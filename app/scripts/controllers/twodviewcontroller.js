@@ -9,9 +9,12 @@
  */
 angular.module('otaniemi3dApp')
   .controller('twodview', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    
+  	Snap.load("http://upload.wikimedia.org/wikipedia/commons/8/84/Example.svg", function (f) {
+	    var g = f.select("svg");
+
+	    var svg_div = Snap.select(".floorplan");
+	    svg_div.append(g);
+	});
   });
+
