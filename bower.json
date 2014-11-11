@@ -15,7 +15,6 @@
     "x3dom": "~1.6.1",
     "jasmine-jquery": "~2.0.5",
     "jasmine": "~2.0.4",
-    "d3": "~3.4.13",
     "snap.svg": "~0.3.0"
   },
   "devDependencies": {
