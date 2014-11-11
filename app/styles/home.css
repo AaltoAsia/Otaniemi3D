@@ -1,0 +1,6 @@
+.home-navs > li {    
+  display:inline;
+  list-style-type: none;
+  margin: 20px;
+  font-size: 32px;
+}

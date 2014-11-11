@@ -22,23 +22,61 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
+    <header>
+      <nav class="navbar navbar-default" role="navigation">
+	    <div class="container-fluid">
+            
+	      <!-- Brand and toggle get grouped for better mobile display -->
+		  <div class="navbar-header">
+		    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+	  		  <span class="sr-only">Toggle navigation</span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>              
+		    </button>
+            <li class="navbar-brand"><a id="home" ng-href="#/home">Otaniemi3D</a></li>
+            
+		  </div>
+
+		  <!-- Collect the nav links, forms, and other content for toggling -->
+          
+		  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+			  <li class="nav1d"><a id="1dview" ng-href="#/1dview">1D View</a></li>
+			  <li class="nav2d"><a id="2dview" ng-href="#/2dview">2D View</a></li>
+			  <li class="nav3d"><a id="3dview" ng-href="#/3dview">3D View</a></li>
+		  </ul>
+			
+            <form class="navbar-form navbar-left" role="search">
+			  <div class="form-group">
+				<input type="text" class="form-control" placeholder="Search">
+			  </div>
+			  <button type="submit" class="btn btn-default">Search</button>
+			</form>
+            
+            <ul class="nav navbar-nav navbar-right">
+              <li class="nav-support"><a ng-href="#/support">Support</a></li>
+            </ul>
+
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
+    
+    </header>
+      
     <div class="container">
+     
+     <!--
       <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a id="1dview" ng-href="#">1d View</a></li>
-          <li><a id="2dview" ng-href="#/2dview">2d View</a></li>
-          <li><a id="3dview" ng-href="#/3dview">3d View</a></li>
-        </ul>
-        <h3 class="text-muted">Otaniemi3d</h3>
+        <h3 class="text-muted">Otaniemi3D - Building efficiency enhanced</h3>
       </div>
-
+      -->
+         
       <div ng-view=""></div>
-
       <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span>Group 14 project.</p>
+        <p><span class="glyphicon glyphicon-heart"></span> Group 14 Software Development Project Course project 2014-2015.</p>
       </div>
     </div>
-
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
@@ -74,11 +112,14 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/twodviewcontroller.js"></script>
-        <script src="scripts/controllers/onedviewcontroller.js"></script>
-        <script src="scripts/controllers/threedviewcontroller.js"></script>
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/homecontroller.js"></script>
+    <script src="scripts/controllers/twodviewcontroller.js"></script>
+    <script src="scripts/controllers/onedviewcontroller.js"></script>
+    <script src="scripts/controllers/threedviewcontroller.js"></script>
+    <script src="scripts/controllers/supportcontroller.js"></script>
+        
     <!-- endbuild -->
 </body>
 </html>
