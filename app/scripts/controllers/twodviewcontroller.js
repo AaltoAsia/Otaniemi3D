@@ -9,12 +9,17 @@
  */
 angular.module('otaniemi3dApp')
   .controller('twodview', function ($scope) {
-    
-  	Snap.load("http://upload.wikimedia.org/wikipedia/commons/8/84/Example.svg", function (f) {
-	    var g = f.select("svg");
+  var snap = Snap('#floorplan-svg');
 
-	    var svg_div = Snap.select(".floorplan");
-	    svg_div.append(g);
-	});
+  Snap.load('/floorplans/Basement.svg', function (f) {
+    //Doesn't work yet because it doesn't override CSS.
+    var roomToColor = f.select('#shape84-176');
+    roomToColor.attr({
+      stroke: 'green'
+    });
+    snap.append(f);
+  });
+    
+
   });
 
