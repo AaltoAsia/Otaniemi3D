@@ -19,19 +19,27 @@ angular
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
+      .when('/home', {
+        templateUrl: 'views/home.html',
+        controller: 'home'
+      })
+      .when('/1dview', {
         templateUrl: 'views/1dview.html',
-        controller: '1dview'
+        controller: 'onedview'
       })
       .when('/2dview', {
         templateUrl: 'views/2dview.html',
-        controller: '2dview'
+        controller: 'twodview'
       })
       .when('/3dview', {
         templateUrl: 'views/3dview.html',
-        controller: '3dview'
+        controller: 'threedview'
+      })
+      .when('/support', {
+        templateUrl: 'views/support.html',
+        controller: 'support'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/home'
       });
   });

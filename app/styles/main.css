@@ -1,6 +1,6 @@
 /* Space out content a bit */
 body {
-  padding-top: 20px;
+  padding-top: 0px;
   padding-bottom: 20px;
 }
 
@@ -10,6 +10,20 @@ body {
 .footer {
   padding-left: 15px;
   padding-right: 15px;
+}
+
+.navbar .navbar-brand {
+  list-style-type: none;        
+}
+
+.navbar .navbar-brand #home {
+  color: gray;  
+  text-decoration: none;
+}
+
+.navbar .navbar-brand #home:hover {
+  color: black;
+  text-decoration: none;
 }
 
 /* Custom page header */
@@ -32,11 +46,13 @@ body {
 }
 
 /* Customize container */
+/*
 @media (min-width: 768px) {
   .container {
     max-width: 730px;
   }
 }
+*/
 .container-narrow > hr {
   margin: 30px 0;
 }
