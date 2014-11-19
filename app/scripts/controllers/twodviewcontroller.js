@@ -11,9 +11,28 @@ angular.module('otaniemi3dApp')
   .controller('twodview', function ($scope) {
 
     d3.xml('/floorplans/Basement.svg', "image/svg+xml", function(xml) {
-      console.log(xml.documentElement);
+      
+      var svgDocument = d3.select(xml.documentElement);
+      svgDocument.attr('width', '500');
+      svgDocument.attr('height', '500');
+      
       d3.select('.floorplan').node().appendChild(xml.documentElement);
-      d3.selectAll('rect').style('fill', 'green');
+      
+      d3.selectAll('rect')
+        .on('mouseover', function(){
+          d3.select(this).style('fill', 'red');
+        })
+        .on('mouseout', function(){
+          d3.select(this).style('fill', null);
+        });
+      
+      d3.selectAll('path')
+        .on('mouseover', function(){
+          d3.select(this).style('fill', 'red');
+        })
+        .on('mouseout', function(){
+          d3.select(this).style('fill', null);
+        });
     }); 
 
   });
