@@ -9,5 +9,9 @@
  */
 angular.module('otaniemi3dApp')
   .controller('onedview', function ($scope, $location) {
-  	
+        $scope.myData = [
+            {
+                "firstName": "Cox",
+                "lastName": "Carney"
+            }];
   });
