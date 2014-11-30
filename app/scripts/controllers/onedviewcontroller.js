@@ -10,12 +10,10 @@
 angular.module('otaniemi3dApp')
   .controller('onedview', function ($scope, $location, Datahandler) {
 
-   $scope.fetchJson = function(){
+    $scope.fetchJson = function () {
       var fetchJsonPromise = Datahandler.fetchJson();
-      fetchJsonPromise.then(function(data){
+      fetchJsonPromise.then(function (data) {
         console.log(data.data);
       });
     };
-
-  
   });
