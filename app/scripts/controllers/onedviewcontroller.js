@@ -13,7 +13,7 @@ angular.module('otaniemi3dApp')
    $scope.fetchJson = function(){
       var fetchJsonPromise = Datahandler.fetchJson();
       fetchJsonPromise.then(function(data){
-        console.log(data);
+        console.log(data.data);
       });
     };
 
