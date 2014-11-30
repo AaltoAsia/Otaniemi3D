@@ -13,8 +13,6 @@
     "angular-touch": "~1.2.0",
     "angular-route": "~1.2.0",
     "x3dom": "~1.6.1",
-    "jasmine-jquery": "~2.0.5",
-    "jasmine": "~2.0.4",
     "jquery": "~2.1.1"
     
   },
