@@ -8,6 +8,14 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('onedview', function ($scope, $location) {
-  	
+  .controller('onedview', function ($scope, $location, Datahandler) {
+
+   $scope.fetchJson = function(){
+      var fetchJsonPromise = Datahandler.fetchJson();
+      fetchJsonPromise.then(function(data){
+        console.log(data);
+      });
+    };
+
+  
   });
