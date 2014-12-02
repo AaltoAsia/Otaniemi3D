@@ -10,6 +10,8 @@
 angular.module('otaniemi3dApp')
   .controller('twodview', function ($scope) {
 
+    var svgHeight = 600, svgWidth = 600;
+  
     $scope.floorplans = [];
 
     $scope.addItem = function (planLink, planName) {
@@ -31,7 +33,7 @@ angular.module('otaniemi3dApp')
     var floorplanContainer = d3.select('.floorplan');
 
     $scope.selectPlan = function (selectedPlan) {
-      d3.xml(selectedPlan.link, "image/svg+xml", function(xml) {
+      d3.xml(selectedPlan.link, "image/svg+xml", function (xml) {
 
         if (selectedPlan.svgElement === null) {
           selectedPlan.svgElement = xml.documentElement;
@@ -39,8 +41,10 @@ angular.module('otaniemi3dApp')
 
         floorplanContainer.node().innerHTML = '';
         floorplanContainer.node().appendChild(selectedPlan.svgElement);
-
-        d3.select('svg').attr('pointer-events', 'all');
+        
+        d3.select('svg').attr('height', svgHeight)
+          .attr('width', svgWidth)
+          .attr('pointer-events', 'all');
 
         /*
         *Some walls are rect elements, some are paths. Same applies to rooms.
@@ -65,7 +69,7 @@ angular.module('otaniemi3dApp')
         //Configures the moving and zooming behavior.
         function zoomHandler() {
           d3.select(this).attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
-        }  
+        }
         
         var zoomListener = d3.behavior.zoom()
           .scaleExtent([1, 10])
