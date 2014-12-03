@@ -11,10 +11,11 @@ angular.module('otaniemi3dApp')
 
   .controller('onedview', function ($scope, $location, Datahandler) {
 
-        var fetchJsonPromise = Datahandler.fetchJson();
-        fetchJsonPromise.then(function (data) {
-          $scope.myData = data.data;
-        });
-
-
+    var fetchDataPromise = Datahandler.fetchData();
+    fetchDataPromise
+      .then(function (data) {
+        $scope.myData = data;
+      }, function (reason) {    // something gone wrong
+        $scope.myData = reason;
+      });
   });
