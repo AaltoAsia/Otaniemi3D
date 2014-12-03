@@ -11,17 +11,15 @@
     <div id='HUDs_Div'> 
       <div id='viewpoint_menu' class='group' style='margin:2px; margin-top:26px; padding:4px; background-color:rgba(199,202,204,.7); position:absolute; float:center; z-index:1000;'> 
         Select viewpoint
-        <a href=''>Previous</a>
-        <a href=''>Next</a>
+    		<button onClick="x3dElement.runtime.resetView();return false;">Reset current</button> 
+    		<button onClick="x3dElement.runtime.nextView();return false;">Next</button> 
+    		<button onClick="x3dElement.runtime.prevView();return false;">Previous</button> 
+        
       </div> 
       
-      <div id='camera_menu' class='group' style='margin:2px; margin-top:0px; padding:4px; background-color:rgba(199,202,204,.7); position:absolute; float:center; z-index:1000;'> 
-      Navigation
-        <a href=''>Rotate</a>
-        <a href=''>Examine</a>
-      </div>
-      
       <!-- Navigation help menu! 
+      
+      
       
       
       <div id='Interaction_Toolbox' style='margin:2px; padding:4px; padding-right:150px; background-color:rgba(199,202,204,.7);position:absolute; z-index:1000; right:0px; top:0px;'> 
@@ -86,33 +84,34 @@
          headlight='false'
          type='turntable' 
          typeParams= '0.0 0.0 0.1 1.5' >
-       </navigationInfo>  
+       </navigationInfo> 
         
+
         <!-- TODO: Implement viewpoint changing-->
-       
          <Viewpoint id='vp0'
          position="494.52761544508076 31.38101963745607 -27.95278421074164" 
          orientation="-0.99995 0.00979 0.00119 0.24151"  
          centerOfRotation='494.2842745226907 6.15012291102131 -130.38945591364092' 
-         description="Camera0">
+         description="Camera0"
+         zNear='1'>
         </Viewpoint>
         
-        <Viewpoint id='vp2'
+        <Viewpoint id='vp1'
          position="497.7760598031165 1.466787726338509 -148.48556180249267" 
          orientation="0.03603 0.99377 0.10545 3.79634"  
          centerOfRotation='500.857915965627 0.38593202180242003 -144.50280100441586' 
-         description="Camera2">
+         description="Camera1">
         </Viewpoint>
-                                    
-       <Viewpoint id='vp3'
+                                 
+       <Viewpoint id='vp2'
         position="406.9412363270676 15.866261103648956 -155.85222123533936"
         orientation="-0.03460 -0.99832 -0.04638 1.86138"   
         centerOfRotation='476.5988978394429 9.09985473427216 -135.14308588763333'
-        description="Camera3">
+        description="Camera2">
        </Viewpoint>                   
-                            
+
         <!--- floor plane -->
-        <transform translation='494.2 0 -130.1' rotation='-1 0 0 1.57'>
+        <transform translation='494.2 -3.1 -130.1' rotation='-1 0 0 1.57'>
           <shape>
             <appearance>
               <material diffuseColor='0.0 0.7 0.0'></material>
@@ -3315,5 +3314,5 @@
         </shape>
       </transform>
       </scene>
-    </x3d>
+    </x3d>  
   </div>
