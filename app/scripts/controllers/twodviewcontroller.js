@@ -10,7 +10,8 @@
 angular.module('otaniemi3dApp')
   .controller('twodview', function ($scope) {
 
-    var svgHeight = 600, svgWidth = 600;
+    //Class names that are used for rooms that should be coloured on mouseover in the svg
+    var classesOfRooms = ['st1', 'st3'];
   
     $scope.floorplans = [];
   
@@ -48,29 +49,28 @@ angular.module('otaniemi3dApp')
         
         $scope.selectedPlan = selectedPlan;
         
-        d3.select('svg').attr('height', svgHeight)
-          .attr('width', svgWidth)
+        d3.select('svg').attr('width', '100%')
+          .attr('height', '100%')
           .attr('pointer-events', 'all');
 
-        /*
-        *Some walls are rect elements, some are paths. Same applies to rooms.
-        *This is why they must both be highlighted on mouseover.
+       /*
+        * Add mouseover functionality (coloring the element) for elements of those classes that have been
+        * defined in variable classesOfRooms
         */
-        d3.selectAll('rect')
-          .on('mouseover', function () {
-            d3.select(this).style('fill', 'red');
-          })
-          .on('mouseout', function () {
-            d3.select(this).style('fill', null);
-          });
-
-        d3.selectAll('path')
-          .on('mouseover', function () {
-            d3.select(this).style('fill', 'red');
-          })
-          .on('mouseout', function () {
-            d3.select(this).style('fill', null);
-          });
+        function addMouseOverColoring(selectString) {
+          
+          d3.selectAll(selectString)
+            .on('mouseover', function () {
+              d3.select(this).style('fill', 'red');
+            })
+            .on('mouseout', function () {
+              d3.select(this).style('fill', null);
+            });
+        }
+        
+        classesOfRooms.forEach(function (roomClass) {
+          addMouseOverColoring('.' + roomClass);
+        });
         
         //Configures the moving and zooming behavior.
         function zoomHandler() {
