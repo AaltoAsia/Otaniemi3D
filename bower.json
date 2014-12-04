@@ -13,15 +13,9 @@
     "angular-touch": "~1.2.0",
     "angular-route": "~1.2.0",
     "x3dom": "~1.6.1",
-<<<<<<< HEAD
     "jquery": "~2.1.1",
-    "angular-ui-grid": "~3.0.0-rc.16"
-
-=======
-    "jasmine-jquery": "~2.0.5",
-    "jasmine": "~2.0.4",
+    "angular-ui-grid": "~3.0.0-rc.16",
     "d3": "~3.4.13"
->>>>>>> f3ec970a34dc444b2551d5a335d31dbbf78fa32a
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0",
