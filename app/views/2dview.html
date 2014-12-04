@@ -1,3 +1,8 @@
-<div class="jumbotron">
-  <h1>This is the page where we will build 2d view</h1>
+<div class="jumbotron">  
+  Select floor plan
+  <select ng-model="selectedPlan" 
+          ng-change="selectFloorplan()" 
+          ng-options="floorplan.name for floorplan in floorplans">
+  </select>
+  <div class="floorplan"></div>
 </div>
