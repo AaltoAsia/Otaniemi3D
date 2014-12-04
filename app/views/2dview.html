@@ -1,9 +1,8 @@
-
 <div class="jumbotron">  
-  <ul ng-repeat="floorplan in floorplans" id="floorplan-list">
-    <li><a ng-click="selectPlan(floorplan)">{{floorplan.name}}</a></li>
-  </ul>
-  <div class="floorplan" >
-  </div>
-
+  Select floor plan
+  <select ng-model="selectedPlan" 
+          ng-change="selectFloorplan()" 
+          ng-options="floorplan.name for floorplan in floorplans">
+  </select>
+  <div class="floorplan"></div>
 </div>

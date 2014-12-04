@@ -13,6 +13,8 @@ angular.module('otaniemi3dApp')
     var svgHeight = 600, svgWidth = 600;
   
     $scope.floorplans = [];
+  
+    $scope.selectedPlan = null;
 
     $scope.addItem = function (planLink, planName) {
       $scope.floorplans.push({
@@ -32,15 +34,19 @@ angular.module('otaniemi3dApp')
 
     var floorplanContainer = d3.select('.floorplan');
 
-    $scope.selectPlan = function (selectedPlan) {
+    $scope.selectFloorplan = function () {
+      var selectedPlan = $scope.selectedPlan;
+      
       d3.xml(selectedPlan.link, "image/svg+xml", function (xml) {
-
+        
         if (selectedPlan.svgElement === null) {
           selectedPlan.svgElement = xml.documentElement;
         }
 
         floorplanContainer.node().innerHTML = '';
         floorplanContainer.node().appendChild(selectedPlan.svgElement);
+        
+        $scope.selectedPlan = selectedPlan;
         
         d3.select('svg').attr('height', svgHeight)
           .attr('width', svgWidth)
