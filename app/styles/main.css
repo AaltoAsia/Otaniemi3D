@@ -80,6 +80,13 @@ body {
   border: 1px solid #e5e5e5;
 }
 
+.home-navs > li {
+    display:inline;
+    list-style-type: none;
+    margin: 20px;
+    font-size: 32px;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   /* Remove the padding we set earlier */
