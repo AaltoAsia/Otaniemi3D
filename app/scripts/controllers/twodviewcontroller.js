@@ -26,11 +26,11 @@ angular.module('otaniemi3dApp')
     };
 
     //Add wanted floorplans to the list here
-    $scope.addItem('/floorplans/Basement.svg', 'Basement');
-    $scope.addItem('/floorplans/FloorPlan (1).svg', 'Floor 1');
-    $scope.addItem('/floorplans/FloorPlan (2).svg', 'Floor 2');
-    $scope.addItem('/floorplans/FloorPlan (3).svg', 'Floor 3');
-    $scope.addItem('/floorplans/FloorPlan (4).svg', 'Floor 4');
+    $scope.addItem('floorplans/Basement.svg', 'Basement');
+    $scope.addItem('floorplans/FloorPlan (1).svg', 'Floor 1');
+    $scope.addItem('floorplans/FloorPlan (2).svg', 'Floor 2');
+    $scope.addItem('floorplans/FloorPlan (3).svg', 'Floor 3');
+    $scope.addItem('floorplans/FloorPlan (4).svg', 'Floor 4');
     /////////////////////////////////////////
 
     var floorplanContainer = d3.select('.floorplan');
@@ -38,7 +38,7 @@ angular.module('otaniemi3dApp')
     $scope.selectFloorplan = function () {
       var selectedPlan = $scope.selectedPlan;
       
-      d3.xml(selectedPlan.link, "image/svg+xml", function (xml) {
+      d3.xml(selectedPlan.link, 'image/svg+xml', function (xml) {
         
         if (selectedPlan.svgElement === null) {
           selectedPlan.svgElement = xml.documentElement;

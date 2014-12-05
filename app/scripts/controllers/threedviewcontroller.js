@@ -8,6 +8,6 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('threedview', function ($scope, $location) {
+  .controller('threedview', function ($scope) {
   	
   });
