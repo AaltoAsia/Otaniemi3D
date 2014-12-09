@@ -15,6 +15,9 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
+  // Grunt-build-control task
+  grunt.loadNpmTasks('grunt-build-control');
+  
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
@@ -138,6 +141,8 @@ module.exports = function (grunt) {
           src: [
             '.tmp',
             '<%= yeoman.dist %>/{,*/}*',
+			'!<%= yeoman.dist %>/binGeo/**',
+			'!<%= yeoman.dist %>/floorplans/**',
             '!<%= yeoman.dist %>/.git*'
           ]
         }]
@@ -351,7 +356,30 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+	
+	// Various Grunt tasks...
+
+  buildcontrol: {
+    options: {
+      dir: 'dist',
+      commit: true,
+      push: true,
+      message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
+    },
+    development: {
+      options: {
+        remote: 'git@5apps.com:super-r_otaniemi3d.git',
+        branch: 'master'
+      }
+    },
+    local: {
+      options: {
+        remote: '../',
+        branch: 'build'
+      }
     }
+	}
   });
 
 
