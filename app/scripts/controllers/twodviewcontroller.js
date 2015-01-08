@@ -10,7 +10,8 @@
 angular.module('otaniemi3dApp')
   .controller('twodview', function ($scope) {
 
-    //Class names that are used for rooms that should be coloured on mouseover in the svg
+    //Class names that are used for rooms that should be coloured on 
+    //mouseover in the svg
     var classesOfRooms = ['st1', 'st3'];
   
     $scope.floorplans = [];
@@ -25,7 +26,7 @@ angular.module('otaniemi3dApp')
       });
     };
 
-    //Add wanted floorplans to the list here
+    //Add wanted floor plans to the list here
     $scope.addItem('floorplans/Basement.svg', 'Basement');
     $scope.addItem('floorplans/FloorPlan (1).svg', 'Floor 1');
     $scope.addItem('floorplans/FloorPlan (2).svg', 'Floor 2');
@@ -35,6 +36,7 @@ angular.module('otaniemi3dApp')
 
     var floorplanContainer = d3.select('.floorplan');
 
+    //Load selected floor plan from the server
     $scope.selectFloorplan = function () {
       var selectedPlan = $scope.selectedPlan;
       
@@ -49,14 +51,12 @@ angular.module('otaniemi3dApp')
         
         $scope.selectedPlan = selectedPlan;
         
-        d3.select('svg').attr('width', '100%')
+        var svg = d3.select('svg').attr('width', '100%')
           .attr('height', '100%')
           .attr('pointer-events', 'all');
 
-       /*
-        * Add mouseover functionality (coloring the element) for elements of those classes that have been
-        * defined in variable classesOfRooms
-        */
+        //Add mouseover functionality (coloring the element) for elements of 
+        //those classes that have been defined in variable classesOfRooms
         function addMouseOverColoring(selectString) {
           
           d3.selectAll(selectString)
@@ -74,16 +74,16 @@ angular.module('otaniemi3dApp')
         
         //Configures the moving and zooming behavior.
         function zoomHandler() {
-          d3.select(this).attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+          d3.select('g').attr('transform', 'translate(' + d3.event.translate + 
+                               ')scale(' + d3.event.scale + ')');
         }
         
         var zoomListener = d3.behavior.zoom()
-          .scaleExtent([1, 10])
+          .scaleExtent([0.5, 10])
           .on('zoom', zoomHandler);
 
-        d3.select('g').call(zoomListener);
+        svg.call(zoomListener);
 
       });
     };
   });
-
