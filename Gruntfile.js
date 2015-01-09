@@ -356,30 +356,8 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
-    },
-	
-	// Various Grunt tasks...
-
-  buildcontrol: {
-    options: {
-      dir: 'dist',
-      commit: true,
-      push: true,
-      message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
-    },
-    development: {
-      options: {
-        remote: 'git@5apps.com:super-r_otaniemi3d.git',
-        branch: 'master'
-      }
-    },
-    local: {
-      options: {
-        remote: '../',
-        branch: 'build'
-      }
     }
-	}
+      
   });
 
 
