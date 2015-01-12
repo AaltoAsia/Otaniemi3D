@@ -15,8 +15,4 @@ describe('Controller: onedview', function () {
       $scope: scope
     });
   }));
-/* This is the original example test.
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(scope.awesomeThings.length).toBe(3);
-  });*/
 });
