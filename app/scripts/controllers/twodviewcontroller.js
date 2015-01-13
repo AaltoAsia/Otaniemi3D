@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('twodview', function ($scope, $location, Datahandler) {
+  .controller('twodview', function ($scope, Datahandler) {
 
     //Class names that are used for rooms that should be coloured on 
     //mouseover in the svg
