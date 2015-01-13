@@ -15,8 +15,6 @@ angular.module('otaniemi3dApp')
     var classesOfRooms = ['st1', 'st3'];
     
     $scope.floorplans = [];
-  
-    $scope.selectedPlan = null;
     $scope.sensorData = null;
     
     //When adding new floor plans these parameters need to be provided:
@@ -41,12 +39,15 @@ angular.module('otaniemi3dApp')
     $scope.addItem('floorplans/FloorPlan (3).svg', 'Floor 3', 'st7', 'st1');
     $scope.addItem('floorplans/FloorPlan (4).svg', 'Floor 4', 'st10', 'st3');
     /////////////////////////////////////////
+  
+    $scope.selectedPlan = $scope.floorplans[0];
 
     var fetchDataPromise = Datahandler.fetchData();
   
     fetchDataPromise.then(
       function (data) {
         $scope.sensorData = data;
+        $scope.selectFloorplan();
       }, 
       function (reason) {       // something gone wrong
         $scope.sensorData = reason;
@@ -97,32 +98,30 @@ angular.module('otaniemi3dApp')
 
     //Load selected floor plan from the server
     $scope.selectFloorplan = function () {
-      var selectedPlan = $scope.selectedPlan;
       
-      d3.xml(selectedPlan.link, 'image/svg+xml', function (xml) {
+      d3.xml($scope.selectedPlan.link, 'image/svg+xml', function (xml) {
         
-        if (selectedPlan.svgElement === null) {
-          selectedPlan.svgElement = xml.documentElement;
+        if ($scope.selectedPlan.svgElement === null) {
+          $scope.selectedPlan.svgElement = xml.documentElement;
         }
 
         floorplanContainer.node().innerHTML = '';
-        floorplanContainer.node().appendChild(selectedPlan.svgElement);
-        
-        $scope.selectedPlan = selectedPlan;
+        floorplanContainer.node().appendChild($scope.selectedPlan.svgElement);
         
         var svg = d3.select('svg')
           .attr('width', '100%')
           .attr('height', '100%')
           .attr('pointer-events', 'all');
         
-        //Map rooms with correct room numbers in the svg.
-        d3.selectAll('.' + selectedPlan.roomNumber).each(function () {
+        //Map room numbers with correct rooms in the svg.
+        d3.selectAll('.' + $scope.selectedPlan.roomNumber).each(function () {
           
           var roomText = this;
           
-          //Check if which room names overlap with room rectangles in svg and modify
-          //room rectangles to have room names in their titles.
-          d3.selectAll('.' + selectedPlan.roomArea).each(function () {
+          d3.selectAll('.' + $scope.selectedPlan.roomArea).each(function () {
+            //Check if which room names overlap with room rectangles in svg and modify
+            //room rectangles to have room names in their titles.
+
             var roomArea = this;
             
             //TODO: check if middle point of the text is inside room
@@ -145,14 +144,14 @@ angular.module('otaniemi3dApp')
               }
               
               $scope.setRoomColor(roomArea);
-            };
+            }
           })
-        })
+        });
         
         //Add mouseover functionality (coloring the element) for elements of 
         //those classes that have been defined in variable classesOfRooms
-        function addMouseOverColoring(selectString) {
-          
+        function addTooltip(selectString) {
+          /*
           d3.selectAll(selectString)
             .on('mouseover', function () {
               d3.select(this).style('fill', 'green');
@@ -160,10 +159,11 @@ angular.module('otaniemi3dApp')
             .on('mouseout', function () {
               $scope.setRoomColor(this);
             });
+          */
         }
         
         classesOfRooms.forEach(function (roomClass) {
-          addMouseOverColoring('.' + roomClass);
+          //addTooltip('.' + roomClass);
         });
         
         //Configures the moving and zooming behavior.
