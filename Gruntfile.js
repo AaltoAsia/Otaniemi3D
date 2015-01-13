@@ -14,9 +14,6 @@ module.exports = function (grunt) {
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
-
-  // Grunt-build-control task
-  grunt.loadNpmTasks('grunt-build-control');
   
   // Configurable paths for the application
   var appConfig = {
