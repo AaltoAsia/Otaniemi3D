@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('twodview', function ($scope) {
+  .controller('twodview', function ($scope, $location, Datahandler) {
 
     //Class names that are used for rooms that should be coloured on 
     //mouseover in the svg
@@ -17,6 +17,7 @@ angular.module('otaniemi3dApp')
     $scope.floorplans = [];
   
     $scope.selectedPlan = null;
+    $scope.sensorData = null;
     
     //When adding new floor plans these parameters need to be provided:
     //  planLink: url to the floor plan
@@ -41,6 +42,57 @@ angular.module('otaniemi3dApp')
     $scope.addItem('floorplans/FloorPlan (4).svg', 'Floor 4', 'st10', 'st3');
     /////////////////////////////////////////
 
+    var fetchDataPromise = Datahandler.fetchData();
+  
+    fetchDataPromise.then(
+      function (data) {
+        $scope.sensorData = data;
+      }, 
+      function (reason) {       // something gone wrong
+        $scope.sensorData = reason;
+      }
+    );
+  
+    //Color rooms according to the temperature
+    $scope.setRoomColor = function (roomArea) {
+      if ($scope.sensorData != null) {
+        var roomNumber = d3.select(roomArea.parentNode).select('title');
+        d3.select(roomArea).style('fill', 'null');
+        
+        var i;
+        for (i = 0; i < $scope.sensorData.length; i++) {
+
+          var sensor = $scope.sensorData[i];
+          //This checks if data string starts with str string
+          //"data.lastIndexOf(str, 0) === 0"
+          if (sensor.room.lastIndexOf(roomNumber.node().textContent, 0) === 0 &&
+              sensor.type === 'temperature') {
+            var temp = sensor.value;
+
+            //Temeperature color range is 15C - 35C
+            var tempPercentage = Math.min((temp - 20) / (30 - 20), 1);
+            tempPercentage = Math.max(tempPercentage, 0);
+
+            var rgb = Math.round(255 * tempPercentage);
+
+            //Change rgb value to hex value with leading zeros
+            var hex = (255 - rgb).toString(16);
+            if (hex.length === 1) {
+              hex = '0' + hex;
+            }
+
+            var color = '#ff' + hex + '00';
+
+            d3.select(roomArea).style('fill', color);
+
+            break;
+          }
+        }
+      } else {
+        d3.select(roomArea).style('fill', 'null');
+      }
+    }
+  
     var floorplanContainer = d3.select('.floorplan');
 
     //Load selected floor plan from the server
@@ -63,16 +115,17 @@ angular.module('otaniemi3dApp')
           .attr('height', '100%')
           .attr('pointer-events', 'all');
         
-        //Map room numbers with correct rooms in the svg.
+        //Map rooms with correct room numbers in the svg.
         d3.selectAll('.' + selectedPlan.roomNumber).each(function () {
           
           var roomText = this;
           
+          //Check if which room names overlap with room rectangles in svg and modify
+          //room rectangles to have room names in their titles.
           d3.selectAll('.' + selectedPlan.roomArea).each(function () {
-            //Check if which room names overlap with room rectangles in svg and modify
-            //room rectangles to have room names in their titles.
             var roomArea = this;
             
+            //TODO: check if middle point of the text is inside room
             var isInside = 
                 roomText.getBoundingClientRect().top > roomArea.getBoundingClientRect().top && 
                 roomText.getBoundingClientRect().bottom < roomArea.getBoundingClientRect().bottom && 
@@ -82,7 +135,6 @@ angular.module('otaniemi3dApp')
             if (isInside) {
               var roomNumber = d3.select(roomArea.parentNode).select('title');
               var isLetter = /[a-z]/i;
-              //var reNumber = /[0-9]+/i;
               
               //Make room's 'title' element same as room number and append a letter 
               //to room number if needed.
@@ -91,7 +143,9 @@ angular.module('otaniemi3dApp')
               } else{
                 roomNumber.node().textContent = roomText.textContent;
               }
-            }
+              
+              $scope.setRoomColor(roomArea);
+            };
           })
         })
         
@@ -101,10 +155,10 @@ angular.module('otaniemi3dApp')
           
           d3.selectAll(selectString)
             .on('mouseover', function () {
-              d3.select(this).style('fill', 'red');
+              d3.select(this).style('fill', 'green');
             })
             .on('mouseout', function () {
-              d3.select(this).style('fill', null);
+              $scope.setRoomColor(this);
             });
         }
         
