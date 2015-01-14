@@ -44,4 +44,7 @@ angular
       .otherwise({
         redirectTo: '/home'
       });
+  })
+  .run(function() {
+    FastClick.attach(document.body);
   });

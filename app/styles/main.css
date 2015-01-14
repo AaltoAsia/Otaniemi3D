@@ -87,6 +87,20 @@ body {
     font-size: 32px;
 }
 
+#searchContainer {
+    margin-bottom:10px;
+}
+
+#searchContent {
+    width: 80%;
+    display:inline;
+}
+
+#searchDefault {
+    display:inline;
+    margin-bottom:3px;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   /* Remove the padding we set earlier */

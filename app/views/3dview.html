@@ -8,107 +8,142 @@
     </style>
   </head>
   <div class="container">
+    
+    <!-- HUD for testing -->
+    <!--
     <div id='HUDs_Div'> 
-      <div id='viewpoint_menu' class='group' style='margin:2px; margin-top:26px; padding:4px; background-color:rgba(199,202,204,.7); position:absolute; float:center; z-index:1000;'> 
+      <div id='viewpoint_menu' class='group' style='margin:2px; margin-top:56px; padding:4px; background-color:rgba(199,202,204,.7); position:absolute; float:center; z-index:1000;'> 
         Select viewpoint
     		<button onClick="x3dElement.runtime.resetView();return false;">Reset current</button> 
     		<button onClick="x3dElement.runtime.nextView();return false;">Next</button> 
     		<button onClick="x3dElement.runtime.prevView();return false;">Previous</button> 
-        
-      </div> 
-      
-      <!-- Navigation help menu! 
-      
-      
-      
-      
-      <div id='Interaction_Toolbox' style='margin:2px; padding:4px; padding-right:150px; background-color:rgba(199,202,204,.7);position:absolute; z-index:1000; right:0px; top:0px;'> 
-        
-        <table> 
-          <tr>     
-            <td>Navigation Mode: 
-            </td> 
-            <td align='right'> 
-              <select style='aling:right;' onchange='if (this.selectedIndex !== undefined) { var e = document.getElementById(&apos;x3dElement&apos;); if (this.options[this.selectedIndex].value === &apos;examine&apos;) { e.runtime.examine(); } else if (this.options[this.selectedIndex].value === &apos;lookat&apos;) { e.runtime.lookAt(); } else if (this.options[this.selectedIndex].value === &apos;walk&apos;) { e.runtime.walk(); } else if (this.options[this.selectedIndex].value === &apos;fly&apos;) { e.runtime.fly(); } else if (this.options[this.selectedIndex].value === &apos;helicopter&apos;) { e.runtime.helicopter(); } else if (this.options[this.selectedIndex].value === &apos;none&apos;) { e.runtime.noNav(); } }'> 
-                <option value='examine'>Examine 
-                </option> 
-                <option value='lookat'>LookAt 
-                </option> 
-                <option value='walk'>Walk 
-                </option> 
-                <option value='fly'>Fly 
-                </option> 
-                <option value='helicopter'>Helicopter 
-                </option> 
-                <option value='none'>None 
-                </option> 
-              </select> 
-            </td> 
-          </tr> 
-          <tr> 
-            <td>Debug Display: 
-            </td> 
-            <td align='right'> 
-              <input type='checkbox' onclick='if (this.checked) { document.getElementById(&apos;x3dElement&apos;).runtime.statistics(true); } else { document.getElementById(&apos;x3dElement&apos;).runtime.statistics(false); }'> 
-              </input> Stats 
-              <input type='checkbox' onclick='document.getElementById(&apos;x3dElement&apos;).runtime.debug();'> 
-              </input> Log 
-            </td> 
-          </tr> 
-          <tr> 
-            <td> 
-              <button onclick='document.getElementById(&apos;x3dElement&apos;).runtime.showAll();'> Show Everything 
-              </button> 
-            </td> 
-            <td> 
-              <button onclick='document.getElementById(&apos;x3dElement&apos;).runtime.resetView();'> Reset View 
-              </button> 
-            </td> 
-          </tr> 
-        </table> 
-        
-        
-        
-        
-      </div>
-        
-            END OF Navigation (interaction toolbar) menu! -->
-        
+      </div>         
     </div>
+    -->
+      
     <x3d id='x3dElement' showStat='false' showLog='false' style='width:100%; height:100%; border:0; margin:0; padding:0;'>
       
       <scene DEF='scene'>
-      
         <navigationInfo 
          speed='1' 
          headlight='false'
          type='turntable' 
          typeParams= '0.0 0.0 0.1 1.5' >
-       </navigationInfo> 
+       </navigationInfo>
         
-
-        <!-- TODO: Implement viewpoint changing-->
-         <Viewpoint id='vp0'
-         position="494.52761544508076 31.38101963745607 -27.95278421074164" 
-         orientation="-0.99995 0.00979 0.00119 0.24151"  
-         centerOfRotation='494.2842745226907 6.15012291102131 -130.38945591364092' 
-         description="Camera0"
-         zNear='1'>
+      <div id="searchContainer">
+        
+        <input id="searchContent" 
+          type="text" 
+          ng-model="selected" 
+          placeholder="Search for room..." 
+          typeahead="item for item in items | filter:$viewValue | limitTo:8" 
+          class="form-control" 
+          typeahead-on-select="onSelect($item)"
+        >
+        
+        <button class="btn btn-default" id="searchDefault" ng-click="changeView('vp0')">
+          Default view
+        </button>
+        
+      </div>
+      
+        <Viewpoint id='vp0'
+          position="494.52761544508076 31.38101963745607 -27.95278421074164" 
+          orientation="-0.99995 0.00979 0.00119 0.24151"  
+          centerOfRotation='494.2842745226907 6.15012291102131 -130.38945591364092' 
+          description="vp0"
+          zNear='1'>
+        </Viewpoint>
+          
+        <Viewpoint id='341c'
+          position="540.67344 5.01579 -112.42232" 
+          orientation="-0.85856 -0.51240 -0.01815 0.08245"
+          centerOfRotation="540.73929 4.90527 -113.97942"
+          zNear="1.00000"
+          zFar="672.08136"
+          description="341c">
         </Viewpoint>
         
-        <Viewpoint id='vp1'
-         position="497.7760598031165 1.466787726338509 -148.48556180249267" 
-         orientation="0.03603 0.99377 0.10545 3.79634"  
-         centerOfRotation='500.857915965627 0.38593202180242003 -144.50280100441586' 
-         description="Camera1">
+        <Viewpoint id='341b'
+          position="537.85526 4.87722 -112.17062" 
+          orientation="-1.00000 0.00000 0.00000 0.07080"
+          centerOfRotation="537.85526 4.80648 -113.16811"
+          zNear="1.00000" 
+          zFar="668.56008" 
+          description="341b">
         </Viewpoint>
-                                 
-       <Viewpoint id='vp2'
-        position="406.9412363270676 15.866261103648956 -155.85222123533936"
-        orientation="-0.03460 -0.99832 -0.04638 1.86138"   
-        centerOfRotation='476.5988978394429 9.09985473427216 -135.14308588763333'
-        description="Camera2">
-       </Viewpoint>                   
+        
+        <Viewpoint id='341a'
+          position="537.20995 5.52361 -109.75590"
+          orientation="-0.03537 -0.99875 -0.03537 1.57205"
+          centerOfRotation="538.21242 5.45252 -109.75590"
+          zNear="1.00000" 
+          zFar="667.71993"
+          description="341a">
+        </Viewpoint>
+        
+        <Viewpoint id='337'
+          position="526.45838 4.86015 -112.78043" 
+          orientation="-1.00000 0.00000 0.00000 0.07080" 
+          centerOfRotation="526.45838 4.78941 -113.77792"
+          zNear="1.00000" 
+          zFar="654.91311" 
+          description="337">
+        </Viewpoint>
+        
+        <Viewpoint id='338'
+          position="529.46532 5.41766 -115.56634" 
+          orientation="-0.00000 0.99937 0.03539 3.14159" 
+          centerOfRotation="529.46532 5.34692 -114.56885"
+        	zNear="1.00000" 
+          zFar="658.64785" 
+          description="338">
+        </Viewpoint>
+        
+        <Viewpoint id='348'
+          position="535.25828 5.19777 -105.52309" 
+          orientation="-0.00000 0.99937 0.03539 3.14159" 
+          centerOfRotation="535.25828 5.16240 -105.02434" 
+          zNear="1.00000" 
+          zFar="665.31799" 
+          description="348">
+        </Viewpoint>
+        
+        <Viewpoint id='336'
+          position="521.73214 5.33379 -110.82007" 
+          orientation="-1.00000 0.00000 0.00000 0.07080" 
+          centerOfRotation="521.73214 5.26305 -111.81756" 
+          zNear="1.00000" 
+          zFar="649.17653" 
+          description="336">
+        </Viewpoint>
+        
+        <Viewpoint id='335'
+          position="517.56277 4.71824 -110.93870" 
+          orientation="-1.00000 -0.00000 -0.00000 0.07080" 
+          centerOfRotation="517.56277 4.64750 -111.93619" 
+          zNear="1.00000" zFar="644.17731" 
+          description="335">
+        </Viewpoint>
+        
+        <Viewpoint id='334'
+          position="512.47401 4.69214 -111.96067" 
+          orientation="-1.00000 -0.00000 -0.00000 0.07080" 
+          centerOfRotation="512.47401 4.62140 -112.95816" 
+          zNear="1.00000" 
+          zFar="638.10872" 
+          description="334">
+        </Viewpoint>
+        
+        <Viewpoint id='333'
+          position="509.05285 4.91875 -112.37071" 
+          orientation="-1.00000 0.00000 0.00000 0.07080" 
+          centerOfRotation="509.05285 4.84801 -113.36820"
+          zNear="1.00000" 
+          zFar="634.02180" 
+          description="333">
+        </Viewpoint>
 
         <!--- floor plane -->
         <transform translation='494.2 -3.1 -130.1' rotation='-1 0 0 1.57'>
@@ -117,9 +152,29 @@
               <material diffuseColor='0.0 0.7 0.0'></material>
             </appearance>                    
             <plane solid='true' size='160 160'></plane>
-          <shape>
+          </shape>
         </transform>
                   
+        <!-- Otakaari -->          
+        <transform translation='494.2 -3.0 -85.1' rotation='-1 0 0 1.57'>
+          <shape>
+            <appearance>
+              <material diffuseColor='0.8 0.8 0.8'></material>
+            </appearance>                    
+            <plane solid='true' size='160 10'></plane>
+          </shape>
+        </transform>
+        
+        <!-- Puumiehenkuja -->         
+        <transform translation='440.2 -3.0 -145.1' rotation='-1 0 0 1.57'>
+          <shape>
+            <appearance>
+              <material diffuseColor='0.8 0.8 0.8'></material>
+            </appearance>                    
+            <plane solid='true' size='10 130'></plane>
+          </shape>
+        </transform>             
+                     
                                                 
         <directionalLight ambientIntensity='1' color='0.549996 0.549996 0.549996' direction='0.34549 -0.68389 -0.642598'></directionalLight>
         <coordinate DEF='AOPT_Coordinate_170204896' point='465.025 123.146 -2.1 465.025 125.172 -2.1 465.025 125.172 -0.59 465.025 123.146 -0.59 465.025 129.731 -0.59 465.025 127.704 -0.59 465.025 127.704 -2.1 465.025 129.731 -2.1 465.025 132.223 -2.1 465.025 134.249 -2.1 465.025 134.249 -0.59 465.025 132.223 -0.59 465.025 136.551 -0.59 465.025 134.525 -0.59 465.025 134.525 -2.1 465.025 136.551 -2.1 465.025 141.238 -2.1 465.025 143.264 -2.1 465.025 143.264 -0.59 465.025 141.238 -0.59 465.025 151.739 -0.59 465.025 149.713 -0.59 465.025 149.713 -2.1 465.025 151.739 -2.1 465.025 145.015 -0.59 465.025 145.015 -2.1 465.025 147.559 -2.1 465.025 147.559 -0.59 465.025 141.14 -2.1 465.025 141.14 -0.59 465.025 139.113 -0.59 465.025 139.113 -2.1 465.025 136.609 -0.59 465.025 136.609 -2.1 465.025 137.979 -2.1 465.025 137.979 -0.59 465.025 131.946 -2.1 465.025 131.946 -0.59 465.025 129.919 -0.59 465.025 129.919 -2.1 465.025 125.396 -0.59 465.025 125.396 -2.1 465.025 127.423 -2.1 465.025 127.423 -0.59 465.025 122.86 0 465.025 159.948 0 465.025 159.948 -3 465.025 122.86 -3 465.425 123.146 -2.1 465.425 125.172 -2.1 465.425 125.172 -0.59 465.425 123.146 -0.59 465.425 129.731 -0.59 465.425 127.704 -0.59 465.425 127.704 -2.1 465.425 129.731 -2.1 465.425 132.223 -2.1 465.425 134.249 -2.1 465.425 134.249 -0.59 465.425 132.223 -0.59 465.425 136.551 -0.59 465.425 134.525 -0.59 465.425 134.525 -2.1 465.425 136.551 -2.1 465.425 141.238 -2.1 465.425 143.264 -2.1 465.425 143.264 -0.59 465.425 141.238 -0.59 465.425 151.739 -0.59 465.425 149.713 -0.59 465.425 149.713 -2.1 465.425 151.739 -2.1 465.425 145.015 -0.59 465.425 145.015 -2.1 465.425 147.559 -2.1 465.425 147.559 -0.59 465.425 141.14 -0.59 465.425 141.14 -2.1 465.425 139.113 -0.59 465.425 139.113 -2.1 465.425 136.609 -0.59 465.425 136.609 -2.1 465.425 137.979 -2.1 465.425 137.979 -0.59 465.425 131.946 -0.59 465.425 131.946 -2.1 465.425 129.919 -0.59 465.425 129.919 -2.1 465.425 125.396 -0.59 465.425 125.396 -2.1 465.425 127.423 -2.1 465.425 127.423 -0.59 465.425 122.86 0 465.425 159.948 0 465.425 159.948 -3 465.425 122.86 -3 465.425 159.948 -3 465.425 122.86 -3 465.025 159.948 -3 465.425 159.948 0'></coordinate>
