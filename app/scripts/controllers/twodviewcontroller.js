@@ -113,23 +113,30 @@ angular.module('otaniemi3dApp')
           .attr('height', '100%')
           .attr('pointer-events', 'all');
         
-        //Map room numbers with correct rooms in the svg.
+        //Remove pointer-events from text elements
+        svg.selectAll('text').attr('pointer-events', 'none');
+        
+        //Map rooms with correct room numbers in the svg.
         d3.selectAll('.' + $scope.selectedPlan.roomNumber).each(function () {
           
           var roomText = this;
           
+          //Check if which room names overlap with room rectangles in svg and modify
+          //room rectangles to have room names in their titles.
           d3.selectAll('.' + $scope.selectedPlan.roomArea).each(function () {
-            //Check if which room names overlap with room rectangles in svg and modify
-            //room rectangles to have room names in their titles.
 
             var roomArea = this;
             
-            //TODO: check if middle point of the text is inside room
+            var textCoords = roomText.getBoundingClientRect();
+            var roomCoords = roomArea.getBoundingClientRect();
+            var textHeight = textCoords.bottom - textCoords.top;
+            var textWidth = textCoords.right - textCoords.left;
+            
             var isInside = 
-                roomText.getBoundingClientRect().top > roomArea.getBoundingClientRect().top && 
-                roomText.getBoundingClientRect().bottom < roomArea.getBoundingClientRect().bottom && 
-                roomText.getBoundingClientRect().left > roomArea.getBoundingClientRect().left && 
-                roomText.getBoundingClientRect().right < roomArea.getBoundingClientRect().right;
+                textCoords.top + textHeight / 2 > roomCoords.top && 
+                textCoords.top + textHeight / 2 < roomCoords.bottom && 
+                textCoords.left + textWidth / 2 > roomCoords.left && 
+                textCoords.left + textWidth / 2 < roomCoords.right;
             
             if (isInside) {
               var roomNumber = d3.select(roomArea.parentNode).select('title');
