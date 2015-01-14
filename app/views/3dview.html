@@ -31,9 +31,23 @@
          typeParams= '0.0 0.0 0.1 1.5' >
        </navigationInfo>
         
-        <input id="searchContent" ng-controller="typeaheadSearch" type="text" ng-model="selected" placeholder="Search for room..." typeahead="item for item in items | filter:$viewValue | limitTo:8" class="form-control" typeahead-on-select="onSelect($item)">
-        <button ng-click="changeView('vp0')">Default view</button>
+      <div id="searchContainer">
         
+        <input id="searchContent" 
+          ng-controller="typeaheadSearch" 
+          type="text" ng-model="selected" 
+          placeholder="Search for room..." 
+          typeahead="item for item in items | filter:$viewValue | limitTo:8" 
+          class="form-control" 
+          typeahead-on-select="onSelect($item)"
+        >
+        
+        <button class="btn btn-default" id="searchDefault" ng-click="changeView('vp0')">
+          Default view
+        </button>
+        
+      </div>
+      
         <Viewpoint id='vp0'
           position="494.52761544508076 31.38101963745607 -27.95278421074164" 
           orientation="-0.99995 0.00979 0.00119 0.24151"  
@@ -43,79 +57,89 @@
         </Viewpoint>
           
         <Viewpoint id='341c'
-          position="540.73929 4.90527 -113.77942"
-          orientation="-0.99663 0.08189 0.00372 0.09111"
+          position="540.67344 5.01579 -112.42232" 
+          orientation="-0.85856 -0.51240 -0.01815 0.08245"
+          centerOfRotation="540.73929 4.90527 -113.97942"
           zNear="1.00000"
           zFar="672.08136"
           description="341c">
         </Viewpoint>
         
         <Viewpoint id='341b'
-          position="537.85526 4.80648 -112.16811" 
-          orientation="-0.99740 -0.07190 -0.00543 0.15123" 
+          position="537.85526 4.87722 -112.17062" 
+          orientation="-1.00000 0.00000 0.00000 0.07080"
+          centerOfRotation="537.85526 4.80648 -113.16811"
           zNear="1.00000" 
           zFar="668.56008" 
           description="341b">
         </Viewpoint>
         
         <Viewpoint id='341a'
-          position="537.21242 5.35252 -109.75590"
-          orientation="-0.15718 -0.96473 -0.21117 1.89605"
+          position="537.20995 5.52361 -109.75590"
+          orientation="-0.03537 -0.99875 -0.03537 1.57205"
+          centerOfRotation="538.21242 5.45252 -109.75590"
           zNear="1.00000" 
           zFar="667.71993"
           description="341a">
         </Viewpoint>
         
         <Viewpoint id='337'
-          position="526.45838 4.78941 -112.77792" 
-          orientation="-0.29254 0.95478 0.05296 0.37474" 
+          position="526.45838 4.86015 -112.78043" 
+          orientation="-1.00000 0.00000 0.00000 0.07080" 
+          centerOfRotation="526.45838 4.78941 -113.77792"
           zNear="1.00000" 
           zFar="654.91311" 
           description="337">
         </Viewpoint>
         
         <Viewpoint id='338'
-          position="529.46532 4.34692 -115.56885" 
-          orientation="0.00295 0.99425 0.10703 3.19638" 
+          position="529.46532 5.41766 -115.56634" 
+          orientation="-0.00000 0.99937 0.03539 3.14159" 
+          centerOfRotation="529.46532 5.34692 -114.56885"
         	zNear="1.00000" 
           zFar="658.64785" 
           description="338">
         </Viewpoint>
         
         <Viewpoint id='348'
-          position="535.25828 5.16240 -105.52434" 
-          orientation="-0.01849 0.99428 0.10522 2.79564" 
+          position="535.25828 5.19777 -105.52309" 
+          orientation="-0.00000 0.99937 0.03539 3.14159" 
+          centerOfRotation="535.25828 5.16240 -105.02434" 
           zNear="1.00000" 
           zFar="665.31799" 
           description="348">
         </Viewpoint>
         
         <Viewpoint id='336'
-          position="521.73214 5.26305 -110.81756" 
-          orientation="-0.95088 -0.30816 -0.02950 0.20066" 
+          position="521.73214 5.33379 -110.82007" 
+          orientation="-1.00000 0.00000 0.00000 0.07080" 
+          centerOfRotation="521.73214 5.26305 -111.81756" 
           zNear="1.00000" 
           zFar="649.17653" 
           description="336">
         </Viewpoint>
         
         <Viewpoint id='335'
-          position="517.56277 4.64750 -110.93619" 
-          orientation="-0.96746 -0.25277 -0.01092 0.08922" 
+          position="517.56277 4.71824 -110.93870" 
+          orientation="-1.00000 -0.00000 -0.00000 0.07080" 
+          centerOfRotation="517.56277 4.64750 -111.93619" 
           zNear="1.00000" zFar="644.17731" 
           description="335">
         </Viewpoint>
         
         <Viewpoint id='334'
-          position="512.47401 4.62140 -111.95816" 
-          orientation="-0.82155 -0.56977 -0.02018 0.08616" 
+          position="512.47401 4.69214 -111.96067" 
+          orientation="-1.00000 -0.00000 -0.00000 0.07080" 
+          centerOfRotation="512.47401 4.62140 -112.95816" 
           zNear="1.00000" 
           zFar="638.10872" 
           description="334">
         </Viewpoint>
         
         <Viewpoint id='333'
-          position="509.05285 4.84801 -112.36820" 
-          orientation="-0.63509 0.77125 0.04278 0.17423" 
+          position="509.05285 4.91875 -112.37071" 
+          orientation="-1.00000 0.00000 0.00000 0.07080" 
+          centerOfRotation="509.05285 4.84801 -113.36820"
           zNear="1.00000" 
           zFar="634.02180" 
           description="333">

@@ -87,10 +87,18 @@ body {
     font-size: 32px;
 }
 
+#searchContainer {
+    margin-bottom:10px;
+}
+
 #searchContent {
     width: 80%;
     display:inline;
-    margin-bottom:10px;
+}
+
+#searchDefault {
+    display:inline;
+    margin-bottom:3px;
 }
 
 /* Responsive: Portrait tablets and up */
