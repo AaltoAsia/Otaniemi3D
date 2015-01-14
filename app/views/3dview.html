@@ -34,8 +34,8 @@
       <div id="searchContainer">
         
         <input id="searchContent" 
-          ng-controller="typeaheadSearch" 
-          type="text" ng-model="selected" 
+          type="text" 
+          ng-model="selected" 
           placeholder="Search for room..." 
           typeahead="item for item in items | filter:$viewValue | limitTo:8" 
           class="form-control" 
