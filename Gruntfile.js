@@ -138,8 +138,6 @@ module.exports = function (grunt) {
           src: [
             '.tmp',
             '<%= yeoman.dist %>/{,*/}*',
-			'!<%= yeoman.dist %>/binGeo/**',
-			'!<%= yeoman.dist %>/floorplans/**',
             '!<%= yeoman.dist %>/.git/**'
           ]
         }]
@@ -310,7 +308,9 @@ module.exports = function (grunt) {
             '*.html',
             'views/{,*/}*.html',
             'images/{,*/}*.{webp}',
-            'fonts/*'
+            'fonts/*',
+            'binGeo/*',
+            'floorplans/*'
           ]
         }, {
           expand: true,

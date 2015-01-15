@@ -1,8 +1,10 @@
-<div class="jumbotron">  
-  Select floor plan
-  <select ng-model="selectedPlan" 
-          ng-change="selectFloorplan()" 
-          ng-options="floorplan.name for floorplan in floorplans">
-  </select>
+<div class="jumbotron">
+    <label>
+        Select floor plan
+        <select ng-model="selectedPlan"
+                ng-change="selectFloorplan()"
+                ng-options="floorplan.name for floorplan in floorplans">
+        </select>
+    </label>
   <div class="floorplan"></div>
 </div>

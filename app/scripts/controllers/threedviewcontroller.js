@@ -13,7 +13,7 @@ angular.module('otaniemi3dApp')
         
     $scope.changeView = function(viewpoint){
       if(viewpoint === undefined) {
-        var textField = document.getElementById("searchContent");
+        var textField = document.getElementById('searchContent');
         viewpoint = textField.value;
       }
         
@@ -22,15 +22,15 @@ angular.module('otaniemi3dApp')
       if(elem !== null) {
         elem.setAttribute('set_bind','true'); 
 
-        var x3dElem = document.getElementById("x3dElement");
+        var x3dElem = document.getElementById('x3dElement');
         x3dElem.runtime.resetView();
       }
-    }
+    };
     $scope.text = undefined;  
     $scope.items = ['333','334','335','336','337','338','341a','341b','341c', '348'];
     
     $scope.onSelect = function($item) {
-      $scope.changeView($item)
-    }
+      $scope.changeView($item);
+    };
   }
 );
