@@ -158,19 +158,22 @@ angular.module('otaniemi3dApp')
         //Add mouseover functionality (coloring the element) for elements of 
         //those classes that have been defined in variable classesOfRooms
         function addTooltip(selectString) {
-          /*
+          var tooltip = d3.select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden")
+            .text("a simple tooltip");
+          
           d3.selectAll(selectString)
-            .on('mouseover', function () {
-              d3.select(this).style('fill', 'green');
-            })
-            .on('mouseout', function () {
-              $scope.setRoomColor(this);
-            });
-          */
+            .on("mouseover", function(){return tooltip.style("visibility", "visible");})
+	        .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+	        .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
         }
         
         classesOfRooms.forEach(function (roomClass) {
-          //addTooltip('.' + roomClass);
+          addTooltip('.' + roomClass);
         });
         
         //Configures the moving and zooming behavior.
