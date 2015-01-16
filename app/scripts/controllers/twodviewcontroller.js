@@ -48,7 +48,7 @@ angular.module('otaniemi3dApp')
       function (data) {
         $scope.sensorData = data;
         $scope.selectFloorplan();
-      }, 
+      },
       function (reason) {       // something gone wrong
         $scope.sensorData = reason;
       }
@@ -157,18 +157,22 @@ angular.module('otaniemi3dApp')
         
         //Add mouseover functionality (coloring the element) for elements of 
         //those classes that have been defined in variable classesOfRooms
+        // Source : http://bl.ocks.org/biovisualize/1016860
         function addTooltip(selectString) {
-          var tooltip = d3.select("body")
-            .append("div")
-            .style("position", "absolute")
-            .style("z-index", "10")
-            .style("visibility", "hidden")
-            .text("a simple tooltip");
+          var tooltip = d3.select('body')
+            .append('div')
+            .style('position', 'absolute')
+            .style('z-index', '10')
+            .style('visibility', 'hidden')
+            .text('Data not available for some reason');
           
           d3.selectAll(selectString)
-            .on("mouseover", function(){return tooltip.style("visibility", "visible");})
-	        .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-	        .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+            .on('mouseover', function(){
+              tooltip.text(d3.select(this.parentNode).select('title').node().textContent);
+              tooltip.style('visibility', 'visible');              
+            })
+	        .on('mousemove', function(){tooltip.style('top', (event.pageY-10)+'px').style('left',(event.pageX+10)+'px');})
+	        .on('mouseout', function(){tooltip.style('visibility', 'hidden');});
 
         }
         
