@@ -80,6 +80,10 @@ body {
   border: 1px solid #e5e5e5;
 }
 
+.tooltip-div {
+  font-size: 50px;
+}
+
 .home-navs > li {
     display:inline;
     list-style-type: none;

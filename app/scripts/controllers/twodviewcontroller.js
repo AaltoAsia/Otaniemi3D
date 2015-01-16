@@ -124,7 +124,7 @@ angular.module('otaniemi3dApp')
           //Check if which room names overlap with room rectangles in svg and modify
           //room rectangles to have room names in their titles.
           d3.selectAll('.' + $scope.selectedPlan.roomArea).each(function () {
-
+            //roomArea is a d3 selection of the room (path or rect element)
             var roomArea = this;
             
             var textCoords = roomText.getBoundingClientRect();
@@ -164,6 +164,7 @@ angular.module('otaniemi3dApp')
             .style('position', 'absolute')
             .style('z-index', '10')
             .style('visibility', 'hidden')
+            .classed('tooltip-div')
             .text('Data not available for some reason');
           
           d3.selectAll(selectString)
