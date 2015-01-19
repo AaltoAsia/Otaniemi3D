@@ -7,18 +7,15 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('floorplan', ['$q', 'Datahandler', function ($q, Datahandler) {
+  .directive('floorplan', function () {
     return {
-      restrict: 'E',
+      restrict: 'EA',
       scope: {
         plan: '=',
-        data: '='
+        data: '=',
+        rooms: '='
       },
       link: function (scope, element, attrs) {
-        
-        //Class names that are used for rooms that should be coloured on 
-        //mouseover in the svg
-        var classesOfRooms = ['st1', 'st3'];
         
         function parseRooms(floorplan) {
           var isLetter = /[a-z]/i;
@@ -63,8 +60,8 @@ angular.module('otaniemi3dApp')
                   //roomNumber.node().textContent = roomText.textContent;
                 }
               }
-            })
-          })
+            });
+          });
         }
         
         function setRoomColor (roomArea) {
@@ -115,6 +112,37 @@ angular.module('otaniemi3dApp')
           });
         }
         
+        //Add mouseover functionality (coloring the element) for room
+        //Source : http://bl.ocks.org/biovisualize/1016860
+        function addTooltip(room) {
+          var tooltip = d3.select('body')
+            .append('div')
+            .style('position', 'absolute')
+            .style('z-index', '10')
+            .style('visibility', 'hidden')
+            .text('Data not available for some reason');
+          
+          function mouseOver () {
+            tooltip.text(room.name);
+            tooltip.style('visibility', 'visible');              
+          }
+          
+          function mouseMove () {
+            tooltip.style('top', (event.pageY-10)+'px').style('left',(event.pageX+10)+'px');
+          }
+          
+          function mouseOut () {
+            tooltip.style('visibility', 'hidden');
+          }
+
+          if (room.node) {
+            d3.select(room.node)
+              .on('mouseover', mouseOver)
+              .on('mousemove', mouseMove)
+              .on('mouseout', mouseOut);
+          }
+        }
+        
         function appendFloorplan (floorplan) {
           while (element[0].firstChild) {
             element[0].removeChild(element[0].firstChild);
@@ -130,34 +158,12 @@ angular.module('otaniemi3dApp')
           //Remove pointer-events from text elements
           svg.selectAll('text').attr('pointer-events', 'none');
 
-          
-
-          //Add mouseover functionality (coloring the element) for elements of 
-          //those classes that have been defined in variable classesOfRooms
-          // Source : http://bl.ocks.org/biovisualize/1016860
-          function addTooltip(selectString) {
-            var tooltip = d3.select('body')
-              .append('div')
-              .style('position', 'absolute')
-              .style('z-index', '10')
-              .style('visibility', 'hidden')
-              .text('Data not available for some reason');
-
-            d3.selectAll(selectString)
-              .on('mouseover', function(){
-                tooltip.text(d3.select(this.parentNode).select('title').node().textContent);
-                tooltip.style('visibility', 'visible');              
-              })
-              .on('mousemove', function(){tooltip.style('top', (event.pageY-10)+'px').style('left',(event.pageX+10)+'px');})
-              .on('mouseout', function(){tooltip.style('visibility', 'hidden');});
-
+          var i;
+          for (i = 0; i < scope.rooms.length; i++) {
+            addTooltip(scope.rooms[i]);
           }
 
-          classesOfRooms.forEach(function (roomClass) {
-            addTooltip('.' + roomClass);
-          });
-
-          //Configures the moving and zooming behavior.
+          //Configure dragging and zooming behavior.
           function zoomHandler() {
             d3.select('g').attr('transform', 'translate(' + d3.event.translate + 
                                  ')scale(' + d3.event.scale + ')');
@@ -177,14 +183,15 @@ angular.module('otaniemi3dApp')
           } else {
             appendFloorplan(scope.plan);
           }
-        })
+        });
         
         scope.$watch('data', function () {
           if (scope.data) {
+            parseRooms(scope.plan);
             appendFloorplan(scope.plan);
           }
-        })
+        });
         
       }
     };
-  }]);
+  });

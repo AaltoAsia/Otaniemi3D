@@ -23,7 +23,7 @@ angular.module('otaniemi3dApp')
       function (error) {
         console.log('Error: Failed to fetch sensor data');
       }
-    )
+    );
   
     function updateRoomInfo(data) {
       var i, j;
