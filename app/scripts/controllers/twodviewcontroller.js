@@ -8,53 +8,38 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms) {
+  .controller('twodview', function ($scope, Datahandler, Floorplans) {
 
     $scope.floorplans = Floorplans;
-    $scope.rooms = Rooms;
     $scope.sensorData = null;
-    $scope.selectedPlan = $scope.floorplans[0];
+  
+    var i;
+    for (i = 0; i < $scope.floorplans.length; i++) {
+      if ($scope.floorplans[i].isSelected) {
+        $scope.selectedPlan = $scope.floorplans[i];
+      }
+    }
 
     Datahandler.fetchData().then(
       function (data) {
         $scope.sensorData = data;
-        updateRoomInfo(data);
       },
       function (error) {
         console.log('Error: Failed to fetch sensor data');
       }
     );
   
-    function updateRoomInfo(data) {
-      var i, j;
-      
-      iterateRooms:
-      for (i = 0; i < data.length; i++) {
-        var roomName = data[i].room.split(' ')[0];
-        
-        for (j = 0; j < $scope.rooms.length; j++) {
-          
-          if (roomName === $scope.rooms[j].name) {
-            $scope.rooms[j].sensors.push({
-              id: data[i].sensorId,
-              type: data[i].type,
-              value: data[i].value
-            });
-            
-            continue iterateRooms;
+    $scope.selectPlan = function () {
+      var i;
+      for (i = 0; i < $scope.floorplans.length; i++) {
+        if ($scope.floorplans[i].isSelected && $scope.floorplans[i] !== $scope.selectedPlan) {
+          $scope.floorplans[i].isSelected = false;
+        } else {
+          if ($scope.selectedPlan === $scope.floorplans[i]) {
+            $scope.floorplans[i].isSelected = true;
           }
         }
-        
-        $scope.rooms.push({
-          name: roomName,
-          node: null,
-          sensors: [{
-            id: data[i].sensorId,
-            type: data[i].type,
-            value: data[i].value
-          }],
-        });
       }
     }
-  
+    
   });
