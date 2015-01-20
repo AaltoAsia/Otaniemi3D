@@ -17,6 +17,15 @@ angular.module('otaniemi3dApp')
       link: function (scope, element, attrs) {
         
         function setRoomColor (roomArea) {
+          
+          function scaleTo255 (percent) { 
+            return Math.round(255 * percent); 
+          }
+                
+          function scaleValueLowHigh(value, low, high) {
+            return 100 * Math.max(0, Math.min(1, (value - low)/(high - low)));
+          }
+          
           if (scope.data != null) {
             var roomNumber = d3.select(roomArea.parentNode).select('title');
             d3.select(roomArea).style('fill', 'null');
@@ -37,14 +46,6 @@ angular.module('otaniemi3dApp')
                 
                 var tempPercentage = Math.min((temp - min) / (max - min), 1);
                 tempPercentage = Math.max(tempPercentage, 0);
-
-                function scaleTo255 (percent) { 
-                  return Math.round(255 * percent); 
-                }
-                
-                function scaleValueLowHigh(value, low, high) {
-                  return 100 * Math.max(0, Math.min(1, (value - low)/(high - low)));
-                }
 
                 //Change rgb value to hex value with leading zeros
 //                var hex = (255 - rgb).toString(16);
@@ -98,6 +99,13 @@ angular.module('otaniemi3dApp')
               floorplan.svg = xml.documentElement;
               appendFloorplan(floorplan);
               parseRooms(floorplan);
+              
+              var i;
+              for (i = 0; i < Rooms.length; i++) {
+                if (Rooms[i].node) {
+                  setRoomColor(Rooms[i].node);
+                }
+              }
             }
           });
         }
