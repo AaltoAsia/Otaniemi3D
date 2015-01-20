@@ -78,20 +78,57 @@ angular.module('otaniemi3dApp')
               if (sensor.room.lastIndexOf(roomNumber.node().textContent, 0) === 0 &&
                   sensor.type === 'temperature') {
                 var temp = sensor.value;
-
-                //Temeperature color range is 15C - 35C
-                var tempPercentage = Math.min((temp - 20) / (30 - 20), 1);
+                
+                //Temperature color range is 15C - 35C
+                var min = 15;
+                var max = 35;
+                
+                var tempPercentage = Math.min((temp - min) / (max - min), 1);
                 tempPercentage = Math.max(tempPercentage, 0);
 
-                var rgb = Math.round(255 * tempPercentage);
-
-                //Change rgb value to hex value with leading zeros
-                var hex = (255 - rgb).toString(16);
-                if (hex.length === 1) {
-                  hex = '0' + hex;
+                function scaleTo255 (percent) { 
+                  return Math.round(255 * percent); 
+                }
+                
+                function scaleValueLowHigh(value, low, high) {
+                  return 100 * Math.max(0, Math.min(1, (value - low)/(high - low)));
                 }
 
-                var color = '#ff' + hex + '00';
+                //Change rgb value to hex value with leading zeros
+//                var hex = (255 - rgb).toString(16);
+//                if (hex.length === 1) {
+//                  hex = '0' + hex;
+//                }
+//                r    g    b
+//                255  0    0    0%
+//                255  255  0    25%
+//                0    255  0    50%
+//                0    255  255  75%
+//                0    0    255  100%
+//              
+                var red = 0;
+                var green = 0;
+                var blue = 0;
+                
+                if (tempPercentage < 25) {
+                  red = 100;
+                  green = scaleValueLowHigh(tempPercentage, 0, 25);
+                  blue = 0;
+                } else if (tempPercentage < 50) {
+                  red = scaleValueLowHigh(tempPercentage, 50, 25);
+                  green = 100;
+                  blue = 0;
+                } else if (tempPercentage < 75) {
+                  red = 0;
+                  green = 100;
+                  blue = scaleValueLowHigh(tempPercentage, 50, 75);
+                } else {
+                  red = 0;
+                  green = scaleValueLowHigh(tempPercentage, 100, 75);
+                  blue = 100;
+                }
+                
+                var color = rgb(scaleTo255(red), scaleTo255(green), scaleTo255(blue));
 
                 d3.select(roomArea).style('fill', color);
 
