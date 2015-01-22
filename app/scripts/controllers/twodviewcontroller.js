@@ -40,6 +40,6 @@ angular.module('otaniemi3dApp')
           }
         }
       }
-    }
+    };
     
   });

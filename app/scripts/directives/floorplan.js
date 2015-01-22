@@ -16,7 +16,7 @@ angular.module('otaniemi3dApp')
       },
       link: function (scope, element, attrs) {
         
-        function setRoomColor (roomArea) {
+        function setRoomColor (room) {
           
           function scaleTo255 (percent) { 
             return Math.round(255 * percent); 
@@ -25,44 +25,37 @@ angular.module('otaniemi3dApp')
           function scaleValueLowHigh(value, low, high) {
             return 100 * Math.max(0, Math.min(1, (value - low)/(high - low)));
           }
-          
-          if (scope.data != null) {
-            var roomNumber = d3.select(roomArea.parentNode).select('title');
-            d3.select(roomArea).style('fill', 'null');
 
+          if (room.node) {
             var i;
-            for (i = 0; i < scope.data.length; i++) {
+            for (i = 0; i < room.sensors.length; i++) {
 
-              var sensor = scope.data[i];
-              //This checks if data string starts with str string
-              //"data.lastIndexOf(str, 0) === 0"
-              if (sensor.room.lastIndexOf(roomNumber.node().textContent, 0) === 0 &&
-                  sensor.type === 'temperature') {
-                var temp = sensor.value;
-                
+              if (room.sensors[i].type === 'temperature') {
+                var temp = room.sensors[i].value;
+
                 //Temperature color range is 15C - 35C
                 var min = 15;
                 var max = 35;
-                
+
                 var tempPercentage = Math.min((temp - min) / (max - min), 1);
                 tempPercentage = Math.max(tempPercentage, 0);
 
                 //Change rgb value to hex value with leading zeros
-//                var hex = (255 - rgb).toString(16);
-//                if (hex.length === 1) {
-//                  hex = '0' + hex;
-//                }
-//                r    g    b
-//                255  0    0    0%
-//                255  255  0    25%
-//                0    255  0    50%
-//                0    255  255  75%
-//                0    0    255  100%
-//              
+    //                var hex = (255 - rgb).toString(16);
+    //                if (hex.length === 1) {
+    //                  hex = '0' + hex;
+    //                }
+    //                r    g    b
+    //                255  0    0    0%
+    //                255  255  0    25%
+    //                0    255  0    50%
+    //                0    255  255  75%
+    //                0    0    255  100%
+    //              
                 var red = 0;
                 var green = 0;
                 var blue = 0;
-                
+
                 if (tempPercentage < 25) {
                   red = 100;
                   green = scaleValueLowHigh(tempPercentage, 0, 25);
@@ -80,16 +73,15 @@ angular.module('otaniemi3dApp')
                   green = scaleValueLowHigh(tempPercentage, 100, 75);
                   blue = 100;
                 }
-                
-                var color = rgb(scaleTo255(red), scaleTo255(green), scaleTo255(blue));
 
-                d3.select(roomArea).style('fill', color);
+                var color = 'rgb(' + scaleTo255(red).toString() + ', ' + 
+                                     scaleTo255(green).toString() + ', ' + 
+                                     scaleTo255(blue).toString() + ')';
 
-                break;
+                d3.select(room.node).style('fill', color);
+
               }
             }
-          } else {
-            d3.select(roomArea).style('fill', 'null');
           }
         }
         
@@ -99,13 +91,6 @@ angular.module('otaniemi3dApp')
               floorplan.svg = xml.documentElement;
               appendFloorplan(floorplan);
               parseRooms(floorplan);
-              
-              var i;
-              for (i = 0; i < Rooms.length; i++) {
-                if (Rooms[i].node) {
-                  setRoomColor(Rooms[i].node);
-                }
-              }
             }
           });
         }
@@ -222,7 +207,9 @@ angular.module('otaniemi3dApp')
           var i;
           for (i = 0; i < Rooms.length; i++) {
             addTooltip(Rooms[i]);
+            setRoomColor(Rooms[i]);
           }
+          
         }
 
         function updateRoomInfo(data) {
@@ -233,14 +220,15 @@ angular.module('otaniemi3dApp')
             var roomName = data[i].room.split(' ')[0];
 
             for (j = 0; j < Rooms.length; j++) {
-
               if (roomName === Rooms[j].name) {
                 Rooms[j].sensors.push({
                   id: data[i].sensorId,
                   type: data[i].type,
                   value: data[i].value
                 });
-
+                
+                setRoomColor(Rooms[j]);
+                
                 continue iterateRooms;
               }
             }
@@ -266,7 +254,7 @@ angular.module('otaniemi3dApp')
         });
         
         scope.$watch('data', function () {
-          if (scope.data && scope.plan.svg) {
+          if (scope.data) {
             updateRoomInfo(scope.data);
           }
         });     
