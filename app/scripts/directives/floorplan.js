@@ -16,14 +16,14 @@ angular.module('otaniemi3dApp')
       },
       link: function (scope, element, attrs) {
         
-        function setRoomColor (room) {
+        function setRoomColor(room) {
           
-          function scaleTo255 (percent) { 
-            return Math.round(255 * percent); 
+          function scaleTo255(percent) {
+            return Math.round(255 * percent);
           }
                 
           function scaleValueLowHigh(value, low, high) {
-            return 100 * Math.max(0, Math.min(1, (value - low)/(high - low)));
+            return 100 * Math.max(0, Math.min(1, (value - low) / (high - low)));
           }
 
           if (room.node) {
@@ -38,7 +38,7 @@ angular.module('otaniemi3dApp')
                 var max = 35;
 
                 var tempPercentage = Math.min((temp - min) / (max - min), 1);
-                tempPercentage = Math.max(tempPercentage, 0);
+                tempPercentage = 1 - Math.max(tempPercentage, 0);
 
                 //Change rgb value to hex value with leading zeros
     //                var hex = (255 - rgb).toString(16);
@@ -52,9 +52,7 @@ angular.module('otaniemi3dApp')
     //                0    255  255  75%
     //                0    0    255  100%
     //              
-                var red = 0;
-                var green = 0;
-                var blue = 0;
+                var red, green, blue = 0;
 
                 if (tempPercentage < 25) {
                   red = 100;
@@ -73,9 +71,8 @@ angular.module('otaniemi3dApp')
                   green = scaleValueLowHigh(tempPercentage, 100, 75);
                   blue = 100;
                 }
-
-                var color = 'rgb(' + scaleTo255(red).toString() + ', ' + 
-                                     scaleTo255(green).toString() + ', ' + 
+                var color = 'rgb(' + scaleTo255(red).toString() + ', ' +
+                                     scaleTo255(green).toString() + ', ' +
                                      scaleTo255(blue).toString() + ')';
 
                 d3.select(room.node).style('fill', color);
@@ -85,12 +82,13 @@ angular.module('otaniemi3dApp')
           }
         }
         
-        function getFloorplan (floorplan) {
+        function getFloorplan(floorplan) {
           d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
             if (xml != undefined) {
               floorplan.svg = xml.documentElement;
               appendFloorplan(floorplan);
               parseRooms(floorplan);
+              d3.select('svg').selectAll('title').remove();
             }
           });
         }
@@ -103,10 +101,15 @@ angular.module('otaniemi3dApp')
             .style('position', 'absolute')
             .style('z-index', '10')
             .style('visibility', 'hidden')
-            .text('Data not available for some reason');
+            .text('There is no data available fot this room.');
           
           function mouseOver () {
-            tooltip.text(room.name);
+            var toolTipString = room.name;
+            var i = 0;
+            for (i = 0; i < room.sensors.length; i++) {
+              toolTipString += '\n' + room.sensors[i].type + ': ' + room.sensors[i].value;
+            }
+            tooltip.text(toolTipString);
             tooltip.style('visibility', 'visible');              
           }
           
@@ -126,7 +129,7 @@ angular.module('otaniemi3dApp')
           }
         }
         
-        function appendFloorplan (floorplan) {
+        function appendFloorplan(floorplan) {
           while (element[0].firstChild) {
             element[0].removeChild(element[0].firstChild);
           }
@@ -143,7 +146,7 @@ angular.module('otaniemi3dApp')
           
           //Configure dragging and zooming behavior.
           function zoomHandler() {
-            svg.select('g').attr('transform', 'translate(' + d3.event.translate + 
+            svg.select('g').attr('transform', 'translate(' + d3.event.translate +
                                  ')scale(' + d3.event.scale + ')');
             floorplan.scale = d3.event.scale;
             floorplan.translate = d3.event.translate;
@@ -178,9 +181,9 @@ angular.module('otaniemi3dApp')
               var textHeight = textCoords.bottom - textCoords.top;
               var textWidth = textCoords.right - textCoords.left;
               var isInside = 
-                  textCoords.top + textHeight / 2 > roomCoords.top && 
-                  textCoords.top + textHeight / 2 < roomCoords.bottom && 
-                  textCoords.left + textWidth / 2 > roomCoords.left && 
+                  textCoords.top + textHeight / 2 > roomCoords.top &&
+                  textCoords.top + textHeight / 2 < roomCoords.bottom &&
+                  textCoords.left + textWidth / 2 > roomCoords.left &&
                   textCoords.left + textWidth / 2 < roomCoords.right;
               
               if (isInside) {
@@ -192,7 +195,7 @@ angular.module('otaniemi3dApp')
                     }
                   }
                   //roomNumber.node().textContent = roomNumber.node().textContent + roomText.textContent;
-                } else{
+                } else {
                   Rooms.push({
                     name: roomText.textContent,
                     node: roomArea,
@@ -203,13 +206,10 @@ angular.module('otaniemi3dApp')
               }
             });
           });
-          
-          var i;
-          for (i = 0; i < Rooms.length; i++) {
-            addTooltip(Rooms[i]);
-            setRoomColor(Rooms[i]);
-          }
-          
+          Rooms.forEach(function(room) {
+            addTooltip(room);
+          })
+          updateRoomInfo(scope.data);
         }
 
         function updateRoomInfo(data) {
@@ -218,7 +218,7 @@ angular.module('otaniemi3dApp')
           iterateRooms:
           for (i = 0; i < data.length; i++) {
             var roomName = data[i].room.split(' ')[0];
-
+            
             for (j = 0; j < Rooms.length; j++) {
               if (roomName === Rooms[j].name) {
                 Rooms[j].sensors.push({
@@ -226,22 +226,11 @@ angular.module('otaniemi3dApp')
                   type: data[i].type,
                   value: data[i].value
                 });
-                
                 setRoomColor(Rooms[j]);
                 
                 continue iterateRooms;
               }
             }
-
-            Rooms.push({
-              name: roomName,
-              node: null,
-              sensors: [{
-                id: data[i].sensorId,
-                type: data[i].type,
-                value: data[i].value
-              }],
-            });
           }
         }
         
