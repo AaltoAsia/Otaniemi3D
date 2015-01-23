@@ -1,6 +1,5 @@
 /* Space out content a bit */
 body {
-  padding-top: 0px;
   padding-bottom: 20px;
 }
 
@@ -95,6 +94,20 @@ body {
   list-style-type: none;
   margin: 20px;
   font-size: 32px;
+}
+
+#searchContainer {
+    margin-bottom:10px;
+}
+
+#searchContent {
+    width: 80%;
+    display:inline;
+}
+
+#searchDefault {
+    display:inline;
+    margin-bottom:3px;
 }
 
 /* Responsive: Portrait tablets and up */

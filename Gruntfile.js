@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
-
+  
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
@@ -138,7 +138,7 @@ module.exports = function (grunt) {
           src: [
             '.tmp',
             '<%= yeoman.dist %>/{,*/}*',
-            '!<%= yeoman.dist %>/.git*'
+            '!<%= yeoman.dist %>/.git/**'
           ]
         }]
       },
@@ -308,7 +308,9 @@ module.exports = function (grunt) {
             '*.html',
             'views/{,*/}*.html',
             'images/{,*/}*.{webp}',
-            'fonts/*'
+            'fonts/*',
+            'binGeo/*',
+            'floorplans/*'
           ]
         }, {
           expand: true,
@@ -352,6 +354,7 @@ module.exports = function (grunt) {
         singleRun: true
       }
     }
+      
   });
 
 

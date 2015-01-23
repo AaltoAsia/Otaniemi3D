@@ -16,6 +16,7 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
+    'ui.bootstrap',
     'ui.grid'
   ])
   .config(function ($routeProvider) {
@@ -43,4 +44,7 @@ angular
       .otherwise({
         redirectTo: '/home'
       });
+  })
+  .run(function() {
+    FastClick.attach(document.body);
   });

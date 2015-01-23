@@ -9,12 +9,15 @@
  */
 angular.module('otaniemi3dApp')
   .controller('HeaderController', function ($scope, $location) {
-   
 
-   // Check if current URL-location matches the highlighted item 
+
+   // Check if current URL-location matches the highlighted item
    //
-    $scope.isActive = function (viewLocation) { 
+    $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
-
+    $scope.isCollapsed = true;
+    $scope.$on('$routeChangeSuccess', function () {
+        $scope.isCollapsed = true;
+    });
   });
