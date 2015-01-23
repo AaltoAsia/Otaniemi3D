@@ -85,10 +85,14 @@ angular.module('otaniemi3dApp')
         function getFloorplan(floorplan) {
           d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
             if (xml != undefined) {
-              floorplan.svg = xml.documentElement;
-              appendFloorplan(floorplan);
-              parseRooms(floorplan);
-              d3.select('svg').selectAll('title').remove();
+              try {
+                floorplan.svg = xml.documentElement;
+                appendFloorplan(floorplan);
+                parseRooms(floorplan);
+              }
+              finally {
+                d3.select('svg').selectAll('title').remove();
+              }
             }
           });
         }
@@ -167,8 +171,7 @@ angular.module('otaniemi3dApp')
 
             var roomText = this;
 
-            //Check which room names overlap with room rectangles in svg and modify
-            //room rectangles to have room names in their titles.
+            //Check which room names overlap with room rectangles in svg.
             d3.select(floorplan.svg).selectAll('.' + floorplan.roomArea).each(function () {
 
               //roomArea is a d3 selection of the room (path or rect element)
