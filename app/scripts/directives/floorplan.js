@@ -37,8 +37,8 @@ angular.module('otaniemi3dApp')
                 var min = 15;
                 var max = 35;
 
-                var tempPercentage = Math.min((temp - min) / (max - min), 1);
-                tempPercentage = 1 - Math.max(tempPercentage, 0);
+                var tempPercentage = Math.min((temp - min) / (max - min), 1) * 100;
+                tempPercentage = 100 - Math.max(tempPercentage, 0);
 
                 //Change rgb value to hex value with leading zeros
     //                var hex = (255 - rgb).toString(16);
@@ -51,7 +51,7 @@ angular.module('otaniemi3dApp')
     //                0    255  0    50%
     //                0    255  255  75%
     //                0    0    255  100%
-    //              
+                
                 var red, green, blue = 0;
 
                 if (tempPercentage < 25) {
