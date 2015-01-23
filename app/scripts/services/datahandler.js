@@ -13,13 +13,13 @@ angular.module('otaniemi3dApp')
 
         var dataIsOk = function (data) {
             for (var i = 0; i < data.length; i = i + 1) {
-                if      (data[i].id       === undefined) return false;
-                else if (data[i].room     === undefined) return false;
-                else if (data[i].sensorId === undefined) return false;
-                else if (data[i].type     === undefined) return false;
-                else if (data[i].value    === undefined) return false;
+                if      (data[i].id       === undefined) { return false; }
+                else if (data[i].room     === undefined) { return false; }
+                else if (data[i].sensorId === undefined) { return false; }
+                else if (data[i].type     === undefined) { return false; }
+                else if (data[i].value    === undefined) { return false; }
 
-                else return true;
+                else { return true; }
             }
         };
 

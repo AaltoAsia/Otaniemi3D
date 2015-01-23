@@ -4,5 +4,7 @@
           ng-change="selectPlan()"
           ng-options="floor.name for floor in floorplans">
   </select>
-  <floorplan plan="selectedPlan" data="sensorData"></floorplan>
+  <div class="floorplan">
+    <floorplan plan="selectedPlan" data="sensorData"></floorplan>
+  </div>
 </div>

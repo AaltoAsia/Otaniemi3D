@@ -98,18 +98,16 @@ angular.module('otaniemi3dApp')
         function addTooltip(room) {
           var tooltip = d3.select('body')
             .append('div')
-            .style('position', 'absolute')
-            .style('z-index', '10')
-            .style('visibility', 'hidden')
-            .text('There is no data available fot this room.');
+            .attr('class','mousetooltip');
           
           function mouseOver () {
-            var toolTipString = room.name;
+            //Add room-specific information to the tooltip
+            tooltip.selectAll('p').remove();
+            tooltip.append('p').text('Room: ' + room.name);
             var i = 0;
             for (i = 0; i < room.sensors.length; i++) {
-              toolTipString += '\n' + room.sensors[i].type + ': ' + room.sensors[i].value;
+              tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
             }
-            tooltip.text(toolTipString);
             tooltip.style('visibility', 'visible');              
           }
           
@@ -118,7 +116,7 @@ angular.module('otaniemi3dApp')
           }
           
           function mouseOut () {
-            tooltip.style('visibility', 'hidden');
+            tooltip.style('visibility', null);
           }
 
           if (room.node) {

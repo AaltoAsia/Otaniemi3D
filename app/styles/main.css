@@ -80,11 +80,21 @@ body {
   border: 1px solid #e5e5e5;
 }
 
+.mousetooltip {
+  margin-top: 19px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  background: #A3CCCC;
+  z-index: 10;
+  position: absolute;
+  visibility: hidden;
+}
+
 .home-navs > li {
-    display:inline;
-    list-style-type: none;
-    margin: 20px;
-    font-size: 32px;
+  display:inline;
+  list-style-type: none;
+  margin: 20px;
+  font-size: 32px;
 }
 
 /* Responsive: Portrait tablets and up */
