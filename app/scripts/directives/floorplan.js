@@ -161,7 +161,7 @@ angular.module('otaniemi3dApp')
         }
         
         function parseRooms(floorplan) {
-          var isLetter = /[a-z]/i;
+          var isLetter = /^\w$/i;
 
           d3.select(floorplan.svg).selectAll('.' + floorplan.roomNumber).each(function () {
 
@@ -186,8 +186,8 @@ angular.module('otaniemi3dApp')
               if (isInside) {
                 if (isLetter.test(roomText.textContent)) {
                   var i;
-                  for (i = 0; i < Rooms; i++) {
-                    if (Rooms[i].name === roomText.textContent) {
+                  for (i = 0; i < Rooms.length; i++) {
+                    if (Rooms[i].node === roomArea) {
                       Rooms[i].name = Rooms[i].name + roomText.textContent;
                     }
                   }
