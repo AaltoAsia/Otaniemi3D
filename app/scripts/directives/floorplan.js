@@ -23,7 +23,7 @@ angular.module('otaniemi3dApp')
           }
                 
           function scaleValueLowHigh(value, low, high) {
-            return 100 * Math.max(0, Math.min(1, (value - low) / (high - low)));
+            return Math.max(0, Math.min(1, (value - low) / (high - low)));
           }
 
           if (room.node) {
@@ -37,40 +37,36 @@ angular.module('otaniemi3dApp')
                 var min = 15;
                 var max = 35;
 
-                var tempPercentage = Math.min((temp - min) / (max - min), 1) * 100;
-                tempPercentage = 100 - Math.max(tempPercentage, 0);
+                var tempPercentage = Math.min((temp - min) / (max - min), 1);
+                tempPercentage = 1.0 - Math.max(tempPercentage, 0);
 
-                //Change rgb value to hex value with leading zeros
-    //                var hex = (255 - rgb).toString(16);
-    //                if (hex.length === 1) {
-    //                  hex = '0' + hex;
-    //                }
-    //                r    g    b
-    //                255  0    0    0%
-    //                255  255  0    25%
-    //                0    255  0    50%
-    //                0    255  255  75%
-    //                0    0    255  100%
+                // r    g    b    temp
+                // 255  0    0    0%
+                // 255  255  0    25%
+                // 0    255  0    50%
+                // 0    255  255  75%
+                // 0    0    255  100%
                 
-                var red, green, blue = 0;
+                var red, green, blue;
 
-                if (tempPercentage < 25) {
-                  red = 100;
-                  green = scaleValueLowHigh(tempPercentage, 0, 25);
+                if (tempPercentage < 0.25) {
+                  red = 1.0;
+                  green = scaleValueLowHigh(tempPercentage, 0, 0.25);
                   blue = 0;
-                } else if (tempPercentage < 50) {
-                  red = scaleValueLowHigh(tempPercentage, 50, 25);
-                  green = 100;
+                } else if (tempPercentage < 0.50) {
+                  red = scaleValueLowHigh(tempPercentage, 0.50, 0.25);
+                  green = 1.0;
                   blue = 0;
-                } else if (tempPercentage < 75) {
+                } else if (tempPercentage < 0.75) {
                   red = 0;
-                  green = 100;
-                  blue = scaleValueLowHigh(tempPercentage, 50, 75);
+                  green = 1.0;
+                  blue = scaleValueLowHigh(tempPercentage, 0.50, 0.75);
                 } else {
                   red = 0;
-                  green = scaleValueLowHigh(tempPercentage, 100, 75);
-                  blue = 100;
+                  green = scaleValueLowHigh(tempPercentage, 1.0, 0.75);
+                  blue = 1.0;
                 }
+                
                 var color = 'rgb(' + scaleTo255(red).toString() + ', ' +
                                      scaleTo255(green).toString() + ', ' +
                                      scaleTo255(blue).toString() + ')';
