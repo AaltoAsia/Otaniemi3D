@@ -107,7 +107,7 @@ angular.module('otaniemi3dApp')
           function mouseOver () {
             //Add room-specific information to the tooltip
             tooltip.append('p').text('Room: ' + room.name);
-            console.log(room.sensors);
+            
             var i = 0;
             for (i = 0; i < room.sensors.length; i++) {
               tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
