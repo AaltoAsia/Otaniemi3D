@@ -96,19 +96,24 @@ angular.module('otaniemi3dApp')
         //Add mouseover functionality (coloring the element) for room
         //Source : http://bl.ocks.org/biovisualize/1016860
         function addTooltip(room) {
-          var tooltip = d3.select('body')
-            .append('div')
-            .attr('class','mousetooltip');
+          var tooltip = d3.select('.mousetooltip');
+          
+          if (tooltip.empty()) {
+            tooltip = d3.select('body')
+              .append('div')
+              .attr('class','mousetooltip');
+          }
           
           function mouseOver () {
             //Add room-specific information to the tooltip
-            tooltip.selectAll('p').remove();
             tooltip.append('p').text('Room: ' + room.name);
+            console.log(room.sensors);
             var i = 0;
             for (i = 0; i < room.sensors.length; i++) {
               tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
             }
-            tooltip.style('visibility', 'visible');              
+            
+            tooltip.style('visibility', 'visible');
           }
           
           function mouseMove () {
@@ -116,7 +121,9 @@ angular.module('otaniemi3dApp')
           }
           
           function mouseOut () {
-            tooltip.style('visibility', null);
+            tooltip
+              .selectAll('p').remove()
+              .style('visibility', null);
           }
 
           if (room.node) {
@@ -211,18 +218,36 @@ angular.module('otaniemi3dApp')
 
         function updateRoomInfo(data) {
           var i, j;
-
+          var sensorUpdated = false;
+          
           iterateRooms:
           for (i = 0; i < data.length; i++) {
             var roomName = data[i].room.split(' ')[0];
             
             for (j = 0; j < Rooms.length; j++) {
               if (roomName === Rooms[j].name) {
-                Rooms[j].sensors.push({
-                  id: data[i].sensorId,
-                  type: data[i].type,
-                  value: data[i].value
-                });
+                
+                var k;
+                //Check if sensor already exists
+                for (k = 0; Rooms[j].sensors.length; k++) {
+                  if (Rooms[j].sensors[k].id === data[i].sensorId) {
+                    Rooms[j].sensors[k].value = data[i].value;
+                    sensorUpdated = true;
+                  }
+                }
+                
+                //If sensor doesn't yet exist in local room database then add it
+                if (!sensorUpdated) {
+                  Rooms[j].sensors.push({
+                    id: data[i].sensorId,
+                    type: data[i].type,
+                    value: data[i].value
+                  });
+                } else {
+                  //reset updated flag
+                  sensorUpdated = false;
+                }
+                
                 setRoomColor(Rooms[j]);
                 
                 continue iterateRooms;
