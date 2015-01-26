@@ -16,12 +16,19 @@ angular.module('otaniemi3dApp')
       },
       link: function (scope, element, attrs) {
         
+        /*
+        * Set room color for a room according to its temperature.
+        * Color range is from blue to red and temperature range is from
+        * 15C to 35C.
+        */
         function setRoomColor(room) {
           
+          //Scale percentage to rgb value 0 - 255.
           function scaleTo255(percent) {
             return Math.round(255 * percent);
           }
-                
+          
+          //Translate value between low and high parameters to a percentage
           function scaleValueLowHigh(value, low, high) {
             return Math.max(0, Math.min(1, (value - low) / (high - low)));
           }
@@ -78,34 +85,41 @@ angular.module('otaniemi3dApp')
           }
         }
         
+        /*
+        * Download a new floorplan from server and append it to the page.
+        */
         function getFloorplan(floorplan) {
           d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
-            if (xml != undefined) {
+            if (xml !== undefined) {
               try {
                 floorplan.svg = xml.documentElement;
                 appendFloorplan(floorplan);
                 parseRooms(floorplan);
               }
               finally {
+                //Remove title elements so that the browser's built-in tooltip doesn't show
                 d3.select('svg').selectAll('title').remove();
               }
             }
           });
         }
         
-        //Add mouseover functionality (coloring the element) for room
-        //Source : http://bl.ocks.org/biovisualize/1016860
+        /*
+        * Add tooltip that shows room's sensor values.
+        * Source: http://bl.ocks.org/biovisualize/1016860
+        */
         function addTooltip(room) {
           var tooltip = d3.select('.mousetooltip');
           
+          //Check if tooltip div element has already been created.
           if (tooltip.empty()) {
             tooltip = d3.select('body')
               .append('div')
               .attr('class','mousetooltip');
           }
           
+          //Add room-specific information to the tooltip and make tooltip visible
           function mouseOver () {
-            //Add room-specific information to the tooltip
             tooltip.append('p').text('Room: ' + room.name);
             
             var i = 0;
@@ -116,10 +130,12 @@ angular.module('otaniemi3dApp')
             tooltip.style('visibility', 'visible');
           }
           
+          //Make tooltip window follow mouse movement
           function mouseMove () {
             tooltip.style('top', (d3.event.pageY-10)+'px').style('left',(d3.event.pageX+10)+'px');
           }
           
+          //Empty tooltip and make it invisible
           function mouseOut () {
             tooltip
               .selectAll('p').remove()
@@ -134,6 +150,9 @@ angular.module('otaniemi3dApp')
           }
         }
         
+        /*
+        * Append floorplan to the html element and register zoom and drag listener.
+        */
         function appendFloorplan(floorplan) {
           while (element[0].firstChild) {
             element[0].removeChild(element[0].firstChild);
@@ -167,17 +186,22 @@ angular.module('otaniemi3dApp')
           
         }
         
+        /*
+        * Read rooms and their html elements from the floorplan svg
+        * and save data to the Rooms service.
+        */
         function parseRooms(floorplan) {
           var isLetter = /^\w$/i;
 
           d3.select(floorplan.svg).selectAll('.' + floorplan.roomNumber).each(function () {
 
+            //roomText is the d3 selection of the text element that has room number
             var roomText = this;
 
-            //Check which room names overlap with room rectangles in svg.
+            //Iterate through room areas to check if they overlap with the text element
             d3.select(floorplan.svg).selectAll('.' + floorplan.roomArea).each(function () {
 
-              //roomArea is a d3 selection of the room (path or rect element)
+              //roomArea is the d3 selection of the room (path or rect element)
               var roomArea = this;
 
               var textCoords = roomText.getBoundingClientRect();
@@ -190,7 +214,9 @@ angular.module('otaniemi3dApp')
                   textCoords.left + textWidth / 2 > roomCoords.left &&
                   textCoords.left + textWidth / 2 < roomCoords.right;
               
+              //Check if room name overlaps with room rectangle in svg.
               if (isInside) {
+                //If text element is one letter then it should be appended to room number
                 if (isLetter.test(roomText.textContent)) {
                   var i;
                   for (i = 0; i < Rooms.length; i++) {
@@ -198,24 +224,30 @@ angular.module('otaniemi3dApp')
                       Rooms[i].name = Rooms[i].name + roomText.textContent;
                     }
                   }
-                  //roomNumber.node().textContent = roomNumber.node().textContent + roomText.textContent;
+                //Else add a new room to the Rooms service
                 } else {
                   Rooms.push({
                     name: roomText.textContent,
                     node: roomArea,
                     sensors: []
                   });
-                  //roomNumber.node().textContent = roomText.textContent;
                 }
               }
             });
           });
+          
+          //Add tooltip to each room
           Rooms.forEach(function(room) {
             addTooltip(room);
-          })
+          });
+          
+          //Update sensor info for each room  
           updateRoomInfo(scope.data);
         }
 
+        /*
+        * Update or add new sensor data to rooms.
+        */
         function updateRoomInfo(data) {
           var i, j;
           var sensorUpdated = false;
@@ -236,7 +268,7 @@ angular.module('otaniemi3dApp')
                   }
                 }
                 
-                //If sensor doesn't yet exist in local room database then add it
+                //If sensor doesn't yet exist in Rooms service then add it
                 if (!sensorUpdated) {
                   Rooms[j].sensors.push({
                     id: data[i].sensorId,
@@ -244,7 +276,7 @@ angular.module('otaniemi3dApp')
                     value: data[i].value
                   });
                 } else {
-                  //reset updated flag
+                  //Reset updated flag
                   sensorUpdated = false;
                 }
                 
@@ -256,6 +288,11 @@ angular.module('otaniemi3dApp')
           }
         }
         
+        /*
+        * Watch for changes in twodviewcontroller's $scope.floorplan and
+        * show it in the 2dview. Also downloads the selected floorplan if
+        * it hasn't already been downloaded.
+        */
         scope.$watch('plan', function () {
           if (scope.plan.svg === null) {
             getFloorplan(scope.plan);
@@ -264,6 +301,10 @@ angular.module('otaniemi3dApp')
           }
         });
         
+        /*
+        * Watch for sensor data updates and update every room's
+        * info accordingly.
+        */
         scope.$watch('data', function () {
           if (scope.data) {
             updateRoomInfo(scope.data);
