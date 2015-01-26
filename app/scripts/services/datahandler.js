@@ -12,12 +12,14 @@ angular.module('otaniemi3dApp')
         // AngularJS will instantiate a singleton by calling "new" on this function
 
         var dataIsOk = function (data) {
-            for (var i = 0; i < data.length; i++) {
-                if      (data[i].id       === undefined) return false;
-                else if (data[i].room     === undefined) return false;
-                else if (data[i].sensorId === undefined) return false;
-                else if (data[i].type     === undefined) return false;
-                else return data[i].value !== undefined;
+            for (var i = 0; i < data.length; i = i + 1) {
+                if      (data[i].id       === undefined) { return false; }
+                else if (data[i].room     === undefined) { return false; }
+                else if (data[i].sensorId === undefined) { return false; }
+                else if (data[i].type     === undefined) { return false; }
+                else if (data[i].value    === undefined) { return false; }
+
+                else { return true; }
             }
         };
 
