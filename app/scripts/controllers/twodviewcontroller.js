@@ -13,6 +13,7 @@ angular.module('otaniemi3dApp')
     $scope.floorplans = Floorplans;
     $scope.sensorData = null;
   
+    //Select default floorplan which is defined in Floorplans service
     var i;
     for (i = 0; i < $scope.floorplans.length; i++) {
       if ($scope.floorplans[i].isSelected) {
@@ -20,6 +21,9 @@ angular.module('otaniemi3dApp')
       }
     }
 
+    /*
+    * Fetch sensor data from the server.
+    */
     Datahandler.fetchData().then(
       function (data) {
         $scope.sensorData = data;
@@ -29,6 +33,9 @@ angular.module('otaniemi3dApp')
       }
     );
   
+    /*
+    * Change current floorplan to the one that user has selected.
+    */
     $scope.selectPlan = function () {
       var i;
       for (i = 0; i < $scope.floorplans.length; i++) {
