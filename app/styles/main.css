@@ -128,3 +128,13 @@ body {
     border-bottom: 0;
   }
 }
+.floorplan {
+    height: 73vh;
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+    .floorplan {
+        height: 77vh;
+    }
+}
