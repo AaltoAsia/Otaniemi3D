@@ -20,13 +20,11 @@
           typeahead-on-select="onSelect($room)"
         >
         
-        <button class="btn btn-default" id="searchDefault" ng-click="changeView('vp0')">
-          Default view
+        <button class="btn btn-default" id="searchDefault" ng-click="debug">
+          Debug
         </button>
         
       </div>
   
-  <div class="floorplan">
-    <floorplan plan="selectedPlan" data="sensorData"></floorplan>
-  </div>
+  <floorplan plan="selectedPlan" data="sensorData"></floorplan>
 </div>

@@ -7,7 +7,7 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('floorplan', ['Rooms', function (Rooms) {
+  .directive('floorplan', ['Rooms', 'Floorplans', function (Rooms, Floorplans) {
     return {
       restrict: 'EA',
       scope: {
@@ -15,6 +15,78 @@ angular.module('otaniemi3dApp')
         data: '='
       },
       link: function (scope, element, attrs) {
+        
+        /*
+        * Containers for floor plans. Parser container is used only
+        * for parsing room info and isn't shown on the page.
+        */
+        var floorplanContainer = {
+          class: 'floorplan',
+          width: '100%',
+          height: '100%'
+        };
+        
+        var parserContainer = {
+          class: 'parser',
+          width: '0px',
+          height: '0px'
+        };
+        
+        var defaultFloorplan = scope.plan;
+        
+        /*
+        * Download and show default floorplan and then download 
+        * other floorplans asynchronously.
+        */
+        var firstFloorplan = getDefaultFloorplan();
+        firstFloorplan.on('load', getOtherFloorplans());
+        
+        /*
+        * Download a new floorplan from server and append it to the page.
+        */
+        function getDefaultFloorplan() {
+          var floorplan = defaultFloorplan;
+          
+          return d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
+            if (xml !== undefined) {
+              try {
+                floorplan.svg = xml.documentElement;
+                appendFloorplan(floorplan, floorplanContainer);
+                parseRooms(floorplan);
+              }
+              finally {
+                //Remove title elements so that the browser's built-in tooltip doesn't show
+                d3.select('.' + floorplanContainer.class).selectAll('title').remove();
+              }
+            }
+          });
+        }
+        
+        /*
+        * Download remaining floorplans and parse their room info.
+        */
+        function getOtherFloorplans() {
+          var i;
+          for (i = 0; i < Floorplans.length; i++) {
+            var floorplan = Floorplans[i];
+            
+            if (floorplan !== defaultFloorplan) {
+              d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
+                if (xml !== undefined) {
+                  try {
+                    floorplan.svg = xml.documentElement;
+                    appendFloorplan(floorplan, parserContainer);
+                    parseRooms(floorplan);
+                  }
+                  finally {
+                    //Remove title elements so that the browser's built-in tooltip doesn't show
+                    d3.select('.' + parserContainer.class).selectAll('title').remove();
+                  }
+                }
+              });
+            }
+          }
+        }
         
         /*
         * Set room color for a room according to its temperature.
@@ -86,25 +158,6 @@ angular.module('otaniemi3dApp')
         }
         
         /*
-        * Download a new floorplan from server and append it to the page.
-        */
-        function getFloorplan(floorplan) {
-          d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
-            if (xml !== undefined) {
-              try {
-                floorplan.svg = xml.documentElement;
-                appendFloorplan(floorplan);
-                parseRooms(floorplan);
-              }
-              finally {
-                //Remove title elements so that the browser's built-in tooltip doesn't show
-                d3.select('svg').selectAll('title').remove();
-              }
-            }
-          });
-        }
-        
-        /*
         * Add tooltip that shows room's sensor values.
         * Source: http://bl.ocks.org/biovisualize/1016860
         */
@@ -153,12 +206,19 @@ angular.module('otaniemi3dApp')
         /*
         * Append floorplan to the html element and register zoom and drag listener.
         */
-        function appendFloorplan(floorplan) {
+        function appendFloorplan(floorplan, container) {
           while (element[0].firstChild) {
             element[0].removeChild(element[0].firstChild);
           }
           
-          var svg = element[0].appendChild(floorplan.svg);
+          var containerElement = d3.select(element[0])
+            .append('div')
+            .attr('class', container.class)
+            .attr('width', container.width)
+            .attr('height', container.height);
+          
+          var svg = containerElement.node()
+            .appendChild(floorplan.svg);
           
           svg = d3.select(svg)
             .attr('width', '100%')
@@ -293,10 +353,8 @@ angular.module('otaniemi3dApp')
         * it hasn't already been downloaded.
         */
         scope.$watch('plan', function () {
-          if (scope.plan.svg === null) {
-            getFloorplan(scope.plan);
-          } else {
-            appendFloorplan(scope.plan);
+          if (scope.plan.svg !== null) {
+            appendFloorplan(scope.plan, floorplanContainer);
           }
         });
         
