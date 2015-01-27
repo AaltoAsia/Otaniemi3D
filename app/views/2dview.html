@@ -1,9 +1,31 @@
 <div class="jumbotron">  
-  Select floor plan
-  <select ng-model="selectedPlan"
-          ng-change="selectPlan()"
-          ng-options="floor.name for floor in floorplans">
-  </select>
+  <div>
+    <form>
+      Select floor plan
+      <select ng-model="selectedPlan"
+              ng-change="selectPlan()"
+              ng-options="floor.name for floor in floorplans">
+      </select>
+    </form>
+  </div>
+  
+  <div id="searchContainer">
+        
+        <input id="searchContent" 
+          type="text" 
+          ng-model="searchString" 
+          placeholder="Search for room..." 
+          typeahead="room as room.name for room in rooms | filter:{name:$viewValue} | limitTo:8" 
+          class="form-control" 
+          typeahead-on-select="onSelect($room)"
+        >
+        
+        <button class="btn btn-default" id="searchDefault" ng-click="changeView('vp0')">
+          Default view
+        </button>
+        
+      </div>
+  
   <div class="floorplan">
     <floorplan plan="selectedPlan" data="sensorData"></floorplan>
   </div>

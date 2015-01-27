@@ -8,10 +8,12 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('twodview', function ($scope, Datahandler, Floorplans) {
+  .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms) {
 
     $scope.floorplans = Floorplans;
     $scope.sensorData = null;
+    $scope.rooms = Rooms;
+    $scope.searchString = '';
   
     //Select default floorplan which is defined in Floorplans service
     var i;
@@ -49,4 +51,13 @@ angular.module('otaniemi3dApp')
       }
     };
     
+    $scope.highlightRoom = function(room) {
+      
+    }
+  
+    $scope.onSelect = function($room) {
+      $scope.highlightRoom($room);
+    };
+  
+  
   });

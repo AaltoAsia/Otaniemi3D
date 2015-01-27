@@ -252,7 +252,6 @@ angular.module('otaniemi3dApp')
           var i, j;
           var sensorUpdated = false;
           
-          iterateRooms:
           for (i = 0; i < data.length; i++) {
             var roomName = data[i].room.split(' ')[0];
             
@@ -282,7 +281,7 @@ angular.module('otaniemi3dApp')
                 
                 setRoomColor(Rooms[j]);
                 
-                continue iterateRooms;
+                break;
               }
             }
           }
