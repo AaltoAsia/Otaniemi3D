@@ -128,13 +128,34 @@ body {
     border-bottom: 0;
   }
 }
-.floorplan {
-    height: 73vh;
-}
 
-/* Small Devices, Tablets */
+/* Increase the height of floorplan slightly for small Devices and Tablets (footer will disappear)*/
 @media only screen and (max-width : 768px) {
     .floorplan {
-        height: 77vh;
+        height: 78vh;
+    }
+    .floorplan-fullscreen {
+        height: 92.5vh;
+    }
+	.myGrid {
+        height: 76.5vh;
+    }
+}
+	.fullscreen-button {
+		position:fixed;
+        margin-top: 1vh;
+        margin-left: 1vh;
+	}
+
+/* Increase the height of grid slightly for small Devices and Tablets (footer will disappear) */
+@media only screen and (min-width : 769px) {
+    .myGrid {
+        height: 83vh;
+    }
+	.floorplan {
+		height: 80vh;
+	}
+	.floorplan-fullscreen {
+        height: 90vh;
     }
 }

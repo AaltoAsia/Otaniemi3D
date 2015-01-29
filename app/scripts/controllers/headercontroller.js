@@ -17,6 +17,8 @@ angular.module('otaniemi3dApp')
         return viewLocation === $location.path();
     };
     $scope.isCollapsed = true;
+    $scope.fullscreen = false;
+    
     $scope.$on('$routeChangeSuccess', function () {
         $scope.isCollapsed = true;
     });

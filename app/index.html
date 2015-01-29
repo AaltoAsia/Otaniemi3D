@@ -2,7 +2,7 @@
 <html class="no-js">
 <head>
     <title>Otaniemi3d</title>
-    <meta charset="utf-8" name="viewport" content="width=device-width, user-scalable=no" />
+    <meta charset="utf-8" name="viewport" content="width=device-width" />
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -21,9 +21,9 @@
 <![endif]-->
 
 <!-- Add your site or application content here -->
-<header>
+<header ng-controller="HeaderController" ng-hide="fullscreen">
     <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid" ng-controller="HeaderController">
+        <div class="container-fluid" >
 
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">

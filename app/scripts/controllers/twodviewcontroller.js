@@ -12,6 +12,7 @@ angular.module('otaniemi3dApp')
 
     $scope.floorplans = Floorplans;
     $scope.sensorData = null;
+    $scope.floorplanClass = 'floorplan';
   
     //Select default floorplan which is defined in Floorplans service
     var i;
@@ -20,6 +21,18 @@ angular.module('otaniemi3dApp')
         $scope.selectedPlan = $scope.floorplans[i];
       }
     }
+
+    $scope.toggleFullscreen = function(){
+        $scope.$$prevSibling.fullscreen = !$scope.$$prevSibling.fullscreen;
+        if ($scope.floorplanClass === 'floorplan') {
+            $scope.floorplanClass = 'floorplan-fullscreen';
+        }
+        else {
+            $scope.floorplanClass= 'floorplan';
+        }
+
+    };
+
 
     /*
     * Fetch sensor data from the server.

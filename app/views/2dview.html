@@ -3,6 +3,7 @@
           ng-change="selectPlan()"
           ng-options="floor.name for floor in floorplans">
   </select>
-  <div class="floorplan">
-    <floorplan plan="selectedPlan" data="sensorData"></floorplan>
+  <div ng-class="floorplanClass">
+    <button type="button" ng-click="toggleFullscreen()" class="btn btn-primary fullscreen-button">Fullscreen</button>
+    <floorplan class="fp" plan="selectedPlan" data="sensorData"></floorplan>
   </div>
