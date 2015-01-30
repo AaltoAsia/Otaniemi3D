@@ -142,11 +142,10 @@ body {
     }
 }
 	.fullscreen-button {
-		position:fixed;
+		position:absolute;
         margin-top: 1vh;
         margin-left: 1vh;
 	}
-
 /* Increase the height of grid slightly for small Devices and Tablets (footer will disappear) */
 @media only screen and (min-width : 769px) {
     .myGrid {
