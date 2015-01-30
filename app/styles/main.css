@@ -128,3 +128,8 @@ body {
     border-bottom: 0;
   }
 }
+/*Remove home page white space wrapping*/
+
+.no-wrap {
+    white-space: nowrap;
+}
