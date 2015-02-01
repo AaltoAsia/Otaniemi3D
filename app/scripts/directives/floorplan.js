@@ -38,28 +38,36 @@ angular.module('otaniemi3dApp')
         * Download and show default floorplan and then download 
         * other floorplans asynchronously.
         */
-        var firstFloorplan = getDefaultFloorplan();
-        firstFloorplan.on('load', getOtherFloorplans());
+        var loadEvent = new Event('loaded');
+        document.addEventListener('loaded', function(e){updateRoomInfo(scope.data)});
+        getDefaultFloorplan();
+        getOtherFloorplans();
+        
+        /*
+        * Use the given object to determine the svg to be fetched and append it according to the argument container
+        */
+        function getFloorplan(floorplan, container){
+          d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
+            if (xml !== undefined) {
+              try {
+                floorplan.svg = xml.documentElement;
+                appendFloorplan(floorplan, container);
+                parseRooms(floorplan);
+              }
+              finally {
+                //Remove title elements so that the browser's built-in tooltip doesn't show
+                d3.select('.' + container.class).selectAll('title').remove();
+                document.dispatchEvent(loadEvent);
+              }
+            }
+          });
+        }
         
         /*
         * Download a new floorplan from server and append it to the page.
         */
         function getDefaultFloorplan() {
-          var floorplan = defaultFloorplan;
-          
-          return d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
-            if (xml !== undefined) {
-              try {
-                floorplan.svg = xml.documentElement;
-                appendFloorplan(floorplan, floorplanContainer);
-                parseRooms(floorplan);
-              }
-              finally {
-                //Remove title elements so that the browser's built-in tooltip doesn't show
-                d3.select('.' + floorplanContainer.class).selectAll('title').remove();
-              }
-            }
-          });
+          getFloorplan(defaultFloorplan, floorplanContainer);
         }
         
         /*
@@ -71,19 +79,7 @@ angular.module('otaniemi3dApp')
             var floorplan = Floorplans[i];
             
             if (floorplan !== defaultFloorplan) {
-              d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
-                if (xml !== undefined) {
-                  try {
-                    floorplan.svg = xml.documentElement;
-                    appendFloorplan(floorplan, parserContainer);
-                    parseRooms(floorplan);
-                  }
-                  finally {
-                    //Remove title elements so that the browser's built-in tooltip doesn't show
-                    d3.select('.' + parserContainer.class).selectAll('title').remove();
-                  }
-                }
-              });
+              getFloorplan(floorplan, parserContainer);
             }
           }
         }
@@ -104,7 +100,7 @@ angular.module('otaniemi3dApp')
           function scaleValueLowHigh(value, low, high) {
             return Math.max(0, Math.min(1, (value - low) / (high - low)));
           }
-
+          
           if (room.node) {
             var i;
             for (i = 0; i < room.sensors.length; i++) {
@@ -300,27 +296,22 @@ angular.module('otaniemi3dApp')
           Rooms.forEach(function(room) {
             addTooltip(room);
           });
-          
-          //Update sensor info for each room  
-          updateRoomInfo(scope.data);
         }
 
         /*
-        * Update or add new sensor data to rooms.
+        * Update or add new sensor data to rooms, and then color the rooms according to the data.
         */
         function updateRoomInfo(data) {
+          console.trace();
           var i, j;
           var sensorUpdated = false;
-          
           for (i = 0; i < data.length; i++) {
             var roomName = data[i].room.split(' ')[0];
-            
             for (j = 0; j < Rooms.length; j++) {
               if (roomName === Rooms[j].name) {
-                
                 var k;
                 //Check if sensor already exists
-                for (k = 0; Rooms[j].sensors.length; k++) {
+                for (k = 0; k < Rooms[j].sensors.length; k++) {
                   if (Rooms[j].sensors[k].id === data[i].sensorId) {
                     Rooms[j].sensors[k].value = data[i].value;
                     sensorUpdated = true;
