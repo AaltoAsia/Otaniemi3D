@@ -22,14 +22,12 @@ angular.module('otaniemi3dApp')
         */
         var floorplanContainer = {
           class: 'floorplan',
-          width: '100%',
-          height: '100%'
+          display: 'block'
         };
         
         var parserContainer = {
           class: 'parser',
-          width: '0px',
-          height: '0px'
+          display: 'none'
         };
         
         var defaultFloorplan = scope.plan;
@@ -78,7 +76,7 @@ angular.module('otaniemi3dApp')
           for (i = 0; i < Floorplans.length; i++) {
             var floorplan = Floorplans[i];
             
-            if (floorplan !== defaultFloorplan) {
+            if (floorplan !== defaultFloorplan && floorplan.svg === null) {
               getFloorplan(floorplan, parserContainer);
             }
           }
@@ -203,43 +201,53 @@ angular.module('otaniemi3dApp')
         * Append floorplan to the html element and register zoom and drag listener.
         */
         function appendFloorplan(floorplan, container) {
-          while (element[0].firstChild) {
-            element[0].removeChild(element[0].firstChild);
+          //Container tells if svg should be visible or if it's only appended
+          //for room info parsing
+          var containerElement = d3.select(element[0]).select('.' + container.class);
+          
+          //If container doesn't exist create a new
+          if (containerElement.empty()) {
+            containerElement = d3.select(element[0])
+              .append('div')
+              .attr('class', container.class)
+              .style('display', container.display);
           }
           
-          var containerElement = d3.select(element[0])
-            .append('div')
-            .attr('class', container.class)
-            .attr('width', container.width)
-            .attr('height', container.height);
+          var containerNode = containerElement.node();
           
-          var svg = containerElement.node()
+          //Empty container from old floorplan
+          while (containerNode.firstChild) {
+            containerNode.removeChild(containerNode.firstChild);
+          }
+          
+          //Add new floorplan
+          var svg = containerNode
             .appendChild(floorplan.svg);
           
-          svg = d3.select(svg)
-            .attr('width', '100%')
-            .attr('height', '100%')
-            .attr('pointer-events', 'all');
+          //Execute if the floorplan is supposed to be seen
+          if (container.display !== 'none') {
+            svg = d3.select(svg)
+              .attr('width', '100%')
+              .attr('height', '100%')
+              .attr('pointer-events', 'all');
 
-          //Remove pointer-events from text elements
-          svg.selectAll('text').attr('pointer-events', 'none');
-          
-          //Configure dragging and zooming behavior.
-          function zoomHandler() {
-            svg.select('g').attr('transform', 'translate(' + d3.event.translate +
-                                 ')scale(' + d3.event.scale + ')');
-            floorplan.scale = d3.event.scale;
-            floorplan.translate = d3.event.translate;
+            //Remove pointer-events from text elements
+            svg.selectAll('text').attr('pointer-events', 'none');
+
+            //Configure dragging and zooming behavior.
+            var zoomListener = d3.behavior.zoom()
+              .scaleExtent([0.5, 10])
+              .scale(floorplan.scale)
+              .translate(floorplan.translate)
+              .on('zoom', function() {
+                svg.select('g').attr('transform', 'translate(' + d3.event.translate +
+                                     ')scale(' + d3.event.scale + ')');
+                floorplan.scale = d3.event.scale;
+                floorplan.translate = d3.event.translate;
+              });
+            
+            svg.call(zoomListener);
           }
-
-          var zoomListener = d3.behavior.zoom()
-            .scaleExtent([0.5, 10])
-            .scale(floorplan.scale)
-            .translate(floorplan.translate)
-            .on('zoom', zoomHandler);
-
-          svg.call(zoomListener);
-          
         }
         
         /*
@@ -249,6 +257,8 @@ angular.module('otaniemi3dApp')
         function parseRooms(floorplan) {
           var isLetter = /^\w$/i;
 
+          d3.select('.' + parserContainer.class).style('display', 'block');
+          
           d3.select(floorplan.svg).selectAll('.' + floorplan.roomNumber).each(function () {
 
             //roomText is the d3 selection of the text element that has room number
@@ -259,7 +269,7 @@ angular.module('otaniemi3dApp')
 
               //roomArea is the d3 selection of the room (path or rect element)
               var roomArea = this;
-
+              
               var textCoords = roomText.getBoundingClientRect();
               var roomCoords = roomArea.getBoundingClientRect();
               var textHeight = textCoords.bottom - textCoords.top;
@@ -296,17 +306,24 @@ angular.module('otaniemi3dApp')
           Rooms.forEach(function(room) {
             addTooltip(room);
           });
+          
+          d3.select('.' + parserContainer.class).style('display', 'none');
         }
 
         /*
         * Update or add new sensor data to rooms, and then color the rooms according to the data.
         */
-        function updateRoomInfo(data) {
-          console.trace();
+        function updateRoomInfo(data) {        
+          if(!data) {
+            return;
+          }
+          
           var i, j;
           var sensorUpdated = false;
+          
           for (i = 0; i < data.length; i++) {
             var roomName = data[i].room.split(' ')[0];
+            
             for (j = 0; j < Rooms.length; j++) {
               if (roomName === Rooms[j].name) {
                 var k;
