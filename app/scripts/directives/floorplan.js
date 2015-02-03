@@ -37,14 +37,15 @@ angular.module('otaniemi3dApp')
         * other floorplans asynchronously.
         */
         var loadEvent = new Event('loaded');
-        document.addEventListener('loaded', function(e){updateRoomInfo(scope.data)});
+        var defaultLoadedEvent = new Event('defaultLoadedEvent');
+        document.addEventListener('loaded', function(e){updateRoomInfo(scope.data);});
+        document.addEventListener('defaultLoadedEvent', function(e){getOtherFloorplans();});
         getDefaultFloorplan();
-        getOtherFloorplans();
         
         /*
         * Use the given object to determine the svg to be fetched and append it according to the argument container
         */
-        function getFloorplan(floorplan, container){
+        function getFloorplan(floorplan, container, isDefault){
           d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
             if (xml !== undefined) {
               try {
@@ -56,6 +57,10 @@ angular.module('otaniemi3dApp')
                 //Remove title elements so that the browser's built-in tooltip doesn't show
                 d3.select('.' + container.class).selectAll('title').remove();
                 document.dispatchEvent(loadEvent);
+                if (isDefault)
+                {
+                  document.dispatchEvent(defaultLoadedEvent);
+                }              
               }
             }
           });
@@ -65,7 +70,7 @@ angular.module('otaniemi3dApp')
         * Download a new floorplan from server and append it to the page.
         */
         function getDefaultFloorplan() {
-          getFloorplan(defaultFloorplan, floorplanContainer);
+          getFloorplan(defaultFloorplan, floorplanContainer, true);
         }
         
         /*
@@ -77,7 +82,7 @@ angular.module('otaniemi3dApp')
             var floorplan = Floorplans[i];
             
             if (floorplan !== defaultFloorplan && floorplan.svg === null) {
-              getFloorplan(floorplan, parserContainer);
+              getFloorplan(floorplan, parserContainer, false);
             }
           }
         }
