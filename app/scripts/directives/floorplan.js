@@ -52,10 +52,10 @@ angular.module('otaniemi3dApp')
                 floorplan.svg = xml.documentElement;
                 appendFloorplan(floorplan, container);
                 parseRooms(floorplan);
+                //Remove title elements so that the browser's built-in tooltip doesn't show
+                d3.select('.' + floorplanContainer.class).selectAll('title').remove();
               }
               finally {
-                //Remove title elements so that the browser's built-in tooltip doesn't show
-                d3.select('.' + container.class).selectAll('title').remove();
                 document.dispatchEvent(loadEvent);
                 if (isDefault)
                 {
@@ -313,7 +313,11 @@ angular.module('otaniemi3dApp')
             addTooltip(room);
           });
           
-          var containerNode = d3.select('.' + parserContainer.class).node();
+          //Remove title elements so that the browser's built-in tooltip doesn't show
+          var container = d3.select('.' + parserContainer.class);
+          container.selectAll('title').remove();
+          
+          var containerNode = container.node();
           
           //Empty container from old floorplan
           while (containerNode.firstChild) {
