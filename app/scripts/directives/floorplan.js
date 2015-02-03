@@ -21,7 +21,7 @@ angular.module('otaniemi3dApp')
         * for parsing room info and isn't shown on the page.
         */
         var floorplanContainer = {
-          class: 'floorplan',
+          class: 'floorplanContainer',
           display: 'block'
         };
         
@@ -252,6 +252,7 @@ angular.module('otaniemi3dApp')
               });
             
             svg.call(zoomListener);
+            
           }
         }
         
@@ -312,7 +313,12 @@ angular.module('otaniemi3dApp')
             addTooltip(room);
           });
           
-          d3.select('.' + parserContainer.class).style('display', 'none');
+          var containerNode = d3.select('.' + parserContainer.class).node();
+          
+          //Empty container from old floorplan
+          while (containerNode.firstChild) {
+            containerNode.removeChild(containerNode.firstChild);
+          }
         }
 
         /*
