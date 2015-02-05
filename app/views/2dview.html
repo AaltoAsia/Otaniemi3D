@@ -1,9 +1,7 @@
-  Select floor plan
-  <select ng-model="selectedPlan"
-          ng-change="selectPlan()"
-          ng-options="floor.name for floor in floorplans">
-  </select>
   <div ng-class="floorplanClass">
-	<i ng-click="toggleFullscreen()" class="fa btn fullscreen-button" ng-class="buttonClass"></i>
+    <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i>
+    <div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}}</h4> </div>
+    <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i>
+    <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floorplans.length-1"></i>
     <floorplan class="fp" plan="selectedPlan" data="sensorData"></floorplan>
   </div>

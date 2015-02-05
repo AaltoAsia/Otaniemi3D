@@ -7,13 +7,13 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
     <!-- endbower -->
     <!-- endbuild -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css"/>
     <!-- endbuild -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
 
 </head>
 <body ng-app="otaniemi3dApp">
@@ -65,7 +65,7 @@
 <div class="container-fluid">
 
     <div ng-view=""></div>
-    <div class="footer hidden-sm hidden-xs">
+    <div class="footer hidden-sm hidden-xs" ng-hide="fullscreen">
         <p><span class="glyphicon glyphicon-heart"></span> Group 14 Software Development Project Course project 2014-2015.</p>
     </div>
 </div>
@@ -102,6 +102,7 @@
 <script src="bower_components/d3/d3.js"></script>
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script src="bower_components/fastclick/lib/fastclick.js"></script>
+<script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 

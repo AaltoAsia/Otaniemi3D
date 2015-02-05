@@ -17,7 +17,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'ui.bootstrap',
-    'ui.grid'
+    'ui.grid',
+    'angular-loading-bar'
   ])
   .config(function ($routeProvider) {
     $routeProvider

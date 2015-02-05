@@ -141,11 +141,24 @@ body {
         height: 76.5vh;
     }
 }
+/*CSS for button that makes the floorplan fullscreen*/
 	.fullscreen-button {
 		position:absolute;
         margin-top: 1vh;
         margin-left: 1vh;
+        float: left;
 	}
+    .previous-button {
+        position: absolute;
+        bottom: 5vh;
+        left: 10vh;
+    }
+    .next-button {
+        position: absolute;
+        bottom: 5vh;
+        right: 10vh;
+    }
+
 /* Increase the height of grid slightly for small Devices and Tablets (footer will disappear) */
 @media only screen and (min-width : 769px) {
     .myGrid {
@@ -157,4 +170,21 @@ body {
 	.floorplan-fullscreen {
         height: 90vh;
     }
+}
+
+.floorplan-caption {
+    left: 20%;
+    padding-bottom:30px;
+    right: 20%;
+    position: absolute;
+}
+.caption-text {
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Override the bootstrap top 3px CSS*/
+.glyphicon {
+    top: auto;
 }
