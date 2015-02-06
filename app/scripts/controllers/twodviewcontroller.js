@@ -13,6 +13,8 @@ angular.module('otaniemi3dApp')
         $scope.floorplans = Floorplans;
         $scope.sensorData = null;
         $scope.floorplanClass = 'floorplan';
+
+        /* These are ng-class definitions for buttons found in 2dview*/
         $scope.buttonClass = 'glyphicon glyphicon-resize-full';
         $scope.nextButtonClass = 'glyphicon glyphicon-arrow-right';
         $scope.previousButtonClass = 'glyphicon glyphicon-arrow-left';
@@ -26,6 +28,9 @@ angular.module('otaniemi3dApp')
             }
         }
 
+        // Toggle fullscreen button. It broadcasts to rootscope to change the view to fullscreen
+        // which in turn hides the footer and header. Also it changes the fullscreen button glyphicon
+        //
         $scope.toggleFullscreen = function(){
             $rootScope.fullscreen = !$rootScope.fullscreen;
             if ($scope.floorplanClass === 'floorplan') {
@@ -69,7 +74,9 @@ angular.module('otaniemi3dApp')
         };*/
 
         /*
-         * Change current floorplan to the one that user has selected.
+         * Change current floorplan to the previous of net floorplan
+         * direction is either 1 if the user pressed next button or -1
+         * if the user pressed previous button
          */
         $scope.selectPlan = function (direction) {
                 if (direction === 1) {

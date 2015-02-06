@@ -7,7 +7,7 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('floorplan', ['Rooms', function (Rooms) {
+  .directive('floorplan', ['Rooms', 'usSpinnerService', function (Rooms, usSpinnerService) {
     return {
       restrict: 'EA',
       scope: {
@@ -89,6 +89,7 @@ angular.module('otaniemi3dApp')
         * Download a new floorplan from server and append it to the page.
         */
         function getFloorplan(floorplan) {
+          usSpinnerService.spin('spinner-1'); //Start the spinner
           d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
             if (xml !== undefined) {
               try {
@@ -183,7 +184,7 @@ angular.module('otaniemi3dApp')
             .on('zoom', zoomHandler);
 
           svg.call(zoomListener);
-          
+          usSpinnerService.stop('spinner-1'); //floorplan loaded, hide the spinner
         }
         
         /*

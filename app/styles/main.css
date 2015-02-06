@@ -148,15 +148,23 @@ body {
         margin-left: 1vh;
         float: left;
 	}
+
+    /*Sets the CSS of right arrow, also known as next-button. There are distinct CSS definitions for
+    margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
     .previous-button {
         position: absolute;
         bottom: 5vh;
-        left: 10vh;
+        margin-bottom: 5vh;
+        left: 5vh;
     }
+
+    /*Sets the CSS of right arrow, also known as next-button. There are distinct CSS definitions for
+    margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
     .next-button {
         position: absolute;
         bottom: 5vh;
-        right: 10vh;
+        right: 5vh;
+        margin-bottom: 5vh;
     }
 
 /* Increase the height of grid slightly for small Devices and Tablets (footer will disappear) */
@@ -172,10 +180,10 @@ body {
     }
 }
 
+/* CSS-definitions for the caption that is on top of floorplan*/
 .floorplan-caption {
-    left: 20%;
-    padding-bottom:30px;
-    right: 20%;
+    left: 30%;
+    right: 30%;
     position: absolute;
 }
 .caption-text {

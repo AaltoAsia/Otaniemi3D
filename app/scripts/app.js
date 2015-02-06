@@ -18,7 +18,8 @@ angular
     'ngTouch',
     'ui.bootstrap',
     'ui.grid',
-    'angular-loading-bar'
+    'angular-loading-bar',
+    'angularSpinner'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -46,6 +47,9 @@ angular
         redirectTo: '/home'
       });
   })
+  .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+      cfpLoadingBarProvider.includeSpinner = false;
+  }])
   .run(function() {
     FastClick.attach(document.body);
   });
