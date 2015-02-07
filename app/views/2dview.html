@@ -1,18 +1,4 @@
-<div class="floorplanClass">
-
-<!--
-  <div>
-    <form>
-      Select floor plan
-      <select ng-model="selectedPlan"
-              ng-change="selectPlan()"
-              ng-options="floor.name for floor in floorplans">
-      </select>
-    </form>
-  </div>
--->
-  
-  <div id="searchContainer">
+<div id="searchContainer">
         
         <input id="searchContent" 
           type="text" 
@@ -27,7 +13,9 @@
           Debug
         </button>
         
-  </div>
+</div>
+
+<div ng-class="floorplanClass">
 
   <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->
   <div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floorplans.length}})</h4> </div> <!-- Caption of floorplan -->

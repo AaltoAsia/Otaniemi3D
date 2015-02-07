@@ -21,8 +21,8 @@ angular.module('otaniemi3dApp')
         * for parsing room info and isn't shown on the page.
         */
         var floorplanContainer = {
-          class: 'floorplanContainer',
-          display: 'block'
+          class: 'floorplan-container',
+          display: 'inline'
         };
         
         var parserContainer = {
@@ -319,7 +319,7 @@ angular.module('otaniemi3dApp')
           
           var containerNode = container.node();
           
-          if (containerNode == null) { return; }
+          if (containerNode === null) { return; }
           
           //Empty container from old floorplan
           while (containerNode.firstChild) {

@@ -10,9 +10,12 @@
 angular.module('otaniemi3dApp')
     .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope) {
 
+        var floorplanClass = 'floorplan';
+        var floorplanFullscreenClass = 'floorplan-fullscreen';
+  
         $scope.floorplans = Floorplans;
         $scope.sensorData = null;
-        $scope.floorplanClass = 'floorplan';
+        $scope.floorplanClass = floorplanClass;
         $scope.rooms = Rooms;
         $scope.searchString = '';
 
@@ -35,13 +38,13 @@ angular.module('otaniemi3dApp')
         //
         $scope.toggleFullscreen = function(){
             $rootScope.fullscreen = !$rootScope.fullscreen;
-            if ($scope.floorplanClass === 'floorplan') {
-                $scope.floorplanClass = 'floorplan-fullscreen';
+            if ($scope.floorplanClass === floorplanClass) {
+                $scope.floorplanClass = floorplanFullscreenClass;
                 $scope.buttonClass = ' glyphicon glyphicon-resize-small';
             }
             else {
-                $scope.floorplanClass= 'floorplan';
-                $scope.buttonClass = ' glyphicon glyphicon-resize-full';
+                $scope.floorplanClass= floorplanClass;
+                $scope.buttonClass = 'glyphicon glyphicon-resize-full';
             }
 
         };
@@ -97,7 +100,7 @@ angular.module('otaniemi3dApp')
 
         $scope.highlightRoom = function(item, model, label) {
       
-    	}
+    	};
   
   	    $scope.onSelect = function ($item, $model, $label) {
           $scope.$item = $item;
