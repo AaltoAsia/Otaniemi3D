@@ -40,7 +40,10 @@ angular.module('otaniemi3dApp')
         var defaultLoadedEvent = new Event('defaultLoadedEvent');
         document.addEventListener('loaded', function(e){updateRoomInfo(scope.data);});
         document.addEventListener('defaultLoadedEvent', function(e){getOtherFloorplans();});
-        getDefaultFloorplan();
+        
+        if (defaultFloorplan.svg === null) {
+          getDefaultFloorplan();
+        }
         
         /*
         * Use the given object to determine the svg to be fetched and append it according to the argument container
