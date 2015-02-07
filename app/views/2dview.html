@@ -1,10 +1,28 @@
-<div class="jumbotron">  
-  Select floor plan
-  <select ng-model="selectedPlan"
-          ng-change="selectPlan()"
-          ng-options="floor.name for floor in floorplans">
-  </select>
-  <div class="floorplan">
-    <floorplan plan="selectedPlan" data="sensorData"></floorplan>
-  </div>
+<div id="searchContainer">
+        
+        <input id="searchContent" 
+          type="text" 
+          ng-model="searchString" 
+          placeholder="Search for room..." 
+          typeahead="room as room.name for room in rooms | filter:{name:$viewValue} | limitTo:8" 
+          class="form-control" 
+          typeahead-on-select="onSelect($item, $model, $label)"
+        >
+        
+        <button class="btn btn-default" id="searchDefault" ng-click="debug">
+          Debug
+        </button>
+        
+</div>
+
+<div ng-class="floorplanClass">
+
+  <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->
+  <div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floorplans.length}})</h4> </div> <!-- Caption of floorplan -->
+  <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
+  <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floorplans.length-1"></i> <!-- button that loads up higher (aka next) floor -->
+  
+  
+  
+  <floorplan class="fp" plan="selectedPlan" data="sensorData"></floorplan> <!-- The actual floorplan -->
 </div>

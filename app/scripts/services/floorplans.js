@@ -12,8 +12,8 @@ angular.module('otaniemi3dApp')
     
     return [
       {
-        url: 'floorplans/Basement.svg',
-        name: 'Basement',
+        url: 'floorplans/floor1.svg',
+        name: 'Floor 1',
         roomNumber: 'st10',
         roomArea: 'st1',
         svg: null,
@@ -22,8 +22,8 @@ angular.module('otaniemi3dApp')
         scale: 1
       },
       {
-        url: 'floorplans/FloorPlan (1).svg',
-        name: 'Floor 1',
+        url: 'floorplans/floor2.svg',
+        name: 'Floor 2',
         roomNumber: 'st13',
         roomArea: 'st3',
         svg: null,
@@ -32,8 +32,8 @@ angular.module('otaniemi3dApp')
         scale: 1
       },
       {
-        url: 'floorplans/FloorPlan (2).svg',
-        name: 'Floor 2',
+        url: 'floorplans/floor3.svg',
+        name: 'Floor 3',
         roomNumber: 'st11',
         roomArea: 'st3',
         svg: null,
@@ -42,8 +42,8 @@ angular.module('otaniemi3dApp')
         scale: 1
       },
       {
-        url: 'floorplans/FloorPlan (3).svg',
-        name: 'Floor 3',
+        url: 'floorplans/floor4.svg',
+        name: 'Floor 4',
         roomNumber: 'st7',
         roomArea: 'st1',
         svg: null,
@@ -52,15 +52,15 @@ angular.module('otaniemi3dApp')
         scale: 1
       },
       {
-        url: 'floorplans/FloorPlan (4).svg',
-        name: 'Floor 4',
+        url: 'floorplans/floor5.svg',
+        name: 'Floor 5',
         roomNumber: 'st10',
         roomArea: 'st3',
         svg: null,
         isSelected: false,
         translate: [0,0],
         scale: 1
-      },
+      }
     ];
   
   });
