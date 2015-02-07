@@ -1,20 +1,19 @@
 <!doctype html>
 <html class="no-js">
 <head>
-    <meta charset="utf-8">
     <title>Otaniemi3d</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
+    <meta charset="utf-8" name="viewport" content="width=device-width" />
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
     <!-- endbower -->
     <!-- endbuild -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css"/>
     <!-- endbuild -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
 
 </head>
 <body ng-app="otaniemi3dApp">
@@ -23,9 +22,9 @@
 <![endif]-->
 
 <!-- Add your site or application content here -->
-<header>
+<header ng-controller="HeaderController" ng-hide="fullscreen">
     <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid" ng-controller="HeaderController">
+        <div class="container-fluid" >
 
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -58,16 +57,15 @@
 
 </header>
 
-<div class="container">
-
     <!--
      <div class="header">
        <h3 class="text-muted">Otaniemi3D - Building efficiency enhanced</h3>
      </div>
      -->
+<div class="container-fluid">
 
     <div ng-view=""></div>
-    <div class="footer">
+    <div class="footer hidden-sm hidden-xs" ng-hide="fullscreen">
         <p><span class="glyphicon glyphicon-heart"></span> Group 14 Software Development Project Course project 2014-2015.</p>
     </div>
 </div>
@@ -104,6 +102,7 @@
 <script src="bower_components/d3/d3.js"></script>
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script src="bower_components/fastclick/lib/fastclick.js"></script>
+<script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 

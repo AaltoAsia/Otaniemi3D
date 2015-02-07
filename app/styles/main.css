@@ -128,3 +128,71 @@ body {
     border-bottom: 0;
   }
 }
+
+/* Increase the height of floorplan slightly for small Devices and Tablets (footer will disappear)*/
+@media only screen and (max-width : 768px) {
+    .floorplan {
+        height: 78vh;
+    }
+    .floorplan-fullscreen {
+        height: 92.5vh;
+    }
+	.myGrid {
+        height: 76.5vh;
+    }
+}
+/*CSS for button that makes the floorplan fullscreen*/
+	.fullscreen-button {
+		position:absolute;
+        margin-top: 1vh;
+        margin-left: 1vh;
+        float: left;
+	}
+
+    /*Sets the CSS of right arrow, also known as next-button. There are distinct CSS definitions for
+    margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
+    .previous-button {
+        position: absolute;
+        bottom: 5vh;
+        margin-bottom: 5vh;
+        left: 5vh;
+    }
+
+    /*Sets the CSS of right arrow, also known as next-button. There are distinct CSS definitions for
+    margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
+    .next-button {
+        position: absolute;
+        bottom: 5vh;
+        right: 5vh;
+        margin-bottom: 5vh;
+    }
+
+/* Increase the height of grid slightly for small Devices and Tablets (footer will disappear) */
+@media only screen and (min-width : 769px) {
+    .myGrid {
+        height: 83vh;
+    }
+	.floorplan {
+		height: 80vh;
+	}
+	.floorplan-fullscreen {
+        height: 90vh;
+    }
+}
+
+/* CSS-definitions for the caption that is on top of floorplan*/
+.floorplan-caption {
+    left: 30%;
+    right: 30%;
+    position: absolute;
+}
+.caption-text {
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* Override the bootstrap top 3px CSS*/
+.glyphicon {
+    top: auto;
+}
