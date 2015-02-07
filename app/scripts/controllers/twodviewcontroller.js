@@ -51,12 +51,15 @@ angular.module('otaniemi3dApp')
       }
     };
     
-    $scope.highlightRoom = function(room) {
+    $scope.highlightRoom = function(item, model, label) {
       
     }
   
-    $scope.onSelect = function($room) {
-      $scope.highlightRoom($room);
+    $scope.onSelect = function ($item, $model, $label) {
+      $scope.$item = $item;
+      $scope.$model = $model;
+      $scope.$label = $label;
+      $scope.highlightRoom($item, $model, $label);
     };
   
   

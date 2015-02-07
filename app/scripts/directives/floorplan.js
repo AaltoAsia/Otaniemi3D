@@ -319,6 +319,8 @@ angular.module('otaniemi3dApp')
           
           var containerNode = container.node();
           
+          if (containerNode == null) { return; }
+          
           //Empty container from old floorplan
           while (containerNode.firstChild) {
             containerNode.removeChild(containerNode.firstChild);
