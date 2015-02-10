@@ -68,14 +68,14 @@ angular.module('otaniemi3dApp')
               }
             }
           });
-        }
+        } //end getFloorplan
         
         /*
         * Download a new floorplan from server and append it to the page.
         */
         function getDefaultFloorplan() {
           getFloorplan(defaultFloorplan, floorplanContainer, true);
-        }
+        } //end getDefaultFloorplan
         
         /*
         * Download remaining floorplans and parse their room info.
@@ -89,7 +89,7 @@ angular.module('otaniemi3dApp')
               getFloorplan(floorplan, parserContainer, false);
             }
           }
-        }
+        } //end getOtherFloorplans
         
         /*
         * Set room color for a room according to its temperature.
@@ -158,7 +158,7 @@ angular.module('otaniemi3dApp')
               }
             }
           }
-        }
+        }//end setRoomColor
         
         /*
         * Add tooltip that shows room's sensor values.
@@ -204,7 +204,7 @@ angular.module('otaniemi3dApp')
               .on('mousemove', mouseMove)
               .on('mouseout', mouseOut);
           }
-        }
+        } //end addTooltip
         
         /*
         * Append floorplan to the html element and register zoom and drag listener.
@@ -263,7 +263,7 @@ angular.module('otaniemi3dApp')
               zoomListener.event(svg);
             }
           }
-        }
+        } //end appendFloorplan
         
         /*
         * Read rooms and their html elements from the floorplan svg
@@ -340,7 +340,7 @@ angular.module('otaniemi3dApp')
           while (containerNode.firstChild) {
             containerNode.removeChild(containerNode.firstChild);
           }
-        }
+        } //end parseRooms
 
         /*
         * Update or add new sensor data to rooms, and then color the rooms according to the data.
@@ -385,6 +385,16 @@ angular.module('otaniemi3dApp')
               }
             }
           }
+        } //end updateRoomInfo
+        
+        function highlightRoom(room) {
+          var color = d3.select(room.node).style('fill');
+          console.log(color);
+          if (color == 'none') {
+            color = 'rgb(255,255,255)';
+          }
+          d3.select(room.node).style('fill', 'red');
+          d3.select(room.node).transition().delay(1000).duration(3500).style('fill', color);
         }
         
         /*
@@ -414,11 +424,10 @@ angular.module('otaniemi3dApp')
             scope.plan.translate = [0, 0];
             scope.plan.scale = 1;
             appendFloorplan(scope.plan, floorplanContainer);
-            //TODO: implement this function
-            //highlightRoom(scope.highlightedRoom);
+            highlightRoom(scope.highlightedRoom);
             scope.highlightedRoom = null;
           }
         });
-      }
-    };
-  }]);
+      }//end link: function()
+    }; //end return
+  }]); //end directive
