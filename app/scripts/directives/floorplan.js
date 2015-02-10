@@ -242,7 +242,7 @@ angular.module('otaniemi3dApp')
 
             //Remove pointer-events from text elements
             svg.selectAll('text').attr('pointer-events', 'none');
-
+            
             //Configure dragging and zooming behavior.
             var zoomListener = d3.behavior.zoom()
               .scaleExtent([0.5, 10])
@@ -257,6 +257,11 @@ angular.module('otaniemi3dApp')
             
             svg.call(zoomListener);
             
+            if (scope.highlightedRoom) {
+              floorplan.translate = [0, 0];
+              floorplan.scale = 1;
+              zoomListener.event(svg);
+            }
           }
         }
         
@@ -406,6 +411,12 @@ angular.module('otaniemi3dApp')
         scope.$watch('highlightedRoom', function() {
           if (scope.highlightedRoom !== null) {
             scope.plan = Floorplans[scope.highlightedRoom.floor];
+            scope.plan.translate = [0, 0];
+            scope.plan.scale = 1;
+            appendFloorplan(scope.plan, floorplanContainer);
+            //TODO: implement this function
+            //highlightRoom(scope.highlightedRoom);
+            scope.highlightedRoom = null;
           }
         });
       }
