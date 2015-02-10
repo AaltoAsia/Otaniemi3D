@@ -12,7 +12,8 @@ angular.module('otaniemi3dApp')
       restrict: 'EA',
       scope: {
         plan: '=',
-        data: '='
+        data: '=',
+        highlightedRoom: '='
       },
       link: function (scope, element, attrs) {
         
@@ -301,11 +302,17 @@ angular.module('otaniemi3dApp')
                   }
                 //Else add a new room to the Rooms service
                 } else {
-                  Rooms.push({
-                    name: roomText.textContent,
-                    node: roomArea,
-                    sensors: []
-                  });
+                  var i;
+                  for (i = 0; i < Floorplans.length; i++) {
+                    if (Floorplans[i] === floorplan) {
+                      Rooms.push({
+                        name: roomText.textContent,
+                        node: roomArea,
+                        floor: i,
+                        sensors: []
+                      });
+                    }
+                  }
                 }
               }
             });
@@ -394,7 +401,13 @@ angular.module('otaniemi3dApp')
           if (scope.data) {
             updateRoomInfo(scope.data);
           }
-        });     
+        });
+        
+        scope.$watch('highlightedRoom', function() {
+          if (scope.highlightedRoom !== null) {
+            scope.plan = Floorplans[scope.highlightedRoom.floor];
+          }
+        });
       }
     };
   }]);

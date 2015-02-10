@@ -18,6 +18,7 @@ angular.module('otaniemi3dApp')
         $scope.floorplanClass = floorplanClass;
         $scope.rooms = Rooms;
         $scope.searchString = '';
+        $scope.highlightedRoom = null;
 
         /* These are ng-class definitions for buttons found in 2dview*/
         $scope.buttonClass = 'glyphicon glyphicon-resize-full';
@@ -84,28 +85,26 @@ angular.module('otaniemi3dApp')
          * if the user pressed previous button
          */
         $scope.selectPlan = function (direction) {
-                if (direction === 1) {
-                    $scope.floorplans[$scope.planNumber].isSelected = false;
-                    $scope.floorplans[$scope.planNumber+1].isSelected = true;
-                    $scope.selectedPlan = $scope.floorplans[$scope.planNumber+1];
-                    $scope.planNumber++;
-                }
-                if (direction === -1) {
-                    $scope.floorplans[$scope.planNumber].isSelected = false;
-                    $scope.floorplans[$scope.planNumber-1].isSelected = true;
-                    $scope.selectedPlan = $scope.floorplans[$scope.planNumber-1];
-                    $scope.planNumber--;
-                }
+          if (direction === 1) {
+            $scope.floorplans[$scope.planNumber].isSelected = false;
+            $scope.floorplans[$scope.planNumber+1].isSelected = true;
+            $scope.selectedPlan = $scope.floorplans[$scope.planNumber+1];
+            $scope.planNumber++;
+          }
+          if (direction === -1) {
+            $scope.floorplans[$scope.planNumber].isSelected = false;
+            $scope.floorplans[$scope.planNumber-1].isSelected = true;
+            $scope.selectedPlan = $scope.floorplans[$scope.planNumber-1];
+            $scope.planNumber--;
+          }
         };
 
         $scope.highlightRoom = function(item, model, label) {
-      
+          $scope.highlightedRoom = item;
+          $scope.planNumber = $scope.highlightedRoom.floor;
     	};
   
   	    $scope.onSelect = function ($item, $model, $label) {
-          $scope.$item = $item;
-      	  $scope.$model = $model;
-          $scope.$label = $label;
           $scope.highlightRoom($item, $model, $label);
-    };
+        };
     });
