@@ -17,7 +17,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'ui.bootstrap',
-    'ui.grid'
+    'ui.grid',
+    'angular-loading-bar'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -45,6 +46,9 @@ angular
         redirectTo: '/home'
       });
   })
+  .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+      cfpLoadingBarProvider.includeSpinner = false;
+  }])
   .run(function() {
     FastClick.attach(document.body);
   });
