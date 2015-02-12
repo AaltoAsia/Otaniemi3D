@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('HeaderController', function ($scope, $location) {
+  .controller('HeaderController', function ($scope, $location, $rootScope) {
 
 
    // Check if current URL-location matches the highlighted item
@@ -17,7 +17,9 @@ angular.module('otaniemi3dApp')
         return viewLocation === $location.path();
     };
     $scope.isCollapsed = true;
+
     $scope.$on('$routeChangeSuccess', function () {
         $scope.isCollapsed = true;
+        $rootScope.fullscreen = false;
     });
   });

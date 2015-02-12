@@ -1,0 +1,30 @@
+[
+  {
+    "id": "_101",
+    "room": "101",
+    "sensorId": "111",
+    "type": "temperature",
+    "value": "10.0"
+  },
+  {
+    "id": "_102",
+    "room": "102",
+    "sensorId": "112",
+    "type":"temperature",
+    "value":"20.8"
+  },
+  {
+    "id": "_103",
+    "room": "103",
+    "sensorId": "113",
+    "type":"temperature",
+    "value":"19.2"
+  },
+  {
+    "id": "_105",
+    "room": "105",
+    "sensorId": "115",
+    "type":"temperature",
+    "value":"30.0"
+  }
+]
