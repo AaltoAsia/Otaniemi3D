@@ -231,13 +231,14 @@ angular.module('otaniemi3dApp')
           //Add new floorplan
           var svg = containerNode
             .appendChild(floorplan.svg);
-          
+
+            svg = d3.select(svg)
+                .attr('width', '100%')
+                .attr('height', '100%')
+                .attr('pointer-events', 'all');
+
           //Execute if the floorplan is supposed to be seen
           if (container.display !== 'none') {
-            svg = d3.select(svg)
-              .attr('width', '100%')
-              .attr('height', '100%')
-              .attr('pointer-events', 'all');
 
             //Remove pointer-events from text elements
             svg.selectAll('text').attr('pointer-events', 'none');
@@ -306,15 +307,12 @@ angular.module('otaniemi3dApp')
                     node: roomArea,
                     sensors: []
                   });
+                  addTooltip(Rooms[Rooms.length-1]);
                 }
               }
             });
           });
-          
-          //Add tooltip to each room
-          Rooms.forEach(function(room) {
-            addTooltip(room);
-          });
+
           
           //Remove title elements so that the browser's built-in tooltip doesn't show
           var container = d3.select('.' + parserContainer.class);
