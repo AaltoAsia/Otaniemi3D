@@ -26,5 +26,82 @@
     "sensorId": "115",
     "type":"temperature",
     "value":"30.0"
-  }
+  },
+  {
+    "id": "_2215",
+    "room": "225",
+    "sensorId": "165",
+    "type":"temperature",
+    "value":"30.0"
+  },
+    {
+    "id": "_215",
+    "room": "215",
+    "sensorId": "315",
+    "type":"temperature",
+    "value":"20.0"
+  },
+    {
+    "id": "_205",
+    "room": "216",
+    "sensorId": "545",
+    "type":"temperature",
+    "value":"15.0"
+  },
+  {
+    "id": "_101",
+    "room": "101",
+    "sensorId": "111",
+    "type": "co2",
+    "value": "495"
+  },
+  {
+    "id": "_102",
+    "room": "102",
+    "sensorId": "112",
+    "type":"co2",
+    "value":"395"
+  },
+  {
+    "id": "_103",
+    "room": "103",
+    "sensorId": "113",
+    "type":"co2",
+    "value":"456"
+  },
+  {
+    "id": "_105",
+    "room": "105",
+    "sensorId": "115",
+    "type":"co2",
+    "value":"305"
+  },
+    {
+        "id": "_101",
+        "room": "101",
+        "sensorId": "111",
+        "type": "light",
+        "value": "0"
+    },
+    {
+        "id": "_102",
+        "room": "102",
+        "sensorId": "112",
+        "type":"light",
+        "value":"1"
+    },
+    {
+        "id": "_103",
+        "room": "103",
+        "sensorId": "113",
+        "type":"light",
+        "value":"1"
+    },
+    {
+        "id": "_105",
+        "room": "105",
+        "sensorId": "115",
+        "type":"light",
+        "value":"1"
+    }
 ]

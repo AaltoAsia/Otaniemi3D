@@ -195,6 +195,15 @@ body {
     color: #fff;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
+.sensor-class {
+	left:20%;
+    right:20%;
+	bottom: 0%;
+	position: absolute;
+}
+.sensor-class {
+	text-align:center;
+}
 
 /* Override the bootstrap top 3px CSS*/
 .glyphicon {
