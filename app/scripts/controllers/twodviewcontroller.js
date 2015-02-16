@@ -1,3 +1,4 @@
+
 'use strict';
 
 /**
@@ -66,22 +67,6 @@ angular.module('otaniemi3dApp')
         );
 
         /*
-         * Change current floorplan to the one that user has selected.
-         *//*
-         $scope.selectPlan = function () {
-         var i;
-         for (i = 0; i < $scope.floorplans.length; i++) {
-         if ($scope.floorplans[i].isSelected && $scope.floorplans[i] !== $scope.selectedPlan) {
-         $scope.floorplans[i].isSelected = false;
-         } else {
-         if ($scope.selectedPlan === $scope.floorplans[i]) {
-         $scope.floorplans[i].isSelected = true;
-         }
-         }
-         }
-         };*/
-
-        /*
          * Change current floorplan to the previous of net floorplan
          * direction is either 1 if the user pressed next button or -1
          * if the user pressed previous button
@@ -110,6 +95,13 @@ angular.module('otaniemi3dApp')
             $scope.highlightRoom($item, $model, $label);
         };
 
+
+        /*
+        / Refresh the room colours according to sensor that is chosen.
+        / For example if the user changes from temperature heatmap to co2 heatmap
+        / this function will colour the floorplans according to values measured by
+        / co2 sensors.
+        */
         $scope.refreshRoomColor = function (type) {
 
             //Scale percentage to rgb value 0 - 255.
@@ -124,6 +116,13 @@ angular.module('otaniemi3dApp')
             var value;
             for (var j = 0; j < Rooms.length; j++) {
                 var room = Rooms[j];
+
+                // Colour the room white, in case the room doesn't any any values for that particular sensor
+                //
+                d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
+
+                // Loop through sensors and check the value of the sensor that matches the parameter given
+                //
                 for (var i = 0; i < room.sensors.length; i++) {
                     if (room.sensors[i].type === type) {
                         var parameter = room.sensors[i].value;
@@ -136,19 +135,19 @@ angular.module('otaniemi3dApp')
                                 break;
                             case 'co2':
                                 min = 350;
-                                max = 500;
+                                max = 5000;
                                 break;
                             case 'light':
-                                min = 0;
-                                max = 1;
+                                min = 30;
+                                max = 10000;
                                 break;
                             case 'pir':
-                                min = 15;
-                                max = 35;
+                                min = 0;
+                                max = 30;
                                 break;
                             case 'humidity':
-                                min = 25;
-                                max = 55;
+                                min = 30;
+                                max = 70;
                                 break;
                         }
 

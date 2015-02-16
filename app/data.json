@@ -8,7 +8,7 @@
   },
   {
     "id": "_102",
-    "room": "102",
+    "room": "148",
     "sensorId": "112",
     "type":"temperature",
     "value":"20.8"
@@ -57,7 +57,7 @@
   },
   {
     "id": "_102",
-    "room": "102",
+    "room": "148",
     "sensorId": "112",
     "type":"co2",
     "value":"395"
@@ -81,27 +81,83 @@
         "room": "101",
         "sensorId": "111",
         "type": "light",
-        "value": "0"
+        "value": "8092.12321"
     },
     {
         "id": "_102",
-        "room": "102",
+        "room": "148",
         "sensorId": "112",
         "type":"light",
-        "value":"1"
+        "value":"11309.231"
     },
     {
         "id": "_103",
         "room": "103",
         "sensorId": "113",
         "type":"light",
-        "value":"1"
+        "value":"32.0450231"
     },
     {
         "id": "_105",
         "room": "105",
         "sensorId": "115",
         "type":"light",
+        "value":"32.0450231"
+    },
+    {
+        "id": "_101",
+        "room": "101",
+        "sensorId": "111",
+        "type": "humidity",
+        "value": "42.1232131"
+    },
+    {
+        "id": "_102",
+        "room": "148",
+        "sensorId": "112",
+        "type":"humidity",
+        "value":"43.23131"
+    },
+    {
+        "id": "_103",
+        "room": "103",
+        "sensorId": "113",
+        "type":"humidity",
+        "value":"41.123241"
+    },
+    {
+        "id": "_105",
+        "room": "105",
+        "sensorId": "115",
+        "type":"humidity",
+        "value":"39.08983"
+    },
+    {
+        "id": "_101",
+        "room": "101",
+        "sensorId": "111",
+        "type": "pir",
+        "value": "23"
+    },
+    {
+        "id": "_102",
+        "room": "148",
+        "sensorId": "112",
+        "type":"pir",
+        "value":"25"
+    },
+    {
+        "id": "_103",
+        "room": "103",
+        "sensorId": "113",
+        "type":"pir",
         "value":"1"
+    },
+    {
+        "id": "_105",
+        "room": "105",
+        "sensorId": "115",
+        "type":"pir",
+        "value":"30"
     }
 ]
