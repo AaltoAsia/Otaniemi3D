@@ -44,6 +44,8 @@ angular.module('otaniemi3dApp')
         
         if (defaultFloorplan.svg === null) {
           getDefaultFloorplan();
+        } else {
+          usSpinnerService.stop('spinner-1'); //floorplans loaded, hide the spinner
         }
         
         /*
@@ -78,6 +80,7 @@ angular.module('otaniemi3dApp')
         * Download a new floorplan from server and append it to the page.
         */
         function getDefaultFloorplan() {
+          console.log('spinner');
           usSpinnerService.spin('spinner-1'); //Start the spinner
           
           getFloorplan(defaultFloorplan, floorplanContainer, true);
@@ -239,10 +242,10 @@ angular.module('otaniemi3dApp')
           var svg = containerNode
             .appendChild(floorplan.svg);
 
-            svg = d3.select(svg)
-                .attr('width', '100%')
-                .attr('height', '100%')
-                .attr('pointer-events', 'all');
+          svg = d3.select(svg)
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .attr('pointer-events', 'all');
 
           //Execute if the floorplan is supposed to be seen
           if (container.display !== 'none') {

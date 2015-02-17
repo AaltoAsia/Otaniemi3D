@@ -13,7 +13,7 @@
 
 <div ng-class="floorplanClass">
 
-  <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1"></span> <!-- Spinner that shows up during loading -->
+  <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span> <!-- Spinner that shows up during loading -->
   <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->
   <div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floorplans.length}})</h4> </div> <!-- Caption of floorplan -->
   <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
