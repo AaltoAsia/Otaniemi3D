@@ -18,7 +18,8 @@ angular
     'ngTouch',
     'ui.bootstrap',
     'ui.grid',
-    'angular-loading-bar'
+    'angular-loading-bar',
+    'angularSpinner'
   ])
   .config(function ($routeProvider) {
     $routeProvider

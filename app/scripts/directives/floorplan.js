@@ -7,7 +7,7 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('floorplan', ['Rooms', 'Floorplans', function (Rooms, Floorplans) {
+  .directive('floorplan', ['Rooms', 'Floorplans', 'usSpinnerService', function (Rooms, Floorplans, usSpinnerService) {
     return {
       restrict: 'EA',
       scope: {
@@ -61,10 +61,14 @@ angular.module('otaniemi3dApp')
               }
               finally {
                 document.dispatchEvent(loadEvent);
-                if (isDefault)
-                {
+                
+                if (isDefault) {
                   document.dispatchEvent(defaultLoadedEvent);
-                }              
+                }
+                
+                if (floorplan.url === 'floorplans/floor5.svg') {
+                  usSpinnerService.stop('spinner-1'); //floorplans loaded, hide the spinner
+                }
               }
             }
           });
@@ -74,6 +78,8 @@ angular.module('otaniemi3dApp')
         * Download a new floorplan from server and append it to the page.
         */
         function getDefaultFloorplan() {
+          usSpinnerService.spin('spinner-1'); //Start the spinner
+          
           getFloorplan(defaultFloorplan, floorplanContainer, true);
         } //end getDefaultFloorplan
         
