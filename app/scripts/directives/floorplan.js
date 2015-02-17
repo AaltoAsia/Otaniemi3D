@@ -180,9 +180,25 @@ angular.module('otaniemi3dApp')
             
             var i = 0;
             for (i = 0; i < room.sensors.length; i++) {
-              tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
+                switch (room.sensors[i].type) {
+                    case 'temperature':
+                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' °C');
+                        break;
+                    case 'humidity':
+                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' %');
+                        break;
+                    case 'co2':
+                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm');
+                        break;
+                    case 'pir':
+                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
+                        break;
+                    case 'light':
+                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' lux');
+                        break;
+                }
             }
-            
+
             tooltip.style('visibility', 'visible');
           }
           
