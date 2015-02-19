@@ -1,5 +1,5 @@
 <carousel class="frontpage-carousel" interval="interval">
-    <slide ng-repeat="slide in slides" active="slide.active">
+    <slide class="carousel-slide" ng-repeat="slide in slides" active="slide.active">
         <div class="carousel-caption">
             <article>
                 <h1>{{slide.caption}}</h1>
@@ -9,6 +9,6 @@
                 </p>
             </article>
         </div>
-        <img class="carousel-pic" ng-src="{{slide.image}}">
+
     </slide>
 </carousel>

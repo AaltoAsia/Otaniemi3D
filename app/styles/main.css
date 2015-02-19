@@ -1,18 +1,14 @@
-/* Space out content a bit */
-@media only screen and (min-width : 769px) {
-    body {
-        padding-bottom: 20px;
-    }
-}
-
 html {
     height: 100%;
     width:100%;
     position: relative;
 }
 body {
+    position: fixed;
     height: 100%;
     width: 100%;
+    padding:0px;
+    margin:0px;
     overflow:hidden;
 }
 /*Angular.ui definition needed to change the cursor to pointer when over a button*/
@@ -45,6 +41,7 @@ body {
 /* Custom page header */
 .header {
     border-bottom: 1px solid #e5e5e5;
+    position: fixed;
 }
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
@@ -117,7 +114,6 @@ body {
 }
 
 #searchContainer {
-    margin-top:15px;
     margin-bottom:10px;
 }
 
@@ -169,7 +165,7 @@ body {
 
 /*Remove margin between container fluid and navbar (needed for front page*/
 .navbar {
-    margin-bottom: 0px;
+    margin-bottom: 15px;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -178,25 +174,16 @@ body {
 /* Height of the Grid in 1d view will equal to 100% minus the height of the footer on bigger screens */
 @media only screen and (min-width : 769px) {
     .myGrid {
-        margin-top:10px;
-        height:calc(100% - 90px);
-    }
-}
-/* Smaller devices: no footer so content can be 100% - header (mygrid position is relative)*/
-@media only screen and (max-width : 769px) {
-    .myGrid {
-        margin-top:10px;
-        height:calc(100% - 60px)
+        height:calc(100% - 115px);
     }
 }
 
+/* Smaller devices: no footer so content can be 100% - header (mygrid position is relative)*/
+@media only screen and (max-width : 769px) {
+    .myGrid {
+        height:calc(100% - 66px);
+    }
+}
 #content {
     height:100%;
-}
-/*Remove the paddings bootstrap sets for some unknown reason to both sides of the screen on smaller screens.*/
-.container-fluid {
-    padding-right: 0; /*15px in bootstrap.css*/
-    padding-left: 0;  /*idem*/
-    margin-right: auto;
-    margin-left: auto;
 }

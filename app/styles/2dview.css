@@ -3,16 +3,16 @@
         height:calc(100% - 110px);
     }
     .floorplan-fullscreen {
-        height: calc(100% - 60px);
+        height: calc(100% - 45px);
     }
 }
 
 @media only screen and (min-width : 769px) {
     .floorplan {
-        height:calc(100% - 140px);
+        height:calc(100% - 160px);
     }
     .floorplan-fullscreen {
-        height: calc(100% - 44px);
+        height: calc(100% - 45px);
     }
 }
 
