@@ -315,7 +315,8 @@ angular.module('otaniemi3dApp')
                         name: roomText.textContent,
                         node: roomArea,
                         floor: i,
-                        sensors: []
+                        sensors: [],
+                        pulse: null
                       });
                       addTooltip(Rooms[Rooms.length-1]);
                     }
@@ -385,14 +386,35 @@ angular.module('otaniemi3dApp')
           }
         } //end updateRoomInfo
         
+        /*
+        * Pulse the room highlight until it is not selected anymore.
+        */        
         function highlightRoom(room) {
-          var color = d3.select(room.node).style('fill');
-          console.log(color);
-          if (color == 'none') {
-            color = 'rgb(255,255,255)';
+          var duration = 3500;
+          var pulseColor = 'grey';
+          
+          var initialColor = d3.select(room.node).style('fill');
+          if (initialColor === 'none') {
+            initialColor = 'rgb(255,255,255)';
           }
-          d3.select(room.node).style('fill', 'red');
-          d3.select(room.node).transition().delay(1000).duration(3500).style('fill', color);
+          
+          //Color it first, fade away and color again because the first iteration of setInterval takes a while...
+          d3.select(room.node).style('fill', pulseColor);
+          d3.select(room.node).transition().duration(duration*2).style('fill', initialColor);
+//          d3.select(room.node).transition().delay(duration).duration(duration).style('fill', pulseColor);
+          
+          var pulsing = window.setInterval(function() {
+            d3.select(room.node)
+              .transition()
+              .duration(duration)
+              .style('fill', pulseColor)
+              .transition()
+              .delay(duration)
+              .duration(duration)
+              .style('fill', initialColor);
+          }, duration * 2) //
+          
+          return pulsing;
         }
         
         /*
@@ -422,8 +444,7 @@ angular.module('otaniemi3dApp')
             scope.plan.translate = [0, 0];
             scope.plan.scale = 1;
             appendFloorplan(scope.plan, floorplanContainer);
-            highlightRoom(scope.highlightedRoom);
-            scope.highlightedRoom = null;
+            scope.highlightedRoom.pulse = highlightRoom(scope.highlightedRoom);
           }
         });
       }//end link: function()

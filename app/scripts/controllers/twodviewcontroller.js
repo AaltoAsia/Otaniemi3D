@@ -64,22 +64,6 @@ angular.module('otaniemi3dApp')
         );
 
         /*
-         * Change current floorplan to the one that user has selected.
-         *//*
-        $scope.selectPlan = function () {
-            var i;
-            for (i = 0; i < $scope.floorplans.length; i++) {
-                if ($scope.floorplans[i].isSelected && $scope.floorplans[i] !== $scope.selectedPlan) {
-                    $scope.floorplans[i].isSelected = false;
-                } else {
-                    if ($scope.selectedPlan === $scope.floorplans[i]) {
-                        $scope.floorplans[i].isSelected = true;
-                    }
-                }
-            }
-        };*/
-
-        /*
          * Change current floorplan to the previous of net floorplan
          * direction is either 1 if the user pressed next button or -1
          * if the user pressed previous button
@@ -100,6 +84,10 @@ angular.module('otaniemi3dApp')
         };
 
         $scope.highlightRoom = function(item, model, label) {
+          if ($scope.highlightedRoom !== null) {
+            clearInterval($scope.highlightedRoom.pulse);
+          }
+          
           $scope.highlightedRoom = item;
           $scope.planNumber = $scope.highlightedRoom.floor;
     	};
