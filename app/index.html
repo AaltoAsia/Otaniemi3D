@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css"/>
+    <link rel="stylesheet" href="styles/home.css"/>
+    <link rel="stylesheet" href="styles/2dview.css"/>
+
     <!-- endbuild -->
 
 </head>
@@ -23,7 +26,7 @@
 
 <!-- Add your site or application content here -->
 <header ng-controller="HeaderController" ng-hide="fullscreen">
-    <nav class="navbar navbar-default" role="navigation">
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
         <div class="container-fluid" >
 
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -64,7 +67,7 @@
      -->
 <div class="container-fluid">
 
-    <div ng-view=""></div>
+    <div ng-view="" id="content"></div>
     <div class="footer hidden-sm hidden-xs" ng-hide="fullscreen">
         <p><span class="glyphicon glyphicon-heart"></span> Group 14 Software Development Project Course project 2014-2015.</p>
     </div>

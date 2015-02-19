@@ -10,7 +10,6 @@
  */
 angular
   .module('otaniemi3dApp', [
-    'ngAnimate',
     'ngCookies',
     'ngResource',
     'ngRoute',

@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <div class="jumbotron">
-
-
-    <article>
-      <h2>  Otaniemi3D - enhance building efficiency </h2><br>
-      <h3>With this website you can access building sensor data through three different views.</h3>
-
-      <ul class="home-navs">
-        <li class="no-wrap"><a href="#/1dview">1D View</a></li>
-  	    <li class="no-wrap"><a href="#/2dview">2D View</a></li>
-  	    <li class="no-wrap"><a href="#/3dview">3D View</a></li>
-      </ul>
-      <br>
-        <p><a href="#/support">click here for further information.</a></p>
-
-
-      </article>
-
-  </div>
-</html>
+<carousel class="frontpage-carousel" interval="interval">
+    <slide ng-repeat="slide in slides" active="slide.active">
+        <div class="carousel-caption">
+            <article>
+                <h1>{{slide.caption}}</h1>
+                <h3>{{slide.description}}</h3>
+                <p>
+                    <a class="btn btn-lg btn-primary" role="button" href="#{{slide.link}}">{{slide.linktext}}</a>
+                </p>
+            </article>
+        </div>
+        <img class="carousel-pic" ng-src="{{slide.image}}">
+    </slide>
+</carousel>
