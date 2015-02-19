@@ -60,16 +60,22 @@ angular.module('otaniemi3dApp')
                 parseRooms(floorplan);
                 //Remove title elements so that the browser's built-in tooltip doesn't show
                 d3.select('.' + floorplanContainer.class).selectAll('title').remove();
+
+                for (var i = 0; i < Floorplans.length; i++) {
+                  if (Floorplans[i].svg === null) {
+                    break;
+                  } else if (i === Floorplans.length - 1) {
+                    //Loop continues here only if all the floorplans have a non-null svg attribute
+                    usSpinnerService.stop('spinner-1');
+                    showFloorplan();
+                  }
+                }
               }
               finally {
                 document.dispatchEvent(loadEvent);
                 
                 if (isDefault) {
                   document.dispatchEvent(defaultLoadedEvent);
-                }
-                
-                if (floorplan.url === 'floorplans/floor5.svg') {
-                  usSpinnerService.stop('spinner-1'); //floorplans loaded, hide the spinner
                 }
               }
             }
@@ -100,6 +106,14 @@ angular.module('otaniemi3dApp')
           }
         } //end getOtherFloorplans
         
+        /*
+        * Unhide floorplan. Called when loading spinner stops.
+        */
+        function showFloorplan() {
+          d3.select('.' + floorplanContainer.class).style('visibility', null);
+        }
+
+
         /*
         * Set room color for a room according to its temperature.
         * Color range is from blue to red and temperature range is from
@@ -228,7 +242,8 @@ angular.module('otaniemi3dApp')
             containerElement = d3.select(element[0])
               .append('div')
               .attr('class', container.class)
-              .style('display', container.display);
+              .style('display', container.display)
+              .style('visibility', 'hidden');
           }
           
           var containerNode = containerElement.node();
