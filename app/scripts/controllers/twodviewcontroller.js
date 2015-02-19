@@ -13,7 +13,6 @@ angular.module('otaniemi3dApp')
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
   
-        $scope.floorplans = Floorplans;
         $scope.sensorData = null;
         $scope.floorplanClass = floorplanClass;
         $scope.rooms = Rooms;
@@ -27,9 +26,9 @@ angular.module('otaniemi3dApp')
 
         //Select default floorplan which is defined in Floorplans service
         $scope.planNumber = 0;
-        for ($scope.planNumber; $scope.planNumber < $scope.floorplans.length; $scope.planNumber++) {
-            if ($scope.floorplans[$scope.planNumber].isSelected) {
-                $scope.selectedPlan = $scope.floorplans[$scope.planNumber];
+        for ($scope.planNumber; $scope.planNumber < Floorplans.floors.length; $scope.planNumber++) {
+            if (Floorplans.floors[$scope.planNumber].isSelected) {
+                $scope.selectedPlan = Floorplans.floors[$scope.planNumber];
                 break;
             }
         }
@@ -68,12 +67,12 @@ angular.module('otaniemi3dApp')
          *//*
         $scope.selectPlan = function () {
             var i;
-            for (i = 0; i < $scope.floorplans.length; i++) {
-                if ($scope.floorplans[i].isSelected && $scope.floorplans[i] !== $scope.selectedPlan) {
-                    $scope.floorplans[i].isSelected = false;
+            for (i = 0; i < Floorplans.length; i++) {
+                if (Floorplans.floors[i].isSelected && Floorplans.floors[i] !== $scope.selectedPlan) {
+                    Floorplans.floors[i].isSelected = false;
                 } else {
-                    if ($scope.selectedPlan === $scope.floorplans[i]) {
-                        $scope.floorplans[i].isSelected = true;
+                    if ($scope.selectedPlan === Floorplans.floors[i]) {
+                        Floorplans.floors[i].isSelected = true;
                     }
                 }
             }
@@ -86,15 +85,15 @@ angular.module('otaniemi3dApp')
          */
         $scope.selectPlan = function (direction) {
           if (direction === 1) {
-            $scope.floorplans[$scope.planNumber].isSelected = false;
-            $scope.floorplans[$scope.planNumber+1].isSelected = true;
-            $scope.selectedPlan = $scope.floorplans[$scope.planNumber+1];
+            Floorplans.floors[$scope.planNumber].isSelected = false;
+            Floorplans.floors[$scope.planNumber+1].isSelected = true;
+            $scope.selectedPlan = Floorplans.floors[$scope.planNumber+1];
             $scope.planNumber++;
           }
           if (direction === -1) {
-            $scope.floorplans[$scope.planNumber].isSelected = false;
-            $scope.floorplans[$scope.planNumber-1].isSelected = true;
-            $scope.selectedPlan = $scope.floorplans[$scope.planNumber-1];
+            Floorplans.floors[$scope.planNumber].isSelected = false;
+            Floorplans.floors[$scope.planNumber-1].isSelected = true;
+            $scope.selectedPlan = Floorplans.floors[$scope.planNumber-1];
             $scope.planNumber--;
           }
         };
