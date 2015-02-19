@@ -13,3 +13,16 @@
 .carousel-caption {
     top: 20px!important;
 }
+
+/* Height of the frontpage carousel will equal to 100% minus the height of the footer on bigger screens */
+@media only screen and (min-width : 769px) {
+    .frontpage-carousel {
+        height:calc(100% - 80px);
+    }
+}
+/* Smaller devices: no footer so content can be 100%*/
+@media only screen and (max-width : 769px) {
+    .frontpage-carousel {
+        height:calc(100% - 45px);
+    }
+}

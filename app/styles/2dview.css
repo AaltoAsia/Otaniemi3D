@@ -1,17 +1,21 @@
 @media only screen and (max-width : 769px) {
     .floorplan {
-        height:100%;
+        height:calc(100% - 110px);
+    }
+    .floorplan-fullscreen {
+        height: calc(100% - 60px);
     }
 }
 
 @media only screen and (min-width : 769px) {
     .floorplan {
-        height:calc(100% - 60px);
+        height:calc(100% - 140px);
+    }
+    .floorplan-fullscreen {
+        height: calc(100% - 44px);
     }
 }
-.floorplan-fullscreen {
-    height: 100%;
-}
+
 /*CSS for button that makes the floorplan fullscreen*/
 .fullscreen-button {
     position:absolute;

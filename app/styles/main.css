@@ -1,6 +1,8 @@
 /* Space out content a bit */
-body {
-    padding-bottom: 20px;
+@media only screen and (min-width : 769px) {
+    body {
+        padding-bottom: 20px;
+    }
 }
 
 html {
@@ -10,6 +12,7 @@ html {
 }
 body {
     height: 100%;
+    width: 100%;
     overflow:hidden;
 }
 /*Angular.ui definition needed to change the cursor to pointer when over a button*/
@@ -157,10 +160,6 @@ body {
     top: auto;
 }
 
-.frontpage-carousel {
-    height: 100%;
-}
-
 /*Remove paddings, needed for front page*/
 .container-fluid {
     padding-left: 0px;
@@ -171,22 +170,33 @@ body {
 /*Remove margin between container fluid and navbar (needed for front page*/
 .navbar {
     margin-bottom: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-.myGrid {
-    margin-top: 15px;
+
+/* Height of the Grid in 1d view will equal to 100% minus the height of the footer on bigger screens */
+@media only screen and (min-width : 769px) {
+    .myGrid {
+        margin-top:10px;
+        height:calc(100% - 90px);
+    }
+}
+/* Smaller devices: no footer so content can be 100% - header (mygrid position is relative)*/
+@media only screen and (max-width : 769px) {
+    .myGrid {
+        margin-top:10px;
+        height:calc(100% - 60px)
+    }
+}
+
+#content {
     height:100%;
 }
-
-/* Height of the content will equal to 100% minus the height of the footer on bigger screens */
-@media only screen and (min-width : 769px) {
-    #content {
-        height:calc(100% - 80px);
-    }
-}
-/* Smaller devices: no footer so content can be 100%*/
-@media only screen and (max-width : 769px) {
-    #content {
-        height:calc(100% - 30px);
-    }
+/*Remove the paddings bootstrap sets for some unknown reason to both sides of the screen on smaller screens.*/
+.container-fluid {
+    padding-right: 0; /*15px in bootstrap.css*/
+    padding-left: 0;  /*idem*/
+    margin-right: auto;
+    margin-left: auto;
 }
