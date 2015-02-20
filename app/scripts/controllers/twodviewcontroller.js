@@ -18,6 +18,7 @@ angular.module('otaniemi3dApp')
         $scope.rooms = Rooms;
         $scope.searchString = '';
         $scope.highlightedRoom = null;
+        $scope.floors = Floorplans.floors.length;
 
         /* These are ng-class definitions for buttons found in 2dview*/
         $scope.buttonClass = 'glyphicon glyphicon-resize-full';
