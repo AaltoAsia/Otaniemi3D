@@ -18,23 +18,23 @@ angular.module('otaniemi3dApp')
             linktext: 'Support'
         });
         slides.push({
-            caption: '1d View',
-            description: 'In 1d view you can see each value recorded by each sensor of k1 building in sortable 2-dimension grid.',
+            caption: '1D View',
+            description: 'In 1D View you can see each value recorded by each sensor of k1 building in sortable 2-dimension grid.',
             link: '1dview',
-            linktext: '1d View'
+            linktext: '1D View'
         });
         slides.push({
-            caption: '2d View',
-            description: 'Some text to emphasize how awesome our 2dview is',
+            caption: '2D View',
+            description: 'Some text to emphasize how awesome our 2D View is',
             link: '2dview',
-            linktext: '2d View'
+            linktext: '2D View'
 
         });
         slides.push({
-            caption: '3d View',
-            description: 'Some text to emphasize how awesome our 3dview is and what it does',
+            caption: '3D View',
+            description: 'Some text to emphasize how awesome our 3D View is and what it does',
             link: '3dview',
-            linktext: '3d View'
+            linktext: '3D View'
 
         });
 
