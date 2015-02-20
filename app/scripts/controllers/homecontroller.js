@@ -13,7 +13,7 @@ angular.module('otaniemi3dApp')
         var slides = $scope.slides = [];
         slides.push({
             caption: 'Otaniemi3D - enhance building efficiency',
-            description: 'With Otaniemi3d you can access building sensor values in three different ways.',
+            description: 'With Otaniemi3D you can access building sensor values in three different ways.',
             link: 'support',
             linktext: 'Support'
         });
