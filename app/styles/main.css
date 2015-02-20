@@ -118,6 +118,9 @@ ul.nav {
     font-size: 14px;
 }
 
+.navbar-header {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
 #searchContainer {
     margin-bottom:10px;
 }
