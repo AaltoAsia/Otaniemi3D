@@ -24,7 +24,7 @@
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
 
-<!-- Add your site or application content here -->
+
 <header ng-controller="HeaderController" ng-hide="fullscreen">
     <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
         <div class="container-fluid" >
@@ -60,17 +60,19 @@
 
 </header>
 
-    <!--
-     <div class="header">
-       <h3 class="text-muted">Otaniemi3D - Building efficiency enhanced</h3>
-     </div>
-     -->
+
 <div class="container-fluid">
 
     <div ng-view="" id="content"></div>
-    <div class="footer hidden-sm hidden-xs" ng-hide="fullscreen">
-        <p><span class="glyphicon glyphicon-heart"></span> Group 14 Software Development Project Course project 2014-2015.</p>
-    </div>
+    <footer class="footer hidden-sm hidden-xs" ng-hide="fullscreen">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p><span class="glyphicon glyphicon-heart"></span> Group 14 Software Development Project Course project 2014-2015.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
