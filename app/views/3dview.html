@@ -5,16 +5,16 @@
     <link rel='stylesheet' type='text/css' href='http://www.x3dom.org/x3dom/release/x3dom.css'/>
     <script type='text/javascript' src='http://www.x3dom.org/x3dom/release/x3dom.js'></script>
   </head>
-  <div class="container">
+  <div class="container x3d-container">
     
     <!-- HUD for testing -->
     <!--
     <div id='HUDs_Div'> 
       <div id='viewpoint_menu' class='group' style='margin:2px; margin-top:56px; padding:4px; background-color:rgba(199,202,204,.7); position:absolute; float:center; z-index:1000;'> 
         Select viewpoint
-    		<button onClick="x3dElement.runtime.resetView();return false;">Reset current</button> 
-    		<button onClick="x3dElement.runtime.nextView();return false;">Next</button> 
-    		<button onClick="x3dElement.runtime.prevView();return false;">Previous</button> 
+        <button onClick="x3dElement.runtime.resetView();return false;">Reset current</button> 
+        <button onClick="x3dElement.runtime.nextView();return false;">Next</button> 
+        <button onClick="x3dElement.runtime.prevView();return false;">Previous</button> 
       </div>         
     </div>
     -->
@@ -40,8 +40,11 @@
           typeahead-on-select="onSelect($item)"
         >
         
+        <button class="btn btn-default" id="searchDefault" ng-click="changeView()">
+           <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
+        </button>
         <button class="btn btn-default" id="searchDefault" ng-click="changeView('vp0')">
-          Default view
+          <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
         </button>
         
       </div>
