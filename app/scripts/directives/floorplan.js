@@ -403,7 +403,6 @@ angular.module('otaniemi3dApp')
         
         function highlightRoom(room) {
           var color = d3.select(room.node).style('fill');
-          console.log(color);
           if (color == 'none') {
             color = 'rgb(255,255,255)';
           }
