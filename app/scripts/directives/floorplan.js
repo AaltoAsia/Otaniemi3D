@@ -13,7 +13,8 @@ angular.module('otaniemi3dApp')
       scope: {
         plan: '=',
         data: '=',
-        highlightedRoom: '='
+        highlightedRoom: '=',
+        selectedRoom: '='
       },
       link: function (scope, element, attrs) {
         
@@ -162,7 +163,6 @@ angular.module('otaniemi3dApp')
         
         /*
         * Add tooltip that shows room's sensor values.
-        * Source: http://bl.ocks.org/biovisualize/1016860
         */
         function addTooltip(room) {
           var tooltip = d3.select('.mousetooltip');
@@ -175,7 +175,11 @@ angular.module('otaniemi3dApp')
           }
           
           //Add room-specific information to the tooltip and make tooltip visible
-          function mouseOver () {
+          function mouseOver (skipSelectedCheck) {
+            if (!skipSelectedCheck && scope.selectedRoom) {
+              return;
+            }
+            
             tooltip.append('p').text('Room: ' + room.name);
             
             var i = 0;
@@ -203,22 +207,37 @@ angular.module('otaniemi3dApp')
           }
           
           //Make tooltip window follow mouse movement
-          function mouseMove () {
+          function mouseMove (skipSelectedCheck) {
+            if (!skipSelectedCheck && scope.selectedRoom) {
+              return;
+            }
             tooltip.style('top', (d3.event.pageY-10)+'px').style('left',(d3.event.pageX+10)+'px');
           }
           
           //Empty tooltip and make it invisible
-          function mouseOut () {
+          function mouseOut (skipSelectedCheck) {
+            if (!skipSelectedCheck && scope.selectedRoom) {
+              return;
+            }
             tooltip
               .selectAll('p').remove()
               .style('visibility', null);
           }
-
+          
+          function clicked () {
+            mouseOut(true);
+            scope.selectedRoom = room;
+            mouseOver(true);
+            mouseMove(true);
+          }
+          
+          //Set mouse events to the room node
           if (room.node) {
             d3.select(room.node)
               .on('mouseover', mouseOver)
               .on('mousemove', mouseMove)
-              .on('mouseout', mouseOut);
+              .on('mouseout', mouseOut)
+              .on('click', clicked);
           }
         } //end addTooltip
         
@@ -249,10 +268,10 @@ angular.module('otaniemi3dApp')
           var svg = containerNode
             .appendChild(floorplan.svg);
 
-            svg = d3.select(svg)
-                .attr('width', '100%')
-                .attr('height', '100%')
-                .attr('pointer-events', 'all');
+          svg = d3.select(svg)
+              .attr('width', '100%')
+              .attr('height', '100%')
+              .attr('pointer-events', 'all');
 
           //Execute if the floorplan is supposed to be seen
           if (container.display !== 'none') {
@@ -406,7 +425,7 @@ angular.module('otaniemi3dApp')
         * Pulse the room highlight until it is not selected anymore.
         */        
         function highlightRoom(room) {
-          var duration = 3500;
+          var duration = 3000;
           var pulseColor = 'grey';
           
           var initialColor = d3.select(room.node).style('fill');
@@ -416,8 +435,9 @@ angular.module('otaniemi3dApp')
           
           //Color it first, fade away and color again because the first iteration of setInterval takes a while...
           d3.select(room.node).style('fill', pulseColor);
-          d3.select(room.node).transition().duration(duration*2).style('fill', initialColor);
-//          d3.select(room.node).transition().delay(duration).duration(duration).style('fill', pulseColor);
+          d3.select(room.node).transition().duration(duration*2/3).style('fill', initialColor);
+          d3.select(room.node).transition().delay(duration*2/3).duration(duration*2/3).style('fill', pulseColor);
+          d3.select(room.node).transition().delay(duration*4/3).duration(duration*2/3).style('fill', initialColor);
           
           var pulsing = window.setInterval(function() {
             d3.select(room.node)
