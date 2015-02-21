@@ -12,7 +12,7 @@ body {
     overflow:hidden;
 }
 /*Angular.ui definition needed to change the cursor to pointer when over a button*/
-.nav, .pagination, .carousel, .panel-title a {
+.nav, .pagination, .carousel-control, .panel-title a {
     cursor: pointer;
 }
 

@@ -6,10 +6,6 @@
     height:100%;
 }
 
-.carousel-caption {
-    top: 20px!important;
-}
-
 /* Height of the frontpage carousel will equal to 100% minus the height of the footer on bigger screens */
 @media only screen and (min-width : 769px) {
     .frontpage-carousel {
@@ -25,6 +21,26 @@
     }
 }
 
+/* Set the background color of landing page here*/
 .carousel-slide {
     background-color: #9494D4;
+}
+
+/*Compress the content a bit to make it fit in landscape view*/
+@media screen and (max-height: 350px) {
+    .carousel-caption {
+        top:0px!important;
+        padding-top:0px;
+    }
+    .carousel-heading {
+        margin-top:0px;
+        margin-bottom: 0px;
+    }
+}
+/*Space out the content for larger devices*/
+@media screen and (min-height: 350px) {
+    .carousel-caption {
+        top: auto!important;
+        bottom: auto!important;
+    }
 }
