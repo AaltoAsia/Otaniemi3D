@@ -1,0 +1,84 @@
+@media only screen and (max-width : 769px) {
+    .floorplan {
+        height:calc(100% - 110px);
+    }
+    .floorplan-fullscreen {
+        height: calc(100% - 45px);
+    }
+
+    /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
+    margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
+    .previous-button, .next-button {
+        font-size: 36px; /*Increase the size of arrow a little*/
+        position: fixed;
+        bottom: 5vh;
+    }
+
+    /*CSS definitions for those sensor buttons at the bottom of floorplan viewport*/
+    .sensor-class {
+        left:10%;
+        right:10%;
+        bottom: 0vh;
+        position: fixed;
+        text-align:center;
+    }
+
+    .next-button {
+        right: 0vh;
+    }
+}
+
+@media only screen and (min-width : 769px) {
+    .floorplan {
+        height:calc(100% - 160px);
+    }
+    .floorplan-fullscreen {
+        height: calc(100% - 45px);
+    }
+    /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
+    margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
+
+    .previous-button, .next-button {
+        font-size: 48px; /*Increase the size of arrow a little*/
+        position: absolute;
+        bottom: 5vh;
+        margin-bottom: 5vh;
+
+    }
+    .previous-button {
+        left: 5vh;
+    }
+    .next-button {
+        right: 5vh;
+    }
+
+    /*CSS definitions for those sensor buttons at the bottom of floorplan viewport*/
+    .sensor-class {
+        left:20%;
+        right:20%;
+        bottom: 50px;
+        position: fixed;
+        text-align:center;
+    }
+}
+
+/*CSS for button that makes the floorplan fullscreen*/
+.fullscreen-button {
+    position:absolute;
+    margin-top: 1vh;
+    margin-left: 1vh;
+    float: left;
+}
+
+
+/* CSS-definitions for the caption that is on top of floorplan*/
+.floorplan-caption {
+    left: 30%;
+    right: 30%;
+    position: absolute;
+}
+.caption-text {
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}

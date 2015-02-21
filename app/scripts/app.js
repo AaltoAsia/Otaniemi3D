@@ -10,7 +10,6 @@
  */
 angular
   .module('otaniemi3dApp', [
-    'ngAnimate',
     'ngCookies',
     'ngResource',
     'ngRoute',
@@ -18,7 +17,8 @@ angular
     'ngTouch',
     'ui.bootstrap',
     'ui.grid',
-    'angular-loading-bar'
+    'angular-loading-bar',
+    'angularSpinner'
   ])
   .config(function ($routeProvider) {
     $routeProvider

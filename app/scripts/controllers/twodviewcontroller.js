@@ -14,14 +14,13 @@ angular.module('otaniemi3dApp')
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
 
-        $scope.floorplans = Floorplans;
         $scope.sensorData = null;
         $scope.floorplanClass = floorplanClass;
         $scope.rooms = Rooms;
         $scope.searchString = '';
         $scope.highlightedRoom = null;
         $scope.roomValueType = 'temperature';
-
+        $scope.floors = Floorplans.floors.length;
 
         /* These are ng-class definitions for buttons found in 2dview*/
         $scope.buttonClass = 'glyphicon glyphicon-resize-full';
@@ -30,9 +29,9 @@ angular.module('otaniemi3dApp')
 
         //Select default floorplan which is defined in Floorplans service
         $scope.planNumber = 0;
-        for ($scope.planNumber; $scope.planNumber < $scope.floorplans.length; $scope.planNumber++) {
-            if ($scope.floorplans[$scope.planNumber].isSelected) {
-                $scope.selectedPlan = $scope.floorplans[$scope.planNumber];
+        for ($scope.planNumber; $scope.planNumber < Floorplans.floors.length; $scope.planNumber++) {
+            if (Floorplans.floors[$scope.planNumber].isSelected) {
+                $scope.selectedPlan = Floorplans.floors[$scope.planNumber];
                 break;
             }
         }
@@ -66,24 +65,26 @@ angular.module('otaniemi3dApp')
             }
         );
 
+
         /*
          * Change current floorplan to the previous of net floorplan
          * direction is either 1 if the user pressed next button or -1
          * if the user pressed previous button
          */
         $scope.selectPlan = function (direction) {
-            if (direction === 1) {
-                $scope.floorplans[$scope.planNumber].isSelected = false;
-                $scope.floorplans[$scope.planNumber+1].isSelected = true;
-                $scope.selectedPlan = $scope.floorplans[$scope.planNumber+1];
-                $scope.planNumber++;
-            }
-            if (direction === -1) {
-                $scope.floorplans[$scope.planNumber].isSelected = false;
-                $scope.floorplans[$scope.planNumber-1].isSelected = true;
-                $scope.selectedPlan = $scope.floorplans[$scope.planNumber-1];
-                $scope.planNumber--;
-            }
+
+          if (direction === 1) {
+            Floorplans.floors[$scope.planNumber].isSelected = false;
+            Floorplans.floors[$scope.planNumber+1].isSelected = true;
+            $scope.selectedPlan = Floorplans.floors[$scope.planNumber+1];
+            $scope.planNumber++;
+          }
+          if (direction === -1) {
+            Floorplans.floors[$scope.planNumber].isSelected = false;
+            Floorplans.floors[$scope.planNumber-1].isSelected = true;
+            $scope.selectedPlan = Floorplans.floors[$scope.planNumber-1];
+            $scope.planNumber--;
+          }
         };
 
         $scope.highlightRoom = function(item, model, label) {

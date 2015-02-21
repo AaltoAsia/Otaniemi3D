@@ -1,47 +1,65 @@
-/* Space out content a bit */
+html {
+    height: 100%;
+    width:100%;
+    position: relative;
+}
 body {
-  padding-bottom: 20px;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    padding:0px;
+    margin:0px;
+    overflow:hidden;
+}
+/*Angular.ui definition needed to change the cursor to pointer when over a button*/
+.nav, .pagination, .carousel-control, .panel-title a {
+    cursor: pointer;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
 .footer {
-  padding-left: 15px;
-  padding-right: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .navbar .navbar-brand {
-  list-style-type: none;        
+    list-style-type: none;
 }
 
 .navbar .navbar-brand #home {
-  color: gray;  
-  text-decoration: none;
+    color: gray;
+    text-decoration: none;
 }
 
 .navbar .navbar-brand #home:hover {
-  color: black;
-  text-decoration: none;
+    color: black;
+    text-decoration: none;
 }
 
 /* Custom page header */
 .header {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    position: fixed;
 }
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
-  margin-top: 0;
-  margin-bottom: 0;
-  line-height: 40px;
-  padding-bottom: 19px;
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    padding-bottom: 19px;
 }
 
 /* Custom page footer */
 .footer {
-  padding-top: 19px;
-  color: #777;
-  border-top: 1px solid #e5e5e5;
+    background-color: #f5f5f5;
+    bottom: 0;
+    padding-top: 10px;
+    height: 50px;
+    position: fixed;
+    width: 100%;
+    border-top: 1px solid #e5e5e5;
 }
 
 /* Customize container */
@@ -53,48 +71,56 @@ body {
 }
 */
 .container-narrow > hr {
-  margin: 30px 0;
+    margin: 30px 0;
 }
 
 /* Main marketing message and sign up button */
 .jumbotron {
-  text-align: center;
-  border-bottom: 1px solid #e5e5e5;
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
 }
 .jumbotron .btn {
-  font-size: 21px;
-  padding: 14px 24px;
+    font-size: 21px;
+    padding: 14px 24px;
 }
 
 /* Supporting marketing content */
 .marketing {
-  margin: 40px 0;
+    margin: 40px 0;
 }
 .marketing p + h4 {
-  margin-top: 28px;
+    margin-top: 28px;
 }
 
 .floorplan {
-  border: 1px solid #e5e5e5;
+    border: 1px solid #e5e5e5;
 }
 
 .mousetooltip {
-  margin-top: 19px;
-  border: 1px solid #e5e5e5;
-  border-radius: 5px;
-  background: #A3CCCC;
-  z-index: 10;
-  position: absolute;
-  visibility: hidden;
+    margin-top: 19px;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    background: #A3CCCC;
+    z-index: 10;
+    position: absolute;
+    visibility: hidden;
 }
 
 .home-navs > li {
-  display:inline;
-  list-style-type: none;
-  margin: 20px;
-  font-size: 32px;
+    display:inline;
+    list-style-type: none;
+    margin: 20px;
+    font-size: 32px;
 }
 
+ul.nav {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+}
+
+.navbar-header {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
 #searchContainer {
     margin-bottom:10px;
 }
@@ -111,21 +137,21 @@ body {
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
-  /* Remove the padding we set earlier */
-  .header,
-  .marketing,
-  .footer {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  /* Space out the masthead */
-  .header {
-    margin-bottom: 30px;
-  }
-  /* Remove the bottom border on the jumbotron for visual effect */
-  .jumbotron {
-    border-bottom: 0;
-  }
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
+    }
 }
 
 /*Remove home page white space wrapping*/
@@ -133,86 +159,41 @@ body {
     white-space: nowrap;
 }
 
-/* Increase the height of floorplan slightly for small Devices and Tablets (footer will disappear)*/
-@media only screen and (max-width : 768px) {
-    .floorplan {
-        height: 78vh;
-        margin-left: -15px; /*Ignore paddings set by parent container-fluid*/
-        margin-right: -15px; /*Ignore paddings set by parent container-fluid*/
-    }
-    .floorplan-fullscreen {
-        height: 92.5vh;
-        margin-left: -15px; /*Ignore paddings set by parent container-fluid*/
-        margin-right: -15px; /*Ignore paddings set by parent container-fluid*/
-    }
-	.myGrid {
-        height: 76.5vh;
-    }
-
-}
-/*CSS for button that makes the floorplan fullscreen*/
-	.fullscreen-button {
-		position:absolute;
-        margin-top: 1vh;
-        margin-left: 1vh;
-        float: left;
-	}
-
-    /*Sets the CSS of right arrow, also known as next-button. There are distinct CSS definitions for
-    margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
-    .previous-button {
-        position: absolute;
-        bottom: 5vh;
-        margin-bottom: 5vh;
-        left: 5vh;
-    }
-
-    /*Sets the CSS of right arrow, also known as next-button. There are distinct CSS definitions for
-    margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
-    .next-button {
-        position: absolute;
-        bottom: 5vh;
-        right: 5vh;
-        margin-bottom: 5vh;
-    }
-
-/* Increase the height of grid slightly for small Devices and Tablets (footer will disappear) */
-@media only screen and (min-width : 769px) {
-    .myGrid {
-        height: 83vh;
-    }
-	.floorplan {
-		height: 80vh;
-	}
-	.floorplan-fullscreen {
-        height: 90vh;
-    }
-}
-
-/* CSS-definitions for the caption that is on top of floorplan*/
-.floorplan-caption {
-    left: 30%;
-    right: 30%;
-    position: absolute;
-}
-.caption-text {
-    text-align: center;
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-}
-
-/*CSS definitions for those sensor buttons at the bottom of floorplan viewport*/
-.sensor-class {
-	left:20%;
-    right:20%;
-	bottom: 5vh;
-	position: absolute;
-}
-.sensor-class {
-	text-align:center;
-}
 
 /* Override the bootstrap top 3px CSS*/
 .glyphicon {
     top: auto;
+}
+
+/*Remove paddings, needed for front page*/
+.container-fluid {
+    padding-left: 0px;
+    padding-right: 0px;
+    height: 100%;
+}
+
+/*Remove margin between container fluid and navbar (needed for front page*/
+.navbar {
+    margin-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+/* Height of the Grid in 1d view will equal to 100% minus the height of the footer on bigger screens */
+@media only screen and (min-width : 769px) {
+    .myGrid {
+        height:calc(100% - 115px);
+    }
+}
+
+/* Smaller devices: no footer so content can be 100% - header (mygrid position is relative)*/
+@media only screen and (max-width : 769px) {
+    .myGrid {
+        height:calc(100% - 66px);
+    }
+}
+
+#content {
+    height:100%;
 }
