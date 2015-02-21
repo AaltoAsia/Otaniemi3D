@@ -2,8 +2,22 @@
   {
     "id": "_101",
     "room": "101",
-    "sensorId": "111",
+    "sensorId": "111t",
     "type": "temperature",
+    "value": "10.0"
+  },
+  {
+    "id": "_101",
+    "room": "101",
+    "sensorId": "111c",
+    "type": "co2",
+    "value": "10.0"
+  },
+  {
+    "id": "_101",
+    "room": "101",
+    "sensorId": "111l",
+    "type": "light",
     "value": "10.0"
   },
   {
