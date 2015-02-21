@@ -57,7 +57,7 @@ angular.module('otaniemi3dApp')
         */
         function getFloorplan(floorplan, container, isDefault){
           d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
-            if (xml !== undefined) {
+            if (xml) {
               try {
                 floorplan.svg = xml.documentElement;
                 appendFloorplan(floorplan, container);
@@ -167,26 +167,50 @@ angular.module('otaniemi3dApp')
         }//end setRoomColor
         
         /*
+        *==============================================
+        * Helper functions for tooltip handling. 
+        * Those that do not require room-specific information and are common to all rooms.
+        *==============================================
+        */
+        var tooltip = d3.select('.mousetooltip');
+          
+        //Check if tooltip div element has already been created.
+        if (tooltip.empty()) {
+          tooltip = d3.select('body')
+            .append('div')
+            .attr('class','mousetooltip');
+        }
+
+        //Make tooltip window follow mouse movement
+        function mouseMove (skipSelectedCheck) {
+          if (!skipSelectedCheck && scope.selectedRoom) {
+            return;
+          }
+          tooltip.style('top', (d3.event.pageY-10)+'px').style('left',(d3.event.pageX+10)+'px');
+        }
+
+        //Empty tooltip and make it invisible
+        function mouseOut (skipSelectedCheck) {
+          if (!skipSelectedCheck && scope.selectedRoom) {
+            return;
+          }
+          tooltip
+            .selectAll('p').remove()
+            .style('visibility', null);
+        } //end tooltip  helper functions
+        
+        /*
         * Add tooltip that shows room's sensor values.
         */
         function addTooltip(room) {
-          var tooltip = d3.select('.mousetooltip');
-          
-          //Check if tooltip div element has already been created.
-          if (tooltip.empty()) {
-            tooltip = d3.select('body')
-              .append('div')
-              .attr('class','mousetooltip');
-          }
-          
           //Add room-specific information to the tooltip and make tooltip visible
           function mouseOver (skipSelectedCheck) {
             if (!skipSelectedCheck && scope.selectedRoom) {
               return;
             }
-            
+
             tooltip.append('p').text('Room: ' + room.name);
-            
+
             var i = 0;
             for (i = 0; i < room.sensors.length; i++) {
                 switch (room.sensors[i].type) {
@@ -211,24 +235,6 @@ angular.module('otaniemi3dApp')
             tooltip.style('visibility', 'visible');
           }
           
-          //Make tooltip window follow mouse movement
-          function mouseMove (skipSelectedCheck) {
-            if (!skipSelectedCheck && scope.selectedRoom) {
-              return;
-            }
-            tooltip.style('top', (d3.event.pageY-10)+'px').style('left',(d3.event.pageX+10)+'px');
-          }
-          
-          //Empty tooltip and make it invisible
-          function mouseOut (skipSelectedCheck) {
-            if (!skipSelectedCheck && scope.selectedRoom) {
-              return;
-            }
-            tooltip
-              .selectAll('p').remove()
-              .style('visibility', null);
-          }
-          
           function clicked () {
             clickWasOnRoom = true;
             if (scope.highlightedRoom) {
@@ -239,7 +245,7 @@ angular.module('otaniemi3dApp')
             scope.selectedRoom = room;
             mouseOver(true);
             mouseMove(true);
-          }
+          } 
           
           //Set mouse events to the room node
           if (room.node) {
@@ -305,7 +311,8 @@ angular.module('otaniemi3dApp')
             
             svg.on('click', function() {
               if (!clickWasOnRoom) {
-                scope.selectedRoom = null
+                scope.selectedRoom = null;
+                mouseOut(true);
               }
               clickWasOnRoom = false;
             });
@@ -465,7 +472,7 @@ angular.module('otaniemi3dApp')
               .delay(duration)
               .duration(duration)
               .style('fill', initialColor);
-          }, duration * 2) 
+          }, duration * 2);
           
           return pulsing;
         }
