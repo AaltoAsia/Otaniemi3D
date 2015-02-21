@@ -34,6 +34,11 @@ angular.module('otaniemi3dApp')
         
         var defaultFloorplan = scope.plan;
         
+        //Because the click event of a room node takes place after the one of the svg element,
+        //we need this variable to keep record if the event happened on a room and, therefore,
+        //should not unselect the selected room.
+        var clickWasOnRoom = false;
+        
         /*
         * Download and show default floorplan and then download 
         * other floorplans asynchronously.
@@ -225,6 +230,11 @@ angular.module('otaniemi3dApp')
           }
           
           function clicked () {
+            clickWasOnRoom = true;
+            if (scope.highlightedRoom) {
+              clearInterval(scope.highlightedRoom.pulse);
+              scope.highlightedRoom = null;
+            }
             mouseOut(true);
             scope.selectedRoom = room;
             mouseOver(true);
@@ -292,6 +302,13 @@ angular.module('otaniemi3dApp')
               });
             
             svg.call(zoomListener);
+            
+            svg.on('click', function() {
+              if (!clickWasOnRoom) {
+                scope.selectedRoom = null
+              }
+              clickWasOnRoom = false;
+            });
             
             if (scope.highlightedRoom) {
               floorplan.translate = [0, 0];
@@ -448,7 +465,7 @@ angular.module('otaniemi3dApp')
               .delay(duration)
               .duration(duration)
               .style('fill', initialColor);
-          }, duration * 2) //
+          }, duration * 2) 
           
           return pulsing;
         }

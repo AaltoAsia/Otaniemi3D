@@ -51,7 +51,6 @@ angular.module('otaniemi3dApp')
 
         };
 
-
         /*
          * Fetch sensor data from the server.
          */
