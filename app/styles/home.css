@@ -10,14 +10,14 @@
 @media only screen and (min-width : 769px) {
     .frontpage-carousel {
         margin-top: -15px;
-        height:calc(100% - 80px);
+        height:calc(100% - 100px);
     }
 }
 /* Smaller devices: no footer so content can be 100%*/
 @media only screen and (max-width : 769px) {
     .frontpage-carousel {
         margin-top: -15px;
-        height:calc(100% - 40px);
+        height:calc(100% - 50px);
     }
 }
 
