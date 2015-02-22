@@ -20,8 +20,10 @@ angular.module('otaniemi3dApp')
         $scope.highlightedRoom = null;
         $scope.roomValueType = 'temperature';
         $scope.floors = Floorplans.floors.length;
+        $scope.selectedRoom = null;
 
         $scope.searchContainer = ''; //This is used to set correct top margin for search container
+
 
         /* These are ng-class definitions for buttons found in 2dview*/
         $scope.buttonClass = 'glyphicon glyphicon-resize-full';
@@ -55,7 +57,6 @@ angular.module('otaniemi3dApp')
 
         };
 
-
         /*
          * Fetch sensor data from the server.
          */
@@ -67,8 +68,6 @@ angular.module('otaniemi3dApp')
                 console.log('Error: Failed to fetch sensor data');
             }
         );
-
-
         /*
          * Change current floorplan to the previous of net floorplan
          * direction is either 1 if the user pressed next button or -1
@@ -91,14 +90,17 @@ angular.module('otaniemi3dApp')
         };
 
         $scope.highlightRoom = function(item, model, label) {
-            $scope.highlightedRoom = item;
-            $scope.planNumber = $scope.highlightedRoom.floor;
+          if ($scope.highlightedRoom !== null) {
+            clearInterval($scope.highlightedRoom.pulse);
+          }
+          
+          $scope.highlightedRoom = item;
+          $scope.planNumber = $scope.highlightedRoom.floor;
+    	};
+  
+  	    $scope.onSelect = function ($item, $model, $label) {
+          $scope.highlightRoom($item, $model, $label);
         };
-
-        $scope.onSelect = function ($item, $model, $label) {
-            $scope.highlightRoom($item, $model, $label);
-        };
-
 
         /*
         / Refresh the room colours according to sensor that is chosen.
