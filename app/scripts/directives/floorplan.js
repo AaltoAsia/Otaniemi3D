@@ -422,47 +422,47 @@ angular.module('otaniemi3dApp')
         /*
         * Update or add new sensor data to rooms, and then color the rooms according to the data.
         */
-        function updateRoomInfo(data) {        
-          if(!data) {
+        function updateRoomInfo(data) {
+        if(!data) {
             return;
-          }
-          
-          var i, j;
-          var sensorUpdated = false;
-          
-          for (i = 0; i < data.length; i++) {
+        }
+
+        var i, j;
+        var sensorUpdated = false;
+
+        for (i = 0; i < data.length; i++) {
             var roomName = data[i].room.split(' ')[0];
-            
+
             for (j = 0; j < Rooms.length; j++) {
-              if (roomName === Rooms[j].name) {
-                var k;
-                //Check if sensor already exists
-                for (k = 0; k < Rooms[j].sensors.length; k++) {
-                  if (Rooms[j].sensors[k].id === data[i].sensorId) {
-                    Rooms[j].sensors[k].value = data[i].value;
-                    sensorUpdated = true;
-                  }
+                if (roomName === Rooms[j].name) {
+                    var k;
+                    //Check if sensor already exists
+                    for (k = 0; k < Rooms[j].sensors.length; k++) {
+                        if (Rooms[j].sensors[k].id === data[i].sensorId && Rooms[j].sensors[k].type === data[i].type) {
+                            Rooms[j].sensors[k].value = data[i].value;
+                            sensorUpdated = true;
+                        }
+                    }
+
+                    //If sensor doesn't yet exist in Rooms service then add it
+                    if (!sensorUpdated) {
+                        Rooms[j].sensors.push({
+                            id: data[i].sensorId,
+                            type: data[i].type,
+                            value: data[i].value
+                        });
+                    } else {
+                    //Reset updated flag
+                        sensorUpdated = false;
+                    }
+
+                    setRoomColor(Rooms[j]);
+
+                    break;
                 }
-                
-                //If sensor doesn't yet exist in Rooms service then add it
-                if (!sensorUpdated) {
-                  Rooms[j].sensors.push({
-                    id: data[i].sensorId,
-                    type: data[i].type,
-                    value: data[i].value
-                  });
-                } else {
-                  //Reset updated flag
-                  sensorUpdated = false;
-                }
-                
-                setRoomColor(Rooms[j]);
-                
-                break;
-              }
             }
-          }
-        } //end updateRoomInfo
+        }
+    }  //end updateRoomInfo
         
         /*
         * Pulse the room highlight until it is not selected anymore.
