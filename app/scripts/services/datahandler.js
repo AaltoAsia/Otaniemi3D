@@ -26,7 +26,7 @@ angular.module('otaniemi3dApp')
         var fetchData = function () {
             var deferred = $q.defer();
 
-            $http.get('data.json')
+            $http.get('http://leap.cs.hut.fi/Otaniemi3DREST/webresources/entities.livedata')
                 .success(function (data) {
                     if (dataIsOk(data))
                     {

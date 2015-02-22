@@ -62,14 +62,6 @@ body {
     border-top: 1px solid #e5e5e5;
 }
 
-/* Customize container */
-/*
-@media (min-width: 768px) {
-  .container {
-    max-width: 730px;
-  }
-}
-*/
 .container-narrow > hr {
     margin: 30px 0;
 }
@@ -120,19 +112,6 @@ ul.nav {
 
 .navbar-header {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-}
-#searchContainer {
-    margin-bottom:10px;
-}
-
-#searchContent {
-    width: 80%;
-    display:inline;
-}
-
-#searchDefault {
-    display:inline;
-    margin-bottom:3px;
 }
 
 /* Responsive: Portrait tablets and up */

@@ -1,4 +1,3 @@
-
 'use strict';
 
 /**
@@ -22,6 +21,8 @@ angular.module('otaniemi3dApp')
         $scope.roomValueType = 'temperature';
         $scope.floors = Floorplans.floors.length;
 
+        $scope.searchContainer = ''; //This is used to set correct top margin for search container
+
         /* These are ng-class definitions for buttons found in 2dview*/
         $scope.buttonClass = 'glyphicon glyphicon-resize-full';
         $scope.nextButtonClass = 'glyphicon glyphicon-arrow-right';
@@ -43,10 +44,12 @@ angular.module('otaniemi3dApp')
             $rootScope.fullscreen = !$rootScope.fullscreen;
             if ($scope.floorplanClass === floorplanClass) {
                 $scope.floorplanClass = floorplanFullscreenClass;
+                $scope.searchContainer = 'search-container-full';
                 $scope.buttonClass = ' glyphicon glyphicon-resize-small';
             }
             else {
-                $scope.floorplanClass= floorplanClass;
+                $scope.floorplanClass = floorplanClass;
+                $scope.searchContainer = '';
                 $scope.buttonClass = 'glyphicon glyphicon-resize-full';
             }
 

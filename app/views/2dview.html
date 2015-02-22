@@ -1,13 +1,12 @@
-<div id="searchContainer">
+<div id="searchContainer" ng-class="searchContainer">
 
-    <input id="searchContent"
+    <input id="searchContent2"
            type="text"
            ng-model="searchString"
            placeholder="Search for room..."
            typeahead="room as room.name for room in rooms | filter:{name:$viewValue} | limitTo:8"
            class="form-control"
-           typeahead-on-select="onSelect($item, $model, $label)"
-            >
+           typeahead-on-select="onSelect($item, $model, $label)">
 
 </div>
 
