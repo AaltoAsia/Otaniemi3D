@@ -12,13 +12,18 @@ angular.module('otaniemi3dApp')
 
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
-  
+
         $scope.sensorData = null;
         $scope.floorplanClass = floorplanClass;
         $scope.rooms = Rooms;
         $scope.searchString = '';
         $scope.highlightedRoom = null;
+        $scope.roomValueType = 'temperature';
         $scope.floors = Floorplans.floors.length;
+        $scope.selectedRoom = null;
+
+        $scope.searchContainer = ''; //This is used to set correct top margin for search container
+
 
         /* These are ng-class definitions for buttons found in 2dview*/
         $scope.buttonClass = 'glyphicon glyphicon-resize-full';
@@ -41,15 +46,16 @@ angular.module('otaniemi3dApp')
             $rootScope.fullscreen = !$rootScope.fullscreen;
             if ($scope.floorplanClass === floorplanClass) {
                 $scope.floorplanClass = floorplanFullscreenClass;
+                $scope.searchContainer = 'search-container-full';
                 $scope.buttonClass = ' glyphicon glyphicon-resize-small';
             }
             else {
-                $scope.floorplanClass= floorplanClass;
+                $scope.floorplanClass = floorplanClass;
+                $scope.searchContainer = '';
                 $scope.buttonClass = 'glyphicon glyphicon-resize-full';
             }
 
         };
-
 
         /*
          * Fetch sensor data from the server.
@@ -62,29 +68,13 @@ angular.module('otaniemi3dApp')
                 console.log('Error: Failed to fetch sensor data');
             }
         );
-
-        /*
-         * Change current floorplan to the one that user has selected.
-         *//*
-        $scope.selectPlan = function () {
-            var i;
-            for (i = 0; i < Floorplans.length; i++) {
-                if (Floorplans.floors[i].isSelected && Floorplans.floors[i] !== $scope.selectedPlan) {
-                    Floorplans.floors[i].isSelected = false;
-                } else {
-                    if ($scope.selectedPlan === Floorplans.floors[i]) {
-                        Floorplans.floors[i].isSelected = true;
-                    }
-                }
-            }
-        };*/
-
         /*
          * Change current floorplan to the previous of net floorplan
          * direction is either 1 if the user pressed next button or -1
          * if the user pressed previous button
          */
         $scope.selectPlan = function (direction) {
+
           if (direction === 1) {
             Floorplans.floors[$scope.planNumber].isSelected = false;
             Floorplans.floors[$scope.planNumber+1].isSelected = true;
@@ -100,6 +90,10 @@ angular.module('otaniemi3dApp')
         };
 
         $scope.highlightRoom = function(item, model, label) {
+          if ($scope.highlightedRoom !== null) {
+            clearInterval($scope.highlightedRoom.pulse);
+          }
+          
           $scope.highlightedRoom = item;
           $scope.planNumber = $scope.highlightedRoom.floor;
     	};
@@ -107,4 +101,105 @@ angular.module('otaniemi3dApp')
   	    $scope.onSelect = function ($item, $model, $label) {
           $scope.highlightRoom($item, $model, $label);
         };
-    });
+
+        /*
+        / Refresh the room colours according to sensor that is chosen.
+        / For example if the user changes from temperature heatmap to co2 heatmap
+        / this function will colour the floorplans according to values measured by
+        / co2 sensors.
+        */
+        $scope.refreshRoomColor = function (type) {
+
+            //Scale percentage to rgb value 0 - 255.
+            function scaleTo255(percent) {
+                return Math.round(255 * percent);
+            }
+
+            //Translate value between low and high parameters to a percentage
+            function scaleValueLowHigh(value, low, high) {
+                return Math.max(0, Math.min(1, (value - low) / (high - low)));
+            }
+            var value;
+            for (var j = 0; j < Rooms.length; j++) {
+                var room = Rooms[j];
+
+                // Colour the room white, in case the room doesn't any any values for that particular sensor
+                //
+                d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
+
+                // Loop through sensors and check the value of the sensor that matches the parameter given
+                //
+                for (var i = 0; i < room.sensors.length; i++) {
+                    if (room.sensors[i].type === type) {
+                        var parameter = room.sensors[i].value;
+                        var min;
+                        var max;
+                        switch (type) {
+                            case 'temperature':
+                                min = 15;
+                                max = 35;
+                                break;
+                            case 'co2':
+                                min = 350;
+                                max = 5000;
+                                break;
+                            case 'light':
+                                min = 30;
+                                max = 10000;
+                                break;
+                            case 'pir':
+                                min = 0;
+                                max = 30;
+                                break;
+                            case 'humidity':
+                                min = 30;
+                                max = 70;
+                                break;
+                        }
+
+                        var tempPercentage = Math.min((parameter - min) / (max - min), 1);
+                        tempPercentage = 1.0 - Math.max(tempPercentage, 0);
+
+                        // r    g    b    temp
+                        // 255  0    0    0%
+                        // 255  255  0    25%
+                        // 0    255  0    50%
+                        // 0    255  255  75%
+                        // 0    0    255  100%
+
+                        var red, green, blue;
+
+                        if (tempPercentage < 0.25) {
+                            red = 1.0;
+                            green = scaleValueLowHigh(tempPercentage, 0, 0.25);
+                            blue = 0;
+                        } else if (tempPercentage < 0.50) {
+                            red = scaleValueLowHigh(tempPercentage, 0.50, 0.25);
+                            green = 1.0;
+                            blue = 0;
+                        } else if (tempPercentage < 0.75) {
+                            red = 0;
+                            green = 1.0;
+                            blue = scaleValueLowHigh(tempPercentage, 0.50, 0.75);
+                        } else {
+                            red = 0;
+                            green = scaleValueLowHigh(tempPercentage, 1.0, 0.75);
+                            blue = 1.0;
+                        }
+
+                        var color = 'rgb(' + scaleTo255(red).toString() + ', ' +
+                            scaleTo255(green).toString() + ', ' +
+                            scaleTo255(blue).toString() + ')';
+                        d3.select(room.node).style('fill', color);
+                    }
+                }
+            }
+            };
+
+
+            $scope.changeColour = function (type) {
+                $scope.roomValueType = type;
+                $scope.refreshRoomColor(type);
+            };
+
+        });
