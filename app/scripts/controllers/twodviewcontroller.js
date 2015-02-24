@@ -89,7 +89,7 @@ angular.module('otaniemi3dApp')
           }
         };
 
-        $scope.highlightRoom = function(item, model, label) {
+        $scope.highlightRoom = function(item) {
           if ($scope.highlightedRoom !== null) {
             clearInterval($scope.highlightedRoom.pulse);
           }
@@ -98,8 +98,8 @@ angular.module('otaniemi3dApp')
           $scope.planNumber = $scope.highlightedRoom.floor;
     	};
   
-  	    $scope.onSelect = function ($item, $model, $label) {
-          $scope.highlightRoom($item, $model, $label);
+  	    $scope.onSelect = function ($item) {
+          $scope.highlightRoom($item);
         };
 
         /*
@@ -119,7 +119,6 @@ angular.module('otaniemi3dApp')
             function scaleValueLowHigh(value, low, high) {
                 return Math.max(0, Math.min(1, (value - low) / (high - low)));
             }
-            var value;
             for (var j = 0; j < Rooms.length; j++) {
                 var room = Rooms[j];
 
