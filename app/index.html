@@ -2,7 +2,8 @@
 <html class="no-js">
 <head>
     <title>Otaniemi3D</title>
-    <meta charset="utf-8" name="viewport" content="width=device-width" />
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -114,6 +115,8 @@
 <!-- endbuild -->
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="panorama/embedpano.js"></script>
+<script src="panorama/HTMLviewer.js"></script>
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers/homecontroller.js"></script>
 <script src="scripts/controllers/twodviewcontroller.js"></script>
@@ -125,6 +128,7 @@
 <script src="scripts/directives/floorplan.js"></script>
 <script src="scripts/services/floorplans.js"></script>
 <script src="scripts/services/rooms.js"></script>
+<script src="scripts/controllers/panorama.js"></script>
 <!-- endbuild -->
 </body>
 </html>

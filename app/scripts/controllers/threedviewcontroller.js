@@ -10,6 +10,7 @@
 angular.module('otaniemi3dApp')
   .controller('threedview', function ($scope) {
     $scope.selected = undefined;
+    $scope.pano = false;
         
     $scope.changeView = function(viewpoint){
       if(viewpoint === undefined) {
@@ -34,5 +35,10 @@ angular.module('otaniemi3dApp')
     $scope.onSelect = function($item) {
       $scope.changeView($item);
     };
+    $scope.panoramaViewer = function(room) {
+      $scope.pano = true;
+      embedpano({xml:"panorama/" + room + ".xml", target:"pano", html5:"only", passQueryParameters:true});
+    };
+
   }
 );

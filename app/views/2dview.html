@@ -1,25 +1,31 @@
-<div id="searchContainer">
-        
-        <input id="searchContent" 
-          type="text" 
-          ng-model="searchString" 
-          placeholder="Search for room..." 
-          typeahead="room as room.name for room in rooms | filter:{name:$viewValue} | limitTo:8" 
-          class="form-control" 
-          typeahead-on-select="onSelect($item, $model, $label)"
-        >
-        
+<div ng-hide="pano"  id="searchContainer" ng-class="searchContainer">
+
+    <input id="searchContent2"
+           type="text"
+           ng-model="searchString"
+           placeholder="Search for room..."
+           typeahead="room as room.name for room in rooms | filter:{name:$viewValue} | limitTo:8"
+           class="form-control"
+           typeahead-on-select="onSelect($item, $model, $label)">
+
 </div>
 
-<div ng-class="floorplanClass">
+<div ng-hide="pano" ng-class="floorplanClass">
 
-  <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span> <!-- Spinner that shows up during loading -->
-  <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->
-  <div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4> </div> <!-- Caption of floorplan -->
-  <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
-  <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floorplans.length-1"></i> <!-- button that loads up higher (aka next) floor -->
-  
-  
-  
-  <floorplan class="fp" plan="selectedPlan" data="sensorData" highlighted-room="highlightedRoom"></floorplan> <!-- The actual floorplan -->
+    <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span> <!-- Spinner that shows up during loading -->
+    <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->
+    <div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4> </div> <!-- Caption of floorplan -->
+    <div class="sensor-class">
+        <div class="btn-group sensor-button">
+            <label class="btn btn-primary btn-sm" ng-disabled="roomValueType == 'co2'" ng-click="changeColour('co2')" uncheckable>CO2</label>
+            <label class="btn btn-primary btn-sm" ng-disabled="roomValueType == 'temperature'" ng-click="changeColour('temperature')" uncheckable>Temp</label>
+            <label class="btn btn-primary btn-sm" ng-disabled="roomValueType == 'humidity'" ng-click="changeColour('humidity')" uncheckable>Humi</label>
+            <label class="btn btn-primary btn-sm" ng-disabled="roomValueType == 'light'" ng-click="changeColour('light')" uncheckable>Light</label>
+            <label class="btn btn-primary btn-sm" ng-disabled="roomValueType == 'pir'" ng-click="changeColour('pir')" uncheckable>pir</label>
+        </div>
+    </div>
+
+    <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
+    <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floorplans.length-1"></i> <!-- button that loads up higher (aka next) floor -->
+    <floorplan class="fp" plan="selectedPlan" data="sensorData" highlighted-room="highlightedRoom"></floorplan> <!-- The actual floorplan -->
 </div>

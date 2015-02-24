@@ -1,7 +1,46 @@
-.x3d-container {
-    width:100%;
-    height:calc(100% - 115px);
-    padding-right: 0px;
-    padding-left: 0px;
+@media only screen and (min-width : 769px) {
+    .x3d-container {
+        width:100%;
+        height:calc(100% - 100px);
+        padding-right: 0px;
+        padding-left: 0px;
+        position:relative!important;
+        margin-top:-15px;
+    }
+    .search-container {
+        padding-top: 10px;
+    }
+}
 
+@media only screen and (max-width : 769px) {
+    .x3d-container {
+        width:100%;
+        height:calc(100% - 50px);
+        padding-right: 0px;
+        padding-left: 0px;
+        position:relative!important;
+        margin-top:-15px;
+    }
+    .search-container {
+        padding-top: 5px;
+    }
+}
+
+/*CSS definitions for search bar and buttons next to it*/
+
+.search-container {
+    padding-top: 10px;
+    width:100%;
+    text-align: center;
+    position:absolute;
+}
+
+.search-content {
+    width: 70%;
+    display:inline;
+}
+
+#searchDefault {
+    display:inline;
+    margin-bottom:3px;
 }
