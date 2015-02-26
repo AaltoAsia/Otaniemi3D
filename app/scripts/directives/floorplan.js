@@ -380,23 +380,17 @@ angular.module('otaniemi3dApp')
                 var i;
                 //If text element is one letter then it should be appended to room number
                 if (isLetter.test(roomText.textContent)) {
-                  for (i = 0; i < Rooms.length; i++) {
-                    if (Rooms[i].node === roomArea) {
-                      Rooms[i].name = Rooms[i].name + roomText.textContent;
+                  for (i = 0; i < Rooms.list.length; i++) {
+                    if (Rooms.list[i].node === roomArea) {
+                      Rooms.list[i].name = Rooms.list[i].name + roomText.textContent;
                     }
                   }
                 //Else add a new room to the Rooms service
                 } else {
                   for (i = 0; i < Floorplans.floors.length; i++) {
                     if (Floorplans.floors[i] === floorplan) {
-                      Rooms.push({
-                        name: roomText.textContent,
-                        node: roomArea,
-                        floor: i,
-                        sensors: [],
-                        pulse: null
-                      });
-                      addTooltip(Rooms[Rooms.length-1]);
+                      Rooms.add(roomText.textContent, roomArea, i);
+                      addTooltip(Rooms.list[Rooms.list.length-1]);
                     }
                   }
                 }
@@ -423,46 +417,24 @@ angular.module('otaniemi3dApp')
         * Update or add new sensor data to rooms, and then color the rooms according to the data.
         */
         function updateRoomInfo(data) {
-        if(!data) {
+          if(!data) {
             return;
-        }
+          }
 
-        var i, j;
-        var sensorUpdated = false;
-
-        for (i = 0; i < data.length; i++) {
+          var i, j;
+          for (i = 0; i < data.length; i++) {
             var roomName = data[i].room.split(' ')[0];
 
-            for (j = 0; j < Rooms.length; j++) {
-                if (roomName === Rooms[j].name) {
-                    var k;
-                    //Check if sensor already exists
-                    for (k = 0; k < Rooms[j].sensors.length; k++) {
-                        if (Rooms[j].sensors[k].id === data[i].sensorId && Rooms[j].sensors[k].type === data[i].type) {
-                            Rooms[j].sensors[k].value = data[i].value;
-                            sensorUpdated = true;
-                        }
-                    }
+            for (j = 0; j < Rooms.list.length; j++) {
+              if (roomName === Rooms.list[j].name) {
 
-                    //If sensor doesn't yet exist in Rooms service then add it
-                    if (!sensorUpdated) {
-                        Rooms[j].sensors.push({
-                            id: data[i].sensorId,
-                            type: data[i].type,
-                            value: data[i].value
-                        });
-                    } else {
-                    //Reset updated flag
-                        sensorUpdated = false;
-                    }
+                Rooms.updateSensor(j, data[i].sensorId, data[i].type, data[i].value);
 
-                    setRoomColor(Rooms[j]);
-
-                    break;
-                }
+                setRoomColor(Rooms.list[j]);
+              }
             }
-        }
-    }  //end updateRoomInfo
+          }
+        }  //end updateRoomInfo
 
         /*
         * Pulse the room highlight until it is not selected anymore.
