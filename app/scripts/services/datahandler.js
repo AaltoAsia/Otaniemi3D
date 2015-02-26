@@ -33,6 +33,10 @@ angular.module('otaniemi3dApp')
           url = 'sensor_data/data_day.json';
           break;
           
+        case 'week':
+          url = 'sensor_data/data_week.json';
+          break;
+          
         case 'month':
           url = 'sensor_data/data_month.json';
           break;
@@ -42,8 +46,8 @@ angular.module('otaniemi3dApp')
           break;
           
         default:
-          //url = 'sensor_data/data.json';
-          url = 'http://leap.cs.hut.fi/Otaniemi3DREST/webresources/entities.livedata';
+          url = 'sensor_data/data.json';
+          //url = 'http://leap.cs.hut.fi/Otaniemi3DREST/webresources/entities.livedata';
       }
       
       $http.get(url)
