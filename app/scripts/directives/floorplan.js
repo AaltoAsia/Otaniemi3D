@@ -56,15 +56,14 @@ angular.module('otaniemi3dApp')
         } //end getDefaultFloorplan
 
 
-          /*
-          * Download and show default floorplan and then download
-          * other floorplans asynchronously.
-          */
-
+        /*
+        * Download and show default floorplan and then download
+        * other floorplans asynchronously.
+        */
         if (defaultFloorplan.svg === null) {
           getDefaultFloorplan();
         } else {
-          usSpinnerService.stop('spinner-1'); //floorplans , hide the spinner
+          usSpinnerService.stop('spinner-1'); //floorplans loaded, hide the spinner
           showFloorplan();
         }
           /*
@@ -418,46 +417,46 @@ angular.module('otaniemi3dApp')
         * Update or add new sensor data to rooms, and then color the rooms according to the data.
         */
         function updateRoomInfo() {
-        if(!scope.data) {
+          if(!scope.data) {
             return;
-        }
+          }
 
-        var i, j;
-        var sensorUpdated = false;
+          var i, j;
+          var sensorUpdated = false;
 
-        for (i = 0; i < scope.data.length; i++) {
+          for (i = 0; i < scope.data.length; i++) {
             var roomName = scope.data[i].room.split(' ')[0];
 
             for (j = 0; j < Rooms.length; j++) {
-                if (roomName === Rooms[j].name) {
-                    var k;
-                    //Check if sensor already exists
-                    for (k = 0; k < Rooms[j].sensors.length; k++) {
-                        if (Rooms[j].sensors[k].id === scope.data[i].sensorId && Rooms[j].sensors[k].type === scope.data[i].type) {
-                            Rooms[j].sensors[k].value = scope.data[i].value;
-                            sensorUpdated = true;
-                        }
-                    }
-
-                    //If sensor doesn't yet exist in Rooms service then add it
-                    if (!sensorUpdated) {
-                        Rooms[j].sensors.push({
-                            id: scope.data[i].sensorId,
-                            type: scope.data[i].type,
-                            value: scope.data[i].value
-                        });
-                    } else {
-                    //Reset updated flag
-                        sensorUpdated = false;
-                    }
-
-                    setRoomColor(Rooms[j]);
-
-                    break;
+              if (roomName === Rooms[j].name) {
+                var k;
+                //Check if sensor already exists
+                for (k = 0; k < Rooms[j].sensors.length; k++) {
+                  if (Rooms[j].sensors[k].id === scope.data[i].sensorId && Rooms[j].sensors[k].type === scope.data[i].type) {
+                    Rooms[j].sensors[k].value = scope.data[i].value;
+                    sensorUpdated = true;
+                  }
                 }
+
+                //If sensor doesn't yet exist in Rooms service then add it
+                if (!sensorUpdated) {
+                  Rooms[j].sensors.push({
+                    id: scope.data[i].sensorId,
+                    type: scope.data[i].type,
+                    value: scope.data[i].value
+                  });
+                } else {
+                //Reset updated flag
+                  sensorUpdated = false;
+                }
+
+                setRoomColor(Rooms[j]);
+
+                break;
+              }
             }
-        }
-    }  //end updateRoomInfo
+          }
+        }  //end updateRoomInfo
 
         /*
         * Pulse the room highlight until it is not selected anymore.
