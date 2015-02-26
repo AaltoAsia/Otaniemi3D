@@ -21,6 +21,7 @@ angular.module('otaniemi3dApp')
         $scope.roomValueType = 'temperature';
         $scope.floors = Floorplans.floors.length;
         $scope.selectedRoom = null;
+        $scope.timeFrame = '';
 
         $scope.searchContainer = ''; //This is used to set correct top margin for search container
 
@@ -201,7 +202,15 @@ angular.module('otaniemi3dApp')
         };
 
         $scope.selectTimeFrame = function(timeFrame) {
-            Datahandler.fetchData(timeFrame).then(
+            var time = timeFrame || '';
+          
+            if (time) {
+              $scope.timeFrame = time;
+            } else {
+              $scope.timeFrame = '';
+            }
+          
+            Datahandler.fetchData(time).then(
               function(data) {
                   $scope.sensorData = data;
               },
