@@ -418,24 +418,45 @@ angular.module('otaniemi3dApp')
         */
         function updateRoomInfo(data) {
           if(!data) {
-            return;
+              return;
           }
 
           var i, j;
+          var sensorUpdated = false;
+
           for (i = 0; i < data.length; i++) {
-            var roomName = data[i].room.split(' ')[0];
+              var roomName = data[i].room.split(' ')[0];
 
-            for (j = 0; j < Rooms.list.length; j++) {
-              if (roomName === Rooms.list[j].name) {
+              for (j = 0; j < Rooms.list.length; j++) {
+                  if (roomName === Rooms.list[j].name) {
+                      var k;
+                      //Check if sensor already exists
+                      for (k = 0; k < Rooms.list[j].sensors.length; k++) {
+                          if (Rooms.list[j].sensors[k].id === data[i].sensorId && Rooms.list[j].sensors[k].type === data[i].type) {
+                              Rooms.list[j].sensors[k].value = data[i].value;
+                              sensorUpdated = true;
+                          }
+                      }
 
-                Rooms.updateSensor(j, data[i].sensorId, data[i].type, data[i].value);
+                      //If sensor doesn't yet exist in Rooms service then add it
+                      if (!sensorUpdated) {
+                          Rooms.list[j].sensors.push({
+                              id: data[i].sensorId,
+                              type: data[i].type,
+                              value: data[i].value
+                          });
+                      } else {
+                      //Reset updated flag
+                          sensorUpdated = false;
+                      }
 
-                setRoomColor(Rooms.list[j]);
+                      setRoomColor(Rooms.list[j]);
+
+                      break;
+                  }
               }
-            }
           }
-        }  //end updateRoomInfo
-
+    }  //end updateRoomInfo
         /*
         * Pulse the room highlight until it is not selected anymore.
         */
