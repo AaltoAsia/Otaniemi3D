@@ -23,10 +23,30 @@ angular.module('otaniemi3dApp')
       }
     };
 
-    var fetchData = function () {
-      var deferred = $q.defer();
-
-      $http.get('http://leap.cs.hut.fi/Otaniemi3DREST/webresources/entities.livedata')
+    var fetchData = function (timeFrame) {
+      var deferred = $q.defer(),
+          time = timeFrame || '',
+          url;
+      
+      switch(time) {
+        case 'day':
+          url = 'sensor_data/data_day.json';
+          break;
+          
+        case 'month':
+          url = 'sensor_data/data_month.json';
+          break;
+          
+        case 'year':
+          url = 'sensor_data/data_year.json';
+          break;
+          
+        default:
+          //url = 'sensor_data/data.json';
+          url = 'http://leap.cs.hut.fi/Otaniemi3DREST/webresources/entities.livedata';
+      }
+      
+      $http.get(url)
         .success(function (data) {
           if (dataIsOk(data))
           {

@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope) {
+    .controller('twodview', function($scope, Datahandler, Floorplans, Rooms, $rootScope) {
 
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
@@ -61,10 +61,10 @@ angular.module('otaniemi3dApp')
          * Fetch sensor data from the server.
          */
         Datahandler.fetchData().then(
-            function (data) {
+            function(data) {
                 $scope.sensorData = data;
             },
-            function (error) {
+            function() {
                 console.log('Error: Failed to fetch sensor data');
             }
         );
@@ -73,7 +73,7 @@ angular.module('otaniemi3dApp')
          * direction is either 1 if the user pressed next button or -1
          * if the user pressed previous button
          */
-        $scope.selectPlan = function (direction) {
+        $scope.selectPlan = function(direction) {
 
           if (direction === 1) {
             Floorplans.floors[$scope.planNumber].isSelected = false;
@@ -98,7 +98,7 @@ angular.module('otaniemi3dApp')
           $scope.planNumber = $scope.highlightedRoom.floor;
     	};
   
-  	    $scope.onSelect = function ($item) {
+  	    $scope.onSelect = function($item) {
           $scope.highlightRoom($item);
         };
 
@@ -108,7 +108,7 @@ angular.module('otaniemi3dApp')
         / this function will colour the floorplans according to values measured by
         / co2 sensors.
         */
-        $scope.refreshRoomColor = function (type) {
+        $scope.refreshRoomColor = function(type) {
 
             //Scale percentage to rgb value 0 - 255.
             function scaleTo255(percent) {
@@ -193,12 +193,22 @@ angular.module('otaniemi3dApp')
                     }
                 }
             }
-            };
+        };
 
+        $scope.changeColour = function(type) {
+            $scope.roomValueType = type;
+            $scope.refreshRoomColor(type);
+        };
 
-            $scope.changeColour = function (type) {
-                $scope.roomValueType = type;
-                $scope.refreshRoomColor(type);
-            };
+        $scope.selectTimeFrame = function(timeFrame) {
+            Datahandler.fetchData(timeFrame).then(
+              function(data) {
+                  $scope.sensorData = data;
+              },
+              function() {
+                  console.log('Error: Failed to fetch sensor data');
+              }
+          );
+        };
 
-        });
+    });
