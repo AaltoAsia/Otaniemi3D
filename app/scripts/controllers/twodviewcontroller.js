@@ -119,8 +119,8 @@ angular.module('otaniemi3dApp')
             function scaleValueLowHigh(value, low, high) {
                 return Math.max(0, Math.min(1, (value - low) / (high - low)));
             }
-            for (var j = 0; j < Rooms.length; j++) {
-                var room = Rooms[j];
+            for (var j = 0; j < Rooms.list.length; j++) {
+                var room = Rooms.list[j];
 
                 // Colour the room white, in case the room doesn't any any values for that particular sensor
                 //
