@@ -10,6 +10,14 @@
 
 </div>
 
+<div id="pano" ng-show="pano" style="width:100%;height:100%;">
+  <button class="panobtn" ng-show="pano" ng-click="stopPanorama()" >
+  <span class="glyphicon glyphicon glyphicon-backward" ></span> BACK </button>
+  <noscript><table style="width:100%;height:100%;"><tr style="vertical-align:middle;"><td><div style="text-align:center;">ERROR:<br/><br/>Javascript not activated<br/><br/></div></td></tr></table></noscript>
+  <script>
+  </script>
+</div>
+
 <div ng-hide="pano" ng-class="floorplanClass">
 
     <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span> <!-- Spinner that shows up during loading -->

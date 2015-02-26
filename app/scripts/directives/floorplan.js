@@ -7,14 +7,16 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('floorplan', ['Rooms', 'Floorplans', 'usSpinnerService',function (Rooms, Floorplans, usSpinnerService) {
+  .directive('floorplan', ['$compile', 'Rooms', 'Floorplans', 'usSpinnerService',function ($compile, Rooms, Floorplans, usSpinnerService) {
     return {
       restrict: 'EA',
       scope: {
         plan: '=',
         data: '=',
         highlightedRoom: '=',
-        selectedRoom: '='
+        selectedRoom: '=',
+        panoramaViewer: '&'
+
       },
       link: function (scope, element, attrs) {
         
@@ -210,7 +212,7 @@ angular.module('otaniemi3dApp')
             return;
           }
           tooltip
-            .selectAll('p').remove()
+            .selectAll('.roominfo').remove()
             .style('visibility', null);
         } //end tooltip  helper functions
         
@@ -224,7 +226,12 @@ angular.module('otaniemi3dApp')
               return;
             }
 
-            tooltip.append('p').text('Room: ' + room.name);
+            $compile(angular.element('<button ng-click="console.log("testi")" class="btn btn-sm btn-info">Panorama</button>'))(scope);
+
+            //tooltip.append('p').text('Room: ' + room.name);
+            //tooltip.append('button').attr('class', 'roominfo').attr('ng-click', 'panoramaViewer("OFFICE_B122")').text('Panorama');
+            //$compile(angular.element(tooltip.select('.roominfo')))(scope);
+            tooltip.html(element[0].outerHTML);
 
             var i = 0;
             for (i = 0; i < room.sensors.length; i++) {
@@ -246,6 +253,7 @@ angular.module('otaniemi3dApp')
                         break;
                 }
             }
+            tooltip.selectAll('p').attr('class','roominfo');
 
             tooltip.style('visibility', 'visible');
           }

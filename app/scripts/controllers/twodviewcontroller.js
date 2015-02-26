@@ -8,7 +8,16 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope) {
+    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope, $compile) {
+
+    $scope.panoramaViewer = function(room) {
+        console.log("moroo");
+        $scope.pano = true;
+        embedpano({xml:"panorama/" + room + ".xml", target:"pano", html5:"only", passQueryParameters:true});
+    };
+    $scope.stopPanorama = function(){
+        $scope.pano = false;
+    };
 
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
@@ -201,5 +210,6 @@ angular.module('otaniemi3dApp')
                 $scope.roomValueType = type;
                 $scope.refreshRoomColor(type);
             };
+
 
         });

@@ -114,6 +114,16 @@ ul.nav {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.panobtn {
+  position: fixed;
+  z-index: 5;
+  width: 10em;
+  height: 3em;
+  border: none;
+  background-color: #333;
+  color: #9D9D9D;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
     /* Remove the padding we set earlier */
