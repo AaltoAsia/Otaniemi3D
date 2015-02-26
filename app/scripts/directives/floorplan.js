@@ -56,15 +56,10 @@ angular.module('otaniemi3dApp')
         } //end getDefaultFloorplan
 
 
-          /*
-          * Download and show default floorplan and then download
-          * other floorplans asynchronously.
-          */
-        var loadEvent = new Event('loaded');
-        var defaultLoadedEvent = new Event('defaultLoadedEvent');
-        document.addEventListener('loaded', function(){updateRoomInfo(scope.data);});
-        document.addEventListener('defaultLoadedEvent', function(){getOtherFloorplans();});
-
+        /*
+        * Download and show default floorplan and then download
+        * other floorplans asynchronously.
+        */
         if (defaultFloorplan.svg === null) {
           getDefaultFloorplan();
         } else {
@@ -84,15 +79,14 @@ angular.module('otaniemi3dApp')
                 //Remove title elements so that the browser's built-in tooltip doesn't show
                 d3.select('.' + floorplanContainer.class).selectAll('title').remove();
                 if (Floorplans.allLoaded()) {
+                  updateRoomInfo();
                   usSpinnerService.stop('spinner-1');
                   showFloorplan();
                 }
               }
               finally {
-                document.dispatchEvent(loadEvent);
-                if (isDefault)
-                {
-                  document.dispatchEvent(defaultLoadedEvent);
+                if (isDefault) {
+                    getOtherFloorplans();
                 }
               }
             }
@@ -416,24 +410,25 @@ angular.module('otaniemi3dApp')
         /*
         * Update or add new sensor data to rooms, and then color the rooms according to the data.
         */
-        function updateRoomInfo(data) {
-          if(!data) {
+
+        function updateRoomInfo() {
+          if(!scope.data) {
               return;
           }
 
           var i, j;
           var sensorUpdated = false;
 
-          for (i = 0; i < data.length; i++) {
-              var roomName = data[i].room.split(' ')[0];
+          for (i = 0; i < scope.data.length; i++) {
+              var roomName = scope.data[i].room.split(' ')[0];
 
               for (j = 0; j < Rooms.list.length; j++) {
                   if (roomName === Rooms.list[j].name) {
                       var k;
                       //Check if sensor already exists
                       for (k = 0; k < Rooms.list[j].sensors.length; k++) {
-                          if (Rooms.list[j].sensors[k].id === data[i].sensorId && Rooms.list[j].sensors[k].type === data[i].type) {
-                              Rooms.list[j].sensors[k].value = data[i].value;
+                          if (Rooms.list[j].sensors[k].id === scope.data[i].sensorId && Rooms.list[j].sensors[k].type === scope.data[i].type) {
+                              Rooms.list[j].sensors[k].value = scope.data[i].value;
                               sensorUpdated = true;
                           }
                       }
@@ -441,9 +436,9 @@ angular.module('otaniemi3dApp')
                       //If sensor doesn't yet exist in Rooms service then add it
                       if (!sensorUpdated) {
                           Rooms.list[j].sensors.push({
-                              id: data[i].sensorId,
-                              type: data[i].type,
-                              value: data[i].value
+                              id: scope.data[i].sensorId,
+                              type: scope.data[i].type,
+                              value: scope.data[i].value
                           });
                       } else {
                       //Reset updated flag
@@ -457,7 +452,8 @@ angular.module('otaniemi3dApp')
               }
           }
     }  //end updateRoomInfo
-        /*
+
+	/*
         * Pulse the room highlight until it is not selected anymore.
         */
         function highlightRoom(room) {
@@ -506,7 +502,7 @@ angular.module('otaniemi3dApp')
         */
         scope.$watch('data', function () {
           if (scope.data) {
-            updateRoomInfo(scope.data);
+            updateRoomInfo();
           }
         });
 
