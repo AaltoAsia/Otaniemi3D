@@ -41,7 +41,6 @@ angular.module('otaniemi3dApp')
 
         // Toggle fullscreen button. It broadcasts to rootscope to change the view to fullscreen
         // which in turn hides the footer and header. Also it changes the fullscreen button glyphicon
-        //
         $scope.toggleFullscreen = function(){
             $rootScope.fullscreen = !$rootScope.fullscreen;
             if ($scope.floorplanClass === floorplanClass) {
