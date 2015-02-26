@@ -380,23 +380,17 @@ angular.module('otaniemi3dApp')
                 var i;
                 //If text element is one letter then it should be appended to room number
                 if (isLetter.test(roomText.textContent)) {
-                  for (i = 0; i < Rooms.length; i++) {
-                    if (Rooms[i].node === roomArea) {
-                      Rooms[i].name = Rooms[i].name + roomText.textContent;
+                  for (i = 0; i < Rooms.list.length; i++) {
+                    if (Rooms.list[i].node === roomArea) {
+                      Rooms.list[i].name = Rooms.list[i].name + roomText.textContent;
                     }
                   }
                 //Else add a new room to the Rooms service
                 } else {
                   for (i = 0; i < Floorplans.floors.length; i++) {
                     if (Floorplans.floors[i] === floorplan) {
-                      Rooms.push({
-                        name: roomText.textContent,
-                        node: roomArea,
-                        floor: i,
-                        sensors: [],
-                        pulse: null
-                      });
-                      addTooltip(Rooms[Rooms.length-1]);
+                      Rooms.add(roomText.textContent, roomArea, i);
+                      addTooltip(Rooms.list[Rooms.list.length-1]);
                     }
                   }
                 }
@@ -433,20 +427,20 @@ angular.module('otaniemi3dApp')
           for (i = 0; i < data.length; i++) {
               var roomName = data[i].room.split(' ')[0];
 
-              for (j = 0; j < Rooms.length; j++) {
-                  if (roomName === Rooms[j].name) {
+              for (j = 0; j < Rooms.list.length; j++) {
+                  if (roomName === Rooms.list[j].name) {
                       var k;
                       //Check if sensor already exists
-                      for (k = 0; k < Rooms[j].sensors.length; k++) {
-                          if (Rooms[j].sensors[k].id === data[i].sensorId && Rooms[j].sensors[k].type === data[i].type) {
-                              Rooms[j].sensors[k].value = data[i].value;
+                      for (k = 0; k < Rooms.list[j].sensors.length; k++) {
+                          if (Rooms.list[j].sensors[k].id === data[i].sensorId && Rooms.list[j].sensors[k].type === data[i].type) {
+                              Rooms.list[j].sensors[k].value = data[i].value;
                               sensorUpdated = true;
                           }
                       }
 
                       //If sensor doesn't yet exist in Rooms service then add it
                       if (!sensorUpdated) {
-                          Rooms[j].sensors.push({
+                          Rooms.list[j].sensors.push({
                               id: data[i].sensorId,
                               type: data[i].type,
                               value: data[i].value
@@ -456,14 +450,13 @@ angular.module('otaniemi3dApp')
                           sensorUpdated = false;
                       }
 
-                      setRoomColor(Rooms[j]);
+                      setRoomColor(Rooms.list[j]);
 
                       break;
                   }
               }
           }
     }  //end updateRoomInfo
-
         /*
         * Pulse the room highlight until it is not selected anymore.
         */
