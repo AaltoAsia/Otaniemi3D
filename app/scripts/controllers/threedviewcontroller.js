@@ -10,7 +10,7 @@
 angular.module('otaniemi3dApp')
   .controller('threedview', function ($scope) {
     $scope.selected = undefined;
-        
+    $scope.webglSupport = Modernizr.webgl; //Use this boolean to check for webgl support
     $scope.changeView = function(viewpoint){
       if(viewpoint === undefined) {
         var textField = document.getElementById('searchContent');

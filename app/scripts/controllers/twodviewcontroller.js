@@ -12,7 +12,7 @@ angular.module('otaniemi3dApp')
 
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
-
+	
         $scope.sensorData = null;
         $scope.floorplanClass = floorplanClass;
         $scope.rooms = Rooms;

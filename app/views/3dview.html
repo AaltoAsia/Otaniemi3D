@@ -7,19 +7,9 @@
 </head>
 <div class="container x3d-container">
 
-<!-- HUD for testing -->
-<!--
-    <div id='HUDs_Div'> 
-      <div id='viewpoint_menu' class='group' style='margin:2px; margin-top:56px; padding:4px; background-color:rgba(199,202,204,.7); position:absolute; float:center; z-index:1000;'> 
-        Select viewpoint
-        <button onClick="x3dElement.runtime.resetView();return false;">Reset current</button> 
-        <button onClick="x3dElement.runtime.nextView();return false;">Next</button> 
-        <button onClick="x3dElement.runtime.prevView();return false;">Previous</button> 
-      </div>         
-    </div>
-    -->
+<div class="jumbotron" ng-hide="webglSupport"><h1>Your browser doesn't support webGL!</h1></div>
 
-<x3d id='x3dElement' keysEnabled='false' showStat='false' showLog='false' style='width:100%; height:100%; border:0; margin:0; padding:0;'>
+<x3d ng-show="webglSupport" id='x3dElement' keysEnabled='false' showStat='false' showLog='false' style='width:100%; height:100%; border:0; margin:0; padding:0;'>
 
 <scene DEF='scene'>
 <navigationInfo
@@ -29,7 +19,7 @@
         typeParams= '0.0 0.0 0.1 1.5' >
 </navigationInfo>
 
-<div class="search-container">
+<div ng-show="webglSupport" class="search-container">
 
     <input
             id="searchContent"
