@@ -310,7 +310,8 @@ module.exports = function (grunt) {
             'images/{,*/}*.{webp}',
             'fonts/*',
             'binGeo/*',
-            'floorplans/*'
+            'floorplans/*',
+			'sensor_data/*'
           ]
         }, {
           expand: true,
