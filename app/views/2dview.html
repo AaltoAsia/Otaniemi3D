@@ -8,8 +8,9 @@
          class="form-control"
          typeahead-on-select="onSelect($item)">
 </div>
+<div class="jumbotron" ng-hide="svgSupport"><h1>Your browser doesn't support svg!</h1></div>
 
-<div ng-class="floorplanClass">
+<div ng-show="svgSupport" ng-class="floorplanClass">
 
   <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span> <!-- Spinner that shows up during loading -->
   <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->

@@ -12,7 +12,7 @@ angular.module('otaniemi3dApp')
 
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
-
+	
         $scope.sensorData = null;
         $scope.floorplanClass = floorplanClass;
         $scope.rooms = Rooms;
@@ -25,6 +25,7 @@ angular.module('otaniemi3dApp')
 
         $scope.searchContainer = ''; //This is used to set correct top margin for search container
 
+        $scope.svgSupport = Modernizr.svg;
 
         /* These are ng-class definitions for buttons found in 2dview*/
         $scope.buttonClass = 'glyphicon glyphicon-resize-full';
