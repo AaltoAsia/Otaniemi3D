@@ -18,8 +18,8 @@
 
     /*CSS definitions for those sensor buttons at the bottom of floorplan viewport*/
     .sensor-class {
-        left:10%;
-        right:10%;
+        left:5%;
+        right:5%;
         bottom: 0vh;
         position: fixed;
         text-align:center;
@@ -68,7 +68,6 @@
         position: fixed;
         text-align:center;
     }
-
     .search-container-full {
         padding-top: 20px;
     }
@@ -110,4 +109,32 @@
 #searchContent2 {
     width: 100%;
     display:inline;
+}
+
+
+/* CSS definitions for the sensor time interval buttons and popover (tooltip) */ 
+.sensor-interval {
+    margin-top: 1vh;
+    right: 0px;
+    position: fixed;
+    text-align:right;
+}
+
+.sensor-interval .popover {
+    margin-right: 82px;
+    margin-top: 56px;
+}
+
+.sensor-interval .popover .arrow {
+    top: 15px;
+}
+
+/* CSS definitions for the sensor type popover (tooltip) */
+.sensor-class .popover {
+    margin-top: 10px;
+    margin-left: 72px;
+}
+
+.sensor-class .popover .arrow {
+    left: 27px;
 }

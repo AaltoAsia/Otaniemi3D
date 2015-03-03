@@ -1,0 +1,156 @@
+[
+  {
+    "id": "_102",
+    "room": "148",
+    "sensorId": "112",
+    "type":"temperature",
+    "value":"21.8"
+  },
+  {
+    "id": "_103",
+    "room": "103",
+    "sensorId": "113",
+    "type":"temperature",
+    "value":"19.2"
+  },
+  {
+    "id": "_105",
+    "room": "105",
+    "sensorId": "115",
+    "type":"temperature",
+    "value":"22.0"
+  },
+  {
+    "id": "_2215",
+    "room": "225",
+    "sensorId": "165",
+    "type":"temperature",
+    "value":"27.0"
+  },
+  {
+    "id": "_215",
+    "room": "215",
+    "sensorId": "315",
+    "type":"temperature",
+    "value":"23.0"
+  },
+  {
+    "id": "_205",
+    "room": "216",
+    "sensorId": "545",
+    "type":"temperature",
+    "value":"17.0"
+  },
+  {
+    "id": "_101",
+    "room": "101",
+    "sensorId": "111",
+    "type": "co2",
+    "value": "425"
+  },
+  {
+    "id": "_102",
+    "room": "148",
+    "sensorId": "112",
+    "type":"co2",
+    "value":"315"
+  },
+  {
+    "id": "_103",
+    "room": "103",
+    "sensorId": "113",
+    "type":"co2",
+    "value":"546"
+  },
+  {
+    "id": "_105",
+    "room": "105",
+    "sensorId": "115",
+    "type":"co2",
+    "value":"225"
+  },
+  {
+      "id": "_101",
+      "room": "101",
+      "sensorId": "111",
+      "type": "light",
+      "value": "7392.12321"
+  },
+  {
+      "id": "_102",
+      "room": "148",
+      "sensorId": "112",
+      "type":"light",
+      "value":"3609.231"
+  },
+  {
+      "id": "_103",
+      "room": "103",
+      "sensorId": "113",
+      "type":"light",
+      "value":"300.0450231"
+  },
+  {
+      "id": "_105",
+      "room": "105",
+      "sensorId": "115",
+      "type":"light",
+      "value":"302.0450231"
+  },
+  {
+      "id": "_101",
+      "room": "101",
+      "sensorId": "111",
+      "type": "humidity",
+      "value": "56.1232131"
+  },
+  {
+      "id": "_102",
+      "room": "148",
+      "sensorId": "112",
+      "type":"humidity",
+      "value":"32.23131"
+  },
+  {
+      "id": "_103",
+      "room": "103",
+      "sensorId": "113",
+      "type":"humidity",
+      "value":"41.123241"
+  },
+  {
+      "id": "_105",
+      "room": "105",
+      "sensorId": "115",
+      "type":"humidity",
+      "value":"39.08983"
+  },
+  {
+      "id": "_101",
+      "room": "101",
+      "sensorId": "111",
+      "type": "pir",
+      "value": "31"
+  },
+  {
+      "id": "_102",
+      "room": "148",
+      "sensorId": "112",
+      "type":"pir",
+      "value":"28"
+  },
+  {
+      "id": "_103",
+      "room": "103",
+      "sensorId": "113",
+      "type":"pir",
+      "value":"10"
+  },
+  {
+      "id": "_105",
+      "room": "105",
+      "sensorId": "115",
+      "type":"pir",
+      "value":"4"
+  }
+]

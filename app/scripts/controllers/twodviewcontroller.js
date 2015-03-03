@@ -8,12 +8,12 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope, $compile) {
+    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope) {
 
-    $scope.panoramaViewer = function(room) {
-        console.log("moroo");
+    $scope.panoramaViewer = function() {
+        console.log($scope.room);
         $scope.pano = true;
-        embedpano({xml:"panorama/" + room + ".xml", target:"pano", html5:"only", passQueryParameters:true});
+        embedpano({xml:'panorama/Office_B122.xml', target:'pano', html5:'only', passQueryParameters:true});
     };
     $scope.stopPanorama = function(){
         $scope.pano = false;
@@ -30,7 +30,9 @@ angular.module('otaniemi3dApp')
         $scope.roomValueType = 'temperature';
         $scope.floors = Floorplans.floors.length;
         $scope.selectedRoom = null;
-
+        $scope.timeFrame = '';
+        $scope.room = null; // Room which panoramic button was clicked.
+        $scope.selectedPlan = null;
         $scope.searchContainer = ''; //This is used to set correct top margin for search container
 
 
@@ -50,7 +52,6 @@ angular.module('otaniemi3dApp')
 
         // Toggle fullscreen button. It broadcasts to rootscope to change the view to fullscreen
         // which in turn hides the footer and header. Also it changes the fullscreen button glyphicon
-        //
         $scope.toggleFullscreen = function(){
             $rootScope.fullscreen = !$rootScope.fullscreen;
             if ($scope.floorplanClass === floorplanClass) {
@@ -70,10 +71,10 @@ angular.module('otaniemi3dApp')
          * Fetch sensor data from the server.
          */
         Datahandler.fetchData().then(
-            function (data) {
+            function(data) {
                 $scope.sensorData = data;
             },
-            function (error) {
+            function() {
                 console.log('Error: Failed to fetch sensor data');
             }
         );
@@ -98,8 +99,10 @@ angular.module('otaniemi3dApp')
           }
         };
 
-        $scope.highlightRoom = function(item, model, label) {
-          if ($scope.highlightedRoom !== null) {
+
+        $scope.highlightRoom = function(item) {
+
+	      if ($scope.highlightedRoom !== null) {
             clearInterval($scope.highlightedRoom.pulse);
           }
           
@@ -107,8 +110,8 @@ angular.module('otaniemi3dApp')
           $scope.planNumber = $scope.highlightedRoom.floor;
     	};
   
-  	    $scope.onSelect = function ($item, $model, $label) {
-          $scope.highlightRoom($item, $model, $label);
+  	    $scope.onSelect = function($item) {
+          $scope.highlightRoom($item);
         };
 
         /*
@@ -117,7 +120,7 @@ angular.module('otaniemi3dApp')
         / this function will colour the floorplans according to values measured by
         / co2 sensors.
         */
-        $scope.refreshRoomColor = function (type) {
+        $scope.refreshRoomColor = function(type) {
 
             //Scale percentage to rgb value 0 - 255.
             function scaleTo255(percent) {
@@ -128,9 +131,8 @@ angular.module('otaniemi3dApp')
             function scaleValueLowHigh(value, low, high) {
                 return Math.max(0, Math.min(1, (value - low) / (high - low)));
             }
-            var value;
-            for (var j = 0; j < Rooms.length; j++) {
-                var room = Rooms[j];
+            for (var j = 0; j < Rooms.list.length; j++) {
+                var room = Rooms.list[j];
 
                 // Colour the room white, in case the room doesn't any any values for that particular sensor
                 //
@@ -203,13 +205,30 @@ angular.module('otaniemi3dApp')
                     }
                 }
             }
-            };
+        };
 
+        $scope.changeColour = function(type) {
+            $scope.roomValueType = type;
+            $scope.refreshRoomColor(type);
+        };
 
-            $scope.changeColour = function (type) {
-                $scope.roomValueType = type;
-                $scope.refreshRoomColor(type);
-            };
+        $scope.selectTimeFrame = function(timeFrame) {
+            var time = timeFrame || '';
+          
+            if (time) {
+              $scope.timeFrame = time;
+            } else {
+              $scope.timeFrame = '';
+            }
+          
+            Datahandler.fetchData(time).then(
+              function(data) {
+                  $scope.sensorData = data;
+              },
+              function() {
+                  console.log('Error: Failed to fetch sensor data');
+              }
+          );
+        };
 
-
-        });
+    });
