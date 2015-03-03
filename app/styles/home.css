@@ -11,7 +11,7 @@
     .frontpage-carousel {
         margin-top: -15px;
         height:calc(100% - 100px)!important;
-		height:85%; /*This is a fallback for devices with no calc support*/
+        height:85%; /*This is a fallback for devices with no calc support*/
     }
 }
 /* Smaller devices: no footer so content can be 100%*/
@@ -19,7 +19,7 @@
     .frontpage-carousel {
         margin-top: -15px;
         height:calc(100% - 50px)!important;
-		height:90%; /*This is a fallback for devices with no calc support*/
+        height:90%; /*This is a fallback for devices with no calc support*/
     }
 }
 

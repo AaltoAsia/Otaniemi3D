@@ -311,7 +311,7 @@ module.exports = function (grunt) {
             'fonts/*',
             'binGeo/*',
             'floorplans/*',
-			'sensor_data/*'
+            'sensor_data/*'
           ]
         }, {
           expand: true,
