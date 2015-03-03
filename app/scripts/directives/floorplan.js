@@ -60,11 +60,14 @@ angular.module('otaniemi3dApp')
         * Download and show default floorplan and then download
         * other floorplans asynchronously.
         */
+
+      if (scope.$parent.svgSupport) {  //Check if svg support. There is not point doing anything if there isn't
         if (defaultFloorplan.svg === null) {
-          getDefaultFloorplan();
-        } else {
-          usSpinnerService.stop('spinner-1'); //floorplans loaded, hide the spinner
-          showFloorplan();
+            getDefaultFloorplan();
+            } else {
+              usSpinnerService.stop('spinner-1'); //floorplans loaded, hide the spinner
+              showFloorplan();
+          }
         }
           /*
           * Use the given object to determine the svg to be fetched and append it according to the argument container
