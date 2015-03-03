@@ -7,6 +7,9 @@
     .floorplan-fullscreen {
         height: calc(100% - 45px);
     }
+	.pano-2d-view {
+	    height: calc(100%-45px);
+	}
 
     /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
     margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
@@ -43,6 +46,12 @@
     .floorplan-fullscreen {
         height: calc(100% - 55px);
     }
+	
+	.pano-2d-view {
+	    height: calc(100% - 100px)!important;
+		margin-top: -15px;
+    }
+	
     /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
     margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
 
