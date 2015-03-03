@@ -3,7 +3,8 @@
 <head>
     <title>Otaniemi3D</title>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="utf-8">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -88,8 +89,12 @@
 
 <!-- build:js(.) scripts/oldieshim.js -->
 <!--[if lt IE 9]>
-<script src="bower_components/es5-shim/es5-shim.js"></script>
 <script src="bower_components/json3/lib/json3.js"></script>
+<script src="bower_components/aight/aight.js"></script>
+<![endif]-->
+
+<!--[if lt IE 8]>
+<script src="bower_components/aight/d3/d3.ie8.min.js"></script>
 <![endif]-->
 <!-- endbuild -->
 
