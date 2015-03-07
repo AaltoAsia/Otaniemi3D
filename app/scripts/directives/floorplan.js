@@ -484,6 +484,26 @@ angular.module('otaniemi3dApp')
 
           return pulsing;
         }
+        
+        function fillLegend() {
+          var legend = d3.select('#heatmap-legend');
+          legend
+            .append('rect')
+              .attr('fill', 'url(#tempGradient)')
+              .attr("x",100)
+              .attr("y",100)
+              .attr("width",40)
+              .attr("height",100);
+          legend
+            .append('g')
+              .append('defs')
+                .append('tempGradient')
+                  .attr('id', 'tempGradient')
+                  .attr("x1","0%")
+                  .attr("x2","0%")
+                  .attr("y1","0%")
+                  .attr("y2","100%");
+        }
 
         /*
         * Watch for changes in twodviewcontroller's $scope.floorplan and

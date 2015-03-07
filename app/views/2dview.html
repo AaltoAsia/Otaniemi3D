@@ -36,6 +36,12 @@
       <label class="btn btn-warning btn-sm" ng-disabled="timeFrame == 'year'" ng-click="selectTimeFrame('year')" uncheckable>Year</label>
     </div>
   </div>
+  
+  <div class="legend-div">
+    <svg id="heatmap-legend" width="100" height="300">
+    
+    </svg>
+  </div>
 
   <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
   <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floorplans.length-1"></i> <!-- button that loads up higher (aka next) floor -->
