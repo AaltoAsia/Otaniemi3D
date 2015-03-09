@@ -12,16 +12,16 @@ angular.module('otaniemi3dApp')
 
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
-	
+                
         $scope.sensorData = null;
         $scope.floorplanClass = floorplanClass;
         $scope.rooms = Rooms;
         $scope.searchString = '';
         $scope.highlightedRoom = null;
-        $scope.roomValueType = 'temperature';
+        $scope.roomValueType = 'Temperature';
         $scope.floors = Floorplans.floors.length;
         $scope.selectedRoom = null;
-        $scope.timeFrame = '';
+        $scope.timeFrame = 'Latest';
 
         $scope.searchContainer = ''; //This is used to set correct top margin for search container
 
@@ -135,15 +135,15 @@ angular.module('otaniemi3dApp')
                         var min;
                         var max;
                         switch (type) {
-                            case 'temperature':
+                            case 'Temperature':
                                 min = 15;
                                 max = 35;
                                 break;
-                            case 'co2':
+                            case 'CO2':
                                 min = 350;
                                 max = 5000;
                                 break;
-                            case 'light':
+                            case 'Light':
                                 min = 30;
                                 max = 10000;
                                 break;
@@ -151,7 +151,7 @@ angular.module('otaniemi3dApp')
                                 min = 0;
                                 max = 30;
                                 break;
-                            case 'humidity':
+                            case 'Humidity':
                                 min = 30;
                                 max = 70;
                                 break;
@@ -202,12 +202,12 @@ angular.module('otaniemi3dApp')
         };
 
         $scope.selectTimeFrame = function(timeFrame) {
-            var time = timeFrame || '';
+            var time = timeFrame;
           
             if (time) {
               $scope.timeFrame = time;
             } else {
-              $scope.timeFrame = '';
+              $scope.timeFrame = 'Latest';
             }
           
             Datahandler.fetchData(time).then(

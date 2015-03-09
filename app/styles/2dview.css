@@ -17,12 +17,6 @@
         bottom: 5vh;
     }
 
-    /*CSS definitions for those sensor buttons at the bottom of floorplan viewport*/
-    .sensor-class {
-        left:5%;
-        right:5%;
-        bottom: 0px;
-    }
     /*Make next-button hug the right side of floorplan div*/
     .next-button {
         right: 0px;
@@ -32,6 +26,11 @@
       override header bottom margin*/
     .search-container-full {
         padding-top: 20px;
+    }
+    
+    #searchContent2 {
+        width: 220px;
+        display:inline;
     }
 }
 
@@ -62,26 +61,16 @@
         right: 5%;
         right: 5vh;
     }
-
-    /*CSS definitions for those sensor buttons at the bottom of floorplan viewport*/
-    .sensor-class {
-        left:20%;
-        right:20%;
-        bottom: 50px;
-        position: fixed;
-        text-align:center;
-    }
-
+    
     .search-container-full {
         padding-top: 20px;
     }
+    
+    #searchContent2 {
+        width: 50%;
+        display:inline;
+    }
 
-}
-
-/*CSS definitions for those sensor buttons at the bottom of floorplan viewport*/
-.sensor-class {
-    position: fixed;
-    text-align:center;
 }
 
 /*CSS for button that makes the floorplan fullscreen*/
@@ -111,43 +100,24 @@
 /*CSS definitions for search bar next to it*/
 
 #searchContainer {
-    margin-left: 30%;
-    margin-right: 30%;
+    margin-left: 10%;
+    margin-right: 10%;
     text-align: center;
     margin-top:-10px;
     margin-bottom:5px;
 }
 
-#searchContent2 {
-    width: 100%;
-    display:inline;
+#sensorTypeButton {
+    width: 120px;
+    margin-bottom:5px;
 }
 
-
-/* CSS definitions for the sensor time interval buttons and popover (tooltip) */ 
-.sensor-interval {
-    margin-top: 1%; /*Fallback!*/
-    margin-top: 1vh;
-    right: 0px;
-    position: fixed;
-    text-align:right;
+#sensorTimeButton {
+    width: 85px;
+    margin-bottom:5px;
 }
 
-.sensor-interval .popover {
-    margin-right: 82px;
-    margin-top: 56px;
-}
-
-.sensor-interval .popover .arrow {
-    top: 15px;
-}
-
-/* CSS definitions for the sensor type popover (tooltip) */
-.sensor-class .popover {
+.caret {
+    float: right;
     margin-top: 10px;
-    margin-left: 72px;
-}
-
-.sensor-class .popover .arrow {
-    left: 27px;
 }
