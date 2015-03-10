@@ -34,7 +34,7 @@ angular.module('otaniemi3dApp')
         $scope.room = null; // Room which panoramic button was clicked.
         $scope.selectedPlan = null;
         $scope.searchContainer = ''; //This is used to set correct top margin for search container
-
+        $scope.pano = false;
 
         /* These are ng-class definitions for buttons found in 2dview*/
         $scope.buttonClass = 'glyphicon glyphicon-resize-full';

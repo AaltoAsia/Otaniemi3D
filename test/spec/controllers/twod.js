@@ -14,6 +14,15 @@ describe('Controller: twodview', function () {
         twodviewCtrl = $controller('twodview', {
             $scope: scope
         });
-}));
 
+
+    }));
+    it('pano should instantiate false', function () {
+        expect(scope.pano).toBe(false);
+        });
+
+    it('pano should change to trues', function () {
+        scope.panoramaViewer();
+        expect(scope.pano).toBe(true);
+    });
 });

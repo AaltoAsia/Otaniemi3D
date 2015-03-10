@@ -9,7 +9,7 @@
 angular.module('otaniemi3dApp')
   .directive('floorplan', ['Rooms', 'Floorplans', 'usSpinnerService',function (Rooms, Floorplans, usSpinnerService) {
     return {
-      restrict: 'EA',
+      restrict: 'E',
       scope: {
         plan: '=',
         data: '=',
