@@ -28,19 +28,19 @@ angular.module('otaniemi3dApp')
           url;
       
       switch(time) {
-        case 'day':
+        case 'Day':
           url = 'sensor_data/data_day.json';
           break;
           
-        case 'week':
+        case 'Week':
           url = 'sensor_data/data_week.json';
           break;
           
-        case 'month':
+        case 'Month':
           url = 'sensor_data/data_month.json';
           break;
           
-        case 'year':
+        case 'Year':
           url = 'sensor_data/data_year.json';
           break;
           

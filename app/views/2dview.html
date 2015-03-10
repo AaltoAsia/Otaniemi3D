@@ -5,7 +5,7 @@
     <button id="sensorTypeButton" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement> 
       {{roomValueType}} <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu" role="menu">
+    <ul class="dropdown-menu typeMenu" role="menu">
       <li class="btn" disabled>Choose sensor type</li>
       <li><a ng-disabled="roomValueType == 'CO2'" ng-click="changeColour('CO2')">CO2</a></li>
       <li><a ng-disabled="roomValueType == 'Temperature'" ng-click="changeColour('Temperature')" active>Temperature</a></li>
@@ -20,7 +20,7 @@
     <button id="sensorTimeButton" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement> 
       {{ timeFrame }} <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu" role="menu">
+    <ul class="dropdown-menu pull-right timeMenu" role="menu">
       <li class="btn" disabled>Choose data timeframe</li>
       <li><a ng-disabled="timeFrame == 'Latest'" ng-click="selectTimeFrame('Latest')" uncheckable>Latest</a></li>
       <li><a ng-disabled="timeFrame == 'Day'" ng-click="selectTimeFrame('Day')" uncheckable>Day</a></li>
