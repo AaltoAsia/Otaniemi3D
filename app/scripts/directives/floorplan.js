@@ -209,6 +209,7 @@ angular.module('otaniemi3dApp')
           tooltip
             .selectAll('.roominfo').remove()
             .style('visibility', null);
+          tooltip.selectAll('button').style('display', 'none');
         } //end tooltip  helper functions
         
         /*
@@ -244,7 +245,8 @@ angular.module('otaniemi3dApp')
                 }
             }
             tooltip.selectAll('p').attr('class','roominfo');
-
+;
+            tooltip.selectAll('button').style('display', 'block');
             tooltip.style('visibility', 'visible');
           }
           

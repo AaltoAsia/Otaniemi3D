@@ -11,9 +11,8 @@ angular.module('otaniemi3dApp')
     .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope) {
 
     $scope.panoramaViewer = function() {
-        console.log($scope.room);
         $scope.pano = true;
-        embedpano({xml:'panorama/Office_B122.xml', target:'pano', html5:'only', passQueryParameters:true});
+        embedpano({xml:'panorama/OFFICE_B' + $scope.room +'.xml', target:'pano', html5:'only', passQueryParameters:true});
     };
     $scope.stopPanorama = function(){
         $scope.pano = false;
