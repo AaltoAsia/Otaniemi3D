@@ -209,7 +209,7 @@ angular.module('otaniemi3dApp')
           }
           tooltip
             .selectAll('p').remove()
-            .style('visibility', null);
+            .style('visibility', 'hidden');
         } //end tooltip  helper functions
 
         /*
@@ -322,6 +322,7 @@ angular.module('otaniemi3dApp')
                                      ')scale(' + d3.event.scale + ')');
                 floorplan.scale = d3.event.scale;
                 floorplan.translate = d3.event.translate;
+                tooltip.style('visibility', 'hidden');
               });
 
             svg.call(zoomListener);
