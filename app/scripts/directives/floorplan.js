@@ -209,6 +209,9 @@ angular.module('otaniemi3dApp')
           tooltip
             .selectAll('.roominfo').remove()
             .style('visibility', null);
+          tooltip
+            .style('display','flex')
+            .style('flex-flow','column');
           tooltip.selectAll('button').style('display', 'none');
         } //end tooltip  helper functions
         
@@ -223,24 +226,24 @@ angular.module('otaniemi3dApp')
             }
             
             scope.$parent.room = room.name; //Pass the room name to controller function
-
+            tooltip.append('div').attr('id', 'infocontent');
             var i = 0;
             for (i = 0; i < room.sensors.length; i++) {
                 switch (room.sensors[i].type) {
                     case 'temperature':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' °C');
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' °C');
                         break;
                     case 'humidity':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' %');
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' %');
                         break;
                     case 'co2':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm');
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm');
                         break;
                     case 'pir':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
                         break;
                     case 'light':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' lux');
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' lux');
                         break;
                 }
             }

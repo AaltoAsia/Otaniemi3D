@@ -138,6 +138,15 @@
     top: 15px;
 }
 
+/*we want to show room information before panoramabutto in tooltip */
+#infocontent{
+    order:1;
+}
+/* panoramabutton in tooltip */
+#panobtn{
+    order:2;
+}
+
 /* CSS definitions for the sensor type popover (tooltip) */
 .sensor-class .popover {
     margin-top: 10px;
