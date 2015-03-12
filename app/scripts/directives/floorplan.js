@@ -226,8 +226,9 @@ angular.module('otaniemi3dApp')
             }
             
             scope.$parent.room = room.name; //Pass the room name to controller function
-
             tooltip.append('div').attr('id', 'infocontent');
+            tooltip.select('#infocontent').append('p').text('Room: ' + room.name);
+
             var i = 0;
             for (i = 0; i < room.sensors.length; i++) {
                 switch (room.sensors[i].type) {
