@@ -199,7 +199,24 @@ angular.module('otaniemi3dApp')
           if (!skipSelectedCheck && scope.selectedRoom) {
             return;
           }
-          tooltip.style('top', (d3.event.pageY-10)+'px').style('left',(d3.event.pageX+10)+'px');
+          
+          // Make sure that tooltip doesn't appear out of window
+          if (d3.event.pageY > window.innerHeight /2) {
+            tooltip.style('bottom', (window.innerHeight-d3.event.pageY)+'px');
+            tooltip.style('top', 'auto');
+          }
+          else {
+            tooltip.style('top', (d3.event.pageY-10)+'px');
+            tooltip.style('bottom', 'auto');
+          }
+          if (d3.event.pageX > window.innerWidth /2) {
+            tooltip.style('right', (window.innerWidth-d3.event.pageX)+'px');
+            tooltip.style('left', 'auto');
+          }
+          else {
+            tooltip.style('left', (d3.event.pageX)+'px');
+            tooltip.style('right', 'auto');
+          }        
         }
 
         //Empty tooltip and make it invisible
