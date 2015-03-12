@@ -6,15 +6,19 @@ describe('Directive: floorplan', function () {
   beforeEach(module('otaniemi3dApp'));
 
   var element,
-    scope;
+      Ctrl,
+      scope;
 
-  beforeEach(inject(function ($rootScope) {
+  beforeEach(inject(function ($rootScope, $controller) {
     scope = $rootScope.$new();
+    Ctrl = $controller('twodview', {
+      $scope: scope
+    });
   }));
 
   it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<floorplan></floorplan>');
+    element = angular.element('<floorplan class="fp" plan="selectedPlan" data="sensorData" highlighted-room="highlightedRoom"></floorplan>');
     element = $compile(element)(scope);
-    expect(element.text()).toBe('this is the floorplan directive');
+    console.log(element.contents().children()[0]);
   }));
 });

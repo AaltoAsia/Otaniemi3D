@@ -8,7 +8,16 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-    .controller('twodview', function($scope, Datahandler, Floorplans, Rooms, $rootScope) {
+    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope) {
+
+
+    $scope.panoramaViewer = function() {
+        $scope.pano = true;
+        embedpano({xml:'panorama/OFFICE_B' + $scope.room +'.xml', target:'pano', html5:'only', passQueryParameters:true});
+    };
+    $scope.stopPanorama = function(){
+        $scope.pano = false;
+    };
 
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
@@ -22,10 +31,12 @@ angular.module('otaniemi3dApp')
         $scope.floors = Floorplans.floors.length;
         $scope.selectedRoom = null;
         $scope.timeFrame = '';
-
+        $scope.room = null; // Room which panoramic button was clicked.
+        $scope.selectedPlan = null;
         $scope.searchContainer = ''; //This is used to set correct top margin for search container
 
         $scope.svgSupport = Modernizr.svg;
+        $scope.pano = false;
 
         /* These are ng-class definitions for buttons found in 2dview*/
         $scope.buttonClass = 'glyphicon glyphicon-resize-full';
@@ -74,7 +85,7 @@ angular.module('otaniemi3dApp')
          * direction is either 1 if the user pressed next button or -1
          * if the user pressed previous button
          */
-        $scope.selectPlan = function(direction) {
+        $scope.selectPlan = function (direction) {
 
           if (direction === 1) {
             Floorplans.floors[$scope.planNumber].isSelected = false;
@@ -90,8 +101,10 @@ angular.module('otaniemi3dApp')
           }
         };
 
+
         $scope.highlightRoom = function(item) {
-          if ($scope.highlightedRoom !== null) {
+
+	      if ($scope.highlightedRoom !== null) {
             clearInterval($scope.highlightedRoom.pulse);
           }
           

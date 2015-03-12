@@ -22,6 +22,7 @@
     "angular": false,
     "d3": false,
     "FastClick": false,
-	"Modernizr": false
+	"Modernizr": false,
+    "embedpano": false
   }
 }

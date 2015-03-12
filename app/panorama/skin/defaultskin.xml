@@ -1,0 +1,170 @@
+<krpano>
+	<!-- krpano 1.17.4 default buttons skin -->
+
+	<!-- default mouse control mode (moveto or drag2d) -->
+	<control mousetype="moveto" />
+
+	<!-- default autorotate settings (disabled by default) -->
+	<autorotate enabled="false" waittime="1.0" accel="2.0" speed="8.0" horizon="0.0" tofov="90.0" />
+
+
+	<!-- control buttons style -->
+	<style name="defaultskin_button" url="buttons-2.png" scale="0.5" align="lefttop" />
+
+	<!-- the container layer that contains the buttons -->
+	<layer name="defaultskin_buttons" type="container" width="360" height="40" align="bottom=" y="10" scalechildren="true" scale="1.0" keep="true">
+		<layer name="btn_in"       x="0"   style="defaultskin_button" crop="320|0|80|80" onovercrop="320|80|80|80" ondown="set(fov_moveforce,-1);"     onup="set(fov_moveforce,0);"     />
+		<layer name="btn_out"      x="40"  style="defaultskin_button" crop="400|0|80|80" onovercrop="400|80|80|80" ondown="set(fov_moveforce,+1);"     onup="set(fov_moveforce,0);"     />
+		<layer name="btn_left"     x="80"  style="defaultskin_button" crop=  "0|0|80|80" onovercrop=  "0|80|80|80" ondown="set(hlookat_moveforce,-1);" onup="set(hlookat_moveforce,0);" />
+		<layer name="btn_right"    x="120" style="defaultskin_button" crop= "80|0|80|80" onovercrop= "80|80|80|80" ondown="set(hlookat_moveforce,+1);" onup="set(hlookat_moveforce,0);" />
+		<layer name="btn_up"       x="160" style="defaultskin_button" crop="160|0|80|80" onovercrop="160|80|80|80" ondown="set(vlookat_moveforce,-1);" onup="set(vlookat_moveforce,0);" />
+		<layer name="btn_down"     x="200" style="defaultskin_button" crop="240|0|80|80" onovercrop="240|80|80|80" ondown="set(vlookat_moveforce,+1);" onup="set(vlookat_moveforce,0);" />
+		<layer name="btn_ctrlmode" x="240" style="defaultskin_button" crop="800|0|80|80" onovercrop="800|80|80|80" onclick="switch(control.mousetype,moveto,drag2d); switch(control.touchtype,moveto,drag2d); update_ctrl_mode();" />
+		<layer name="btn_autorot"  x="280" style="defaultskin_button" crop="480|0|80|80" onovercrop="480|80|80|80" onclick="switch(autorotate.enabled);" />
+		<layer name="btn_fs"       x="320" style="defaultskin_button" crop="560|0|80|80" onovercrop="560|80|80|80" onclick="switch(fullscreen);" visible="true" devices="fullscreensupport" />
+	</layer>
+
+	<!-- no fullscreen support => no fullscreen button => smaller container width -->
+	<layer name="defaultskin_buttons" width="320" devices="!fullscreensupport" />
+
+	<!-- scale the buttons 2x for mobile devices -->
+	<layer name="defaultskin_buttons" scale="2.0" devices="mobile" />
+
+
+	<!-- events for handling dynamic changes -->
+	<events name="defaultskin_buttons" keep="true"
+	        onxmlcomplete="update_ctrl_mode(); update_fs_button();"
+	        onresize="adjust_button_sizes();"
+	        onenterfullscreen="update_fs_button();"
+	        onexitfullscreen ="update_fs_button();"
+	        />
+
+
+	<!-- check if the buttons fit inside the window, and if not, make them smaller so that they will fit -->
+	<action name="adjust_button_sizes">
+		if(layer[defaultskin_buttons].pixelwidth GT stagewidth,
+			div(layer[defaultskin_buttons].scale, stagewidth, layer[defaultskin_buttons].width);
+		  );
+	</action>
+
+	<!-- update the buttons and the cursors according to the current control mode setting -->
+	<action name="update_ctrl_mode">
+		if(control.mousetype == drag2d,
+			<!-- set mouse cursor graphic -->
+			set(cursors.url, %SWFPATH%/skin/drag-cursors-2.png);
+			set(cursors.type, drag);
+			set(cursors.move,  0|0|32|32);
+			set(cursors.drag, 32|0|32|32);
+			<!-- set button graphic -->
+			set(layer[btn_ctrlmode].crop,       720|0|80|80);
+			set(layer[btn_ctrlmode].onovercrop, 720|80|80|80);
+		  ,
+			<!-- set mouse cursor graphic -->
+			set(cursors.url, %SWFPATH%/skin/qtvr-cursors.png);
+			set(cursors.type, 8way);
+			set(cursors.move,       0|0|16|16);
+			set(cursors.drag,      16|0|16|16);
+			set(cursors.arrow_u,   32|0|16|16);
+			set(cursors.arrow_d,   48|0|16|16);
+			set(cursors.arrow_l,   64|0|16|16);
+			set(cursors.arrow_r,   80|0|16|16);
+			set(cursors.arrow_lu,  96|0|16|16);
+			set(cursors.arrow_ru, 112|0|16|16);
+			set(cursors.arrow_rd, 128|0|16|16);
+			set(cursors.arrow_ld, 144|0|16|16);
+			<!-- set button graphic -->
+			set(layer[btn_ctrlmode].crop,       800|0|80|80);
+			set(layer[btn_ctrlmode].onovercrop, 800|80|80|80);
+		  );
+	</action>
+
+	<!-- update the fullscreen button according to the current state -->
+	<action name="update_fs_button">
+		if(fullscreen,
+			set(layer[btn_fs].crop,       640|0|80|80);
+			set(layer[btn_fs].onovercrop, 640|80|80|80);
+		  ,
+			set(layer[btn_fs].crop,       560|0|80|80);
+			set(layer[btn_fs].onovercrop, 560|80|80|80);
+		  );
+	</action>
+
+
+	<!-- context menu -->
+	<contextmenu>
+		<item name="krp" caption="KRPANO"     />
+		<item name="fsc" caption="FULLSCREEN" />
+		<item name="scm" caption="Change Controlmode" onclick="switch(control.mousetype,moveto,drag2d); switch(control.touchtype,moveto,drag2d); update_ctrl_mode();" separator="true" />
+		<item name="nrm" caption="Normal View"        onclick="skin_view_normal();"        showif="view.vlookatrange == 180" separator="true"      />
+		<item name="fis" caption="Fisheye View"       onclick="skin_view_fisheye();"       showif="view.vlookatrange == 180" devices="flash|webgl" />
+		<item name="ste" caption="Stereographic View" onclick="skin_view_stereographic();" showif="view.vlookatrange == 180" devices="flash|webgl" />
+		<item name="arc" caption="Architectural View" onclick="skin_view_architectural();" showif="view.vlookatrange == 180"                       />
+		<item name="pan" caption="Pannini View"       onclick="skin_view_pannini();"       showif="view.vlookatrange == 180" devices="flash|webgl" />
+		<item name="lpv" caption="Little Planet View" onclick="skin_view_littleplanet();"  showif="view.vlookatrange == 180" devices="flash|webgl" />
+	</contextmenu>
+
+
+	<!-- actions for view changing -->
+	<action name="skin_view_normal">
+		tween(view.fovmax,       150.0, distance(179, 1.00), easeoutquad);
+		tween(view.architectural,  0.0, distance(1.0, 0.45), easeoutquad);
+		tween(view.fisheye,        0.0, distance(1.0, 0.45), easeoutquad, set(view.stereographic,false); if(view.pannini, set(view.pannini,false); delayedcall(0,updateobject(true,true)); ); );
+		set(centerview,false);
+		if(view.architectural LT 0.2,
+			if(view.vlookat LT -60, set(centerview,true));
+			if(view.vlookat GT +60, set(centerview,true));
+			if(centerview, tween(view.vlookat, 0.0, distance(90, 0.45), easeoutquad));
+		  );
+		if(view.fov GE 150, tween(view.fov, 100.0, distance(50, 0.45), easeoutquad));
+	</action>
+
+	<action name="skin_view_fisheye">
+		tween(view.architectural, 0.0, distance(1.0, 0.30), easeoutquad);
+		tween(view.fisheye,       0.0 ,distance(1.0, 0.30), easeoutquad, set(view.stereographic,false); if(view.pannini, set(view.pannini,false); delayedcall(0,updateobject(true,true)); ); set(view.fovmax,179); tween(view.fisheye, 0.35, distance(1.0,1.25)); );
+	</action>
+
+	<action name="skin_view_architectural">
+		tween(view.fovmax,       150.0, distance(179, 1.00), easeoutquad);
+		tween(view.architectural,  1.0, distance(1.0, 0.45), easeoutquad);
+		tween(view.fisheye,        0.0, distance(1.0, 0.45), easeoutquad, set(view.stereographic,false); if(view.pannini, set(view.pannini,false); delayedcall(0,updateobject(true,true)); ); );
+	</action>
+
+	<action name="skin_view_stereographic">
+		tween(view.architectural, 0.0, 0.25);
+		set(backtonormalfirst, false);
+		if(view.pannini       == true,  set(backtonormalfirst, true) );
+		if(view.stereographic == false, set(backtonormalfirst, true) );
+		if(backtonormalfirst, tween(view.fisheye, 0.0 ,distance(1.0, 0.25), easeoutquad, WAIT); );
+		if(view.pannini, set(view.pannini,false); delayedcall(0,updateobject(true,true)); );
+		set(view.stereographic, true);
+		set(view.fovmax, 150);
+		tween(view.fisheye, 1.0, distance(1.0, 0.75), easeoutquad);
+	</action>
+
+	<action name="skin_view_pannini">
+		tween(view.architectural, 0.0, 0.25);
+		set(backtonormalfirst, false);
+		if(view.pannini       == false, set(backtonormalfirst, true) );
+		if(view.stereographic == false, set(backtonormalfirst, true) );
+		if(backtonormalfirst, tween(view.fisheye, 0.0 ,distance(1.0, 0.25), easeoutquad, WAIT); );
+		set(view.pannini, true);
+		set(view.stereographic, true);
+		set(view.fovmax, 150);
+		tween(view.fisheye, 1.0, distance(1.0, 0.75), easeoutquad);
+	</action>
+
+	<action name="skin_view_littleplanet">
+		tween(view.architectural, 0.0, 0.25);
+		tween(view.vlookat,  90, distance(179, 1.50), easeoutquad);
+		set(backtonormalfirst, false);
+		if(view.pannini       == true,  set(backtonormalfirst, true) );
+		if(view.stereographic == false, set(backtonormalfirst, true) );
+		if(backtonormalfirst, tween(view.fisheye, 0.0 ,distance(1.0, 0.25), easeoutquad, WAIT); );
+		if(view.pannini, set(view.pannini,false); delayedcall(0,updateobject(true,true)); );
+		set(view.stereographic, true);
+		set(view.fovmax, 150);
+		tween(view.fisheye, 1.0, distance(1.0, 0.75), easeoutquad);
+		tween(view.fov,     150, distance(179, 0.75), easeoutquad);
+	</action>
+
+</krpano>

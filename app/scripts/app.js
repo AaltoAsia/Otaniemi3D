@@ -40,6 +40,10 @@ angular
         templateUrl: 'views/support.html',
         controller: 'support'
       })
+      .when('/panorama', {
+        templateUrl: 'views/panorama.html',
+        controller: 'PanoramaCtrl'
+      })
       .otherwise({
         redirectTo: '/home'
       });

@@ -69,5 +69,4 @@ angular.module('otaniemi3dApp')
       return deferred.promise;
     };
     return {fetchData: fetchData};
-
   }]);

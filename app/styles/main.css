@@ -88,7 +88,7 @@ body {
     border: 1px solid #e5e5e5;
 }
 
-.mousetooltip {
+.mouse-tooltip {
     margin-top: 19px;
     border: 1px solid #e5e5e5;
     border-radius: 5px;
@@ -112,6 +112,16 @@ ul.nav {
 
 .navbar-header {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.panobtn {
+  position: fixed;
+  z-index: 5;
+  width: 10em;
+  height: 3em;
+  border: none;
+  background-color: #333;
+  color: #9D9D9D;
 }
 
 /* Responsive: Portrait tablets and up */

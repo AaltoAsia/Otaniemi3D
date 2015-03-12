@@ -9,12 +9,11 @@
 angular.module('otaniemi3dApp')
   .directive('floorplan', ['Rooms', 'Floorplans', 'usSpinnerService',function (Rooms, Floorplans, usSpinnerService) {
     return {
-      restrict: 'EA',
+      restrict: 'E',
       scope: {
         plan: '=',
         data: '=',
-        highlightedRoom: '=',
-        selectedRoom: '='
+        highlightedRoom: '='
       },
       link: function (scope, element) {
 
@@ -61,21 +60,33 @@ angular.module('otaniemi3dApp')
         * Those that do not require room-specific information and are common to all rooms.
         *==============================================
         */
-        var tooltip = d3.select('.mousetooltip');
-
-        //Check if tooltip div element has already been created.
-        if (tooltip.empty()) {
-          tooltip = d3.select('body')
-            .append('div')
-            .attr('class','mousetooltip');
-        }
+        var tooltip = d3.select('.mouse-tooltip');
+        tooltip
+          .style('display','flex')
+          .style('flex-flow','column');
+          
 
         //Make tooltip window follow mouse movement
         function mouseMove (skipSelectedCheck) {
           if (!skipSelectedCheck && scope.selectedRoom) {
             return;
           }
-          tooltip.style('top', (d3.event.pageY-10)+'px').style('left',(d3.event.pageX+10)+'px');
+          if (d3.event.pageY > window.innerHeight /2) {
+            tooltip.style('bottom', (window.innerHeight-d3.event.pageY)+'px');
+            tooltip.style('top', 'auto');
+          }
+          else {
+            tooltip.style('top', (d3.event.pageY-10)+'px');
+            tooltip.style('bottom', 'auto');
+          }
+          if (d3.event.pageX > window.innerWidth /2) {
+            tooltip.style('right', (window.innerWidth-d3.event.pageX)+'px');
+            tooltip.style('left', 'auto');
+          }
+          else {
+            tooltip.style('left', (d3.event.pageX)+'px');
+            tooltip.style('right', 'auto');
+          }
         }
 
         //Empty tooltip and make it invisible
@@ -84,8 +95,9 @@ angular.module('otaniemi3dApp')
             return;
           }
           tooltip
-            .selectAll('p').remove()
+            .selectAll('.roominfo').remove()
             .style('visibility', null);
+          tooltip.select('#panobtn').style('display', 'none');
         } //end tooltip  helper functions
 
         /*
@@ -97,32 +109,46 @@ angular.module('otaniemi3dApp')
             if (!skipSelectedCheck && scope.selectedRoom) {
               return;
             }
-
-            tooltip.append('p').text('Room: ' + room.name);
+            
+            scope.$parent.room = room.name; //Pass the room name to controller function
+            tooltip.append('div').attr('id', 'infocontent');
+            tooltip.select('#infocontent').append('p').text('Room: ' + room.name);
 
             var i = 0;
             for (i = 0; i < room.sensors.length; i++) {
                 switch (room.sensors[i].type) {
                     case 'temperature':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' °C');
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' °C');
                         break;
                     case 'humidity':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' %');
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' %');
                         break;
                     case 'co2':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm');
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm');
                         break;
                     case 'pir':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
                         break;
                     case 'light':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' lux');
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' lux');
                         break;
+                }
+            }
+            
+
+            tooltip.selectAll('p').attr('class','roominfo');
+            
+            var roomsWithPanorama = ['103','122','123'];       
+            for(var i = 0; i<roomsWithPanorama.length;i++){
+                if(room.name===roomsWithPanorama[i]){
+                  tooltip.select('#panobtn').style('display', 'block');
                 }
             }
 
             tooltip.style('visibility', 'visible');
+
           }
+          
 
           function clicked () {
             clickWasOnRoom = true;
@@ -190,7 +216,8 @@ angular.module('otaniemi3dApp')
           });
         } //end getFloorplan
 
-        /*
+		
+		/*
         * Download remaining floorplans and parse their room info.
         */
         function getOtherFloorplans() {
@@ -203,6 +230,7 @@ angular.module('otaniemi3dApp')
             }
           }
         } //end getOtherFloorplans
+
 
         /*
         * Set room color for a room according to its temperature.
@@ -272,9 +300,8 @@ angular.module('otaniemi3dApp')
             }
           }
         }//end setRoomColor
-
-
-        /*
+       
+       /*
         * Append floorplan to the html element and register zoom and drag listener.
         */
         function appendFloorplan(floorplan, container) {
@@ -467,12 +494,10 @@ angular.module('otaniemi3dApp')
         function highlightRoom(room) {
           var duration = 3000;
           var pulseColor = 'grey';
-
           var initialColor = d3.select(room.node).style('fill');
           if (initialColor === 'none') {
             initialColor = 'rgb(255,255,255)';
           }
-
           //Color it first, fade away and color again because the first iteration of setInterval takes a while...
           d3.select(room.node).style('fill', pulseColor);
           d3.select(room.node).transition().duration(duration*2/3).style('fill', initialColor);
