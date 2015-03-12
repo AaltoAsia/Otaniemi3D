@@ -10,6 +10,7 @@
 angular.module('otaniemi3dApp')
     .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope) {
 
+
     $scope.panoramaViewer = function() {
         $scope.pano = true;
         embedpano({xml:'panorama/OFFICE_B' + $scope.room +'.xml', target:'pano', html5:'only', passQueryParameters:true});

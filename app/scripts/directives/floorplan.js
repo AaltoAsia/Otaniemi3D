@@ -185,6 +185,9 @@ angular.module('otaniemi3dApp')
         *==============================================
         */
         var tooltip = d3.select('.mouse-tooltip');
+        tooltip
+          .style('display','flex')
+          .style('flex-flow','column');
           
         //Check if tooltip div element has already been created.
         /*if (tooltip.empty()) {
@@ -209,10 +212,7 @@ angular.module('otaniemi3dApp')
           tooltip
             .selectAll('.roominfo').remove()
             .style('visibility', null);
-          tooltip
-            .style('display','flex')
-            .style('flex-flow','column');
-          tooltip.selectAll('button').style('display', 'none');
+          tooltip.select('#panobtn').style('display', 'none');
         } //end tooltip  helper functions
         
         /*
@@ -226,6 +226,7 @@ angular.module('otaniemi3dApp')
             }
             
             scope.$parent.room = room.name; //Pass the room name to controller function
+
             tooltip.append('div').attr('id', 'infocontent');
             var i = 0;
             for (i = 0; i < room.sensors.length; i++) {
@@ -248,8 +249,14 @@ angular.module('otaniemi3dApp')
                 }
             }
             tooltip.selectAll('p').attr('class','roominfo');
-;
-            tooltip.selectAll('button').style('display', 'block');
+            
+            var roomsWithPanorama = ['103','122','123'];       
+            for(var i = 0; i<roomsWithPanorama.length;i++){
+                if(room.name===roomsWithPanorama[i]){
+                  tooltip.select('#panobtn').style('display', 'block');
+                }
+            }
+
             tooltip.style('visibility', 'visible');
           }
           

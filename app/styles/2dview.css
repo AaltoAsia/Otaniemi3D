@@ -140,11 +140,12 @@
 
 /*we want to show room information before panoramabutto in tooltip */
 #infocontent{
-    order:1;
+    order: 1;
 }
 /* panoramabutton in tooltip */
 #panobtn{
-    order:2;
+    order: 2;
+    display: none;
 }
 
 /* CSS definitions for the sensor type popover (tooltip) */
