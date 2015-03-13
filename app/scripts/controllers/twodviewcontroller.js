@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-    .controller('twodview', function($scope, Datahandler, Floorplans, Rooms, $rootScope) {
+    .controller('twodview', function($scope, Datahandler, Floorplans, Rooms, $rootScope, $modal) {
 
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
@@ -219,5 +219,29 @@ angular.module('otaniemi3dApp')
               }
           );
         };
+        
 
+        
+   /*Create a new modal pass timeframe and roomValueType variables into it
+      Also parse the return values to aforementioned variables*/
+  $scope.open = function () {
+
+    var modalInstance = $modal.open({
+      templateUrl: 'myModalContent.html',
+      controller: 'ModalcontrollerCtrl',
+      resolve: {
+        timeFrame: function () {
+          return $scope.timeFrame;
+        },
+        roomValueType: function () {
+          return $scope.roomValueType;
+        }
+      }
+    });
+    
+    modalInstance.result.then(function () {
+      $scope.roomValueType = arguments[0];
+      $scope.timeFrame = arguments[1];
+    });
+    };
     });

@@ -32,6 +32,12 @@
         width: 220px;
         display:inline;
     }
+	.mobile-button {
+		visibility:visible;
+	}
+	.desktop-dropdown {
+		visibility:hidden;
+	}
 }
 
 @media only screen and (min-width : 769px) {
@@ -70,7 +76,13 @@
         width: 50%;
         display:inline;
     }
-
+	.mobile-button {
+		visibility:hidden;
+	}
+	.desktop-dropdown {
+		visibility:visible;
+	}
+	
 }
 
 /*CSS for button that makes the floorplan fullscreen*/
