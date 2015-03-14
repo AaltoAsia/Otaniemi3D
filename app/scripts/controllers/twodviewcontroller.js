@@ -240,8 +240,15 @@ angular.module('otaniemi3dApp')
     });
     
     modalInstance.result.then(function () {
-      $scope.roomValueType = arguments[0];
-      $scope.timeFrame = arguments[1];
+      if (arguments[0][1] !== $scope.timeFrame) {
+        $scope.timeFrame = arguments[0][1];
+        $scope.roomValueType = arguments[0][0];
+        $scope.selectTimeFrame($scope.timeFrame);
+      }
+      else if (arguments[0][0] !== $scope.roomValueType) {
+        $scope.roomValueType = arguments[0][0];
+        $scope.refreshRoomColor($scope.roomValueType);
+      }
     });
     };
     });

@@ -13,7 +13,6 @@
       <li><a ng-disabled="roomValueType == 'Light'" ng-click="changeColour('Light')">Light</a></li>
       <li><a ng-disabled="roomValueType == 'pir'" ng-click="changeColour('pir')">pir</a></li>
     </ul>
-	>
   </div>
   <!-- Sensor timeframe  -->
   <div class="btn-group desktop-dropdown" dropdown>
@@ -56,15 +55,15 @@
 
 <script type="text/ng-template" id="myModalContent.html">
   <div class="modal-header">
-    <h3 class="modal-title">Select sensor values and time period</h3>
+    <h3 class="modal-title">Select sensor values and timeframe</h3>
   </div>
   <div class="modal-body">
     <div class="btn-group">
-        <label class="btn btn-success" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
-        <label class="btn btn-success" ng-model="roomValueType" btn-radio="'pir'" uncheckable>pir</label>
-        <label class="btn btn-success" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
-        <label class="btn btn-success" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
-        <label class="btn btn-success" ng-model="roomValueType" btn-radio="'CO2'" uncheckable>CO2</label>
+        <label class="btn btn-primary" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
+        <label class="btn btn-primary" ng-model="roomValueType" btn-radio="'pir'" uncheckable>pir</label>
+        <label class="btn btn-primary" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
+        <label class="btn btn-primary" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
+        <label class="btn btn-primary" ng-model="roomValueType" btn-radio="'CO2'" uncheckable>CO2</label>
     </div>
 	<div class="btn-group">
         <label class="btn btn-success" ng-model="timeFrame" btn-radio="'Latest'" uncheckable>Latest</label>
@@ -77,5 +76,5 @@
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>
     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
- </div>
- </script>
+  </div>
+</script>

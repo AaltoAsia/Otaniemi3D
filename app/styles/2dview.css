@@ -29,14 +29,17 @@
     }
     
     #searchContent2 {
-        width: 220px;
+        width: 70%;
+		max-width: 220px;
         display:inline;
     }
+	/*Make desktop dropdown invisible and make mobile modal button visible*/
 	.mobile-button {
-		visibility:visible;
+		display:inline;
+		width:30%;
 	}
 	.desktop-dropdown {
-		visibility:hidden;
+		display:none;
 	}
 }
 
@@ -76,12 +79,17 @@
         width: 50%;
         display:inline;
     }
+	/*Make desktop dropdown visible and make mobile modal button invisible*/
 	.mobile-button {
-		visibility:hidden;
+		display:none;
 	}
 	.desktop-dropdown {
-		visibility:visible;
+		display:inline;
 	}
+	#searchContainer {
+        margin-left: 10%;
+	    margin-right: 10%;
+    }
 	
 }
 
@@ -112,8 +120,6 @@
 /*CSS definitions for search bar next to it*/
 
 #searchContainer {
-    margin-left: 10%;
-    margin-right: 10%;
     text-align: center;
     margin-top:-10px;
     margin-bottom:5px;
