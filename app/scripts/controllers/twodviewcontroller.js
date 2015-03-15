@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope) {
+    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope, $modal) {
 
 
     $scope.panoramaViewer = function() {
@@ -21,18 +21,20 @@ angular.module('otaniemi3dApp')
 
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';
-	
+                
         $scope.sensorData = null;
         $scope.floorplanClass = floorplanClass;
         $scope.rooms = Rooms;
         $scope.searchString = '';
         $scope.highlightedRoom = null;
-        $scope.roomValueType = 'temperature';
+        $scope.roomValueType = 'Temperature';
         $scope.floors = Floorplans.floors.length;
         $scope.selectedRoom = null;
         $scope.timeFrame = '';
         $scope.room = null; // Room which panoramic button was clicked.
         $scope.selectedPlan = null;
+        $scope.timeFrame = 'Latest';
+
         $scope.searchContainer = ''; //This is used to set correct top margin for search container
 
         $scope.svgSupport = Modernizr.svg;
@@ -148,15 +150,15 @@ angular.module('otaniemi3dApp')
                         var min;
                         var max;
                         switch (type) {
-                            case 'temperature':
+                            case 'Temperature':
                                 min = 15;
                                 max = 35;
                                 break;
-                            case 'co2':
+                            case 'CO2':
                                 min = 350;
                                 max = 5000;
                                 break;
-                            case 'light':
+                            case 'Light':
                                 min = 30;
                                 max = 10000;
                                 break;
@@ -164,7 +166,7 @@ angular.module('otaniemi3dApp')
                                 min = 0;
                                 max = 30;
                                 break;
-                            case 'humidity':
+                            case 'Humidity':
                                 min = 30;
                                 max = 70;
                                 break;
@@ -215,12 +217,12 @@ angular.module('otaniemi3dApp')
         };
 
         $scope.selectTimeFrame = function(timeFrame) {
-            var time = timeFrame || '';
+            var time = timeFrame;
           
             if (time) {
               $scope.timeFrame = time;
             } else {
-              $scope.timeFrame = '';
+              $scope.timeFrame = 'Latest';
             }
           
             Datahandler.fetchData(time).then(
@@ -232,5 +234,36 @@ angular.module('otaniemi3dApp')
               }
           );
         };
+        
 
+        
+   /*Create a new modal pass timeframe and roomValueType variables into it
+      Also parse the return values to aforementioned variables*/
+  $scope.open = function () {
+
+    var modalInstance = $modal.open({
+      templateUrl: 'myModalContent.html',
+      controller: 'ModalcontrollerCtrl',
+      resolve: {
+        timeFrame: function () {
+          return $scope.timeFrame;
+        },
+        roomValueType: function () {
+          return $scope.roomValueType;
+        }
+      }
+    });
+    
+    modalInstance.result.then(function () {
+      if (arguments[0][1] !== $scope.timeFrame) {
+        $scope.timeFrame = arguments[0][1];
+        $scope.roomValueType = arguments[0][0];
+        $scope.selectTimeFrame($scope.timeFrame);
+      }
+      else if (arguments[0][0] !== $scope.roomValueType) {
+        $scope.roomValueType = arguments[0][0];
+        $scope.refreshRoomColor($scope.roomValueType);
+      }
+    });
+    };
     });
