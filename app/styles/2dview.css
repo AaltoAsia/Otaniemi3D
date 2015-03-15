@@ -84,7 +84,6 @@
 		display:none;
 	}
 	.desktop-dropdown {
-		display:inline;
 	}
 	#searchContainer {
         margin-left: 10%;
@@ -141,6 +140,13 @@
     text-align: right;
     right: 0;
 }
+
+.timeMenu {
+}
+
+.typeMenu {
+}
+
 /* bootstrap2 */
 .timeMenu.dropdown-menu:before {
   position: absolute;
@@ -168,7 +174,7 @@
 .typeMenu.dropdown-menu:before {
   position: absolute;
   top: -7px;
-  left: 9px;
+  right: 9px;
   display: inline-block;
   border-right: 7px solid transparent;
   border-bottom: 7px solid #ccc;
@@ -180,10 +186,14 @@
 .typeMenu.dropdown-menu:after {
   position: absolute;
   top: -6px;
-  left: 10px;
+  right: 10px;
   display: inline-block;
   border-right: 6px solid transparent;
   border-bottom: 6px solid #ffffff;
   border-left: 6px solid transparent;
   content: '';
+}
+
+#modalValue {
+    margin-bottom: 10px;
 }
