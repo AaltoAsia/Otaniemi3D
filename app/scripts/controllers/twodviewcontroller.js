@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-    .controller('twodview', function($scope, Datahandler, Floorplans, Rooms, $rootScope) {
+    .controller('twodview', function($scope, Datahandler, Floorplans, Rooms, twodservice, $rootScope) {
 
         var floorplanClass = 'floorplan';
         var floorplanFullscreenClass = 'floorplan-fullscreen';

@@ -7,7 +7,7 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('floorplan', ['Rooms', 'Floorplans', 'usSpinnerService',function (Rooms, Floorplans, usSpinnerService) {
+  .directive('floorplan', ['Rooms', 'Floorplans', 'usSpinnerService', 'twodservice', function (Rooms, Floorplans, usSpinnerService, twodservice) {
     return {
       restrict: 'EA',
       scope: {
@@ -494,35 +494,33 @@ angular.module('otaniemi3dApp')
               barHeight = svgHeight,
               numberHues = 35;
 
-          var idGradient = "legendGradient";
+          var idGradient = 'legendGradient';
 
-          var svgForLegendStuff = d3.select("#theBar").append("svg")
-                                      .attr("width", svgWidth)
-                                      .attr("height", svgHeight);
+          var svgForLegendStuff = d3.select('#theBar').append('svg')
+                                      .attr('width', svgWidth)
+                                      .attr('height', svgHeight);
 
           //create the empty gradient that we're going to populate later
-          svgForLegendStuff.append("g")
-                              .append("defs")
-                              .append("linearGradient")
-                                  .attr("id",idGradient)
-                                  .attr("x1","0%")
-                                  .attr("x2","0%")
-                                  .attr("y1","0%")
-                                  .attr("y2","100%"); // x1=0, x2=100%, y1=y2 results in a horizontal gradient
+          svgForLegendStuff.append('g')
+                              .append('defs')
+                              .append('linearGradient')
+                                  .attr('id',idGradient)
+                                  .attr('x1','0%')
+                                  .attr('x2','0%')
+                                  .attr('y1','0%')
+                                  .attr('y2','100%'); // x1=0, x2=100%, y1=y2 results in a horizontal gradient
                                                     // it would have been vertical if x1=x2, y1=0, y2=100%
                                                     // See 
                                                     //      http://www.w3.org/TR/SVG/pservers.html#LinearGradients
                                                     // for more details and fancier things you can do
           //create the bar for the legend to go into
           // the "fill" attribute hooks the gradient up to this rect
-          svgForLegendStuff.append("rect")
-                              .attr("fill","url(#" + idGradient + ")")
-                              .attr("x",x1)
-                              .attr("y",y1)
-                              .attr("width",barWidth)
-                              .attr("height",barHeight)
-                              .attr("rx",20)  //rounded corners, of course!
-                              .attr("ry",20);
+          svgForLegendStuff.append('rect')
+                              .attr('fill','url(#' + idGradient + ')')
+                              .attr('x',x1)
+                              .attr('y',y1)
+                              .attr('width',barWidth)
+                              .attr('height',barHeight);
 
           //we go from a somewhat transparent blue/green (hue = 160º, opacity = 0.3) to a fully opaque reddish (hue = 0º, opacity = 1)
           var hueStart = 160, hueEnd = 0;

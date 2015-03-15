@@ -8,7 +8,7 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('2dservice', function () {
+  .service('twodservice', function () {
     // AngularJS will instantiate a singleton by calling "new" on this function
   
     
