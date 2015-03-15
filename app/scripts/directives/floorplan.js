@@ -130,46 +130,10 @@ angular.module('otaniemi3dApp')
 
               if (room.sensors[i].type === 'temperature') {
                 var temp = room.sensors[i].value;
-
-                //Temperature color range is 15C - 35C
-                var min = 15;
-                var max = 35;
-
-                var tempPercentage = Math.min((temp - min) / (max - min), 1);
-                tempPercentage = 1.0 - Math.max(tempPercentage, 0);
-
-                // r    g    b    temp
-                // 255  0    0    0%
-                // 255  255  0    25%
-                // 0    255  0    50%
-                // 0    255  255  75%
-                // 0    0    255  100%
-
-                var red, green, blue;
-
-                if (tempPercentage < 0.25) {
-                  red = 1.0;
-                  green = scaleValueLowHigh(tempPercentage, 0, 0.25);
-                  blue = 0;
-                } else if (tempPercentage < 0.50) {
-                  red = scaleValueLowHigh(tempPercentage, 0.50, 0.25);
-                  green = 1.0;
-                  blue = 0;
-                } else if (tempPercentage < 0.75) {
-                  red = 0;
-                  green = 1.0;
-                  blue = scaleValueLowHigh(tempPercentage, 0.50, 0.75);
-                } else {
-                  red = 0;
-                  green = scaleValueLowHigh(tempPercentage, 1.0, 0.75);
-                  blue = 1.0;
-                }
-
-                var color = 'rgb(' + scaleTo255(red).toString() + ', ' +
-                                     scaleTo255(green).toString() + ', ' +
-                                     scaleTo255(blue).toString() + ')';
-
-                d3.select(room.node).style('fill', color);
+                var color = twodservice.getColor('temperature', temp);
+                d3.select(room.node)
+                  .style('fill', color.rgb)
+                  .style('fill-opacity', color.opacity);
 
               }
             }
@@ -486,13 +450,12 @@ angular.module('otaniemi3dApp')
         }
         
         function fillLegend() {
-          var svgWidth = 40,
-              svgHeight = 200,
+          var svgWidth = 60,
+              svgHeight = 300,
               x1 = 0,
-              barWidth = svgWidth,
-              y1 = 0,
-              barHeight = svgHeight,
-              numberHues = 35;
+              barWidth = 40,
+              y1 = 50,
+              barHeight = 200              
 
           var idGradient = 'legendGradient';
 
@@ -521,10 +484,26 @@ angular.module('otaniemi3dApp')
                               .attr('y',y1)
                               .attr('width',barWidth)
                               .attr('height',barHeight);
+          
+          
+          svgForLegendStuff.append("text")
+                                .attr("class","legendText")
+                                .attr("x",x1)
+                                .attr("y",y1 - 4)
+                                .attr("dy",0)
+                                .text(twodservice.temperatureMin);
+
+          svgForLegendStuff.append("text")
+                                .attr("class","legendText")
+                                .attr("x",x1)
+                                .attr("y",y1 + barHeight + 15)
+                                .attr("dy",0)
+                                .text(twodservice.temperatureMax);
 
           //we go from a somewhat transparent blue/green (hue = 160º, opacity = 0.3) to a fully opaque reddish (hue = 0º, opacity = 1)
           var hueStart = 160, hueEnd = 0;
           var opacityStart = 0.3, opacityEnd = 1.0;
+          var numberHues = 35;
           var theHue, rgbString, opacity,p;
 
           var deltaPercent = 1/(numberHues-1);
