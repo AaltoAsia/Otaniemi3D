@@ -26,7 +26,8 @@ angular.module('otaniemi3dApp')
     function scaleValueLowHigh(value, low, high) {
       return Math.max(0, Math.min(1, (value - low) / (high - low)));
     }
-  
+    
+    //Source: https://gist.github.com/nowherenearithaca/4449376
     function getColor(sensorType, value) {
       
       var min;
@@ -60,11 +61,7 @@ angular.module('otaniemi3dApp')
       var hueStart = 160, hueEnd = 0;
       var opacityStart = 0.3, opacityEnd = 1.0;
       var numberHues = 35;
-      var theHue, rgbString, opacity, p;
-
-      var deltaPercent = 1 / (numberHues - 1);
-      var deltaHue = (hueEnd - hueStart)/(numberHues - 1);
-      var deltaOpacity = (opacityEnd - opacityStart)/(numberHues - 1);
+      var theHue, rgbString, opacity;
 
       theHue = hueStart + percentage * (hueEnd - hueStart);  
       rgbString = d3.hsl(theHue,1,0.6).toString();

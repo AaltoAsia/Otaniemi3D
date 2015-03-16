@@ -109,34 +109,24 @@ angular.module('otaniemi3dApp')
         / co2 sensors.
         */
         $scope.refreshRoomColor = function(type) {
+          for (var j = 0; j < Rooms.list.length; j++) {
+            var room = Rooms.list[j];
 
-            //Scale percentage to rgb value 0 - 255.
-            function scaleTo255(percent) {
-                return Math.round(255 * percent);
+            // Colour the room white, in case the room doesn't have any values for that particular sensor
+            //
+            d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
+
+            // Loop through sensors and check the value of the sensor that matches the parameter given
+            //
+            for (var i = 0; i < room.sensors.length; i++) {
+              if (room.sensors[i].type === type) {
+                var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value)
+                d3.select(room.node)
+                  .style('fill', color.rgb)
+                  .style('fill-opacity', color.opacity);
+              }
             }
-
-            //Translate value between low and high parameters to a percentage
-            function scaleValueLowHigh(value, low, high) {
-                return Math.max(0, Math.min(1, (value - low) / (high - low)));
-            }
-            for (var j = 0; j < Rooms.list.length; j++) {
-                var room = Rooms.list[j];
-
-                // Colour the room white, in case the room doesn't any any values for that particular sensor
-                //
-                d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
-
-                // Loop through sensors and check the value of the sensor that matches the parameter given
-                //
-                for (var i = 0; i < room.sensors.length; i++) {
-                    if (room.sensors[i].type === type) {
-                        var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value)
-                        d3.select(room.node)
-                          .style('fill', color.rgb)
-                          .style('fill-opacity', color.opacity);
-                    }
-                }
-            }
+          }
         };
 
         $scope.changeColour = function(type) {

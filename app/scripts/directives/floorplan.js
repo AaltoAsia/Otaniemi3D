@@ -109,20 +109,9 @@ angular.module('otaniemi3dApp')
 
         /*
         * Set room color for a room according to its temperature.
-        * Color range is from blue to red and temperature range is from
-        * 15C to 35C.
+        * Color range is from blue to red
         */
         function setRoomColor(room) {
-
-          //Scale percentage to rgb value 0 - 255.
-          function scaleTo255(percent) {
-            return Math.round(255 * percent);
-          }
-
-          //Translate value between low and high parameters to a percentage
-          function scaleValueLowHigh(value, low, high) {
-            return Math.max(0, Math.min(1, (value - low) / (high - low)));
-          }
 
           if (room.node) {
             var i;
