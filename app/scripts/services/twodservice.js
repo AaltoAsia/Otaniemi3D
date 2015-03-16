@@ -66,7 +66,6 @@ angular.module('otaniemi3dApp')
       theHue = hueStart + percentage * (hueEnd - hueStart);  
       rgbString = d3.hsl(theHue,1,0.6).toString();
       opacity = opacityStart + percentage * (opacityEnd - opacityStart);
-      console.log(rgbString);
       return {"rgb":rgbString, "opacity":opacity}
     }
     
