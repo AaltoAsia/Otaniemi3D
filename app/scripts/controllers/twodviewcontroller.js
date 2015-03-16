@@ -135,7 +135,7 @@ angular.module('otaniemi3dApp')
             // Loop through sensors and check the value of the sensor that matches the parameter given
             //
             for (var i = 0; i < room.sensors.length; i++) {
-              if (room.sensors[i].type === type) {
+              if (room.sensors[i].type.toLowerCase() === type.toLowerCase()) {
                 var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
                 d3.select(room.node)
                   .style('fill', color.rgb)
