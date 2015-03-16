@@ -21,6 +21,8 @@
   "globals": {
     "angular": false,
     "d3": false,
-    "FastClick": false
+    "FastClick": false,
+	"Modernizr": false,
+    "embedpano": false
   }
 }

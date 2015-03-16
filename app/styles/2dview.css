@@ -7,26 +7,22 @@
     .floorplan-fullscreen {
         height: calc(100% - 45px);
     }
+	.pano-2d-view {
+	    height: calc(100%-45px);
+	}
 
     /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
     margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
     .previous-button, .next-button {
         font-size: 36px; /*Increase the size of arrow a little*/
         position: fixed;
+        bottom: 5%; /*fallback for browsers that don't support vh*/
         bottom: 5vh;
     }
 
-    /*CSS definitions for those sensor buttons at the bottom of floorplan viewport*/
-    .sensor-class {
-        left:5%;
-        right:5%;
-        bottom: 0vh;
-        position: fixed;
-        text-align:center;
-    }
     /*Make next-button hug the right side of floorplan div*/
     .next-button {
-        right: 0vh;
+        right: 0px;
     }
 
     /*Padding needs to be 20 px since the search container all ready has -15px margin to
@@ -34,6 +30,20 @@
     .search-container-full {
         padding-top: 20px;
     }
+    
+    #searchContent2 {
+        width: 70%;
+		max-width: 220px;
+        display:inline;
+    }
+	/*Make desktop dropdown invisible and make mobile modal button visible*/
+	.mobile-button {
+		display:inline;
+		width:30%;
+	}
+	.desktop-dropdown {
+		display:none;
+	}
 }
 
 @media only screen and (min-width : 769px) {
@@ -43,20 +53,30 @@
     .floorplan-fullscreen {
         height: calc(100% - 55px);
     }
+	
+	.pano-2d-view {
+	    height: calc(100% - 100px)!important;
+		margin-top: -15px;
+    }
+	
     /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
     margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
 
     .previous-button, .next-button {
         font-size: 48px; /*Increase the size of arrow a little*/
         position: absolute;
+        bottom: 5%; /* Fallbacks for browsers that don't support vh measurements*/
+        margin-bottom: 5%;
         bottom: 5vh;
         margin-bottom: 5vh;
 
     }
     .previous-button {
+        left: 5%;
         left: 5vh;
     }
     .next-button {
+        right: 5%;
         right: 5vh;
     }
 
@@ -68,16 +88,32 @@
         position: fixed;
         text-align:center;
     }
-
     .search-container-full {
         padding-top: 20px;
     }
-
+    
+    #searchContent2 {
+        width: 50%;
+        display:inline;
+    }
+	/*Make desktop dropdown visible and make mobile modal button invisible*/
+	.mobile-button {
+		display:none;
+	}
+	.desktop-dropdown {
+	}
+	#searchContainer {
+        margin-left: 10%;
+	    margin-right: 10%;
+    }
+	
 }
 
 /*CSS for button that makes the floorplan fullscreen*/
 .fullscreen-button {
     position:absolute;
+    margin-top:1%;
+    margin-left: 1%; /*Fallbacks for older browsers*/
     margin-top: 1vh;
     margin-left: 1vh;
     float: left;
@@ -100,34 +136,42 @@
 /*CSS definitions for search bar next to it*/
 
 #searchContainer {
-    margin-left: 30%;
-    margin-right: 30%;
     text-align: center;
     margin-top:-10px;
     margin-bottom:5px;
 }
 
-#searchContent2 {
-    width: 100%;
-    display:inline;
+#sensorTypeButton {
+    text-align: right;
+    width: 110px;
+    margin-bottom:3px;
 }
 
-
-/* CSS definitions for the sensor time interval buttons and popover (tooltip) */ 
-.sensor-interval {
-    margin-top: 1vh;
-    right: 0px;
-    position: fixed;
+#sensorTimeButton {
     text-align:right;
+    width: 75px;
+    margin-bottom:3px;
 }
 
-.sensor-interval .popover {
-    margin-right: 82px;
-    margin-top: 56px;
+.caret {
+    text-align: right;
+    right: 0;
 }
 
-.sensor-interval .popover .arrow {
-    top: 15px;
+.timeMenu {
+}
+
+.typeMenu {
+}
+
+/*we want to show room information before panoramabutto in tooltip */
+#infocontent{
+    order: 1;
+}
+/* panoramabutton in tooltip */
+#panobtn{
+    order: 2;
+    display: none;
 }
 
 /* CSS definitions for the sensor type popover (tooltip) */
@@ -135,7 +179,53 @@
     margin-top: 10px;
     margin-left: 72px;
 }
+/* bootstrap2 */
+.timeMenu.dropdown-menu:before {
+  position: absolute;
+  top: -7px;
+  right: 9px;
+  display: inline-block;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-left: 7px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  content: '';
+}
 
-.sensor-class .popover .arrow {
-    left: 27px;
+.timeMenu.dropdown-menu:after {
+  position: absolute;
+  top: -6px;
+  right: 10px;
+  display: inline-block;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #ffffff;
+  border-left: 6px solid transparent;
+  content: '';
+}
+
+.typeMenu.dropdown-menu:before {
+  position: absolute;
+  top: -7px;
+  right: 9px;
+  display: inline-block;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-left: 7px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  content: '';
+}
+
+.typeMenu.dropdown-menu:after {
+  position: absolute;
+  top: -6px;
+  right: 10px;
+  display: inline-block;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #ffffff;
+  border-left: 6px solid transparent;
+  content: '';
+}
+
+#modalValue {
+    margin-bottom: 10px;
 }

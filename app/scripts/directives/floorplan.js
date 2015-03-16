@@ -9,12 +9,11 @@
 angular.module('otaniemi3dApp')
   .directive('floorplan', ['Rooms', 'Floorplans', 'usSpinnerService', 'twodservice', function (Rooms, Floorplans, usSpinnerService, twodservice) {
     return {
-      restrict: 'EA',
+      restrict: 'E',
       scope: {
         plan: '=',
         data: '=',
-        highlightedRoom: '=',
-        selectedRoom: '='
+        highlightedRoom: '='
       },
       link: function (scope, element) {
 
@@ -55,16 +54,140 @@ angular.module('otaniemi3dApp')
           getFloorplan(defaultFloorplan, floorplanContainer, true);
         } //end getDefaultFloorplan
 
+        /*
+        *==============================================
+        * Helper functions for tooltip handling.
+        * Those that do not require room-specific information and are common to all rooms.
+        *==============================================
+        */
+        var tooltip = d3.select('.mouse-tooltip');
+        tooltip
+          .style('display','flex')
+          .style('flex-flow','column');
+          
 
+        //Make tooltip window follow mouse movement
+        function mouseMove (skipSelectedCheck) {
+          if (!skipSelectedCheck && scope.selectedRoom) {
+            return;
+          }
+          if (d3.event.pageY > window.innerHeight /2) {
+            tooltip.style('bottom', (window.innerHeight-d3.event.pageY)+'px');
+            tooltip.style('top', 'auto');
+          }
+          else {
+            tooltip.style('top', (d3.event.pageY-10)+'px');
+            tooltip.style('bottom', 'auto');
+          }
+          if (d3.event.pageX > window.innerWidth /2) {
+            tooltip.style('right', (window.innerWidth-d3.event.pageX)+'px');
+            tooltip.style('left', 'auto');
+          }
+          else {
+            tooltip.style('left', (d3.event.pageX)+'px');
+            tooltip.style('right', 'auto');
+          }
+        }
+
+        //Empty tooltip and make it invisible
+        function mouseOut (skipSelectedCheck) {
+          if (!skipSelectedCheck && scope.selectedRoom) {
+            return;
+          }
+          tooltip
+            .selectAll('.roominfo').remove()
+            .style('visibility', null);
+          tooltip.select('#panobtn').style('display', 'none');
+        } //end tooltip  helper functions
+
+        /*
+        * Add tooltip that shows room's sensor values.
+        */
+        function addTooltip(room) {
+          //Add room-specific information to the tooltip and make tooltip visible
+          function mouseOver (skipSelectedCheck) {
+            if (!skipSelectedCheck && scope.selectedRoom) {
+              return;
+            }
+            
+            scope.$parent.room = room.name; //Pass the room name to controller function
+            tooltip.append('div').attr('id', 'infocontent');
+            tooltip.select('#infocontent').append('p').text('Room: ' + room.name);
+
+            var i = 0;
+            for (i = 0; i < room.sensors.length; i++) {
+                switch (room.sensors[i].type) {
+                    case 'temperature':
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' °C');
+                        break;
+                    case 'humidity':
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' %');
+                        break;
+                    case 'co2':
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm');
+                        break;
+                    case 'pir':
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
+                        break;
+                    case 'light':
+                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' lux');
+                        break;
+                }
+            }
+            
+
+            tooltip.selectAll('p').attr('class','roominfo');
+            
+            var roomsWithPanorama = ['103','122','123'];       
+            for(var i = 0; i<roomsWithPanorama.length;i++){
+                if(room.name===roomsWithPanorama[i]){
+                  tooltip.select('#panobtn').style('display', 'block');
+                }
+            }
+
+            tooltip.style('visibility', 'visible');
+
+          }
+          
+
+          function clicked () {
+            clickWasOnRoom = true;
+            if (scope.highlightedRoom) {
+              clearInterval(scope.highlightedRoom.pulse);
+              scope.highlightedRoom = null;
+            }
+            mouseOut(true);
+            scope.selectedRoom = room;
+            mouseOver(true);
+            mouseMove(true);
+          }
+
+          //Set mouse events to the room node
+          if (room.node) {
+            d3.select(room.node)
+              .on('mouseover', mouseOver)
+              .on('mousemove', mouseMove)
+              .on('mouseout', mouseOut)
+              .on('click', clicked);
+          }
+        } //end addTooltip
+        
         /*
         * Download and show default floorplan and then download
         * other floorplans asynchronously.
         */
+
+      if (scope.$parent.svgSupport) {  //Check if svg support. There is not point doing anything if there isn't
         if (defaultFloorplan.svg === null) {
-          getDefaultFloorplan();
-        } else {
-          usSpinnerService.stop('spinner-1'); //floorplans loaded, hide the spinner
-          showFloorplan();
+            getDefaultFloorplan();
+            } else {
+              var roomsLength = Rooms.list.length;
+              for (var i = 0; i < roomsLength; i++) {
+                addTooltip(Rooms.list[i]);
+              }
+              usSpinnerService.stop('spinner-1'); //floorplans loaded, hide the spinner
+              showFloorplan();
+          }
         }
           /*
           * Use the given object to determine the svg to be fetched and append it according to the argument container
@@ -93,7 +216,8 @@ angular.module('otaniemi3dApp')
           });
         } //end getFloorplan
 
-        /*
+		
+		/*
         * Download remaining floorplans and parse their room info.
         */
         function getOtherFloorplans() {
@@ -106,6 +230,7 @@ angular.module('otaniemi3dApp')
             }
           }
         } //end getOtherFloorplans
+
 
         /*
         * Set room color for a room according to its temperature.
@@ -128,99 +253,8 @@ angular.module('otaniemi3dApp')
             }
           }
         }//end setRoomColor
-
-        /*
-        *==============================================
-        * Helper functions for tooltip handling.
-        * Those that do not require room-specific information and are common to all rooms.
-        *==============================================
-        */
-        var tooltip = d3.select('.mousetooltip');
-
-        //Check if tooltip div element has already been created.
-        if (tooltip.empty()) {
-          tooltip = d3.select('body')
-            .append('div')
-            .attr('class','mousetooltip');
-        }
-
-        //Make tooltip window follow mouse movement
-        function mouseMove (skipSelectedCheck) {
-          if (!skipSelectedCheck && scope.selectedRoom) {
-            return;
-          }
-          tooltip.style('top', (d3.event.pageY-10)+'px').style('left',(d3.event.pageX+10)+'px');
-        }
-
-        //Empty tooltip and make it invisible
-        function mouseOut (skipSelectedCheck) {
-          if (!skipSelectedCheck && scope.selectedRoom) {
-            return;
-          }
-          tooltip
-            .selectAll('p').remove()
-            .style('visibility', null);
-        } //end tooltip  helper functions
-
-        /*
-        * Add tooltip that shows room's sensor values.
-        */
-        function addTooltip(room) {
-          //Add room-specific information to the tooltip and make tooltip visible
-          function mouseOver (skipSelectedCheck) {
-            if (!skipSelectedCheck && scope.selectedRoom) {
-              return;
-            }
-
-            tooltip.append('p').text('Room: ' + room.name);
-
-            var i = 0;
-            for (i = 0; i < room.sensors.length; i++) {
-                switch (room.sensors[i].type) {
-                    case 'temperature':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' °C');
-                        break;
-                    case 'humidity':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' %');
-                        break;
-                    case 'co2':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm');
-                        break;
-                    case 'pir':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
-                        break;
-                    case 'light':
-                        tooltip.append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' lux');
-                        break;
-                }
-            }
-
-            tooltip.style('visibility', 'visible');
-          }
-
-          function clicked () {
-            clickWasOnRoom = true;
-            if (scope.highlightedRoom) {
-              clearInterval(scope.highlightedRoom.pulse);
-              scope.highlightedRoom = null;
-            }
-            mouseOut(true);
-            scope.selectedRoom = room;
-            mouseOver(true);
-            mouseMove(true);
-          }
-
-          //Set mouse events to the room node
-          if (room.node) {
-            d3.select(room.node)
-              .on('mouseover', mouseOver)
-              .on('mousemove', mouseMove)
-              .on('mouseout', mouseOut)
-              .on('click', clicked);
-          }
-        } //end addTooltip
-
-        /*
+       
+       /*
         * Append floorplan to the html element and register zoom and drag listener.
         */
         function appendFloorplan(floorplan, container) {
@@ -272,6 +306,7 @@ angular.module('otaniemi3dApp')
                                      ')scale(' + d3.event.scale + ')');
                 floorplan.scale = d3.event.scale;
                 floorplan.translate = d3.event.translate;
+                tooltip.style('visibility', 'hidden');
               });
 
             svg.call(zoomListener);
@@ -412,12 +447,10 @@ angular.module('otaniemi3dApp')
         function highlightRoom(room) {
           var duration = 3000;
           var pulseColor = 'grey';
-
           var initialColor = d3.select(room.node).style('fill');
           if (initialColor === 'none') {
             initialColor = 'rgb(255,255,255)';
           }
-
           //Color it first, fade away and color again because the first iteration of setInterval takes a while...
           d3.select(room.node).style('fill', pulseColor);
           d3.select(room.node).transition().duration(duration*2/3).style('fill', initialColor);

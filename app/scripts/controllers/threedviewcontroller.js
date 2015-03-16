@@ -10,7 +10,8 @@
 angular.module('otaniemi3dApp')
   .controller('threedview', function ($scope) {
     $scope.selected = undefined;
-        
+    $scope.webglSupport = Modernizr.webgl; //Use this boolean to check for webgl support
+    $scope.pano = false;
     $scope.changeView = function(viewpoint){
       if(viewpoint === undefined) {
         var textField = document.getElementById('searchContent');
@@ -33,6 +34,13 @@ angular.module('otaniemi3dApp')
     
     $scope.onSelect = function($item) {
       $scope.changeView($item);
+    };
+    $scope.panoramaViewer = function(room) {
+      $scope.pano = true;
+      embedpano({xml:'panorama/' + room + '.xml', target:'pano', html5:'only', passQueryParameters:true});
+    };
+    $scope.stopPanorama = function(){
+      $scope.pano = false;
     };
   }
 );

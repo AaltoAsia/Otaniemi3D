@@ -10,10 +10,8 @@
  */
 angular
   .module('otaniemi3dApp', [
-    'ngCookies',
     'ngResource',
     'ngRoute',
-    'ngSanitize',
     'ngTouch',
     'ui.bootstrap',
     'ui.grid',
@@ -41,6 +39,10 @@ angular
       .when('/support', {
         templateUrl: 'views/support.html',
         controller: 'support'
+      })
+      .when('/panorama', {
+        templateUrl: 'views/panorama.html',
+        controller: 'PanoramaCtrl'
       })
       .otherwise({
         redirectTo: '/home'
