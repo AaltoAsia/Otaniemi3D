@@ -13,7 +13,8 @@ angular.module('otaniemi3dApp')
       scope: {
         plan: '=',
         data: '=',
-        highlightedRoom: '='
+        highlightedRoom: '=',
+        roomValueType: '='
       },
       link: function (scope, element) {
 
@@ -114,8 +115,7 @@ angular.module('otaniemi3dApp')
             tooltip.append('div').attr('id', 'infocontent');
             tooltip.select('#infocontent').append('p').text('Room: ' + room.name);
 
-            var i = 0;
-            for (i = 0; i < room.sensors.length; i++) {
+            for (var i = 0; i < room.sensors.length; i++) {
                 switch (room.sensors[i].type) {
                     case 'temperature':
                         tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' °C');
@@ -139,7 +139,7 @@ angular.module('otaniemi3dApp')
             tooltip.selectAll('p').attr('class','roominfo');
             
             var roomsWithPanorama = ['103','122','123'];       
-            for(var i = 0; i<roomsWithPanorama.length;i++){
+            for(i = 0; i<roomsWithPanorama.length;i++){
                 if(room.name===roomsWithPanorama[i]){
                   tooltip.select('#panobtn').style('display', 'block');
                 }
@@ -401,47 +401,47 @@ angular.module('otaniemi3dApp')
 
         function updateRoomInfo() {
           if(!scope.data) {
-              return;
+            return;
           }
 
           var i, j;
           var sensorUpdated = false;
 
           for (i = 0; i < scope.data.length; i++) {
-              var roomName = scope.data[i].room.split(' ')[0];
+            var roomName = scope.data[i].room.split(' ')[0];
 
-              for (j = 0; j < Rooms.list.length; j++) {
-                  if (roomName === Rooms.list[j].name) {
-                      var k;
-                      //Check if sensor already exists
-                      for (k = 0; k < Rooms.list[j].sensors.length; k++) {
-                          if (Rooms.list[j].sensors[k].id === scope.data[i].sensorId && Rooms.list[j].sensors[k].type === scope.data[i].type) {
-                              Rooms.list[j].sensors[k].value = scope.data[i].value;
-                              sensorUpdated = true;
-                          }
-                      }
-
-                      //If sensor doesn't yet exist in Rooms service then add it
-                      if (!sensorUpdated) {
-                          Rooms.list[j].sensors.push({
-                              id: scope.data[i].sensorId,
-                              type: scope.data[i].type,
-                              value: scope.data[i].value
-                          });
-                      } else {
-                      //Reset updated flag
-                          sensorUpdated = false;
-                      }
-
-                      setRoomColor(Rooms.list[j]);
-
-                      break;
+            for (j = 0; j < Rooms.list.length; j++) {
+              if (roomName === Rooms.list[j].name) {
+                var k;
+                //Check if sensor already exists
+                for (k = 0; k < Rooms.list[j].sensors.length; k++) {
+                  if (Rooms.list[j].sensors[k].id === scope.data[i].sensorId && Rooms.list[j].sensors[k].type === scope.data[i].type) {
+                    Rooms.list[j].sensors[k].value = scope.data[i].value;
+                    sensorUpdated = true;
                   }
-              }
-          }
-    }  //end updateRoomInfo
+                }
 
-	/*
+                //If sensor doesn't yet exist in Rooms service then add it
+                if (!sensorUpdated) {
+                  Rooms.list[j].sensors.push({
+                    id: scope.data[i].sensorId,
+                    type: scope.data[i].type,
+                    value: scope.data[i].value
+                  });
+                } else {
+                //Reset updated flag
+                  sensorUpdated = false;
+                }
+
+                setRoomColor(Rooms.list[j]);
+
+                break;
+              }
+            }
+          }
+        }  //end updateRoomInfo
+
+        /*
         * Pulse the room highlight until it is not selected anymore.
         */
         function highlightRoom(room) {
@@ -471,56 +471,112 @@ angular.module('otaniemi3dApp')
           return pulsing;
         }
         
-        function fillLegend() {
-          var svgWidth = 60,
-              svgHeight = 300,
-              x1 = 0,
-              barWidth = 40,
-              y1 = 50,
-              barHeight = 200              
+    //    
+    //color legend functionality:
+    //    
+        var barWidth = 40,
+            barHeight = 200,
+            svgWidth = barWidth + 32,
+            svgHeight = barHeight + 40,
+            x1 = 0,
+            y1 = 20;
+        var legendLine, legendLineText;
+        
+        function gradientMouseOver() {
+          legendLine.style('visibility', 'visible');
+          legendLineText.style('visibility', 'visible');
+        }
+        
+        function gradientMouseOut() {
+          legendLine.style('visibility', 'hidden');
+          legendLineText.style('visibility', 'hidden');
+        }
+        
+        function gradientMouseMove() {
+          var coordinates = [0, 0];
+          coordinates = d3.mouse(this);
+          
+          var valueText;
+          var positionOnLegend = ((coordinates[1] - y1) / barHeight); //e.g. 60% if it's just below half way.
+          valueText = twodservice.valueAtPercent(scope.roomValueType.toLowerCase(), positionOnLegend) + twodservice.getValueUnit(scope.roomValueType);
+          
+          legendLine.attr('y1', coordinates[1]).attr('y2', coordinates[1]);
+          legendLineText.attr('y', coordinates[1] + 3)
+            .text(valueText);
+        }
+        
+        
+        //make and color the legend svg
+        function fillLegend() {     
 
           var idGradient = 'legendGradient';
 
-          var svgForLegendStuff = d3.select('#theBar').append('svg')
+          var svgForLegend = d3.select('#legendBar').append('svg')
                                       .attr('width', svgWidth)
                                       .attr('height', svgHeight);
 
           //create the empty gradient that we're going to populate later
-          svgForLegendStuff.append('g')
-                              .append('defs')
-                              .append('linearGradient')
-                                  .attr('id',idGradient)
-                                  .attr('x1','0%')
-                                  .attr('x2','0%')
-                                  .attr('y1','0%')
-                                  .attr('y2','100%'); // x1=0, x2=100%, y1=y2 results in a horizontal gradient
-                                                    // it would have been vertical if x1=x2, y1=0, y2=100%
-                                                    // See 
-                                                    //      http://www.w3.org/TR/SVG/pservers.html#LinearGradients
-                                                    // for more details and fancier things you can do
+          svgForLegend
+            .append('g')
+            .append('defs')
+            .append('linearGradient')
+              .attr('id',idGradient)
+              .attr('x1','0%')
+              .attr('x2','0%')
+              .attr('y1','0%')
+              .attr('y2','100%');
+          
           //create the bar for the legend to go into
           // the "fill" attribute hooks the gradient up to this rect
-          svgForLegendStuff.append('rect')
-                              .attr('fill','url(#' + idGradient + ')')
-                              .attr('x',x1)
-                              .attr('y',y1)
-                              .attr('width',barWidth)
-                              .attr('height',barHeight);
+          svgForLegend
+            .append('rect')
+            .attr('id', 'gradientRect')
+            .attr('fill','url(#' + idGradient + ')')
+            .attr('x',x1)
+            .attr('y',y1)
+            .attr('width',barWidth)
+            .attr('height',barHeight);          
           
-          
-          svgForLegendStuff.append("text")
-                                .attr("class","legendText")
-                                .attr("x",x1)
-                                .attr("y",y1 - 4)
-                                .attr("dy",0)
-                                .text(twodservice.temperatureMin);
+          svgForLegend
+            .append('text')
+            .attr('class','legendText')
+            .attr('id', 'legendMinText')
+            .attr('x',x1)
+            .attr('y',y1 - 4)
+            .attr('dy',0)
+            .text(twodservice.temperatureMin + twodservice.getValueUnit('temperature'));
 
-          svgForLegendStuff.append("text")
-                                .attr("class","legendText")
-                                .attr("x",x1)
-                                .attr("y",y1 + barHeight + 15)
-                                .attr("dy",0)
-                                .text(twodservice.temperatureMax);
+          svgForLegend
+            .append('text')
+            .attr('class','legendText')
+            .attr('id', 'legendMaxText')
+            .attr('x',x1)
+            .attr('y',y1 + barHeight + 15)
+            .attr('dy',0)
+            .text(twodservice.temperatureMax + twodservice.getValueUnit('temperature'));
+          
+          //mouseover line with the value of that point in legend
+          legendLine = svgForLegend
+            .append('line')
+            .attr('x1', x1)
+            .attr('y1', y1)
+            .attr('x2', x1 + barWidth)
+            .attr('y2', y1)
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
+            .style('visibility', 'hidden');
+          
+          legendLineText = svgForLegend 
+            .append('text')
+            .attr('x', x1 + barWidth)
+            .attr('y', y1)
+            .style('visibility', 'hidden')
+            .text('');
+          
+          d3.select('#gradientRect')
+            .on('mouseover', gradientMouseOver)
+            .on('mousemove', gradientMouseMove)
+            .on('mouseout', gradientMouseOut);
 
           //we go from a somewhat transparent blue/green (hue = 160º, opacity = 0.3) to a fully opaque reddish (hue = 0º, opacity = 1)
           var hueStart = 160, hueEnd = 0;
@@ -542,7 +598,7 @@ angular.module('otaniemi3dApp')
               opacity = opacityStart + deltaOpacity*i;
               p = 0 + deltaPercent*i;
               //onsole.log("i, values: " + i + ", " + rgbString + ", " + opacity + ", " + p);
-              theData.push({"rgb":rgbString, "opacity":opacity, "percent":p});       
+              theData.push({rgb:rgbString, opacity:opacity, percent:p});       
           }
 
           //now the d3 magic (imo) ...
@@ -559,6 +615,36 @@ angular.module('otaniemi3dApp')
                           .attr('stop-opacity',function(d) {
                                       return d.opacity;
                           });
+        }
+        
+        function changeLegendText() {
+          var minText, maxText;
+          switch (scope.roomValueType.toLowerCase()) {
+            case 'temperature':
+              minText = twodservice.temperatureMin;
+              maxText = twodservice.temperatureMax;
+              break;
+            case 'humidity':
+              minText = twodservice.humidityMin;
+              maxText = twodservice.humidityMax;
+              break;
+            case 'co2':
+              minText = twodservice.co2Min;
+              maxText = twodservice.co2Max;
+              break;
+            case 'pir':
+              minText = twodservice.pirMin;
+              maxText = twodservice.pirMax;
+              break;
+            case 'light':
+              minText = twodservice.lightMin;
+              maxText = twodservice.lightMax;
+              break;            
+          }
+          minText = minText + twodservice.getValueUnit(scope.roomValueType);
+          maxText = maxText + twodservice.getValueUnit(scope.roomValueType);
+          d3.select('#legendMinText').text(minText);
+          d3.select('#legendMaxText').text(maxText);
         }
         
         fillLegend();
@@ -592,6 +678,10 @@ angular.module('otaniemi3dApp')
             appendFloorplan(scope.plan, floorplanContainer);
             scope.highlightedRoom.pulse = highlightRoom(scope.highlightedRoom);
           }
+        });
+        
+        scope.$watch('roomValueType', function() {
+          changeLegendText();
         });
       }//end link: function()
     }; //end return

@@ -136,7 +136,7 @@ angular.module('otaniemi3dApp')
             //
             for (var i = 0; i < room.sensors.length; i++) {
               if (room.sensors[i].type === type) {
-                var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value)
+                var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
                 d3.select(room.node)
                   .style('fill', color.rgb)
                   .style('fill-opacity', color.opacity);
