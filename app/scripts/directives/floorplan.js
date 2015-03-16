@@ -474,8 +474,8 @@ angular.module('otaniemi3dApp')
     //    
     //color legend functionality:
     //    
-        var barWidth = 40,
-            barHeight = 200,
+        var barWidth = 20,
+            barHeight = 180,
             svgWidth = barWidth + 32,
             svgHeight = barHeight + 40,
             x1 = 0,
@@ -535,7 +535,9 @@ angular.module('otaniemi3dApp')
             .attr('x',x1)
             .attr('y',y1)
             .attr('width',barWidth)
-            .attr('height',barHeight);          
+            .attr('height',barHeight)
+            .attr('rx', 10)
+            .attr('ry', 10);
           
           svgForLegend
             .append('text')

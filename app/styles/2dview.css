@@ -113,10 +113,11 @@
 .fullscreen-button {
     position:absolute;
     margin-top:1%;
-    margin-left: 1%; /*Fallbacks for older browsers*/
+    margin-right: 1%; /*Fallbacks for older browsers*/
     margin-top: 1vh;
-    margin-left: 1vh;
-    float: left;
+    margin-right: 1vh;
+    float: right;
+    right: 0px;
 }
 
 
