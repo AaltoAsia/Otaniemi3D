@@ -512,8 +512,9 @@ angular.module('otaniemi3dApp')
           var idGradient = 'legendGradient';
 
           var svgForLegend = d3.select('#legendBar').append('svg')
-                                      .attr('width', svgWidth)
-                                      .attr('height', svgHeight);
+                              .attr('id', 'legendContainingSvg')
+                              .attr('width', svgWidth)
+                              .attr('height', svgHeight);
 
           //create the empty gradient that we're going to populate later
           svgForLegend
