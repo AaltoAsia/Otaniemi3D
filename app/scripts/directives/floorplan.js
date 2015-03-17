@@ -479,7 +479,7 @@ angular.module('otaniemi3dApp')
             svgWidth = 80,
             svgHeight = barHeight,
             x1 = 0,
-            y1 = 0;
+            y1 = 1;
         var legendLine, legendLineText;
         
         function gradientMouseOver() {
@@ -549,7 +549,7 @@ angular.module('otaniemi3dApp')
             .attr('x',x1)
             .attr('y',y1)
             .attr('width',barWidth)
-            .attr('height','100%')
+            .attr('height','99%')
             .attr('rx', 10)
             .attr('ry', 10);
           
