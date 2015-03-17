@@ -476,10 +476,10 @@ angular.module('otaniemi3dApp')
     //    
         var barWidth = 20,
             barHeight = 180,
-            svgWidth = barWidth + 32,
-            svgHeight = barHeight + 40,
+            svgWidth = 80,
+            svgHeight = barHeight,
             x1 = 0,
-            y1 = 20;
+            y1 = 0;
         var legendLine, legendLineText;
         
         function gradientMouseOver() {
@@ -511,10 +511,23 @@ angular.module('otaniemi3dApp')
 
           var idGradient = 'legendGradient';
 
+          d3.select('#legendBar')
+            .append('p')
+            .attr('class','legendText')
+            .attr('id', 'legendMinText')
+            .style('margin', '0px')
+            .text(twodservice.temperatureMin + twodservice.getValueUnit('temperature'));
+          
           var svgForLegend = d3.select('#legendBar').append('svg')
                               .attr('id', 'legendContainingSvg')
                               .attr('width', svgWidth)
-                              .attr('height', svgHeight);
+                              .attr('height', '100%');
+          
+          d3.select('#legendBar')
+            .append('p')
+            .attr('class','legendText')
+            .attr('id', 'legendMaxText')
+            .text(twodservice.temperatureMax + twodservice.getValueUnit('temperature'));
 
           //create the empty gradient that we're going to populate later
           svgForLegend
@@ -536,27 +549,9 @@ angular.module('otaniemi3dApp')
             .attr('x',x1)
             .attr('y',y1)
             .attr('width',barWidth)
-            .attr('height',barHeight)
+            .attr('height','100%')
             .attr('rx', 10)
             .attr('ry', 10);
-          
-          svgForLegend
-            .append('text')
-            .attr('class','legendText')
-            .attr('id', 'legendMinText')
-            .attr('x',x1)
-            .attr('y',y1 - 4)
-            .attr('dy',0)
-            .text(twodservice.temperatureMin + twodservice.getValueUnit('temperature'));
-
-          svgForLegend
-            .append('text')
-            .attr('class','legendText')
-            .attr('id', 'legendMaxText')
-            .attr('x',x1)
-            .attr('y',y1 + barHeight + 15)
-            .attr('dy',0)
-            .text(twodservice.temperatureMax + twodservice.getValueUnit('temperature'));
           
           //mouseover line with the value of that point in legend
           legendLine = svgForLegend
