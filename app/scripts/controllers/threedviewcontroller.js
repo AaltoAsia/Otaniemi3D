@@ -35,12 +35,24 @@ angular.module('otaniemi3dApp')
     $scope.onSelect = function($item) {
       $scope.changeView($item);
     };
+    
+    var loaded = false;
+
     $scope.panoramaViewer = function(room) {
-      $scope.pano = true;
-      embedpano({xml:'panorama/' + room + '.xml', target:'pano', html5:'only', passQueryParameters:true});
+    $scope.pano = true;
+      if(loaded === false){
+          embedpano({xml:'panorama/' + room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true});
+          loaded = true;
+      }
+      else{
+        var xmlpath = room +'.xml';
+        document.getElementById("pano_obj").call("loadpano("+ xmlpath +");");
+      }
     };
     $scope.stopPanorama = function(){
       $scope.pano = false;
     };
   }
 );
+
+
