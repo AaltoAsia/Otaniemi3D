@@ -138,7 +138,7 @@ angular.module('otaniemi3dApp')
 
             tooltip.selectAll('p').attr('class','roominfo');
             
-            var roomsWithPanorama = ['103','122','123'];       
+            var roomsWithPanorama = ['238d','237c','235','232b','232a'];       
             for(var i = 0; i<roomsWithPanorama.length;i++){
                 if(room.name===roomsWithPanorama[i]){
                   tooltip.select('#panobtn').style('display', 'block');

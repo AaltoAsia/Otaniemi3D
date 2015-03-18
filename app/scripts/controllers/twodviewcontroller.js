@@ -9,11 +9,18 @@
  */
 angular.module('otaniemi3dApp')
     .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope, $modal) {
-
+    var loaded = false;
 
     $scope.panoramaViewer = function() {
         $scope.pano = true;
-        embedpano({xml:'panorama/OFFICE_B' + $scope.room +'.xml', target:'pano', html5:'only', passQueryParameters:true});
+        if(loaded === false){
+            embedpano({xml:'panorama/Room_' + $scope.room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true});
+            loaded = true;
+        }
+        else{
+            var xmlpath = 'Room_' + $scope.room +'.xml';
+            document.getElementById("pano_obj").call("loadpano("+ xmlpath +");");
+        }
     };
     $scope.stopPanorama = function(){
         $scope.pano = false;
@@ -145,7 +152,7 @@ angular.module('otaniemi3dApp')
                 // Loop through sensors and check the value of the sensor that matches the parameter given
                 //
                 for (var i = 0; i < room.sensors.length; i++) {
-                    if (room.sensors[i].type === type) {
+                    if (room.sensors[i].type.toLowerCase() === type.toLowerCase()) {
                         var parameter = room.sensors[i].value;
                         var min;
                         var max;
@@ -162,7 +169,7 @@ angular.module('otaniemi3dApp')
                                 min = 30;
                                 max = 10000;
                                 break;
-                            case 'pir':
+                            case 'Occupancy':
                                 min = 0;
                                 max = 30;
                                 break;
