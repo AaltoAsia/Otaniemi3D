@@ -95,7 +95,7 @@ angular.module('otaniemi3dApp')
             return;
           }
           tooltip
-            .selectAll('.roominfo').remove()
+            .select('#infocontent').remove()
             .style('visibility', null);
           tooltip.select('#panobtn').style('display', 'none');
         } //end tooltip  helper functions
