@@ -4,6 +4,8 @@
     <meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
     <link rel='stylesheet' type='text/css' href='x3dom.css'/>
     <script type='text/javascript' src='x3dom.js'></script>
+    <style>.x3dom-logContainer { bottom: 0px; position: absolute; }
+    </style>
 </head>
 <div class="container x3d-container">
 
@@ -17,7 +19,7 @@
   </script>
 </div>
 
-<x3d ng-hide="pano || !webglSupport" id='x3dElement' keysEnabled='false' showStat='false' showLog='false' style='width:100%; height:100%; border:0; margin:0; padding:0;'>
+<x3d ng-hide="pano || !webglSupport" id='x3dElement' keysEnabled='true' showStat='true' showLog='false' style='width:100%; height:100%; border:0; margin:0; padding:0;'>
 
 <scene DEF='scene'>
 <navigationInfo
@@ -60,7 +62,155 @@
            zNear='1'>
 </Viewpoint>
 
+
+<Viewpoint id='Entrance'
+           position="472.70494 -0.63033 -134.51091" 
+           orientation="0.00000 0.99937 0.03539 3.14159" 
+           centerOfRotation="472.70494 -0.6657 -134.01215"
+           zNear="1.00000" 
+           zFar="634.02180"
+           description="entrance">
+</Viewpoint>
+
+<Transform translation='472.70494 -2.06601 -130.52585'>
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Entrance'); $scope.$apply()">
+    <Box DEF="box" size="1 1 1" />
+    <Appearance>
+      <Material diffuseColor="0.5 0 1.0"/>
+    </Appearance>
+  </Shape>
+</Transform>
+
+<Viewpoint id='Cafeteria'
+           position="473.24336 -0.59486 -147.50971" 
+           orientation="0.00000 0.99937 0.03539 3.14159" 
+           centerOfRotation="473.24336 -0.664 -146.53470"
+           zNear="1.00000" 
+           zFar="634.02180" 
+           description="cafeteria">
+</Viewpoint>
+
+<Transform translation='472.70494 -2.066581 -144.51216'>
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Cafeteria'); $scope.$apply()">
+    <Box DEF="box" size="1 1 1" />
+    <Appearance>
+      <Material diffuseColor="0.5 0 1.0"/>
+    </Appearance>
+  </Shape>
+</Transform>
+
+<Viewpoint id='Corridor Entrance Side'
+           position="480.48883 1.32834 -115.26504" 
+           orientation="-0.44858 0.00000 0.00000 0.10982"
+           centerOfRotation="480.48883 1.30138 -115.50956"  
+           zNear="1.00000" 
+           zFar="634.02180" 
+           description="Corridor Entrance Side">
+</Viewpoint>
+
+<Transform translation="480.48883 0.812834 -120.26504">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Corridor_Entrance_Side'); $scope.$apply()">
+    <Box DEF="box" size="1 1 1" />
+    <Appearance>
+      <Material diffuseColor="0.5 0 1.0"/>
+    </Appearance>
+  </Shape>
+</Transform>
+
+<Viewpoint id='Corridor Cafeteria Side'
+           position="480.48883 1.32834 -135.26504" 
+           orientation="-0.44858 0.00000 0.00000 0.10982"
+           centerOfRotation="480.48883 1.30138 -135.50956"  
+           zNear="1.00000" 
+           zFar="634.02180" 
+           description="Corridor Cafeteria Side">
+</Viewpoint>
+
+<Transform translation="480.48883 0.812834 -145.26504">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Corridor_Cafeteria_Side'); $scope.$apply()">
+    <Box DEF="box" size="1 1 1" />
+    <Appearance>
+      <Material diffuseColor="0.5 0 1.0"/>
+    </Appearance>
+  </Shape>
+</Transform>
+
+
+
+
 <!-- Second floor -->
+
+<Viewpoint id='2nd Floor Sundeck'
+           position="478.89333 2.10577 -107.21682" 
+           orientation="-1.00000 0.00000 0.00000 0.08928" 
+           centerOfRotation="478.89333 2.01647 -108.22783"
+           zNear="1.00000" 
+           zFar="634.02180"
+           description="2nd Floor Sundeck">
+</Viewpoint>
+
+<Transform translation="477.61162 0.905068 -109.80603">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd_Floor_Sundeck'); $scope.$apply()">
+    <Box DEF="box" size="1 1 1" />
+    <Appearance>
+      <Material diffuseColor="0.5 0 1.0"/>
+    </Appearance>
+  </Shape>
+</Transform>
+
+<Viewpoint id='2nd Floor Corridor Start'
+           position="485.51469 1.49577 -109.40390" 
+           orientation="-0.08515 -0.99303 -0.08151 1.53413" 
+           centerOfRotation=" 486.04597 1.40788 -109.42711" 
+           zNear="1.00000" 
+           zFar="634.02180" 
+           description="2nd Floor Corridor Start">
+</Viewpoint>
+
+<Transform translation="490.51469 0.90577 -109.40390">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd_Floor_Corridor_Start'); $scope.$apply()">
+    <Box DEF="box" size="1 1 1" />
+    <Appearance>
+      <Material diffuseColor="0.5 0 1.0"/>
+    </Appearance>
+  </Shape>
+</Transform>
+
+<Viewpoint id='2nd Floor Corridor Middle'
+           position="497.51469 1.49577 -109.40390" 
+           orientation="-0.08515 -0.99303 -0.08151 1.53413" 
+           centerOfRotation=" 498.04597 1.40788 -109.42711" 
+           zNear="1.00000" 
+           zFar="634.02180" 
+           description="2nd Floor Corridor Middle">
+</Viewpoint>
+
+<Transform translation="503.51469 0.90577 -109.40390">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd_Floor_Corridor_Middle'); $scope.$apply()">
+    <Box DEF="box" size="1 1 1" />
+    <Appearance>
+      <Material diffuseColor="0.5 0 1.0"/>
+    </Appearance>
+  </Shape>
+</Transform>
+
+<Viewpoint id='2nd Floor Corridor End'
+           position="511.51469 1.49577 -109.40390" 
+           orientation="-0.08515 -0.99303 -0.08151 1.53413" 
+           centerOfRotation=" 512.04597 1.40788 -109.42711" 
+           zNear="1.00000" 
+           zFar="634.02180" 
+           description="2nd Floor Corridor End">
+</Viewpoint>
+
+<Transform translation="516.51469 0.90577 -109.40390">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd_Floor_Corridor_End'); $scope.$apply()">
+    <Box DEF="box" size="1 1 1" />
+    <Appearance>
+      <Material diffuseColor="0.5 0 1.0"/>
+    </Appearance>
+  </Shape>
+</Transform>
 
 <Viewpoint id='223'
            position="504.05285 2.10577 -112.37071"
