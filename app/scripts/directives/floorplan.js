@@ -496,9 +496,8 @@ angular.module('otaniemi3dApp')
           var coordinates = [0, 0];
           coordinates = d3.mouse(this);
           
-          var valueText;
-          var positionOnLegend = ((coordinates[1] - y1) / barHeight); //e.g. 60% if it's just below half way.
-          valueText = twodservice.valueAtPercent(scope.roomValueType.toLowerCase(), positionOnLegend) + twodservice.getValueUnit(scope.roomValueType);
+          var positionOnLegend = ((coordinates[1] - y1) / this.getBBox().height); //e.g. 60% if it's just below half way.
+          var valueText = twodservice.valueAtPercent(scope.roomValueType.toLowerCase(), positionOnLegend) + twodservice.getValueUnit(scope.roomValueType);
           
           legendLine.attr('y1', coordinates[1]).attr('y2', coordinates[1]);
           legendLineText.attr('y', coordinates[1] + 3)
