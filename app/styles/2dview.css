@@ -9,6 +9,7 @@
     }
 	.pano-2d-view {
 	    height: calc(100%-45px);
+      margin-top: -15px;
 	}
 
     /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
