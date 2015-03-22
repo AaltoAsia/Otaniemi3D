@@ -496,16 +496,18 @@ angular.module('otaniemi3dApp')
           var coordinates = [0, 0];
           coordinates = d3.mouse(this);
           
-          var positionOnLegend = ((coordinates[1] - y1) / this.getBBox().height); //e.g. 60% if it's just below half way.
+          var bBoxHeight = this.getBBox().height;
+          var positionOnLegend = ((coordinates[1] - y1) / bBoxHeight); //e.g. 60% if it's just below half way.
           var valueText = twodservice.valueAtPercent(scope.roomValueType.toLowerCase(), positionOnLegend) + twodservice.getValueUnit(scope.roomValueType);
           
-          legendLine.attr('y1', coordinates[1]).attr('y2', coordinates[1]);
-          legendLineText.attr('y', coordinates[1] + 3)
+          //The line shouldn't go all the way to top or bottom because text would not fit completely inside the svg:
+          var yLocation = Math.min((bBoxHeight - 3), Math.max(coordinates[1], 7)); //Always a few pixels away from top and bottom edge.
+          legendLine.attr('y1', yLocation).attr('y2', yLocation);
+          legendLineText.attr('y', yLocation + 3)
             .text(valueText);
         }
-        
-        
-        //make and color the legend svg
+                
+        //Make and color the legend svg
         function fillLegend() {     
 
           var idGradient = 'legendGradient';
