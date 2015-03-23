@@ -9335,61 +9335,6 @@ x3dom.userAgentFeature = {
     x3dom.reload = function() {
         onload();
     };
-	
-    /* FIX PROBLEM IN CHROME - HACK - searching for better solution !!! */
-	if (navigator.userAgent.indexOf("Chrome") != -1) {
-		document.__getElementsByTagName = document.getElementsByTagName;
-		
-		document.getElementsByTagName = function(tag) {
-			var obj = [];
-			var elems = this.__getElementsByTagName("*");
-
-			if(tag =="*"){
-				obj = elems;
-			} else {
-				tag = tag.toUpperCase();
-				for (var i = 0; i < elems.length; i++) {
-					var tagName = elems[i].tagName.toUpperCase();		
-					if (tagName === tag) {
-						obj.push(elems[i]);
-					}
-				}
-			}
-			
-            return obj;
-        };
-
-		document.__getElementById = document.getElementById;
-        document.getElementById = function(id) {
-            var obj = this.__getElementById(id);
-            
-            if (!obj) {
-                var elems = this.__getElementsByTagName("*");
-                for (var i=0; i<elems.length && !obj; i++) {
-                    if (elems[i].getAttribute("id") === id) {
-                        obj = elems[i];
-                    }
-                }
-            }
-            return obj;
-        };
-		
-	} else { /* END OF HACK */
-        document.__getElementById = document.getElementById;
-        document.getElementById = function(id) {
-            var obj = this.__getElementById(id);
-            
-            if (!obj) {
-                var elems = this.getElementsByTagName("*");
-                for (var i=0; i<elems.length && !obj; i++) {
-                    if (elems[i].getAttribute("id") === id) {
-                        obj = elems[i];
-                    }
-                }
-            }
-            return obj;
-        };
-	}
     
     if (window.addEventListener)  {
         window.addEventListener('load', onload, false);
