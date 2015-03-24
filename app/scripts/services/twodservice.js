@@ -50,10 +50,22 @@ angular.module('otaniemi3dApp')
               min = humidityMin;
               max = humidityMax;
               break;
+          default:
+              break;
       }
 
-      var percentage = Math.min((value - min) / (max - min), 1);
-      percentage = Math.max(percentage, 0);
+      var percentage;
+      
+      if (sensorType === 'occupancy'){
+        if (value <= 0) {
+          percentage = 0;
+        } else {
+          percentage = 1;
+        }
+      } else {
+        percentage = Math.min((value - min) / (max - min), 1);
+        percentage = Math.max(percentage, 0);
+      }
       
       var hueStart = 160, hueEnd = 0;
       var opacityStart = 0.3, opacityEnd = 1.0;
