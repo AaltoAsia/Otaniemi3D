@@ -20,7 +20,9 @@ angular.module('otaniemi3dApp')
         pirMin = 0,
         pirMax = 30,
         humidityMin = 30,
-        humidityMax = 70;
+        humidityMax = 70,
+        occupancyMin = 'no',
+        occupancyMax = 'yes';
     
     //Source: https://gist.github.com/nowherenearithaca/4449376
     function getColor(sensorType, value) {
@@ -63,6 +65,7 @@ angular.module('otaniemi3dApp')
       return {rgb:rgbString, opacity:opacity};
     }
   
+    //Percent is represented as 0.5, not 50% or 50
     function valueAtPercent(sensorType, percent) {
       var min;
       var max;
@@ -87,6 +90,8 @@ angular.module('otaniemi3dApp')
               min = humidityMin;
               max = humidityMax;
               break;
+          case 'occupancy':
+              if (percent <= 0.5) {return 'no';} else {return 'yes';}
       }
       var value = (min + percent * (max-min))/1;
       if (value < 0) { 
@@ -96,8 +101,8 @@ angular.module('otaniemi3dApp')
       }      
     }
   
-    function getValueUnit(valueType){
-      switch(valueType.toLowerCase()) {
+    function getValueUnit(sensorType){
+      switch(sensorType.toLowerCase()) {
           case 'temperature':
             return '°C';
           case 'co2':
@@ -109,6 +114,10 @@ angular.module('otaniemi3dApp')
           default:
             return '';
       }
+    }
+  
+    function sensorIsBinary(sensorType) {
+      return (sensorType.toLowerCase === 'occupancy');
     }
     
   
@@ -124,6 +133,8 @@ angular.module('otaniemi3dApp')
       pirMax: pirMax,
       humidityMin: humidityMin,
       humidityMax: humidityMax,
+      occupancyMin: occupancyMin,
+      occupancyMax: occupancyMax,
       valueAtPercent: valueAtPercent,
       getValueUnit: getValueUnit
     };

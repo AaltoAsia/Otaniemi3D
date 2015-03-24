@@ -475,9 +475,7 @@ angular.module('otaniemi3dApp')
     //color legend functionality:
     //    
         var barWidth = 20,
-            barHeight = 180,
             svgWidth = 80,
-            svgHeight = barHeight,
             x1 = 0,
             y1 = 1;
         var legendLine, legendLineText;
@@ -638,12 +636,20 @@ angular.module('otaniemi3dApp')
             case 'light':
               minText = twodservice.lightMin;
               maxText = twodservice.lightMax;
-              break;            
+              break;
+            case 'occupancy':
+              minText = twodservice.occupancyMin;
+              maxText = twodservice.occupancyMax;
+              break;
           }
           minText = minText + twodservice.getValueUnit(scope.roomValueType);
           maxText = maxText + twodservice.getValueUnit(scope.roomValueType);
           d3.select('#legendMinText').text(minText);
           d3.select('#legendMaxText').text(maxText);
+        }
+        
+        function changeLegendStyle() {
+          //Here the legend would be made bicolor instead of gradient
         }
         
         fillLegend();
@@ -681,6 +687,7 @@ angular.module('otaniemi3dApp')
         
         scope.$watch('roomValueType', function() {
           changeLegendText();
+          changeLegendStyle();
         });
       }//end link: function()
     }; //end return
