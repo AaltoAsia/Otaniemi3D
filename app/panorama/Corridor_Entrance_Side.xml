@@ -1,0 +1,30 @@
+<krpano version="1.17.4">
+	
+	<!-- the skin -->
+	<include url="skin/defaultskin.xml" />
+	
+	<!-- view settings -->
+	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />
+	
+
+	<preview url="1th_Floor_-_Corridor_Entrance_Side.tiles/preview.jpg" />
+
+	<image>
+		<cube url="1th_Floor_-_Corridor_Entrance_Side.tiles/pano_%s.jpg" />
+		<mobile>
+			<cube url="1th_Floor_-_Corridor_Entrance_Side.tiles/mobile_%s.jpg" />
+		</mobile>
+	</image>
+
+	<hotspot name="Entrance_Corridor"
+             ath="-112.78446354715783"
+             atv="-6.149078074207291"
+             url="plugins/sensor-128.png"
+             alpha="0.4"
+             scale="0.7"
+             zoom="true"
+             onhover="set(alpha,1.0);"
+             onout="set(alpha,0.4);"
+            />
+
+</krpano>
