@@ -312,7 +312,8 @@ module.exports = function (grunt) {
             'binGeo/*',
             'floorplans/*',
             'sensor_data/*',
-            'panorama/*'
+            'panorama/*',
+            'panorama/*/*'
           ]
         }, {
           expand: true,

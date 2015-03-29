@@ -9,7 +9,6 @@
  */
 angular.module('otaniemi3dApp')
   .controller('threedview', function ($scope) {
-    $scope.panoramabox = 'images/panoramabox.svg'
     $scope.selected = undefined;
     $scope.webglSupport = Modernizr.webgl; //Use this boolean to check for webgl support
     $scope.pano = false;
