@@ -241,14 +241,11 @@ angular.module('otaniemi3dApp')
           if (room.node) {
             var i;
             for (i = 0; i < room.sensors.length; i++) {
-
-              if (room.sensors[i].type === 'temperature') {
-                var temp = room.sensors[i].value;
-                var color = twodservice.getColor('temperature', temp);
+              if (room.sensors[i].type.toLowerCase() === scope.$parent.roomValueType.toLowerCase()) {
+                var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
                 d3.select(room.node)
                   .style('fill', color.rgb)
                   .style('fill-opacity', color.opacity);
-
               }
             }
           }
