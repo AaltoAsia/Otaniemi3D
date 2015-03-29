@@ -19,7 +19,7 @@ angular.module('otaniemi3dApp')
         }
         else{
             var xmlpath = 'Room_' + $scope.room +'.xml';
-            document.getElementById("pano_obj").call("loadpano("+ xmlpath +");");
+            document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
         }
     };
     $scope.stopPanorama = function(){

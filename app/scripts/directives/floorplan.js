@@ -139,7 +139,7 @@ angular.module('otaniemi3dApp')
             tooltip.selectAll('p').attr('class','roominfo');
             
             var roomsWithPanorama = ['238d','237c','235','232b','232a'];       
-            for(var i = 0; i<roomsWithPanorama.length;i++){
+            for(i = 0; i<roomsWithPanorama.length;i++){
                 if(room.name===roomsWithPanorama[i]){
                   tooltip.select('#panobtn').style('display', 'block');
                 }
@@ -530,6 +530,12 @@ angular.module('otaniemi3dApp')
         scope.$watch('plan', function () {
           if (scope.plan.svg !== null) {
             appendFloorplan(scope.plan, floorplanContainer);
+            // Hide the tooltip
+            tooltip
+              .select('#infocontent').remove()
+              .style('visibility', null);
+            tooltip.select('#panobtn').style('display', 'none');
+            scope.selectedRoom = null;
           }
         });
 
