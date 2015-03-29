@@ -141,6 +141,12 @@ ul.nav {
     .jumbotron {
         border-bottom: 0;
     }
+	
+	/*For some reason bootstrap doesn't set these(these make the navbar buttons visible) automatically for larger devices so it is done here*/
+	.collapse {
+	    display: inline!important;
+        visibility: visible!important;
+	}
 }
 
 /*Remove home page white space wrapping*/
