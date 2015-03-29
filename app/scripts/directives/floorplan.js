@@ -343,7 +343,6 @@ angular.module('otaniemi3dApp')
             svg.selectAll('path').each(function() {
               var elem = d3.select(this);
               if (elem.attr('class') !== floorplan.roomArea) {
-                //elem.attr('id', null);
                 elem.attr('pointer-events', 'none');
               }
             });
@@ -414,8 +413,18 @@ angular.module('otaniemi3dApp')
               if (isInside) {
                 for (var i = 0; i < Floorplans.floors.length; i++) {
                   if (Floorplans.floors[i] === floorplan) {
-                    Rooms.add(roomText.textContent, roomArea, i);
-                    addTooltip(Rooms.list[Rooms.list.length-1]);
+                    var roomExists = false;
+
+                    for (var j = 0; j < Rooms.list.length; j++) {
+                      if (Rooms.list[j].name === roomText.textContent) {
+                        roomExists = true;
+                        break;
+                      }
+                    }
+                    if (!roomExists) {
+                      Rooms.add(roomText.textContent, roomArea, i);
+                      addTooltip(Rooms.list[Rooms.list.length-1]);
+                    }
                   }
                 }
               }
