@@ -1,0 +1,19 @@
+<krpano version="1.17.4">
+	
+	<!-- the skin -->
+	<include url="skin/defaultskin.xml" />
+	
+	<!-- view settings -->
+	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />
+	
+
+	<preview url="Room_235.tiles/preview.jpg" />
+
+	<image>
+		<cube url="Room_235.tiles/pano_%s.jpg" />
+		<mobile>
+			<cube url="Room_235.tiles/mobile_%s.jpg" />
+		</mobile>
+	</image>
+
+</krpano>
