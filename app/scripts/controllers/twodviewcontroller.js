@@ -134,7 +134,7 @@ angular.module('otaniemi3dApp')
         selected = room;
         break;
       }
-    };
+    }
     $scope.highlightRoom(selected);
   };
 
@@ -155,8 +155,8 @@ angular.module('otaniemi3dApp')
       // Loop through sensors and check the value of the sensor that matches the parameter given
       //
       for (var i = 0; i < room.sensors.length; i++) {
-        if (room.sensors[i].type.toLowerCase() === type.toLowerCase() 
-            || (room.sensors[i].type.toLowerCase() === 'pir' && type.toLowerCase() === 'occupancy')) {
+        if (room.sensors[i].type.toLowerCase() === type.toLowerCase() ||
+           (room.sensors[i].type.toLowerCase() === 'pir' && type.toLowerCase() === 'occupancy')) {
           var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
           d3.select(room.node)
             .style('fill', color.rgb)
