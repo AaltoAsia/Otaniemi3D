@@ -26,10 +26,10 @@ angular.module('otaniemi3dApp')
     
     //Source: https://gist.github.com/nowherenearithaca/4449376
     function getColor(sensorType, value) {
-      
+      var sensorLower = sensorType.toLowerCase();
       var min;
       var max;
-      switch (sensorType) {
+      switch (sensorLower) {
           case 'temperature':
               min = temperatureMin;
               max = temperatureMax;
@@ -56,7 +56,7 @@ angular.module('otaniemi3dApp')
 
       var percentage;
       
-      if (sensorType === 'occupancy'){
+      if (sensorLower === 'occupancy' || sensorLower === 'pir' || sensorLower === 'occupied'){
         if (value <= 0) {
           percentage = 0;
         } else {

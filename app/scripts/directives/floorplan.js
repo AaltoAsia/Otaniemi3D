@@ -127,7 +127,9 @@ angular.module('otaniemi3dApp')
                         tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm');
                         break;
                     case 'pir':
-                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
+                        var occupancyState;
+                        if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no'}
+                        tooltip.select('#infocontent').append('p').text('occupied' + ': ' + occupancyState);
                         break;
                     case 'light':
                         tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' lux');
@@ -626,9 +628,9 @@ angular.module('otaniemi3dApp')
               minText = twodservice.co2Min;
               maxText = twodservice.co2Max;
               break;
-            case 'pir':
-              minText = twodservice.pirMin;
-              maxText = twodservice.pirMax;
+            case 'pir': //We treat pir as occupancy
+              minText = twodservice.occupancyMin;
+              maxText = twodservice.occupancyMax;
               break;
             case 'light':
               minText = twodservice.lightMin;
