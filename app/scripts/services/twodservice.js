@@ -95,8 +95,7 @@ angular.module('otaniemi3dApp')
               max = lightMax;
               break;
           case 'pir':
-              min = pirMin;
-              max = pirMax;
+              if (percent <= 0.5) {return 'no';} else {return 'yes';}
               break;
           case 'humidity':
               min = humidityMin;
@@ -104,6 +103,7 @@ angular.module('otaniemi3dApp')
               break;
           case 'occupancy':
               if (percent <= 0.5) {return 'no';} else {return 'yes';}
+              break;
       }
       var value = (min + percent * (max-min))/1;
       if (value < 0) { 
