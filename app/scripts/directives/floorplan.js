@@ -140,7 +140,7 @@ angular.module('otaniemi3dApp')
 
             tooltip.selectAll('p').attr('class','roominfo');
             
-            var roomsWithPanorama = ['103','122','123'];       
+            var roomsWithPanorama = ['238d','237c','235','232b','232a'];       
             for(i = 0; i<roomsWithPanorama.length;i++){
                 if(room.name===roomsWithPanorama[i]){
                   tooltip.select('#panobtn').style('display', 'block');
@@ -292,7 +292,13 @@ angular.module('otaniemi3dApp')
           //Execute if the floorplan is supposed to be seen
           if (container.display !== 'none') {
 
-            //Remove pointer-events from text elements
+            svg.selectAll('path').each(function() {
+              var elem = d3.select(this);
+              if (elem.attr('class') !== floorplan.roomArea) {
+                elem.attr('pointer-events', 'none');
+              }
+            });
+
             svg.selectAll('text').attr('pointer-events', 'none');
 
             //Configure dragging and zooming behavior.
@@ -331,7 +337,6 @@ angular.module('otaniemi3dApp')
         * and save data to the Rooms service.
         */
         function parseRooms(floorplan) {
-          var isLetter = /^\w$/i;
 
           d3.select('.' + parserContainer.class).style('display', 'block');
 
@@ -358,18 +363,17 @@ angular.module('otaniemi3dApp')
 
               //Check if room name overlaps with room rectangle in svg.
               if (isInside) {
-                var i;
-                //If text element is one letter then it should be appended to room number
-                if (isLetter.test(roomText.textContent)) {
-                  for (i = 0; i < Rooms.list.length; i++) {
-                    if (Rooms.list[i].node === roomArea) {
-                      Rooms.list[i].name = Rooms.list[i].name + roomText.textContent;
+                for (var i = 0; i < Floorplans.floors.length; i++) {
+                  if (Floorplans.floors[i] === floorplan) {
+                    var roomExists = false;
+
+                    for (var j = 0; j < Rooms.list.length; j++) {
+                      if (Rooms.list[j].name === roomText.textContent) {
+                        roomExists = true;
+                        break;
+                      }
                     }
-                  }
-                //Else add a new room to the Rooms service
-                } else {
-                  for (i = 0; i < Floorplans.floors.length; i++) {
-                    if (Floorplans.floors[i] === floorplan) {
+                    if (!roomExists) {
                       Rooms.add(roomText.textContent, roomArea, i);
                       addTooltip(Rooms.list[Rooms.list.length-1]);
                     }
@@ -661,6 +665,12 @@ angular.module('otaniemi3dApp')
         scope.$watch('plan', function () {
           if (scope.plan.svg !== null) {
             appendFloorplan(scope.plan, floorplanContainer);
+            // Hide the tooltip
+            tooltip
+              .select('#infocontent').remove()
+              .style('visibility', null);
+            tooltip.select('#panobtn').style('display', 'none');
+            scope.selectedRoom = null;
           }
         });
 

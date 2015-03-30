@@ -1,0 +1,29 @@
+<krpano version="1.17.4">
+	
+	<!-- the skin -->
+	<include url="skin/defaultskin.xml" />
+	
+	<!-- view settings -->
+	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />
+	
+
+	<preview url="Room_238d.tiles/preview.jpg" />
+
+	<image>
+		<cube url="Room_238d.tiles/pano_%s.jpg" />
+		<mobile>
+			<cube url="Room_238d.tiles/mobile_%s.jpg" />
+		</mobile>
+	</image>
+
+	<hotspot name="sensor238d"
+             ath="-140.95814047666408"
+             atv="0.3369197058350168"
+             url="plugins/sensor-128.png"
+             alpha="0.4"
+             scale="0.7"
+             zoom="true"
+             onhover="set(alpha,1.0);"
+             onout="set(alpha,0.4);"
+            />
+</krpano>
