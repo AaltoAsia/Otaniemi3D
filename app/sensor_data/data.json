@@ -130,7 +130,7 @@
       "room": "101",
       "sensorId": "111",
       "type": "pir",
-      "value": "23"
+      "value": "0"
   },
   {
       "id": "_102",
