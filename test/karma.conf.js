@@ -32,6 +32,7 @@ module.exports = function(config) {
             'bower_components/spin.js/spin.js',
             'bower_components/angular-spinner/angular-spinner.js',
             'bower_components/fastclick/lib/fastclick.js',
+            'bower_components/modernizr/modernizr.js',
             'app/panorama/embedpano.js',
             'app/panorama/HTMLviewer.js',
             'app/scripts/**/*.js',
