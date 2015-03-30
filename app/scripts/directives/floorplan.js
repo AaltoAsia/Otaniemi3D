@@ -663,7 +663,7 @@ angular.module('otaniemi3dApp')
         * it hasn't already been downloaded.
         */
         scope.$watch('plan', function () {
-          if (scope.plan.svg !== null) {
+          if (scope.plan.svg) {
             appendFloorplan(scope.plan, floorplanContainer);
             // Hide the tooltip
             tooltip
