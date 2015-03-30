@@ -23,5 +23,8 @@
     "jasmine-jquery": "~2.0.5",
     "jasmine": "~2.1.0"
   },
-  "appPath": "app"
+  "appPath": "app",
+  "resolutions": {
+    "jquery": "~1.11.2"
+  }
 }

@@ -7,13 +7,14 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('floorplan', ['Rooms', 'Floorplans', 'usSpinnerService',function (Rooms, Floorplans, usSpinnerService) {
+  .directive('floorplan', ['Rooms', 'Floorplans', 'usSpinnerService', 'twodservice', function (Rooms, Floorplans, usSpinnerService, twodservice) {
     return {
       restrict: 'E',
       scope: {
         plan: '=',
         data: '=',
-        highlightedRoom: '='
+        highlightedRoom: '=',
+        roomValueType: '='
       },
       link: function (scope, element) {
 
@@ -114,8 +115,7 @@ angular.module('otaniemi3dApp')
             tooltip.append('div').attr('id', 'infocontent');
             tooltip.select('#infocontent').append('p').text('Room: ' + room.name);
 
-            var i = 0;
-            for (i = 0; i < room.sensors.length; i++) {
+            for (var i = 0; i < room.sensors.length; i++) {
                 switch (room.sensors[i].type) {
                     case 'temperature':
                         tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' °C');
@@ -127,7 +127,9 @@ angular.module('otaniemi3dApp')
                         tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm');
                         break;
                     case 'pir':
-                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value);
+                        var occupancyState;
+                        if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
+                        tooltip.select('#infocontent').append('p').text('occupied' + ': ' + occupancyState);
                         break;
                     case 'light':
                         tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' lux');
@@ -234,68 +236,18 @@ angular.module('otaniemi3dApp')
 
         /*
         * Set room color for a room according to its temperature.
-        * Color range is from blue to red and temperature range is from
-        * 15C to 35C.
+        * Color range is from blue to red
         */
         function setRoomColor(room) {
-
-          //Scale percentage to rgb value 0 - 255.
-          function scaleTo255(percent) {
-            return Math.round(255 * percent);
-          }
-
-          //Translate value between low and high parameters to a percentage
-          function scaleValueLowHigh(value, low, high) {
-            return Math.max(0, Math.min(1, (value - low) / (high - low)));
-          }
 
           if (room.node) {
             var i;
             for (i = 0; i < room.sensors.length; i++) {
-
-              if (room.sensors[i].type === 'temperature') {
-                var temp = room.sensors[i].value;
-
-                //Temperature color range is 15C - 35C
-                var min = 15;
-                var max = 35;
-
-                var tempPercentage = Math.min((temp - min) / (max - min), 1);
-                tempPercentage = 1.0 - Math.max(tempPercentage, 0);
-
-                // r    g    b    temp
-                // 255  0    0    0%
-                // 255  255  0    25%
-                // 0    255  0    50%
-                // 0    255  255  75%
-                // 0    0    255  100%
-
-                var red, green, blue;
-
-                if (tempPercentage < 0.25) {
-                  red = 1.0;
-                  green = scaleValueLowHigh(tempPercentage, 0, 0.25);
-                  blue = 0;
-                } else if (tempPercentage < 0.50) {
-                  red = scaleValueLowHigh(tempPercentage, 0.50, 0.25);
-                  green = 1.0;
-                  blue = 0;
-                } else if (tempPercentage < 0.75) {
-                  red = 0;
-                  green = 1.0;
-                  blue = scaleValueLowHigh(tempPercentage, 0.50, 0.75);
-                } else {
-                  red = 0;
-                  green = scaleValueLowHigh(tempPercentage, 1.0, 0.75);
-                  blue = 1.0;
-                }
-
-                var color = 'rgb(' + scaleTo255(red).toString() + ', ' +
-                                     scaleTo255(green).toString() + ', ' +
-                                     scaleTo255(blue).toString() + ')';
-
-                d3.select(room.node).style('fill', color);
-
+              if (room.sensors[i].type.toLowerCase() === scope.$parent.roomValueType.toLowerCase()) {
+                var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
+                d3.select(room.node)
+                  .style('fill', color.rgb)
+                  .style('fill-opacity', color.opacity);
               }
             }
           }
@@ -452,47 +404,47 @@ angular.module('otaniemi3dApp')
 
         function updateRoomInfo() {
           if(!scope.data) {
-              return;
+            return;
           }
 
           var i, j;
           var sensorUpdated = false;
 
           for (i = 0; i < scope.data.length; i++) {
-              var roomName = scope.data[i].room.split(' ')[0];
+            var roomName = scope.data[i].room.split(' ')[0];
 
-              for (j = 0; j < Rooms.list.length; j++) {
-                  if (roomName === Rooms.list[j].name) {
-                      var k;
-                      //Check if sensor already exists
-                      for (k = 0; k < Rooms.list[j].sensors.length; k++) {
-                          if (Rooms.list[j].sensors[k].id === scope.data[i].sensorId && Rooms.list[j].sensors[k].type === scope.data[i].type) {
-                              Rooms.list[j].sensors[k].value = scope.data[i].value;
-                              sensorUpdated = true;
-                          }
-                      }
-
-                      //If sensor doesn't yet exist in Rooms service then add it
-                      if (!sensorUpdated) {
-                          Rooms.list[j].sensors.push({
-                              id: scope.data[i].sensorId,
-                              type: scope.data[i].type,
-                              value: scope.data[i].value
-                          });
-                      } else {
-                      //Reset updated flag
-                          sensorUpdated = false;
-                      }
-
-                      setRoomColor(Rooms.list[j]);
-
-                      break;
+            for (j = 0; j < Rooms.list.length; j++) {
+              if (roomName === Rooms.list[j].name) {
+                var k;
+                //Check if sensor already exists
+                for (k = 0; k < Rooms.list[j].sensors.length; k++) {
+                  if (Rooms.list[j].sensors[k].id === scope.data[i].sensorId && Rooms.list[j].sensors[k].type === scope.data[i].type) {
+                    Rooms.list[j].sensors[k].value = scope.data[i].value;
+                    sensorUpdated = true;
                   }
-              }
-          }
-    }  //end updateRoomInfo
+                }
 
-	/*
+                //If sensor doesn't yet exist in Rooms service then add it
+                if (!sensorUpdated) {
+                  Rooms.list[j].sensors.push({
+                    id: scope.data[i].sensorId,
+                    type: scope.data[i].type,
+                    value: scope.data[i].value
+                  });
+                } else {
+                //Reset updated flag
+                  sensorUpdated = false;
+                }
+
+                setRoomColor(Rooms.list[j]);
+
+                break;
+              }
+            }
+          }
+        }  //end updateRoomInfo
+
+        /*
         * Pulse the room highlight until it is not selected anymore.
         */
         function highlightRoom(room) {
@@ -521,6 +473,189 @@ angular.module('otaniemi3dApp')
 
           return pulsing;
         }
+        
+    //    
+    //color legend functionality:
+    //    
+        var barWidth = 20,
+            svgWidth = 80,
+            x1 = 0,
+            y1 = 1;
+        var legendLine, legendLineText;
+        
+        function gradientMouseOver() {
+          legendLine.style('visibility', 'visible');
+          legendLineText.style('visibility', 'visible');
+        }
+        
+        function gradientMouseOut() {
+          legendLine.style('visibility', 'hidden');
+          legendLineText.style('visibility', 'hidden');
+        }
+        
+        function gradientMouseMove() {
+          var coordinates = [0, 0];
+          coordinates = d3.mouse(this);
+          
+          var bBoxHeight = this.getBBox().height;
+          var positionOnLegend = ((coordinates[1] - y1) / bBoxHeight); //e.g. 60% if it's just below half way.
+          var valueText = twodservice.valueAtPercent(scope.roomValueType.toLowerCase(), positionOnLegend) + twodservice.getValueUnit(scope.roomValueType);
+          
+          //The line shouldn't go all the way to top or bottom because text would not fit completely inside the svg:
+          var yLocation = Math.min((bBoxHeight - 3), Math.max(coordinates[1], 7)); //Always a few pixels away from top and bottom edge.
+          legendLine.attr('y1', yLocation).attr('y2', yLocation);
+          legendLineText.attr('y', yLocation + 3)
+            .text(valueText);
+        }
+                
+        //Make and color the legend svg
+        function fillLegend() {     
+
+          var idGradient = 'legendGradient';
+
+          d3.select('#legendBar')
+            .append('p')
+            .attr('class','legendText')
+            .attr('id', 'legendMinText')
+            .style('margin', '0px')
+            .text(twodservice.temperatureMin + twodservice.getValueUnit('temperature'));
+          
+          var svgForLegend = d3.select('#legendBar').append('svg')
+                              .attr('id', 'legendContainingSvg')
+                              .attr('width', svgWidth)
+                              .attr('height', '100%');
+          
+          d3.select('#legendBar')
+            .append('p')
+            .attr('class','legendText')
+            .attr('id', 'legendMaxText')
+            .text(twodservice.temperatureMax + twodservice.getValueUnit('temperature'));
+
+          //create the empty gradient that we're going to populate later
+          svgForLegend
+            .append('g')
+            .append('defs')
+            .append('linearGradient')
+              .attr('id',idGradient)
+              .attr('x1','0%')
+              .attr('x2','0%')
+              .attr('y1','0%')
+              .attr('y2','100%');
+          
+          //create the bar for the legend to go into
+          // the "fill" attribute hooks the gradient up to this rect
+          svgForLegend
+            .append('rect')
+            .attr('id', 'gradientRect')
+            .attr('fill','url(#' + idGradient + ')')
+            .attr('x',x1)
+            .attr('y',y1)
+            .attr('width',barWidth)
+            .attr('height','99%')
+            .attr('rx', 10)
+            .attr('ry', 10);
+          
+          //mouseover line with the value of that point in legend
+          legendLine = svgForLegend
+            .append('line')
+            .attr('x1', x1)
+            .attr('y1', y1)
+            .attr('x2', x1 + barWidth)
+            .attr('y2', y1)
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
+            .style('visibility', 'hidden');
+          
+          legendLineText = svgForLegend 
+            .append('text')
+            .attr('x', x1 + barWidth)
+            .attr('y', y1)
+            .style('visibility', 'hidden')
+            .text('');
+          
+          d3.select('#gradientRect')
+            .on('mouseover', gradientMouseOver)
+            .on('mousemove', gradientMouseMove)
+            .on('mouseout', gradientMouseOut);
+
+          //we go from a somewhat transparent blue/green (hue = 160º, opacity = 0.3) to a fully opaque reddish (hue = 0º, opacity = 1)
+          var hueStart = 160, hueEnd = 0;
+          var opacityStart = 0.3, opacityEnd = 1.0;
+          var numberHues = 35;
+          var theHue, rgbString, opacity,p;
+
+          var deltaPercent = 1/(numberHues-1);
+          var deltaHue = (hueEnd - hueStart)/(numberHues - 1);
+          var deltaOpacity = (opacityEnd - opacityStart)/(numberHues - 1);
+
+          //kind of out of order, but set up the data here 
+          var theData = [];
+          for (var i=0;i < numberHues;i++) {
+              theHue = hueStart + deltaHue*i;
+              //the second parameter, set to 1 here, is the saturation
+              // the third parameter is "lightness"    
+              rgbString = d3.hsl(theHue,1,0.6).toString();
+              opacity = opacityStart + deltaOpacity*i;
+              p = 0 + deltaPercent*i;
+              //onsole.log("i, values: " + i + ", " + rgbString + ", " + opacity + ", " + p);
+              theData.push({rgb:rgbString, opacity:opacity, percent:p});       
+          }
+
+          //now the d3 magic (imo) ...
+          var stops = d3.select('#' + idGradient).selectAll('stop')
+                              .data(theData);
+
+              stops.enter().append('stop');
+              stops.attr('offset',function(d) {
+                                      return d.percent;
+                          })
+                          .attr('stop-color',function(d) {
+                                      return d.rgb;
+                          })
+                          .attr('stop-opacity',function(d) {
+                                      return d.opacity;
+                          });
+        }
+        
+        function changeLegendText() {
+          var minText, maxText;
+          switch (scope.roomValueType.toLowerCase()) {
+            case 'temperature':
+              minText = twodservice.temperatureMin;
+              maxText = twodservice.temperatureMax;
+              break;
+            case 'humidity':
+              minText = twodservice.humidityMin;
+              maxText = twodservice.humidityMax;
+              break;
+            case 'co2':
+              minText = twodservice.co2Min;
+              maxText = twodservice.co2Max;
+              break;
+            case 'pir': //We treat pir as occupancy
+              minText = twodservice.occupancyMin;
+              maxText = twodservice.occupancyMax;
+              break;
+            case 'light':
+              minText = twodservice.lightMin;
+              maxText = twodservice.lightMax;
+              break;
+            case 'occupancy':
+              minText = twodservice.occupancyMin;
+              maxText = twodservice.occupancyMax;
+              break;
+          }
+          minText = minText + twodservice.getValueUnit(scope.roomValueType);
+          maxText = maxText + twodservice.getValueUnit(scope.roomValueType);
+          d3.select('#legendMinText').text(minText);
+          d3.select('#legendMaxText').text(maxText);
+        }
+        
+        function changeLegendStyle() {
+          //Here the legend would be made bicolor instead of gradient
+        }
+        
+        fillLegend();
 
         /*
         * Watch for changes in twodviewcontroller's $scope.floorplan and
@@ -557,6 +692,11 @@ angular.module('otaniemi3dApp')
             appendFloorplan(scope.plan, floorplanContainer);
             scope.highlightedRoom.pulse = highlightRoom(scope.highlightedRoom);
           }
+        });
+        
+        scope.$watch('roomValueType', function() {
+          changeLegendText();
+          changeLegendStyle();
         });
       }//end link: function()
     }; //end return

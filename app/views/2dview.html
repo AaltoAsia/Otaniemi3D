@@ -1,8 +1,8 @@
 <div ng-hide="pano" id="searchContainer" ng-class="searchContainer">
-  <button class="btn btn-primary mobile-button" ng-click="open()">Select values</button>
+  <button class="btn btn-black mobile-button" ng-click="open()">Options</button>
   <!-- Sensor Type  -->
   <div class="btn-group desktop-dropdown" dropdown>
-    <button id="sensorTypeButton" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement> 
+    <button id="sensorTypeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement> 
       {{roomValueType}} <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right typeMenu" role="menu">
@@ -11,12 +11,12 @@
       <li><a ng-disabled="roomValueType == 'Temperature'" ng-click="changeColour('Temperature')" active>Temperature</a></li>
       <li><a ng-disabled="roomValueType == 'Humidity'" ng-click="changeColour('Humidity')">Humidity</a></li>
       <li><a ng-disabled="roomValueType == 'Light'" ng-click="changeColour('Light')">Light</a></li>
-      <li><a ng-disabled="roomValueType == 'pir'" ng-click="changeColour('pir')">pir</a></li>
+      <li><a ng-disabled="roomValueType == 'Occupancy'" ng-click="changeColour('Occupancy')">Occupancy</a></li>
     </ul>
   </div>
   <!-- Sensor timeframe  -->
   <div class="btn-group desktop-dropdown" dropdown>
-    <button id="sensorTimeButton" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement> 
+    <button id="sensorTimeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement> 
       {{ timeFrame }} <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right timeMenu" role="menu">
@@ -36,6 +36,14 @@
          typeahead="room as room.name for room in rooms.list | filter:{name:$viewValue} | limitTo:8"
          class="form-control"
          typeahead-on-select="onSelect($item)">
+
+  <button class="btn btn-default" id="searchDefault" ng-click="">
+    <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
+  </button>
+  <button class="btn btn-default" id="searchDefault" ng-click="">
+    <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
+  </button>
+
 
 </div>
 
@@ -64,32 +72,54 @@
   <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
   <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floors-1"></i> <!-- button that loads up higher (aka next) floor -->
 
-  <floorplan class="fp" plan="selectedPlan" data="sensorData" highlighted-room="highlightedRoom"></floorplan> <!-- The actual floorplan -->
+  <floorplan class="fp" plan="selectedPlan" data="sensorData" highlighted-room="highlightedRoom" room-value-type="roomValueType">
+    <div id="legendBar" style="position: absolute"></div>
+  </floorplan> <!-- The actual floorplan -->
 </div>
 
 <script type="text/ng-template" id="myModalContent.html">
   <div class="modal-header">
-    <h3 class="modal-title">Select sensor values and timeframe</h3>
+    <h3 class="modal-title">Sensor type and timeframe</h3>
   </div>
   <div class="modal-body">
-    <p>
-      <div class="btn-group" id="modalValue">
-        <label class="btn btn-primary" ng-model="roomValueType" btn-radio="'CO2'" uncheckable>CO2</label>
-          <label class="btn btn-primary" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
-          <label class="btn btn-primary" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
-          <label class="btn btn-primary" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
-          <label class="btn btn-primary" ng-model="roomValueType" btn-radio="'pir'" uncheckable>pir</label>
-      </div>
-    </p>
-    <p>
-      <div class="btn-group" id="modalTimeframe">
-          <label class="btn btn-success" ng-model="timeFrame" btn-radio="'Latest'" uncheckable>Latest</label>
-          <label class="btn btn-success" ng-model="timeFrame" btn-radio="'Day'" uncheckable>Day</label>
-          <label class="btn btn-success" ng-model="timeFrame" btn-radio="'Week'" uncheckable>Week</label>
-          <label class="btn btn-success" ng-model="timeFrame" btn-radio="'Month'" uncheckable>Month</label>
-          <label class="btn btn-success" ng-model="timeFrame" btn-radio="'Year'" uncheckable>Year</label>
-      </div>
-    </p>
+    <div class="modal-landscape">
+      <p>
+        <div class="btn-group" id="modalValue">
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'CO2'" uncheckable>CO2</label>
+            <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
+            <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
+            <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
+            <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Occupancy'" uncheckable>Occupancy</label>
+        </div>
+      </p>
+      <p>
+        <div class="btn-group" id="modalTimeframe">
+            <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Latest'" uncheckable>Latest</label>
+            <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Day'" uncheckable>Day</label>
+            <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Week'" uncheckable>Week</label>
+            <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Month'" uncheckable>Month</label>
+            <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Year'" uncheckable>Year</label>
+        </div>
+      </p>
+    </div>
+    <div class="modal-portrait">
+      <p>
+        <div class="btn-group-vertical" id="modalValue">
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'CO2'" uncheckable>CO2</label>
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Occupancy'" uncheckable>Occupancy</label>
+        </div>
+        <div class="btn-group-vertical" id="modalTimeframe">
+          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Latest'" uncheckable>Latest</label>
+          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Day'" uncheckable>Day</label>
+          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Week'" uncheckable>Week</label>
+          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Month'" uncheckable>Month</label>
+          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Year'" uncheckable>Year</label>
+        </div>
+      </p>
+    </div>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>

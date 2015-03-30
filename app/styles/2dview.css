@@ -1,3 +1,36 @@
+/* Responsive adjustment for a landscape mobile device */ 
+@media only screen and (max-width : 768px) and (orientation : landscape) {
+    .modal-portrait {
+        display:none;
+    }    
+    .modal-landscape {
+        display:inline;
+    }
+    
+    /* modal buttons default */
+    #modalValue {
+        margin-bottom: 0px;
+    }
+
+}
+
+/* Responsive adjustment for a portrait mobile device */ 
+@media only screen and (max-width : 768px) and (orientation : portrait) {
+    .modal-portrait {
+        display:inline;
+    }    
+    .modal-landscape {
+        display:none;
+    }
+    
+    /* Modal buttons centered */
+    #modalValue {
+        margin-bottom: 0px;
+        margin-left: 50px;
+        margin-right: 30px;
+    }
+}
+
 @media only screen and (max-width : 769px) {
 
     /*Make floorplan reach from header to footer or from top to bottom*/
@@ -40,7 +73,8 @@
 	/*Make desktop dropdown invisible and make mobile modal button visible*/
 	.mobile-button {
 		display:inline;
-		width:30%;
+		width:20%;
+        margin-bottom: 3px;
 	}
 	.desktop-dropdown {
 		display:none;
@@ -107,6 +141,17 @@
         margin-left: 10%;
 	    margin-right: 10%;
     }
+  
+    #legendBar {
+        margin-left: 15px;
+        margin-top: 12px;
+    }
+    
+    
+    /* Desktop user - disable portrait adjustments */
+    .modal-portrait {
+        display:none;
+    }
 	
 }
 
@@ -114,10 +159,11 @@
 .fullscreen-button {
     position:absolute;
     margin-top:1%;
-    margin-left: 1%; /*Fallbacks for older browsers*/
+    margin-right: 1%; /*Fallbacks for older browsers*/
     margin-top: 1vh;
-    margin-left: 1vh;
-    float: left;
+    margin-right: 1vh;
+    float: right;
+    right: 0px;
 }
 
 
@@ -180,7 +226,7 @@
     margin-top: 10px;
     margin-left: 72px;
 }
-/* bootstrap2 */
+/* Dropdown styling per bootstrap2 */
 .timeMenu.dropdown-menu:before {
   position: absolute;
   top: -7px;
@@ -227,6 +273,72 @@
   content: '';
 }
 
-#modalValue {
-    margin-bottom: 10px;
+#legendBar {
+  pointer-events: none;
+  height: 30%;
+}
+
+#legendContainingSvg {
+  
+}
+
+#gradientRect {
+  stroke-width: 1px;
+  stroke: black;
+  pointer-events: all;
+}
+
+#legendMinText {
+  
+}
+
+#legendMaxText {
+  
+}
+
+/* styling for black buttons in 2dview */
+.btn-black { 
+  color: #ffffff; 
+  background-color: #000000; 
+  border-color: #D4D4D4; 
+} 
+ 
+.btn-black:hover, 
+.btn-black:focus, 
+.btn-black:active, 
+.btn-black.active, 
+.open .dropdown-toggle.btn-black { 
+  color: #ffffff; 
+  background-color: #BABABA; 
+  border-color: #D4D4D4; 
+} 
+ 
+.btn-black:active, 
+.btn-black.active, 
+.open .dropdown-toggle.btn-black { 
+  background-image: none; 
+} 
+ 
+.btn-black.disabled, 
+.btn-black[disabled], 
+fieldset[disabled] .btn-black, 
+.btn-black.disabled:hover, 
+.btn-black[disabled]:hover, 
+fieldset[disabled] .btn-black:hover, 
+.btn-black.disabled:focus, 
+.btn-black[disabled]:focus, 
+fieldset[disabled] .btn-black:focus, 
+.btn-black.disabled:active, 
+.btn-black[disabled]:active, 
+fieldset[disabled] .btn-black:active, 
+.btn-black.disabled.active, 
+.btn-black[disabled].active, 
+fieldset[disabled] .btn-black.active { 
+  background-color: #000000; 
+  border-color: #D4D4D4; 
+} 
+ 
+.btn-black .badge { 
+  color: #000000; 
+  background-color: #ffffff; 
 }

@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, $rootScope, $modal) {
+    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, twodservice, $rootScope, $modal) {
     var loaded = false;
 
     $scope.panoramaViewer = function() {
@@ -132,90 +132,25 @@ angular.module('otaniemi3dApp')
         / co2 sensors.
         */
         $scope.refreshRoomColor = function(type) {
+          for (var j = 0; j < Rooms.list.length; j++) {
+            var room = Rooms.list[j];
 
-            //Scale percentage to rgb value 0 - 255.
-            function scaleTo255(percent) {
-                return Math.round(255 * percent);
+            // Colour the room white, in case the room doesn't have any values for that particular sensor
+            //
+            d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
+
+            // Loop through sensors and check the value of the sensor that matches the parameter given
+            //
+            for (var i = 0; i < room.sensors.length; i++) {
+              if (room.sensors[i].type.toLowerCase() === type.toLowerCase() 
+                  || (room.sensors[i].type.toLowerCase() === 'pir' && type.toLowerCase() === 'occupancy')) {
+                var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
+                d3.select(room.node)
+                  .style('fill', color.rgb)
+                  .style('fill-opacity', color.opacity);
+              }
             }
-
-            //Translate value between low and high parameters to a percentage
-            function scaleValueLowHigh(value, low, high) {
-                return Math.max(0, Math.min(1, (value - low) / (high - low)));
-            }
-            for (var j = 0; j < Rooms.list.length; j++) {
-                var room = Rooms.list[j];
-
-                // Colour the room white, in case the room doesn't any any values for that particular sensor
-                //
-                d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
-
-                // Loop through sensors and check the value of the sensor that matches the parameter given
-                //
-                for (var i = 0; i < room.sensors.length; i++) {
-                    if (room.sensors[i].type.toLowerCase() === type.toLowerCase()) {
-                        var parameter = room.sensors[i].value;
-                        var min;
-                        var max;
-                        switch (type) {
-                            case 'Temperature':
-                                min = 15;
-                                max = 35;
-                                break;
-                            case 'CO2':
-                                min = 350;
-                                max = 5000;
-                                break;
-                            case 'Light':
-                                min = 30;
-                                max = 10000;
-                                break;
-                            case 'Occupancy':
-                                min = 0;
-                                max = 30;
-                                break;
-                            case 'Humidity':
-                                min = 30;
-                                max = 70;
-                                break;
-                        }
-
-                        var tempPercentage = Math.min((parameter - min) / (max - min), 1);
-                        tempPercentage = 1.0 - Math.max(tempPercentage, 0);
-
-                        // r    g    b    temp
-                        // 255  0    0    0%
-                        // 255  255  0    25%
-                        // 0    255  0    50%
-                        // 0    255  255  75%
-                        // 0    0    255  100%
-
-                        var red, green, blue;
-
-                        if (tempPercentage < 0.25) {
-                            red = 1.0;
-                            green = scaleValueLowHigh(tempPercentage, 0, 0.25);
-                            blue = 0;
-                        } else if (tempPercentage < 0.50) {
-                            red = scaleValueLowHigh(tempPercentage, 0.50, 0.25);
-                            green = 1.0;
-                            blue = 0;
-                        } else if (tempPercentage < 0.75) {
-                            red = 0;
-                            green = 1.0;
-                            blue = scaleValueLowHigh(tempPercentage, 0.50, 0.75);
-                        } else {
-                            red = 0;
-                            green = scaleValueLowHigh(tempPercentage, 1.0, 0.75);
-                            blue = 1.0;
-                        }
-
-                        var color = 'rgb(' + scaleTo255(red).toString() + ', ' +
-                            scaleTo255(green).toString() + ', ' +
-                            scaleTo255(blue).toString() + ')';
-                        d3.select(room.node).style('fill', color);
-                    }
-                }
-            }
+          }
         };
 
         $scope.changeColour = function(type) {
