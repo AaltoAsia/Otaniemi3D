@@ -128,7 +128,7 @@ angular.module('otaniemi3dApp')
                         break;
                     case 'pir':
                         var occupancyState;
-                        if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no'}
+                        if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
                         tooltip.select('#infocontent').append('p').text('occupied' + ': ' + occupancyState);
                         break;
                     case 'light':

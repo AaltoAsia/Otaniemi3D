@@ -11,7 +11,7 @@
       <li><a ng-disabled="roomValueType == 'Temperature'" ng-click="changeColour('Temperature')" active>Temperature</a></li>
       <li><a ng-disabled="roomValueType == 'Humidity'" ng-click="changeColour('Humidity')">Humidity</a></li>
       <li><a ng-disabled="roomValueType == 'Light'" ng-click="changeColour('Light')">Light</a></li>
-      <li><a ng-disabled="roomValueType == 'pir'" ng-click="changeColour('pir')">pir</a></li>
+      <li><a ng-disabled="roomValueType == 'Occupancy'" ng-click="changeColour('Occupancy')">Occupancy</a></li>
     </ul>
   </div>
   <!-- Sensor timeframe  -->
@@ -89,7 +89,7 @@
             <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
             <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
             <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
-            <label class="btn btn-black" ng-model="roomValueType" btn-radio="'pir'" uncheckable>pir</label>
+            <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Occupancy'" uncheckable>Occupancy</label>
         </div>
       </p>
       <p>
@@ -109,7 +109,7 @@
           <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
           <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
           <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'pir'" uncheckable>pir</label>
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Occupancy'" uncheckable>Occupancy</label>
         </div>
         <div class="btn-group-vertical" id="modalTimeframe">
           <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Latest'" uncheckable>Latest</label>
