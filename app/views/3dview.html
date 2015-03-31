@@ -4,8 +4,7 @@
     <meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
     <link rel='stylesheet' type='text/css' href='x3dom.css'/>
     <script type='text/javascript' src='x3dom.js'></script>
-    <style>.x3dom-logContainer { bottom: 0px; position: absolute; }
-    </style>
+
 </head>
 <div class="container x3d-container">
 
@@ -87,6 +86,7 @@
            description="cafeteria">
 </Viewpoint>
 
+
 <Transform translation='472.70494 -2.066581 -144.51216'>
   <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Cafeteria'); $scope.$apply()">
     <Appearance>
@@ -97,6 +97,20 @@
   </Shape>
 </Transform>
 
+<Transform DEF = 'cafeteria_sensor1'
+    translation = "469.9848032883704 -0.18947556924496 -143.49173141471726" 
+    scale = '5 5 5' 
+    rotation='-0 0 -1.57 1.57'>
+    <Inline nameSpaceName="sensor" mapDEFToID="true" url="sensor.x3d" />
+</Transform>
+
+<Transform DEF = 'cafeteria_sensor2'
+    translation = "469.9848032883704 -0.68947556924496 -143.49173141471726" 
+    scale = '5 5 5' 
+    rotation='-0 0 -1.57 1.57'>
+    <Inline nameSpaceName="sensor" mapDEFToID="true" url="sensor.x3d" />
+</Transform>
+
 <Viewpoint id='Corridor Entrance Side'
            position="480.48883 1.32834 -115.26504" 
            orientation="-0.44858 0.00000 0.00000 0.10982"
@@ -104,7 +118,7 @@
            description="Corridor Entrance Side">
 </Viewpoint>
 
-<Transform translation="480.48883 0.812834 -120.26504">
+<Transform translation="480.48883 0.90577 -120.26504">
   <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Corridor_Entrance_Side'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
@@ -114,6 +128,13 @@
   </Shape>
 </Transform>
 
+<Transform DEF = 'Corridor_Entrance_Side_sensor'
+    translation = "483.267397 1.75220 -117.68667" 
+    scale = '5 5 5' 
+    rotation='-0 0 1.57 1.57'>
+    <Inline nameSpaceName="sensor" mapDEFToID="true" url="sensor.x3d" />
+</Transform>
+
 <Viewpoint id='Corridor Cafeteria Side'
            position="480.48883 1.32834 -135.26504" 
            orientation="-0.44858 0.00000 0.00000 0.10982"
@@ -121,7 +142,7 @@
            description="Corridor Cafeteria Side">
 </Viewpoint>
 
-<Transform translation="480.48883 0.812834 -145.26504">
+<Transform translation="480.48883 0.90577 -145.26504">
   <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Corridor_Cafeteria_Side'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
@@ -200,6 +221,13 @@
     </Appearance>
     <Box DEF="box" size="1 1 1" />
   </Shape>
+</Transform>
+
+<Transform DEF = 'Corridor_End_sensor'
+    translation = "516.2639057062678 2.05003264707672463 -110.77286572331198" 
+    scale = '5 5 5' 
+    rotation="-0.0 0.785 0.785 3.14"  >
+    <Inline nameSpaceName="sensor" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='223'
@@ -307,6 +335,13 @@
   </Shape>
 </Transform>
 
+<Transform DEF = '238d_sensor'
+    translation = "524.04428 1.6 -101.52309"
+    scale = '5 5 5' 
+    rotation='-0 0 -1.57 1.57'>
+    <Inline nameSpaceName="sensor" mapDEFToID="true" url="sensor.x3d" />
+</Transform>
+
 <Viewpoint id='238b'
            position="522.25828 2.19777 -105.52309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
@@ -329,6 +364,13 @@
     </Appearance>
     <Box DEF="box" size="1 1 1" />
   </Shape>
+</Transform>
+
+<Transform DEF = '237c_sensor'
+    translation = "519.33828 1.7 -101.52309"
+    scale = '5 5 5' 
+    rotation='-0 0 1.57 1.57'>
+    <Inline nameSpaceName="sensor" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='237d'
