@@ -411,7 +411,7 @@ angular.module('otaniemi3dApp')
           var sensorUpdated = false;
 
           for (i = 0; i < scope.data.length; i++) {
-            var roomName = scope.data[i].room.split(' ')[0];
+            var roomName = scope.data[i].room;
 
             for (j = 0; j < Rooms.list.length; j++) {
               if (roomName === Rooms.list[j].name) {
