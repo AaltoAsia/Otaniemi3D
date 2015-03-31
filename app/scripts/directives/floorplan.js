@@ -146,22 +146,28 @@ angular.module('otaniemi3dApp')
                   tooltip.select('#panobtn').style('display', 'block');
                 }
             }
-
             tooltip.style('visibility', 'visible');
 
           }
           
 
           function clicked () {
-            clickWasOnRoom = true;
             if (scope.highlightedRoom) {
               clearInterval(scope.highlightedRoom.pulse);
               scope.highlightedRoom = null;
             }
-            mouseOut(true);
-            scope.selectedRoom = room;
-            mouseOver(true);
-            mouseMove(true);
+            clickWasOnRoom = true;
+            if (d3.event.defaultPrevented) { // Ignore the click since this was called after dragend
+              mouseOut(false);
+              mouseOver(false);
+              mouseMove(false);
+            }
+            else {
+              mouseOut(true);
+              scope.selectedRoom = room;
+              mouseOver(true);
+              mouseMove(true);
+            }
           }
 
           //Set mouse events to the room node
@@ -313,6 +319,7 @@ angular.module('otaniemi3dApp')
                 floorplan.translate = d3.event.translate;
                 tooltip.style('visibility', 'hidden');
               });
+              
 
             svg.call(zoomListener);
 
@@ -495,8 +502,10 @@ angular.module('otaniemi3dApp')
         
         function gradientMouseMove() {
           var coordinates = [0, 0];
+          /*jshint validthis:true */
           coordinates = d3.mouse(this);
           
+          /*jshint validthis:true */
           var bBoxHeight = this.getBBox().height;
           var positionOnLegend = ((coordinates[1] - y1) / bBoxHeight); //e.g. 60% if it's just below half way.
           var valueText = twodservice.valueAtPercent(scope.roomValueType.toLowerCase(), positionOnLegend) + twodservice.getValueUnit(scope.roomValueType);

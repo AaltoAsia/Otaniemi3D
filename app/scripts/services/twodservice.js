@@ -127,10 +127,6 @@ angular.module('otaniemi3dApp')
             return '';
       }
     }
-  
-    function sensorIsBinary(sensorType) {
-      return (sensorType.toLowerCase === 'occupancy');
-    }
     
   
     return { 
