@@ -140,11 +140,21 @@ angular.module('otaniemi3dApp')
 
             tooltip.selectAll('p').attr('class','roominfo');
             
-            var roomsWithPanorama = ['238d','237c','235','232b','232a'];       
-            for(i = 0; i<roomsWithPanorama.length;i++){
-                if(room.name===roomsWithPanorama[i]){
-                  tooltip.select('#panobtn').style('display', 'block');
-                }
+            var roomsWithPanorama = [
+              '238d','237c','235','232b','232a',
+              '2nd Floor Corridor Start',
+              '2nd Floor Corridor Middle',
+              '2nd Floor Corridor End',
+              'Corridor Cafeteria Side',
+              'Corridor Entrance Side',
+              'Cafeteria',
+              'Entrance'
+              ];
+
+            for(i = 0; i < roomsWithPanorama.length; i++){
+              if(room.name === roomsWithPanorama[i]){
+                tooltip.select('#panobtn').style('display', 'block');
+              }
             }
 
             tooltip.style('visibility', 'visible');
