@@ -15,11 +15,17 @@ angular.module('otaniemi3dApp')
   $scope.panoramaViewer = function() {
       $scope.pano = true;
       if(loaded === false){
-          embedpano({xml:'panorama/Room_' + $scope.room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true});
+          embedpano({
+            xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
+            id:'pano_obj',
+            target:'pano',
+            html5:'only',
+            passQueryParameters:true
+          });
           loaded = true;
       }
       else{
-          var xmlpath = 'Room_' + $scope.room +'.xml';
+          var xmlpath = $scope.room.split(' ').join('_') +'.xml';
           document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
       }
   };

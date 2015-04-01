@@ -1,5 +1,284 @@
 [
-  
+    {
+      "id": "room_corr",
+      "room": "Corridor",
+      "sensorId": "temp_corr",
+      "type": "temperature",
+      "value": "20.3"
+    },
+    {
+      "id": "room_corr",
+      "room": "Corridor",
+      "sensorId": "co2_corr",
+      "type": "co2",
+      "value": "437"
+    },
+    {
+      "id": "room_corr",
+      "room": "Corridor",
+      "sensorId": "light_corr",
+      "type": "light",
+      "value": "5993"
+    },
+    {
+      "id": "room_corr",
+      "room": "Corridor",
+      "sensorId": "pir_corr",
+      "type": "pir",
+      "value": "30"
+    },
+    {
+      "id": "room_corr",
+      "room": "Corridor",
+      "sensorId": "hum_corr",
+      "type": "humidity",
+      "value": "42"
+    },
+    {
+      "id": "room_2ndFCS",
+      "room": "2nd Floor Corridor Start",
+      "sensorId": "temp_2ndFCS",
+      "type": "temperature",
+      "value": "21.3"
+    },
+    {
+      "id": "room_2ndFCM",
+      "room": "2nd Floor Corridor Middle",
+      "sensorId": "temp_2ndFCM",
+      "type": "temperature",
+      "value": "22.3"
+    },
+    {
+      "id": "room_2ndFCE",
+      "room": "2nd Floor Corridor End",
+      "sensorId": "temp_2ndFCE",
+      "type": "temperature",
+      "value": "24.3"
+    },
+    {
+      "id": "room_cafe",
+      "room": "Cafeteria",
+      "sensorId": "temp_cafe",
+      "type": "temperature",
+      "value": "25.3"
+    },
+    {
+      "id": "room_entr",
+      "room": "Entrance",
+      "sensorId": "temp_entr",
+      "type": "temperature",
+      "value": "18.3"
+    },
+    {
+      "id": "room_cor_cafe",
+      "room": "Corridor Cafeteria Side",
+      "sensorId": "temp_cor_cafe",
+      "type": "temperature",
+      "value": "19.3"
+    },
+    {
+      "id": "room_cor_entr",
+      "room": "Corridor Entrance Side",
+      "sensorId": "temp_cor_entr",
+      "type": "temperature",
+      "value": "20.3"
+    },
+    {
+      "id": "room_2ndFCS",
+      "room": "2nd Floor Corridor Start",
+      "sensorId": "light_2ndFCS",
+      "type": "light",
+      "value": "6000"
+    },
+    {
+      "id": "room_2ndFCM",
+      "room": "2nd Floor Corridor Middle",
+      "sensorId": "light_2ndFCM",
+      "type": "light",
+      "value": "6100"
+    },
+    {
+      "id": "room_2ndFCE",
+      "room": "2nd Floor Corridor End",
+      "sensorId": "light_2ndFCE",
+      "type": "light",
+      "value": "6050"
+    },
+    {
+      "id": "room_cafe",
+      "room": "Cafeteria",
+      "sensorId": "light_cafe",
+      "type": "light",
+      "value": "5990"
+    },
+    {
+      "id": "room_entr",
+      "room": "Entrance",
+      "sensorId": "light_entr",
+      "type": "light",
+      "value": "6090"
+    },
+    {
+      "id": "room_cor_cafe",
+      "room": "Corridor Cafeteria Side",
+      "sensorId": "light_cor_cafe",
+      "type": "light",
+      "value": "4200"
+    },
+    {
+      "id": "room_cor_entr",
+      "room": "Corridor Entrance Side",
+      "sensorId": "light_cor_entr",
+      "type": "light",
+      "value": "4302"
+    },
+    {
+      "id": "room_2ndFCS",
+      "room": "2nd Floor Corridor Start",
+      "sensorId": "co2_2ndFCS",
+      "type": "co2",
+      "value": "411"
+    },
+    {
+      "id": "room_2ndFCM",
+      "room": "2nd Floor Corridor Middle",
+      "sensorId": "co2_2ndFCM",
+      "type": "co2",
+      "value": "420"
+    },
+    {
+      "id": "room_2ndFCE",
+      "room": "2nd Floor Corridor End",
+      "sensorId": "co2_2ndFCE",
+      "type": "co2",
+      "value": "389"
+    },
+    {
+      "id": "room_cafe",
+      "room": "Cafeteria",
+      "sensorId": "co2_cafe",
+      "type": "co2",
+      "value": "398"
+    },
+    {
+      "id": "room_entr",
+      "room": "Entrance",
+      "sensorId": "co2_entr",
+      "type": "co2",
+      "value": "401"
+    },
+    {
+      "id": "room_cor_cafe",
+      "room": "Corridor Cafeteria Side",
+      "sensorId": "co2_cor_cafe",
+      "type": "co2",
+      "value": "430"
+    },
+    {
+      "id": "room_cor_entr",
+      "room": "Corridor Entrance Side",
+      "sensorId": "co2_cor_entr",
+      "type": "co2",
+      "value": "451"
+    },
+    {
+      "id": "room_2ndFCS",
+      "room": "2nd Floor Corridor Start",
+      "sensorId": "hum_2ndFCS",
+      "type": "humidity",
+      "value": "34"
+    },
+    {
+      "id": "room_2ndFCM",
+      "room": "2nd Floor Corridor Middle",
+      "sensorId": "hum_2ndFCM",
+      "type": "humidity",
+      "value": "35"
+    },
+    {
+      "id": "room_2ndFCE",
+      "room": "2nd Floor Corridor End",
+      "sensorId": "hum_2ndFCE",
+      "type": "humidity",
+      "value": "34"
+    },
+    {
+      "id": "room_cafe",
+      "room": "Cafeteria",
+      "sensorId": "hum_cafe",
+      "type": "humidity",
+      "value": "40"
+    },
+    {
+      "id": "room_entr",
+      "room": "Entrance",
+      "sensorId": "hum_entr",
+      "type": "humidity",
+      "value": "39"
+    },
+    {
+      "id": "room_cor_cafe",
+      "room": "Corridor Cafeteria Side",
+      "sensorId": "hum_cor_cafe",
+      "type": "humidity",
+      "value": "43"
+    },
+    {
+      "id": "room_cor_entr",
+      "room": "Corridor Entrance Side",
+      "sensorId": "hum_cor_entr",
+      "type": "humidity",
+      "value": "41"
+    },
+    {
+      "id": "room_2ndFCS",
+      "room": "2nd Floor Corridor Start",
+      "sensorId": "pir_2ndFCS",
+      "type": "pir",
+      "value": "0"
+    },
+    {
+      "id": "room_2ndFCM",
+      "room": "2nd Floor Corridor Middle",
+      "sensorId": "pir_2ndFCM",
+      "type": "pir",
+      "value": "0"
+    },
+    {
+      "id": "room_2ndFCE",
+      "room": "2nd Floor Corridor End",
+      "sensorId": "pir_2ndFCE",
+      "type": "pir",
+      "value": "0"
+    },
+    {
+      "id": "room_cafe",
+      "room": "Cafeteria",
+      "sensorId": "pir_cafe",
+      "type": "pir",
+      "value": "30"
+    },
+    {
+      "id": "room_entr",
+      "room": "Entrance",
+      "sensorId": "pir_entr",
+      "type": "pir",
+      "value": "30"
+    },
+    {
+      "id": "room_cor_cafe",
+      "room": "Corridor Cafeteria Side",
+      "sensorId": "pir_cor_cafe",
+      "type": "pir",
+      "value": "30"
+    },
+    {
+      "id": "room_cor_entr",
+      "room": "Corridor Entrance Side",
+      "sensorId": "pir_cor_entr",
+      "type": "pir",
+      "value": "30"
+    },
     {
       "id": "room_101",
       "room": "101",
