@@ -4,7 +4,7 @@
             <article>
                 <h1 class="carousel-heading">{{slide.caption}}</h1>
                 <h3 class="carousel-heading">{{slide.description}}</h3>
-                <p ng-show="{{slide.link}} == 'Support'">
+                <p ng-hide="slide.link == 'support'">
                     <a class="btn btn-lg btn-primary" role="button" href="#{{slide.link}}">{{slide.linktext}}</a>
                 </p>
             </article>
