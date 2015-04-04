@@ -1,40 +1,5 @@
 [
     {
-      "id": "room_corr",
-      "room": "Corridor",
-      "sensorId": "temp_corr",
-      "type": "temperature",
-      "value": "20.3"
-    },
-    {
-      "id": "room_corr",
-      "room": "Corridor",
-      "sensorId": "co2_corr",
-      "type": "co2",
-      "value": "437"
-    },
-    {
-      "id": "room_corr",
-      "room": "Corridor",
-      "sensorId": "light_corr",
-      "type": "light",
-      "value": "5993"
-    },
-    {
-      "id": "room_corr",
-      "room": "Corridor",
-      "sensorId": "pir_corr",
-      "type": "pir",
-      "value": "30"
-    },
-    {
-      "id": "room_corr",
-      "room": "Corridor",
-      "sensorId": "hum_corr",
-      "type": "humidity",
-      "value": "42"
-    },
-    {
       "id": "room_2ndFCS",
       "room": "2nd Floor Corridor Start",
       "sensorId": "temp_2ndFCS",
