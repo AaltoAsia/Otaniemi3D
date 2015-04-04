@@ -1,11 +1,10 @@
-
 <head>
     <meta http-equiv='X-UA-Compatible' content='chrome=1/'>
     <meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
     <link rel='stylesheet' type='text/css' href='x3dom.css'/>
     <script type='text/javascript' src='x3dom.js'></script>
-
 </head>
+
 <div class="container x3d-container">
 
 <div ng-cloak class="jumbotron" ng-show="!webglSupport"><h1>Your browser doesn't support webGL!</h1></div>
@@ -38,7 +37,6 @@
             typeahead="item for item in items | filter:$viewValue | limitTo:8"
             class="form-control search-content"
             typeahead-on-select="onSelect($item)">
-			
 
     <button class="btn btn-default" id="searchDefault" ng-click="changeView()">
         <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
@@ -46,8 +44,25 @@
     <button class="btn btn-default" id="searchDefault" ng-click="changeView('vp0')">
         <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
     </button>
-
 </div>
+
+
+<!-- Modal for displaying a sensor values when a sensor is clicked -->
+<script type="text/ng-template" id="threedModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Latest sensor data for <span id="sensorLabel"></span></h3>
+  </div>
+  <div class="modal-body">
+    <p>CO2: </p>
+    <p>Temperature: </p>
+    <p>Humidity: </p>
+    <p>Light: </p>
+    <p>Occupancy: </p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+  </div>
+</script>
 
 <!-- Viewpoint definitions for each room -->
 
@@ -97,12 +112,11 @@
   </Shape>
 </Transform>
 
-
 <Transform DEF = 'cafeteria_sensor'
     translation = "469.9848032883704 -0.68947556924496 -143.49173141471726" 
     scale = '5 5 5' 
     rotation='-0 0 -1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="alert('Dummy sensor message.')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('cafeteria_sensor')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='Corridor Entrance Side'
@@ -126,7 +140,7 @@
     translation = "483.267397 1.75220 -117.68667" 
     scale = '5 5 5' 
     rotation='-0 0 1.57 1.57'>
-    <Inline nameSpaceName="sensor" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Corridor_Entrance_Side_sensor')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='Corridor Cafeteria Side'
@@ -221,7 +235,7 @@
     translation = "516.2639057062678 2.05003264707672463 -110.77286572331198" 
     scale = '5 5 5' 
     rotation="-0.0 0.785 0.785 3.14"  >
-    <Inline nameSpaceName="sensor" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Corridor_End_sensor')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='223'
@@ -333,7 +347,7 @@
     translation = "524.04428 1.6 -101.52309"
     scale = '5 5 5' 
     rotation='-0 0 -1.57 1.57'>
-    <Inline nameSpaceName="sensor" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('238d_sensor')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='238b'
@@ -364,7 +378,7 @@
     translation = "519.33828 1.7 -101.52309"
     scale = '5 5 5' 
     rotation='-0 0 1.57 1.57'>
-    <Inline nameSpaceName="sensor" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('237c_sensor')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='237d'

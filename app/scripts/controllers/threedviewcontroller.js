@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('threedview', function ($scope) {
+  .controller('threedview', function ($scope, $modal) {
     $scope.panoramabox = 'images/panoramabox.svg';
     $scope.selected = undefined;
     $scope.webglSupport = Modernizr.webgl; //Use this boolean to check for webgl support
@@ -56,6 +56,17 @@ angular.module('otaniemi3dApp')
     $scope.stopPanorama = function(){
       $scope.pano = false;
     };
+  
+    $scope.modalTooltip = function (sensorLabel) {
+      /* TODO: implement fetching and showing right values in Modal Tooltip.
+         document.getElementById('sensorLabel').innerHTML = sensorLabel;
+      */
+      var modalInstance = $modal.open({
+        templateUrl: 'threedModal.html',
+        controller: '3dModalCtrl',
+        }
+      );
+    }
   }
 );
 
