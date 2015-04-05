@@ -20,18 +20,13 @@ angular.module('otaniemi3dApp')
   $scope.panoramaViewer = function() {
       $scope.pano = true;
       var room = Rooms.findRoom($scope.room);
-      if(loaded === false){
-          var infos = {room: room};
-          embedpano({xml:'panorama/Room_' + $scope.room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
-          loaded = true;
-      }
-      else{
-          var xmlpath = 'Room_' + $scope.room +'.xml';
-          document.getElementById('pano_obj').call('loadpano('+ xmlpath +', vars:infos);');
-      }
+      var infos = {room: room};
+      embedpano({xml:'panorama/Room_' + $scope.room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
   };
   $scope.stopPanorama = function(){
       $scope.pano = false;
+      var element = document.getElementById("pano_obj");
+      element.parentNode.removeChild(element); 
   };
 
   var floorplanClass = 'floorplan';

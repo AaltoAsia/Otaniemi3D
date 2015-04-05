@@ -40,23 +40,18 @@ angular.module('otaniemi3dApp')
       $scope.changeView($item);
     };
     
-    var loaded = false;
 
     $scope.panoramaViewer = function(room) {
     $scope.pano = true;
     var roomInfos = Rooms.findRoom(room);
     var infos = {room: room};
-      if(loaded === false){
           embedpano({xml:'panorama/Room_' + room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
           loaded = true;
-      }
-      else{
-        var xmlpath = 'Room_' +room +'.xml';
-        document.getElementById('pano_obj').call('loadpano('+ xmlpath +', get(room));');
-      }
     };
     $scope.stopPanorama = function(){
       $scope.pano = false;
+      var element = document.getElementById("pano_obj");
+      element.parentNode.removeChild(element); 
     };
   }
 );

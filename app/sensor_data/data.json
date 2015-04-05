@@ -14,8 +14,8 @@
     "value":"19.2"
   },
   {
-    "id": "_105",
-    "room": "105",
+    "id": "_238d",
+    "room": "238d",
     "sensorId": "115",
     "type":"temperature",
     "value":"30.0"
@@ -63,8 +63,8 @@
     "value":"456"
   },
   {
-    "id": "_105",
-    "room": "105",
+    "id": "_238d",
+    "room": "238d",
     "sensorId": "115",
     "type":"co2",
     "value":"305"
@@ -91,8 +91,8 @@
       "value":"32.0450231"
   },
   {
-      "id": "_105",
-      "room": "105",
+      "id": "_238d",
+      "room": "238d",
       "sensorId": "115",
       "type":"light",
       "value":"32.0450231"
@@ -119,8 +119,8 @@
       "value":"41.123241"
   },
   {
-      "id": "_105",
-      "room": "105",
+      "id": "_238d",
+      "room": "238d",
       "sensorId": "115",
       "type":"humidity",
       "value":"39.08983"
@@ -147,8 +147,8 @@
       "value":"1"
   },
   {
-      "id": "_105",
-      "room": "105",
+      "id": "_238d",
+      "room": "238d",
       "sensorId": "115",
       "type":"pir",
       "value":"30"

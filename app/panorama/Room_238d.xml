@@ -2,6 +2,7 @@
 	
 	<!-- the skin -->
 	<include url="skin/defaultskin.xml" />
+    <include url="plugins/showtext.xml" />
 	
 	<!-- view settings -->
 	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />
@@ -23,7 +24,7 @@
              alpha="0.4"
              scale="0.7"
              zoom="true"
-             onhover="set(alpha,1.0);"
+             onhover="set(alpha,1.0);showtext(get(room));"
              onout="set(alpha,0.4);"
             />
 </krpano>
