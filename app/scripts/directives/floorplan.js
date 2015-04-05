@@ -259,7 +259,7 @@ angular.module('otaniemi3dApp')
           if (room.node) {
             var i;
             for (i = 0; i < room.sensors.length; i++) {
-              if (room.sensors[i].type.toLowerCase() === scope.$parent.roomValueType.toLowerCase()) {
+              if (room.sensors[i].type.toLowerCase() === scope.$parent.roomValueType.toLowerCase() || ((room.sensors[i].type.toLowerCase() === 'pir') && (scope.$parent.roomValueType.toLowerCase() === 'occupancy'))) {
                 var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
                 d3.select(room.node)
                   .style('fill', color.rgb)
