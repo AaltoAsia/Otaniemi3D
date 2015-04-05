@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('threedview', function ($scope) {
+  .controller('threedview', function ($scope, Rooms) {
     $scope.panoramabox = 'images/panoramabox.svg';
     $scope.selected = undefined;
     $scope.webglSupport = Modernizr.webgl; //Use this boolean to check for webgl support
@@ -44,13 +44,15 @@ angular.module('otaniemi3dApp')
 
     $scope.panoramaViewer = function(room) {
     $scope.pano = true;
+    var roomInfos = Rooms.findRoom(room);
+    var infos = {room: room};
       if(loaded === false){
-          embedpano({xml:'panorama/' + room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true});
+          embedpano({xml:'panorama/Room_' + room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
           loaded = true;
       }
       else{
-        var xmlpath = room +'.xml';
-        document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
+        var xmlpath = 'Room_' +room +'.xml';
+        document.getElementById('pano_obj').call('loadpano('+ xmlpath +', get(room));');
       }
     };
     $scope.stopPanorama = function(){
@@ -58,5 +60,3 @@ angular.module('otaniemi3dApp')
     };
   }
 );
-
-

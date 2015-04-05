@@ -65,5 +65,47 @@ angular.module('otaniemi3dApp')
       }
       
     };
+
+    this.findRoom = function(roomName) {
+        var roomHTML = null;
+        var room = null
+        for(var i = 0; i < this.list.length; i++) {
+          if(this.list[i].name===roomName){
+            room = this.list[i];
+          }
+        }
+          if(room !== null){
+            roomHTML = '[p]Room:' + room.name + '[/p]';
+            var paragraph = null;
+            for (var i = 0; i < room.sensors.length; i++) {
+                switch (room.sensors[i].type) {
+                    case 'temperature':
+                         paragraph = '[p]' + room.sensors[i].type + ': ' + room.sensors[i].value + ' °C' + '[/p]';
+                         roomHTML += paragraph;
+                        break;
+                    case 'humidity':
+                        paragraph = '[p]' + room.sensors[i].type + ': ' + room.sensors[i].value + ' %' + '[/p]';
+                        roomHTML += paragraph;
+                        break;
+                    case 'co2':
+                        paragraph = '[p]' + room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm' + '[/p]';
+                        roomHTML += paragraph;
+                        break;
+                    case 'pir':
+                        var occupancyState;
+                        if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
+                        paragraph = '[p]' + 'occupied' + ': ' + occupancyState + '[/p]';
+                        roomHTML += paragraph;
+                        break;
+                    case 'light':
+                        paragraph = '[p]' + room.sensors[i].type + ': ' + room.sensors[i].value + ' lux' +'[/p]';
+                        roomHTML += paragraph;
+                        break;
+                }
+            }
+        return roomHTML;
+    }
+    return null;
+    };
   
   });

@@ -2,6 +2,7 @@
 	
 	<!-- the skin -->
 	<include url="skin/defaultskin.xml" />
+      <include url="plugins/showtext.xml" />
 	
 	<!-- view settings -->
 	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />
@@ -15,7 +16,7 @@
 			<cube url="Cafeteria.tiles/mobile_%s.jpg" />
 		</mobile>
 	</image>
-
+*
 	<hotspot name="cafeteria1"
              ath="-116.94199034018922"
              atv="-14.618310762715677"
@@ -23,7 +24,7 @@
              alpha="0.4"
              scale="0.7"
              zoom="true"
-             onhover="set(alpha,1.0);"
+             onhover="set(alpha,1.0); showtext([p]{{room}}[/p]);"
              onout="set(alpha,0.4);"
             />
 

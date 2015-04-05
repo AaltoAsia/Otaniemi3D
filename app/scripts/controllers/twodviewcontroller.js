@@ -11,16 +11,23 @@ angular.module('otaniemi3dApp')
     .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, twodservice, $rootScope, $modal) {
   
   var loaded = false;
+  $scope.roomer = null;
+
+  $scope.getInfo = function(){
+    console.log($scope.roomer);
+  }
 
   $scope.panoramaViewer = function() {
       $scope.pano = true;
+      var room = Rooms.findRoom($scope.room);
       if(loaded === false){
-          embedpano({xml:'panorama/Room_' + $scope.room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true});
+          var infos = {room: room};
+          embedpano({xml:'panorama/Room_' + $scope.room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
           loaded = true;
       }
       else{
           var xmlpath = 'Room_' + $scope.room +'.xml';
-          document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
+          document.getElementById('pano_obj').call('loadpano('+ xmlpath +', vars:infos);');
       }
   };
   $scope.stopPanorama = function(){
