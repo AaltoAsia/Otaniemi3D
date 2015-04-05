@@ -14,7 +14,9 @@ angular.module('otaniemi3dApp')
         plan: '=',
         data: '=',
         highlightedRoom: '=',
-        roomValueType: '='
+        roomValueType: '=',
+        resetView: '=',
+        planNumber: '='
       },
       link: function (scope, element) {
 
@@ -272,7 +274,7 @@ angular.module('otaniemi3dApp')
        /*
         * Append floorplan to the html element and register zoom and drag listener.
         */
-        function appendFloorplan(floorplan, container) {
+        function appendFloorplan(floorplan, container, redraw) {
           //Container tells if svg should be visible or if it's only appended
           //for room info parsing
           var containerElement = d3.select(element[0]).select('.' + container.class);
@@ -341,7 +343,7 @@ angular.module('otaniemi3dApp')
               clickWasOnRoom = false;
             });
 
-            if (scope.highlightedRoom) {
+            if (scope.highlightedRoom || redraw) {
               floorplan.translate = [0, 0];
               floorplan.scale = 1;
               zoomListener.event(svg);
@@ -692,6 +694,13 @@ angular.module('otaniemi3dApp')
             scope.selectedRoom = null;
           }
         });
+        
+        function resetZoom() {
+//          scope.plan = Floorplans.floors[scope.planNumber];
+//          scope.plan.translate = [0, 0];
+//          scope.plan.scale = 1;
+//          appendFloorplan(scope.plan, floorplanContainer, true);
+        }
 
         /*
         * Watch for sensor data updates and update every room's
@@ -716,6 +725,15 @@ angular.module('otaniemi3dApp')
         scope.$watch('roomValueType', function() {
           changeLegendText();
           changeLegendStyle();
+        });
+        
+        scope.$watch('resetView', function() {
+          if (scope.resetView === null) return;
+          
+          scope.plan = Floorplans.floors[scope.planNumber];
+          scope.plan.translate = [0, 0];
+          scope.plan.scale = 1;
+          appendFloorplan(scope.plan, floorplanContainer, true);
         });
       }//end link: function()
     }; //end return

@@ -48,6 +48,7 @@ angular.module('otaniemi3dApp')
   $scope.room = null; // Room which panoramic button was clicked.
   $scope.selectedPlan = null;
   $scope.timeFrame = 'Latest';
+  $scope.resetView = null;
 
   $scope.searchContainer = ''; //This is used to set correct top margin for search container
 
@@ -133,20 +134,26 @@ angular.module('otaniemi3dApp')
   };
 
   $scope.onSearch = function(searchString) {
-    var selected;
-    for (var i = 0; i < Rooms.list.length; i++) {
-      var room = Rooms.list[i];
-      if (room.name.toLowerCase() === searchString.toLowerCase()) {
-        selected = room;
-        break;
+    if (searchString.name) { //If the room is once selected from the dropdown(typeahead), the searchString will actually be the room object
+      $scope.highlightRoom(searchString);
+    } else {
+      var selected;
+      for (var i = 0; i < Rooms.list.length; i++) {
+        var room = Rooms.list[i];
+        if (room.name.toLowerCase() === searchString.toLowerCase()) {
+          selected = room;
+          break;
+        }
       }
+      $scope.highlightRoom(selected);
     }
-    $scope.highlightRoom(selected);
   };
   
-  $scope.resetView = function() {
-    $scope.selectedPlan.translate = [0, 0];
-    $scope.selectedPlan.scale = 1;
+  $scope.resetZoom = function() {
+    if ($scope.resetView === null) {
+      $scope.resetView = false;
+    }
+    $scope.resetView = !$scope.resetView;
   };
 
   /*
