@@ -11,11 +11,6 @@ angular.module('otaniemi3dApp')
     .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, twodservice, $rootScope, $modal) {
   
   var loaded = false;
-  $scope.roomer = null;
-
-  $scope.getInfo = function(){
-    console.log($scope.roomer);
-  }
 
   $scope.panoramaViewer = function() {
       $scope.pano = true;
