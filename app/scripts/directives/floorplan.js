@@ -15,8 +15,7 @@ angular.module('otaniemi3dApp')
         data: '=',
         highlightedRoom: '=',
         roomValueType: '=',
-        resetView: '=',
-        planNumber: '='
+        resetView: '='
       },
       link: function (scope, element) {
 
@@ -696,10 +695,9 @@ angular.module('otaniemi3dApp')
         });
         
         function resetZoom() {
-//          scope.plan = Floorplans.floors[scope.planNumber];
-//          scope.plan.translate = [0, 0];
-//          scope.plan.scale = 1;
-//          appendFloorplan(scope.plan, floorplanContainer, true);
+          scope.plan.translate = [0, 0];
+          scope.plan.scale = 1;
+          appendFloorplan(scope.plan, floorplanContainer, true);
         }
 
         /*
@@ -728,12 +726,9 @@ angular.module('otaniemi3dApp')
         });
         
         scope.$watch('resetView', function() {
-          if (scope.resetView === null) return;
+          if (scope.resetView === null) {return;}
           
-          scope.plan = Floorplans.floors[scope.planNumber];
-          scope.plan.translate = [0, 0];
-          scope.plan.scale = 1;
-          appendFloorplan(scope.plan, floorplanContainer, true);
+          resetZoom();
         });
       }//end link: function()
     }; //end return
