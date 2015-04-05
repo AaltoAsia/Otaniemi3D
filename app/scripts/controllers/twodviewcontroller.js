@@ -143,6 +143,11 @@ angular.module('otaniemi3dApp')
     }
     $scope.highlightRoom(selected);
   };
+  
+  $scope.resetView = function() {
+    $scope.selectedPlan.translate = [0, 0];
+    $scope.selectedPlan.scale = 1;
+  };
 
   /*
   / Refresh the room colours according to sensor that is chosen.
