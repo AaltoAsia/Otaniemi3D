@@ -13,20 +13,17 @@ angular.module('otaniemi3dApp')
     $scope.selected = undefined;
     $scope.webglSupport = Modernizr.webgl; //Use this boolean to check for webgl support
     $scope.pano = false;
-    $scope.sensorData = null;
 
 
   Datahandler.fetchData().then(
       function(data) {
-          $scope.sensorData = data;
+        Rooms.initRoomList(data);
       },
       function() {
           console.log('Error: Failed to fetch sensor data');
       }
   );
 
-  Rooms.initRoomList($scope.sensorData);
-  Rooms.updateRoomInfo($scope.sensorData);
 
 
     $scope.changeView = function(viewpoint){

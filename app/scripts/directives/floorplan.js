@@ -369,7 +369,10 @@ angular.module('otaniemi3dApp')
 
                     for (var j = 0; j < Rooms.list.length; j++) {
                       if (Rooms.list[j].name === roomText.textContent) {
-                        Rooms.list[j].node = roomArea;
+                        if(Rooms.list[j].node === null){
+                          Rooms.list[j].node = roomArea;
+                          addTooltip(Rooms.list[j]);
+                        }
                         roomExists = true;
                         break;
                       }

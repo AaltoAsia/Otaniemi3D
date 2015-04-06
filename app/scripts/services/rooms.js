@@ -69,13 +69,23 @@ angular.module('otaniemi3dApp')
           if(!data) {
             return;
           }
-          var i;
-          //if(this.list.length === 0){
+          var i, j;
+          var exists = false;
+          if(this.list.length === 0){
             for (i = 0; i < data.length; i++) {
               var roomName = data[i].room.split(' ')[0];
-              this.list.add(roomName, null);
+              for(j=0; j<this.list.length; j++){
+                if(roomName === this.list[j].name){
+                  exists = true;
+                }
+              }
+              if(!exists){
+                this.add(roomName, null);
+                exists = false;
+              }
             }
-          //}
+          }
+          this.updateRoomInfo(data);
         };
 
 

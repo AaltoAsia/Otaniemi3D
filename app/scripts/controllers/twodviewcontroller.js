@@ -86,6 +86,7 @@ angular.module('otaniemi3dApp')
           console.log('Error: Failed to fetch sensor data');
       }
   );
+
   /*
    * Change current floorplan to the previous of net floorplan
    * direction is either 1 if the user pressed next button or -1
