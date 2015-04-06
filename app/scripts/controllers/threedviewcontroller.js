@@ -8,11 +8,27 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('threedview', function ($scope, Rooms) {
+  .controller('threedview', function ($scope, Rooms, Datahandler, $rootScope) {
     $scope.panoramabox = 'images/panoramabox.svg';
     $scope.selected = undefined;
     $scope.webglSupport = Modernizr.webgl; //Use this boolean to check for webgl support
     $scope.pano = false;
+    $scope.sensorData = null;
+
+
+  Datahandler.fetchData().then(
+      function(data) {
+          $scope.sensorData = data;
+      },
+      function() {
+          console.log('Error: Failed to fetch sensor data');
+      }
+  );
+
+  Rooms.initRoomList($scope.sensorData);
+  Rooms.updateRoomInfo($scope.sensorData);
+
+
     $scope.changeView = function(viewpoint){
       if(viewpoint === undefined) {
         var textField = document.getElementById('searchContent');
@@ -44,7 +60,7 @@ angular.module('otaniemi3dApp')
     $scope.panoramaViewer = function(room) {
     $scope.pano = true;
     var roomInfos = Rooms.findRoom(room);
-    var infos = {room: room};
+    var infos = {room: roomInfos};
           embedpano({xml:'panorama/Room_' + room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
     };
     $scope.stopPanorama = function(){

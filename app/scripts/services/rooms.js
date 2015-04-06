@@ -18,11 +18,10 @@ angular.module('otaniemi3dApp')
     /*
     * Add new room object to the list
     */
-    this.add = function(name, node, floor) {
+    this.add = function(name, node) {
       this.list.push({
         name: name,
         node: node,
-        floor: floor,
         sensors: [],
         pulse: null
       });
@@ -65,6 +64,61 @@ angular.module('otaniemi3dApp')
       }
       
     };
+
+    this.initRoomList = function(data){
+          if(!data) {
+            return;
+          }
+          var i;
+          //if(this.list.length === 0){
+            for (i = 0; i < data.length; i++) {
+              var roomName = data[i].room.split(' ')[0];
+              this.list.add(roomName, null);
+            }
+          //}
+        };
+
+
+    this.updateRoomInfo = function(data) {
+          if(!data) {
+            return;
+          }
+
+          var i, j;
+          var sensorUpdated = false;
+
+          for (i = 0; i < data.length; i++) {
+            var roomName = data[i].room.split(' ')[0];
+
+            for (j = 0; j < this.list.length; j++) {
+              if (roomName === this.list[j].name) {
+                var k;
+                //Check if sensor already exists
+                for (k = 0; k < this.list[j].sensors.length; k++) {
+                  if (this.list[j].sensors[k].id === data[i].sensorId && this.list[j].sensors[k].type === data[i].type) {
+                    this.list[j].sensors[k].value = data[i].value;
+                    sensorUpdated = true;
+                  }
+                }
+
+                //If sensor doesn't yet exist, add it
+                if (!sensorUpdated) {
+                  this.list[j].sensors.push({
+                    id: data[i].sensorId,
+                    type: data[i].type,
+                    value: data[i].value
+                  });
+                } else {
+                //Reset updated flag
+                  sensorUpdated = false;
+                }
+
+
+                break;
+              }
+            }
+          }
+        };  //end updateRoomInfo
 
     this.findRoom = function(roomName) {
         var roomHTML = null;

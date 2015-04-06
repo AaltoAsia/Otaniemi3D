@@ -10,12 +10,11 @@
 angular.module('otaniemi3dApp')
     .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, twodservice, $rootScope, $modal) {
   
-  var loaded = false;
 
   $scope.panoramaViewer = function() {
       $scope.pano = true;
-      var room = Rooms.findRoom($scope.room);
-      var infos = {room: room};
+      var roomInfo = Rooms.findRoom($scope.room);
+      var infos = {room: roomInfo};
       embedpano({xml:'panorama/Room_' + $scope.room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
   };
   $scope.stopPanorama = function(){
