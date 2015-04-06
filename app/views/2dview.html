@@ -40,7 +40,7 @@
   <button class="btn btn-default" id="searchDefault" ng-click="onSearch(searchString)">
     <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
   </button>
-  <button class="btn btn-default" id="searchDefault" ng-click="">
+  <button class="btn btn-default" id="searchDefault" ng-click="resetZoom()">
     <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
   </button>
 
@@ -59,22 +59,22 @@
 </div>
 
 <div ng-hide="pano || !svgSupport" ng-class="floorplanClass">
-	<div class="mouse-tooltip" style="position:fixed"></div>
-
-    <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span> <!-- Spinner that shows up during loading -->
-    <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->
-    <div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4> </div> <!-- Caption of floorplan -->
+  <div class="mouse-tooltip" style="position:fixed"></div>
 
   <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span> <!-- Spinner that shows up during loading -->
   <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->
   <div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4> </div> <!-- Caption of floorplan -->
 
-  <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
-  <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floors-1"></i> <!-- button that loads up higher (aka next) floor -->
+<span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span> <!-- Spinner that shows up during loading -->
+<i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->
+<div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4> </div> <!-- Caption of floorplan -->
 
-  <floorplan class="fp" plan="selectedPlan" data="sensorData" highlighted-room="highlightedRoom" room-value-type="roomValueType">
-    <div id="legendBar" style="position: absolute"></div>
-  </floorplan> <!-- The actual floorplan -->
+<i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
+<i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floors-1"></i> <!-- button that loads up higher (aka next) floor -->
+
+<floorplan class="fp" plan="selectedPlan" data="sensorData" highlighted-room="highlightedRoom" room-value-type="roomValueType" reset-view="resetView">
+  <div id="legendBar" style="position: absolute"></div>
+</floorplan> <!-- The actual floorplan -->
 </div>
 
 <script type="text/ng-template" id="myModalContent.html">
