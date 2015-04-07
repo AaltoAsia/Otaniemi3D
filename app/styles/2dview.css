@@ -79,6 +79,11 @@
 	.desktop-dropdown {
 		display:none;
 	}
+  
+    #legendBar {
+      margin-left: 5px;
+      margin-top: 5px;
+    }
 }
 
 @media only screen and (min-width : 769px) {
