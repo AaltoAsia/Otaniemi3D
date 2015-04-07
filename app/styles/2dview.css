@@ -79,11 +79,6 @@
 	.desktop-dropdown {
 		display:none;
 	}
-  
-    #legendBar {
-      margin-left: 5px;
-      margin-top: 5px;
-    }
 }
 
 @media only screen and (min-width : 769px) {
@@ -145,13 +140,7 @@
 	#searchContainer {
         margin-left: 10%;
 	    margin-right: 10%;
-    }
-  
-    #legendBar {
-        margin-left: 15px;
-        margin-top: 12px;
-    }
-    
+    }    
     
     /* Desktop user - disable portrait adjustments */
     .modal-portrait {
@@ -281,6 +270,8 @@
 #legendBar {
   pointer-events: none;
   height: 30%;
+  margin-left: 8px;
+  margin-top: 5px;
 }
 
 #legendContainingSvg {
