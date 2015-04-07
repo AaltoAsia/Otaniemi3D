@@ -296,6 +296,18 @@
   
 }
 
+#binaryRectTop {
+  
+}
+
+#binaryRectBottom {
+  
+}
+
+.binaryRect {
+  pointer-events: none;
+}
+
 /* styling for black buttons in 2dview */
 .btn-black { 
   color: #ffffff; 

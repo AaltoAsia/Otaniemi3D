@@ -608,6 +608,25 @@ angular.module('otaniemi3dApp')
                           .attr('stop-opacity',function(d) {
                                       return d.opacity;
                           });
+          
+          //And for binary rectangles, that is, for occupancy legend:
+          var lowColor = twodservice.getColor('occupancy', 0);
+          var highColor = twodservice.getColor('occupancy', 1);
+          d3.select('#binaryRectTop')
+            .attr('x',x1)
+            .attr('y',y1)
+            .attr('width',barWidth)
+            .attr('height','50%')
+            .attr('fill',lowColor.rgb)
+            .attr('fill-opacity',lowColor.opacity);
+          
+          d3.select('#binaryRectBottom')
+            .attr('x',x1)
+            .attr('y','50%')
+            .attr('width',barWidth)
+            .attr('height','50%')
+            .attr('fill',highColor.rgb)
+            .attr('fill-opacity',highColor.opacity);
         }
         
         function changeLegendText() {
