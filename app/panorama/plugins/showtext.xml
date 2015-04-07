@@ -11,11 +11,14 @@
 
 	<!-- predefine a DEFAULT textstyle element -->
 	<textstyle name="DEFAULT" 
-					edge="lefttop"/>
+					edge="lefttop"
+					yoffset = "5"
+					xofset = "-3"/>
 	<textstyle name="mobile"
 				origin = "center"
 				showtime="5"
-				fadetime="3.0" />
+				fadetime="3.0"
+				fontsize="18.0" />
 
 
 	<!-- the automatic running (autorun=preinit) install action -->

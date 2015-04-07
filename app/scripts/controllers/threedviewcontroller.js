@@ -58,7 +58,7 @@ angular.module('otaniemi3dApp')
     $scope.pano = true;
     var roomInfos = Rooms.krpanoHTML(room);
     var infos = {room: roomInfos};
-          embedpano({xml:'panorama/Room_' + room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
+          embedpano({xml:'panorama/' + room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
     };
     $scope.stopPanorama = function(){
       $scope.pano = false;

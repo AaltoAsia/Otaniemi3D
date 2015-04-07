@@ -17,25 +17,16 @@
 		</mobile>
 	</image>
 *
-	<hotspot name="cafeteria1"
-             ath="-116.94199034018922"
-             atv="-14.618310762715677"
-             url="plugins/sensor-128.png"
-             alpha="0.4"
-             scale="0.7"
-             zoom="true"
-             onhover="set(alpha,1.0); showtext([p]{{room}}[/p]);"
-             onout="set(alpha,0.4);"
-            />
 
-	<hotspot name="cafeteria2"
+	<hotspot name="cafeteria"
              ath="-117.25324838617138"
              atv="-2.705953406430874"
              url="plugins/sensor-128.png"
              alpha="0.4"
              scale="0.7"
              zoom="true"
-             onhover="set(alpha,1.0);"
+             onhover="set(alpha,1.0);showtext(get(room));"
+             onclick="set(alpha,1.0);showtext(get(room), mobile);"
              onout="set(alpha,0.4);"
             />
 
