@@ -114,6 +114,11 @@ ul.nav {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.icons{
+    width: 24px;
+    height: 24px;
+}
+
 .panobtn {
   position: fixed;
   z-index: 2;
