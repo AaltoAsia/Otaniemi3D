@@ -131,45 +131,58 @@ angular.module('otaniemi3dApp')
         };  //end updateRoomInfo
 
     this.findRoom = function(roomName) {
-        var roomHTML = null;
-        var room = null
+        var room = null;
         for(var i = 0; i < this.list.length; i++) {
           if(this.list[i].name===roomName){
             room = this.list[i];
           }
         }
           if(room !== null){
-            roomHTML = '[p]Room:' + room.name + '[/p]';
-            var paragraph = null;
+            var roomInfo = [];
+            var roomData = 'Room:' + room.name;
+            roomInfo.push(roomData);
             for (var i = 0; i < room.sensors.length; i++) {
                 switch (room.sensors[i].type) {
                     case 'temperature':
-                         paragraph = '[p]' + room.sensors[i].type + ': ' + room.sensors[i].value + ' °C' + '[/p]';
-                         roomHTML += paragraph;
+                         roomData = room.sensors[i].type + ': ' + room.sensors[i].value + ' °C' ;
+                         roomInfo.push(roomData);
                         break;
                     case 'humidity':
-                        paragraph = '[p]' + room.sensors[i].type + ': ' + room.sensors[i].value + ' %' + '[/p]';
-                        roomHTML += paragraph;
+                        roomData = room.sensors[i].type + ': ' + room.sensors[i].value + ' %';
+                        roomInfo.push(roomData);
                         break;
                     case 'co2':
-                        paragraph = '[p]' + room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm' + '[/p]';
-                        roomHTML += paragraph;
+                        roomData = room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm';
+                        roomInfo.push(roomData);
                         break;
                     case 'pir':
                         var occupancyState;
                         if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
-                        paragraph = '[p]' + 'occupied' + ': ' + occupancyState + '[/p]';
-                        roomHTML += paragraph;
+                        roomData = 'occupied' + ': ' + occupancyState ;
+                        roomInfo.push(roomData);
                         break;
                     case 'light':
-                        paragraph = '[p]' + room.sensors[i].type + ': ' + room.sensors[i].value + ' lux' +'[/p]';
-                        roomHTML += paragraph;
+                        roomData = room.sensors[i].type + ': ' + room.sensors[i].value + ' lux';
+                        roomInfo.push(roomData);
                         break;
                 }
             }
-        return roomHTML;
+        return roomInfo;
     }
     return null;
     };
-  
+
+    this.krpanoHTML = function(roomName){
+      var roomInfo = this.findRoom(roomName);
+      var roomHTML = '';
+      var paragraph = null;
+      if(roomInfo !== null){
+        for(var i =0 ; i < roomInfo.length; i++){
+          paragraph = '[p]' + roomInfo[i] + '[/p]';
+          roomHTML += paragraph;
+        }
+      }
+      return roomHTML;
+    }
+
   });

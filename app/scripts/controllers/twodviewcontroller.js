@@ -13,7 +13,7 @@ angular.module('otaniemi3dApp')
 
   $scope.panoramaViewer = function() {
       $scope.pano = true;
-      var roomInfo = Rooms.findRoom($scope.room);
+      var roomInfo = Rooms.krpanoHTML($scope.room);
       var infos = {room: roomInfo};
       embedpano({xml:'panorama/Room_' + $scope.room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
   };

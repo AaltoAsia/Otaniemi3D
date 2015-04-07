@@ -25,6 +25,7 @@
              scale="0.7"
              zoom="true"
              onhover="set(alpha,1.0);showtext(get(room));"
+             onclick="set(alpha,1.0);showtext(get(room), mobile);"
              onout="set(alpha,0.4);"
             />
 
