@@ -145,7 +145,9 @@ angular.module('otaniemi3dApp')
           break;
         }
       }
-      $scope.highlightRoom(selected);
+      if (selected !== undefined) {
+        $scope.highlightRoom(selected);
+      }
     }
   };
   
