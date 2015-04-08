@@ -64,7 +64,10 @@ angular.module('otaniemi3dApp')
       }
       
     };
-
+    /*
+     * Initialize rooms list without svg roomAreas. 
+     * Do not use this function for 2dview since it needs those svg paths.
+    */ 
     this.initRoomList = function(data){
           if(!data) {
             return;
@@ -85,10 +88,12 @@ angular.module('otaniemi3dApp')
               }
             }
           }
-          this.updateRoomInfo(data);
+          this.updateRoomInfo(data);  //after initializing get actual data for the rooms.list.
         };
 
-
+    /*
+     * Go through the data and update rooms sensor information.
+     */
     this.updateRoomInfo = function(data) {
           if(!data) {
             return;
@@ -128,8 +133,11 @@ angular.module('otaniemi3dApp')
               }
             }
           }
-        };  //end updateRoomInfo
+        };  
 
+    /*
+    * Find spesific room from room.list and return its information to the new list
+    */
     this.findRoom = function(roomName) {
         var room = null;
         for(var i = 0; i < this.list.length; i++) {
@@ -172,6 +180,9 @@ angular.module('otaniemi3dApp')
     return null;
     };
 
+    /*
+    * Find room for panorama-tooltip and return information with []-tags(krpano recognize these tags as HTML-tags)
+    */
     this.krpanoHTML = function(roomName){
       var roomInfo = this.findRoom(roomName);
       var roomHTML = '';

@@ -387,8 +387,8 @@ angular.module('otaniemi3dApp')
 
                     for (var j = 0; j < Rooms.list.length; j++) {
                       if (Rooms.list[j].name === roomText.textContent) {
-                        if(Rooms.list[j].node === null){
-                          Rooms.list[j].node = roomArea;
+                        if(Rooms.list[j].node === null){ //if rooms list contains nodes with null values,(in case initRoomList called earlier)
+                          Rooms.list[j].node = roomArea; // replace those with actual roomArea values
                           addTooltip(Rooms.list[j]);
                         }
                         roomExists = true;

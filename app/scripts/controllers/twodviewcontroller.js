@@ -12,8 +12,8 @@ angular.module('otaniemi3dApp')
   
 
   $scope.panoramaViewer = function() {
-      $scope.pano = true;
-      var roomInfo = Rooms.krpanoHTML($scope.room);
+      $scope.pano = true; //make panorama(pano) div visible
+      var roomInfo = Rooms.krpanoHTML($scope.room); //find information for krpano tooltip
       var infos = {room: roomInfo};
       embedpano({
             xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
