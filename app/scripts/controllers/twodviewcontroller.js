@@ -26,7 +26,7 @@ angular.module('otaniemi3dApp')
   };
   $scope.stopPanorama = function(){
       $scope.pano = false;
-      var element = document.getElementById("pano_obj");
+      var element = document.getElementById('pano_obj');
       element.parentNode.removeChild(element); 
   };
 

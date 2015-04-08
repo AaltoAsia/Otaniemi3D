@@ -72,22 +72,27 @@ angular.module('otaniemi3dApp')
           if(!data) {
             return;
           }
-          var i, j;
+          var i, j, roomName;
           var exists = false;
+          console.log(this.list.length);
+          console.log(data.length);
           if(this.list.length === 0){
             for (i = 0; i < data.length; i++) {
-              var roomName = data[i].room.split(' ')[0];
+              exists = false;
+              roomName = data[i].room;
               for(j=0; j<this.list.length; j++){
                 if(roomName === this.list[j].name){
                   exists = true;
                 }
               }
               if(!exists){
+                console.log(roomName);
                 this.add(roomName, null);
                 exists = false;
               }
             }
           }
+          console.log(this.list.length);
           this.updateRoomInfo(data);  //after initializing get actual data for the rooms.list.
         };
 
@@ -103,7 +108,7 @@ angular.module('otaniemi3dApp')
           var sensorUpdated = false;
 
           for (i = 0; i < data.length; i++) {
-            var roomName = data[i].room.split(' ')[0];
+            var roomName = data[i].room;
 
             for (j = 0; j < this.list.length; j++) {
               if (roomName === this.list[j].name) {
@@ -140,9 +145,9 @@ angular.module('otaniemi3dApp')
     */
     this.findRoom = function(roomName) {
         var room = null;
-        for(var i = 0; i < this.list.length; i++) {
-          if(this.list[i].name===roomName){
-            room = this.list[i];
+        for(var j = 0; j < this.list.length; j++) {
+          if(this.list[j].name===roomName){
+            room = this.list[j];
           }
         }
           if(room !== null){
@@ -194,6 +199,6 @@ angular.module('otaniemi3dApp')
         }
       }
       return roomHTML;
-    }
+    };
 
   });
