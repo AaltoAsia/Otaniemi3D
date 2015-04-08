@@ -119,6 +119,14 @@ ul.nav {
     height: 16px;
 }
 
+.logo{
+    width: 120px;
+    height: 35px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .panobtn {
   position: fixed;
   z-index: 2;

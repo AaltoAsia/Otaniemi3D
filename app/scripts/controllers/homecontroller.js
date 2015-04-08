@@ -16,6 +16,7 @@ angular.module('otaniemi3dApp')
                 description: 'With Otaniemi3D you can visualize the sensor values of k1-building of Otaniemi',
                 link: 'support',
                 linktext: 'Support',
+                img: '/images/3dview.png'
             },
             {
                 caption: '1D View',
