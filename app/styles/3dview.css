@@ -45,3 +45,7 @@
     margin-bottom:3px;
     max-width:11%;
 }
+
+#sensorLabel{
+    font-style: italic;
+}

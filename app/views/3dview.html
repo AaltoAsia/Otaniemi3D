@@ -50,10 +50,10 @@
 <!-- Modal for displaying a sensor values when a sensor is clicked -->
 <script type="text/ng-template" id="threedModal.html">
   <div class="modal-header">
-    <h3 class="modal-title">Latest sensor data for <span id="sensorLabel"></span></h3>
+    <h3 class="modal-title">Latest sensor data for room:<br><span id="sensorLabel">{{roomInfo[0]}}</span></h3>
   </div>
   <div class="modal-body">
-    <p ng-repeat="info in roomInfo">{{info}}</p>
+    <p ng-repeat="info in roomInfo" ng-show="!$first">{{info}}</p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>
@@ -123,7 +123,7 @@
 </Viewpoint>
 
 <Transform translation="480.48883 0.90577 -120.26504">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Corridor_Entrance_Side'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Corridor Entrance Side'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -147,7 +147,7 @@
 </Viewpoint>
 
 <Transform translation="480.48883 0.90577 -145.26504">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Corridor_Cafeteria_Side'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Corridor Cafeteria Side'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -167,7 +167,7 @@
 </Viewpoint>
 
 <Transform translation="477.61162 0.905068 -109.80603">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd_Floor_Sundeck'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd Floor Sundeck'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -184,7 +184,7 @@
 </Viewpoint>
 
 <Transform translation="490.51469 0.90577 -109.40390">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd_Floor_Corridor_Start'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd Floor Corridor Start'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -201,7 +201,7 @@
 </Viewpoint>
 
 <Transform translation="503.51469 0.90577 -109.40390">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd_Floor_Corridor_Middle'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd Floor Corridor Middle'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -218,7 +218,7 @@
 </Viewpoint>
 
 <Transform translation="516.51469 0.90577 -109.40390">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd_Floor_Corridor_End'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd Floor Corridor End'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
