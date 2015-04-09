@@ -72,6 +72,7 @@
 <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
 <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floors-1"></i> <!-- button that loads up higher (aka next) floor -->
 
+<!-- The actual floorplan -->
 <floorplan class="fp" plan="selectedPlan" data="sensorData" highlighted-room="highlightedRoom" room-value-type="roomValueType" reset-view="resetView">
   <div id="legendBar" style="position: absolute">
     <p id="legendMinText" class="legendText"></p>
@@ -83,15 +84,15 @@
             </lineargradient>
           </defs>
         </g>
-        <rect id="gradientRect" fill="url(#legendGradient)" rx="10" ry="10" visibility="hidden"></rect>
-        <rect id="binaryRectTop" class="binaryRect" rx="10" ry="10" visibility="visible"></rect>
-        <rect id="binaryRectBottom" class="binaryRect" rx="10" ry="10" visibility="visible"></rect>
+        <rect id="gradientRect" fill="url(#legendGradient)" rx="10" ry="10" ng-show="showGradient()" ng-cloak></rect>
+        <rect id="binaryRectTop" class="binaryRect" rx="10" ry="10" ng-hide="showGradient()" ng-cloak></rect>
+        <rect id="binaryRectBottom" class="binaryRect" rx="10" ry="10" ng-hide="showGradient()" ng-cloak></rect>
         <line id="legendLine"></line>
         <text id="legendLineText"></text>
       </svg>
       <p id="legendMaxText" class="legendText"></p>
   </div>
-</floorplan> <!-- The actual floorplan -->
+</floorplan> 
 </div>
 
 <script type="text/ng-template" id="myModalContent.html">
