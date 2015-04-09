@@ -283,8 +283,6 @@
 }
 
 #gradientRect {
-  stroke-width: 1px;
-  stroke: black;
   pointer-events: all;
 }
 
@@ -302,6 +300,11 @@
 
 #binaryRectBottom {
   
+}
+
+.legendRect {
+  stroke-width: 1px;
+  stroke: black;
 }
 
 .binaryRect {

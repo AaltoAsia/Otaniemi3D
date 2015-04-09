@@ -84,9 +84,9 @@
             </lineargradient>
           </defs>
         </g>
-        <rect id="gradientRect" fill="url(#legendGradient)" rx="10" ry="10" ng-show="showGradient()" ng-cloak></rect>
-        <rect id="binaryRectTop" class="binaryRect" rx="10" ry="10" ng-hide="showGradient()" ng-cloak></rect>
-        <rect id="binaryRectBottom" class="binaryRect" rx="10" ry="10" ng-hide="showGradient()" ng-cloak></rect>
+        <rect id="gradientRect" class="legendRect" fill="url(#legendGradient)" rx="10" ry="10" ng-show="showGradient()" ng-cloak></rect>
+        <rect id="binaryRectTop" class="binaryRect legendRect" rx="10" ry="10" ng-hide="showGradient()" ng-cloak></rect>
+        <rect id="binaryRectBottom" class="binaryRect legendRect" rx="10" ry="10" ng-hide="showGradient()" ng-cloak></rect>
         <line id="legendLine"></line>
         <text id="legendLineText"></text>
       </svg>
