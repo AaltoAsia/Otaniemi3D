@@ -65,6 +65,10 @@ angular.module('otaniemi3dApp')
           break;
       }
   }
+  
+  $scope.showGradient = function() {
+    return $scope.roomValueType.toLowerCase() !== 'pir' && $scope.roomValueType.toLowerCase() !== 'occupancy';
+  }
 
   // Toggle fullscreen button. It broadcasts to rootscope to change the view to fullscreen
   // which in turn hides the footer and header. Also it changes the fullscreen button glyphicon
@@ -80,7 +84,6 @@ angular.module('otaniemi3dApp')
           $scope.searchContainer = '';
           $scope.buttonClass = 'glyphicon glyphicon-resize-full';
       }
-
   };
 
   /*

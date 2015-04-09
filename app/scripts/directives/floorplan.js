@@ -498,55 +498,29 @@ angular.module('otaniemi3dApp')
         }
                 
         //Make and color the legend svg
-        function fillLegend() {     
+        function fillLegend() {
 
-          var idGradient = 'legendGradient';
-
-          d3.select('#legendBar')
-            .append('p')
-            .attr('class','legendText')
-            .attr('id', 'legendMinText')
+          d3.select('#legendMinText')
             .style('margin', '0px')
             .text(twodservice.temperatureMin + twodservice.getValueUnit('temperature'));
           
-          var svgForLegend = d3.select('#legendBar').append('svg')
-                              .attr('id', 'legendContainingSvg')
+          var svgForLegend = d3.select('#legendContainingSvg')
                               .attr('width', svgWidth)
                               .attr('height', '100%');
           
-          d3.select('#legendBar')
-            .append('p')
-            .attr('class','legendText')
-            .attr('id', 'legendMaxText')
+          d3.select('#legendMaxText')
             .text(twodservice.temperatureMax + twodservice.getValueUnit('temperature'));
-
-          //create the empty gradient that we're going to populate later
-          svgForLegend
-            .append('g')
-            .append('defs')
-            .append('linearGradient')
-              .attr('id',idGradient)
-              .attr('x1','0%')
-              .attr('x2','0%')
-              .attr('y1','0%')
-              .attr('y2','100%');
           
           //create the bar for the legend to go into
           // the "fill" attribute hooks the gradient up to this rect
-          svgForLegend
-            .append('rect')
-            .attr('id', 'gradientRect')
-            .attr('fill','url(#' + idGradient + ')')
+          d3.select('#gradientRect')
             .attr('x',x1)
             .attr('y',y1)
             .attr('width',barWidth)
-            .attr('height','99%')
-            .attr('rx', 10)
-            .attr('ry', 10);
+            .attr('height','99%');
           
           //mouseover line with the value of that point in legend
-          legendLine = svgForLegend
-            .append('line')
+          legendLine = d3.select('#legendLine')
             .attr('x1', x1)
             .attr('y1', y1)
             .attr('x2', x1 + barWidth)
@@ -555,8 +529,7 @@ angular.module('otaniemi3dApp')
             .attr('stroke-width', 1)
             .style('visibility', 'hidden');
           
-          legendLineText = svgForLegend 
-            .append('text')
+          legendLineText = d3.select("#legendLineText")
             .attr('x', x1 + barWidth)
             .attr('y', y1)
             .style('visibility', 'hidden')
@@ -591,7 +564,7 @@ angular.module('otaniemi3dApp')
           }
 
           //now the d3 magic (imo) ...
-          var stops = d3.select('#' + idGradient).selectAll('stop')
+          var stops = d3.select('#legendGradient').selectAll('stop')
                               .data(theData);
 
               stops.enter().append('stop');
@@ -604,6 +577,25 @@ angular.module('otaniemi3dApp')
                           .attr('stop-opacity',function(d) {
                                       return d.opacity;
                           });
+          
+          //And for binary rectangles, that is, for occupancy legend:
+          var lowColor = twodservice.getColor('occupancy', 0);
+          var highColor = twodservice.getColor('occupancy', 1);
+          d3.select('#binaryRectTop')
+            .attr('x',x1)
+            .attr('y',y1)
+            .attr('width',barWidth)
+            .attr('height','50%')
+            .attr('fill',lowColor.rgb)
+            .attr('fill-opacity',lowColor.opacity);
+          
+          d3.select('#binaryRectBottom')
+            .attr('x',x1)
+            .attr('y','50%')
+            .attr('width',barWidth)
+            .attr('height','50%')
+            .attr('fill',highColor.rgb)
+            .attr('fill-opacity',highColor.opacity);
         }
         
         function changeLegendText() {
