@@ -221,7 +221,7 @@ angular.module('otaniemi3dApp')
                 //Remove title elements so that the browser's built-in tooltip doesn't show
                 d3.select('.' + floorplanContainer.class).selectAll('title').remove();
                 if (Floorplans.allLoaded()) {
-                  updateRoomInfo();
+                  updateRoomColors();
                   usSpinnerService.stop('spinner-1');
                   showFloorplan();
                 }
@@ -387,12 +387,16 @@ angular.module('otaniemi3dApp')
 
                     for (var j = 0; j < Rooms.list.length; j++) {
                       if (Rooms.list[j].name === roomText.textContent) {
+                        if(Rooms.list[j].node === null){ //if rooms list contains nodes with null values,(in case initRoomList called earlier)
+                          Rooms.list[j].node = roomArea; // replace those with actual roomArea values
+                          addTooltip(Rooms.list[j]);
+                        }
                         roomExists = true;
                         break;
                       }
                     }
                     if (!roomExists) {
-                      Rooms.add(roomText.textContent, roomArea, i);
+                      Rooms.add(roomText.textContent, roomArea);
                       addTooltip(Rooms.list[Rooms.list.length-1]);
                     }
                   }
@@ -419,48 +423,13 @@ angular.module('otaniemi3dApp')
         /*
         * Update or add new sensor data to rooms, and then color the rooms according to the data.
         */
-
-        function updateRoomInfo() {
-          if(!scope.data) {
-            return;
+        function updateRoomColors() {
+          Rooms.updateRoomInfo(scope.data);
+          var i;
+          for(i = 0; i < Rooms.list.length; i++){
+            setRoomColor(Rooms.list[i]);
           }
-
-          var i, j;
-          var sensorUpdated = false;
-
-          for (i = 0; i < scope.data.length; i++) {
-            var roomName = scope.data[i].room;
-
-            for (j = 0; j < Rooms.list.length; j++) {
-              if (roomName === Rooms.list[j].name) {
-                var k;
-                //Check if sensor already exists
-                for (k = 0; k < Rooms.list[j].sensors.length; k++) {
-                  if (Rooms.list[j].sensors[k].id === scope.data[i].sensorId && Rooms.list[j].sensors[k].type === scope.data[i].type) {
-                    Rooms.list[j].sensors[k].value = scope.data[i].value;
-                    sensorUpdated = true;
-                  }
-                }
-
-                //If sensor doesn't yet exist in Rooms service then add it
-                if (!sensorUpdated) {
-                  Rooms.list[j].sensors.push({
-                    id: scope.data[i].sensorId,
-                    type: scope.data[i].type,
-                    value: scope.data[i].value
-                  });
-                } else {
-                //Reset updated flag
-                  sensorUpdated = false;
-                }
-
-                setRoomColor(Rooms.list[j]);
-
-                break;
-              }
-            }
-          }
-        }  //end updateRoomInfo
+        }
 
         /*
         * Pulse the room highlight until it is not selected anymore.
@@ -706,7 +675,7 @@ angular.module('otaniemi3dApp')
         */
         scope.$watch('data', function () {
           if (scope.data) {
-            updateRoomInfo();
+            updateRoomColors();
           }
         });
 
