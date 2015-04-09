@@ -8,11 +8,24 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('threedview', function ($scope, $modal) {
+  .controller('threedview', function ($scope, Rooms, Datahandler, $modal) {
     $scope.panoramabox = 'images/panoramabox.svg';
     $scope.selected = undefined;
     $scope.webglSupport = Modernizr.webgl; //Use this boolean to check for webgl support
     $scope.pano = false;
+
+
+  Datahandler.fetchData().then(
+      function(data) {
+        Rooms.initRoomList(data);
+      },
+      function() {
+          console.log('Error: Failed to fetch sensor data');
+      }
+  );
+
+
+
     $scope.changeView = function(viewpoint){
       if(viewpoint === undefined) {
         var textField = document.getElementById('searchContent');
@@ -40,21 +53,17 @@ angular.module('otaniemi3dApp')
       $scope.changeView($item);
     };
     
-    var loaded = false;
 
     $scope.panoramaViewer = function(room) {
-    $scope.pano = true;
-      if(loaded === false){
-          embedpano({xml:'panorama/' + room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true});
-          loaded = true;
-      }
-      else{
-        var xmlpath = room +'.xml';
-        document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
-      }
+    $scope.pano = true; //make panorama(pano) div visible
+    var roomInfos = Rooms.krpanoHTML(room); //find information for krpano tooltip
+    var infos = {room: roomInfos};
+          embedpano({xml:'panorama/' + room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
     };
     $scope.stopPanorama = function(){
       $scope.pano = false;
+      var element = document.getElementById('pano_obj');
+      element.parentNode.removeChild(element); 
     };
   
     $scope.modalTooltip = function (sensorLabel) {
@@ -64,10 +73,13 @@ angular.module('otaniemi3dApp')
       var modalInstance = $modal.open({
         templateUrl: 'threedModal.html',
         controller: '3dModalCtrl',
+        resolve: {
+          roomInfo: function () {
+            return Rooms.findRoom(sensorLabel);
+          }
         }
-      );
+
+        });
     }
   }
 );
-
-

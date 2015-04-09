@@ -10,21 +10,24 @@
 angular.module('otaniemi3dApp')
     .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, twodservice, $rootScope, $modal) {
   
-  var loaded = false;
 
   $scope.panoramaViewer = function() {
-      $scope.pano = true;
-      if(loaded === false){
-          embedpano({xml:'panorama/Room_' + $scope.room +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true});
-          loaded = true;
-      }
-      else{
-          var xmlpath = 'Room_' + $scope.room +'.xml';
-          document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
-      }
+      $scope.pano = true; //make panorama(pano) div visible
+      var roomInfo = Rooms.krpanoHTML($scope.room); //find information for krpano tooltip
+      var infos = {room: roomInfo};
+      embedpano({
+            xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
+            id:'pano_obj',
+            target:'pano',
+            html5:'only',
+            passQueryParameters:true,
+            vars:infos
+          });
   };
   $scope.stopPanorama = function(){
       $scope.pano = false;
+      var element = document.getElementById('pano_obj');
+      element.parentNode.removeChild(element); 
   };
 
   var floorplanClass = 'floorplan';
@@ -42,6 +45,7 @@ angular.module('otaniemi3dApp')
   $scope.room = null; // Room which panoramic button was clicked.
   $scope.selectedPlan = null;
   $scope.timeFrame = 'Latest';
+  $scope.resetView = null;
 
   $scope.searchContainer = ''; //This is used to set correct top margin for search container
 
@@ -90,6 +94,7 @@ angular.module('otaniemi3dApp')
           console.log('Error: Failed to fetch sensor data');
       }
   );
+
   /*
    * Change current floorplan to the previous of net floorplan
    * direction is either 1 if the user pressed next button or -1
@@ -127,15 +132,26 @@ angular.module('otaniemi3dApp')
   };
 
   $scope.onSearch = function(searchString) {
-    var selected;
-    for (var i = 0; i < Rooms.list.length; i++) {
-      var room = Rooms.list[i];
-      if (room.name.toLowerCase() === searchString.toLowerCase()) {
-        selected = room;
-        break;
+    if (searchString.name) { //If the room is once selected from the dropdown(typeahead), the searchString will actually be the room object
+      $scope.highlightRoom(searchString);
+    } else {
+      var selected;
+      for (var i = 0; i < Rooms.list.length; i++) {
+        var room = Rooms.list[i];
+        if (room.name.toLowerCase() === searchString.toLowerCase()) {
+          selected = room;
+          break;
+        }
       }
+      $scope.highlightRoom(selected);
     }
-    $scope.highlightRoom(selected);
+  };
+  
+  $scope.resetZoom = function() {
+    if ($scope.resetView === null) {
+      $scope.resetView = false;
+    }
+    $scope.resetView = !$scope.resetView;
   };
 
   /*

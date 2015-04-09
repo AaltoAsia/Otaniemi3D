@@ -19,7 +19,6 @@ angular.module('otaniemi3dApp')
     $scope.isCollapsed = true;
 
     $scope.$on('$routeChangeSuccess', function () {
-        $scope.isCollapsed = true;
         $rootScope.fullscreen = false;
     });
   });

@@ -14,7 +14,8 @@ angular.module('otaniemi3dApp')
         plan: '=',
         data: '=',
         highlightedRoom: '=',
-        roomValueType: '='
+        roomValueType: '=',
+        resetView: '='
       },
       link: function (scope, element) {
 
@@ -140,28 +141,44 @@ angular.module('otaniemi3dApp')
 
             tooltip.selectAll('p').attr('class','roominfo');
             
-            var roomsWithPanorama = ['238d','237c','235','232b','232a'];       
-            for(i = 0; i<roomsWithPanorama.length;i++){
-                if(room.name===roomsWithPanorama[i]){
-                  tooltip.select('#panobtn').style('display', 'block');
-                }
-            }
+            var roomsWithPanorama = [
+              '238d','237c','235','232b','232a',
+              '2nd Floor Corridor Start',
+              '2nd Floor Corridor Middle',
+              '2nd Floor Corridor End',
+              'Corridor Cafeteria Side',
+              'Corridor Entrance Side',
+              'Cafeteria',
+              'Entrance'
+              ];
 
+            for(i = 0; i < roomsWithPanorama.length; i++){
+              if(room.name === roomsWithPanorama[i]){
+                tooltip.select('#panobtn').style('display', 'block');
+              }
+            }
             tooltip.style('visibility', 'visible');
 
           }
           
 
           function clicked () {
-            clickWasOnRoom = true;
             if (scope.highlightedRoom) {
               clearInterval(scope.highlightedRoom.pulse);
               scope.highlightedRoom = null;
             }
-            mouseOut(true);
-            scope.selectedRoom = room;
-            mouseOver(true);
-            mouseMove(true);
+            clickWasOnRoom = true;
+            if (d3.event.defaultPrevented) { // Ignore the click since this was called after dragend
+              mouseOut(false);
+              mouseOver(false);
+              mouseMove(false);
+            }
+            else {
+              mouseOut(true);
+              scope.selectedRoom = room;
+              mouseOver(true);
+              mouseMove(true);
+            }
           }
 
           //Set mouse events to the room node
@@ -204,7 +221,7 @@ angular.module('otaniemi3dApp')
                 //Remove title elements so that the browser's built-in tooltip doesn't show
                 d3.select('.' + floorplanContainer.class).selectAll('title').remove();
                 if (Floorplans.allLoaded()) {
-                  updateRoomInfo();
+                  updateRoomColors();
                   usSpinnerService.stop('spinner-1');
                   showFloorplan();
                 }
@@ -243,7 +260,7 @@ angular.module('otaniemi3dApp')
           if (room.node) {
             var i;
             for (i = 0; i < room.sensors.length; i++) {
-              if (room.sensors[i].type.toLowerCase() === scope.$parent.roomValueType.toLowerCase()) {
+              if (room.sensors[i].type.toLowerCase() === scope.$parent.roomValueType.toLowerCase() || ((room.sensors[i].type.toLowerCase() === 'pir') && (scope.$parent.roomValueType.toLowerCase() === 'occupancy'))) {
                 var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
                 d3.select(room.node)
                   .style('fill', color.rgb)
@@ -256,7 +273,7 @@ angular.module('otaniemi3dApp')
        /*
         * Append floorplan to the html element and register zoom and drag listener.
         */
-        function appendFloorplan(floorplan, container) {
+        function appendFloorplan(floorplan, container, redraw) {
           //Container tells if svg should be visible or if it's only appended
           //for room info parsing
           var containerElement = d3.select(element[0]).select('.' + container.class);
@@ -313,6 +330,7 @@ angular.module('otaniemi3dApp')
                 floorplan.translate = d3.event.translate;
                 tooltip.style('visibility', 'hidden');
               });
+              
 
             svg.call(zoomListener);
 
@@ -324,7 +342,7 @@ angular.module('otaniemi3dApp')
               clickWasOnRoom = false;
             });
 
-            if (scope.highlightedRoom) {
+            if (scope.highlightedRoom || redraw) {
               floorplan.translate = [0, 0];
               floorplan.scale = 1;
               zoomListener.event(svg);
@@ -369,12 +387,16 @@ angular.module('otaniemi3dApp')
 
                     for (var j = 0; j < Rooms.list.length; j++) {
                       if (Rooms.list[j].name === roomText.textContent) {
+                        if(Rooms.list[j].node === null){ //if rooms list contains nodes with null values,(in case initRoomList called earlier)
+                          Rooms.list[j].node = roomArea; // replace those with actual roomArea values
+                          addTooltip(Rooms.list[j]);
+                        }
                         roomExists = true;
                         break;
                       }
                     }
                     if (!roomExists) {
-                      Rooms.add(roomText.textContent, roomArea, i);
+                      Rooms.add(roomText.textContent, roomArea);
                       addTooltip(Rooms.list[Rooms.list.length-1]);
                     }
                   }
@@ -401,48 +423,13 @@ angular.module('otaniemi3dApp')
         /*
         * Update or add new sensor data to rooms, and then color the rooms according to the data.
         */
-
-        function updateRoomInfo() {
-          if(!scope.data) {
-            return;
+        function updateRoomColors() {
+          Rooms.updateRoomInfo(scope.data);
+          var i;
+          for(i = 0; i < Rooms.list.length; i++){
+            setRoomColor(Rooms.list[i]);
           }
-
-          var i, j;
-          var sensorUpdated = false;
-
-          for (i = 0; i < scope.data.length; i++) {
-            var roomName = scope.data[i].room.split(' ')[0];
-
-            for (j = 0; j < Rooms.list.length; j++) {
-              if (roomName === Rooms.list[j].name) {
-                var k;
-                //Check if sensor already exists
-                for (k = 0; k < Rooms.list[j].sensors.length; k++) {
-                  if (Rooms.list[j].sensors[k].id === scope.data[i].sensorId && Rooms.list[j].sensors[k].type === scope.data[i].type) {
-                    Rooms.list[j].sensors[k].value = scope.data[i].value;
-                    sensorUpdated = true;
-                  }
-                }
-
-                //If sensor doesn't yet exist in Rooms service then add it
-                if (!sensorUpdated) {
-                  Rooms.list[j].sensors.push({
-                    id: scope.data[i].sensorId,
-                    type: scope.data[i].type,
-                    value: scope.data[i].value
-                  });
-                } else {
-                //Reset updated flag
-                  sensorUpdated = false;
-                }
-
-                setRoomColor(Rooms.list[j]);
-
-                break;
-              }
-            }
-          }
-        }  //end updateRoomInfo
+        }
 
         /*
         * Pulse the room highlight until it is not selected anymore.
@@ -495,8 +482,10 @@ angular.module('otaniemi3dApp')
         
         function gradientMouseMove() {
           var coordinates = [0, 0];
+          /*jshint validthis:true */
           coordinates = d3.mouse(this);
           
+          /*jshint validthis:true */
           var bBoxHeight = this.getBBox().height;
           var positionOnLegend = ((coordinates[1] - y1) / bBoxHeight); //e.g. 60% if it's just below half way.
           var valueText = twodservice.valueAtPercent(scope.roomValueType.toLowerCase(), positionOnLegend) + twodservice.getValueUnit(scope.roomValueType);
@@ -673,6 +662,12 @@ angular.module('otaniemi3dApp')
             scope.selectedRoom = null;
           }
         });
+        
+        function resetZoom() {
+          scope.plan.translate = [0, 0];
+          scope.plan.scale = 1;
+          appendFloorplan(scope.plan, floorplanContainer, true);
+        }
 
         /*
         * Watch for sensor data updates and update every room's
@@ -680,7 +675,7 @@ angular.module('otaniemi3dApp')
         */
         scope.$watch('data', function () {
           if (scope.data) {
-            updateRoomInfo();
+            updateRoomColors();
           }
         });
 
@@ -697,6 +692,12 @@ angular.module('otaniemi3dApp')
         scope.$watch('roomValueType', function() {
           changeLegendText();
           changeLegendStyle();
+        });
+        
+        scope.$watch('resetView', function() {
+          if (scope.resetView === null) {return;}
+          
+          resetZoom();
         });
       }//end link: function()
     }; //end return

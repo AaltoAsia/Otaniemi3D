@@ -53,11 +53,7 @@
     <h3 class="modal-title">Latest sensor data for <span id="sensorLabel"></span></h3>
   </div>
   <div class="modal-body">
-    <p>CO2: </p>
-    <p>Temperature: </p>
-    <p>Humidity: </p>
-    <p>Light: </p>
-    <p>Occupancy: </p>
+    <p ng-repeat="info in roomInfo">{{info}}</p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>
@@ -116,7 +112,7 @@
     translation = "469.9848032883704 -0.68947556924496 -143.49173141471726" 
     scale = '5 5 5' 
     rotation='-0 0 -1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('cafeteria_sensor')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Cafeteria')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='Corridor Entrance Side'
@@ -140,7 +136,7 @@
     translation = "483.267397 1.75220 -117.68667" 
     scale = '5 5 5' 
     rotation='-0 0 1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Corridor_Entrance_Side_sensor')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Corridor_Entrance_Side')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='Corridor Cafeteria Side'
@@ -235,7 +231,7 @@
     translation = "516.2639057062678 2.05003264707672463 -110.77286572331198" 
     scale = '5 5 5' 
     rotation="-0.0 0.785 0.785 3.14"  >
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Corridor_End_sensor')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Corridor_End')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='223'
@@ -310,7 +306,7 @@
 </Viewpoint>
 
 <Transform translation="538.04595 0.89867 -109.5522">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room_232a'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('232a'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -334,7 +330,7 @@
 </Viewpoint>
 
 <Transform translation="525.85828 0.91777 -102.52309">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room_238d'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('238d'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -347,7 +343,7 @@
     translation = "524.04428 1.6 -101.52309"
     scale = '5 5 5' 
     rotation='-0 0 -1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('238d_sensor')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('238d')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='238b'
@@ -365,7 +361,7 @@
 </Viewpoint>
 
 <Transform translation="516.65828 0.91777 -102.52309">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room_237c'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('237c'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -378,7 +374,7 @@
     translation = "519.33828 1.7 -101.52309"
     scale = '5 5 5' 
     rotation='-0 0 1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('237c_sensor')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('237c')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <Viewpoint id='237d'
@@ -417,7 +413,7 @@
 </Viewpoint>
 
 <Transform translation="497.65828 0.91777 -102.52309">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room_235'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('235'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>

@@ -8,7 +8,7 @@
     "angular-touch": "~1.2.0",
     "angular-route": "~1.2.0",
     "jquery": "~1.11.2",
-    "angular-ui-grid": "~3.0.0-rc.16",
+    "angular-ui-grid": "~3.0.0-rc.20",
     "d3": "~3.5.5",
     "angular-bootstrap": "~0.12.1",
     "fastclick": "~1.0.3",
