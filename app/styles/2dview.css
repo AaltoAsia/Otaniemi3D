@@ -279,8 +279,6 @@
 }
 
 #gradientRect {
-  stroke-width: 1px;
-  stroke: black;
   pointer-events: all;
 }
 
@@ -290,6 +288,23 @@
 
 #legendMaxText {
   
+}
+
+#binaryRectTop {
+  
+}
+
+#binaryRectBottom {
+  
+}
+
+.legendRect {
+  stroke-width: 1px;
+  stroke: black;
+}
+
+.binaryRect {
+  pointer-events: none;
 }
 
 /* styling for black buttons in 2dview */

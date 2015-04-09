@@ -10,27 +10,24 @@
 angular.module('otaniemi3dApp')
     .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, twodservice, $rootScope, $modal) {
   
-  var loaded = false;
 
   $scope.panoramaViewer = function() {
-      $scope.pano = true;
-      if(loaded === false){
-          embedpano({
+      $scope.pano = true; //make panorama(pano) div visible
+      var roomInfo = Rooms.krpanoHTML($scope.room); //find information for krpano tooltip
+      var infos = {room: roomInfo};
+      embedpano({
             xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
             id:'pano_obj',
             target:'pano',
             html5:'only',
-            passQueryParameters:true
+            passQueryParameters:true,
+            vars:infos
           });
-          loaded = true;
-      }
-      else{
-          var xmlpath = $scope.room.split(' ').join('_') +'.xml';
-          document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
-      }
   };
   $scope.stopPanorama = function(){
       $scope.pano = false;
+      var element = document.getElementById('pano_obj');
+      element.parentNode.removeChild(element); 
   };
 
   var floorplanClass = 'floorplan';
@@ -68,6 +65,10 @@ angular.module('otaniemi3dApp')
           break;
       }
   }
+  
+  $scope.showGradient = function() {
+    return $scope.roomValueType.toLowerCase() !== 'pir' && $scope.roomValueType.toLowerCase() !== 'occupancy';
+  }
 
   // Toggle fullscreen button. It broadcasts to rootscope to change the view to fullscreen
   // which in turn hides the footer and header. Also it changes the fullscreen button glyphicon
@@ -83,7 +84,6 @@ angular.module('otaniemi3dApp')
           $scope.searchContainer = '';
           $scope.buttonClass = 'glyphicon glyphicon-resize-full';
       }
-
   };
 
   /*
@@ -97,6 +97,7 @@ angular.module('otaniemi3dApp')
           console.log('Error: Failed to fetch sensor data');
       }
   );
+
   /*
    * Change current floorplan to the previous of net floorplan
    * direction is either 1 if the user pressed next button or -1
