@@ -148,7 +148,7 @@ angular.module('otaniemi3dApp')
         }
           if(room !== null){
             var roomInfo = [];
-            var roomData = 'Room:' + room.name;
+            var roomData = 'Room: ' + room.name;
             roomInfo.push(roomData);
             for (var i = 0; i < room.sensors.length; i++) {
                 switch (room.sensors[i].type) {
