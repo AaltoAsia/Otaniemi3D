@@ -167,6 +167,8 @@ angular.module('otaniemi3dApp')
               clearInterval(scope.highlightedRoom.pulse);
               scope.highlightedRoom = null;
             }
+            d3.select('#panobtn').style('pointer-events', 'all');
+            d3.select('.mouse-tooltip').style('pointer-events', 'all');
             clickWasOnRoom = true;
             if (d3.event.defaultPrevented) { // Ignore the click since this was called after dragend
               mouseOut(false);
@@ -336,6 +338,8 @@ angular.module('otaniemi3dApp')
 
             svg.on('click', function() {
               if (!clickWasOnRoom) {
+                d3.select('#panobtn').style('pointer-events', null);
+                d3.select('.mouse-tooltip').style('pointer-events', null);
                 scope.selectedRoom = null;
                 mouseOut(true);
               }

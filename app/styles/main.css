@@ -96,6 +96,7 @@ body {
     z-index: 10;
     position: absolute;
     visibility: hidden;
+    pointer-events: none;
 }
 
 .home-navs > li {
