@@ -25,7 +25,7 @@
       "room": "Cafeteria",
       "sensorId": "temp_cafe",
       "type": "temperature",
-      "value": "25.3"
+      "value": "29.7"
     },
     {
       "id": "room_entr",
@@ -989,9 +989,9 @@
       "value": "21"
     },
     {
-      "id": "room_237",
-      "room": "237",
-      "sensorId": "temp_237",
+      "id": "room_237c",
+      "room": "237c",
+      "sensorId": "temp_237c",
       "type": "temperature",
       "value": "18.1"
     },
@@ -2465,9 +2465,9 @@
       "value": "807"
     },
     {
-      "id": "room_237",
-      "room": "237",
-      "sensorId": "co2_237",
+      "id": "room_237c",
+      "room": "237c",
+      "sensorId": "co2_237c",
       "type": "co2",
       "value": "1067"
     },
@@ -3941,9 +3941,9 @@
       "value": "2466"
     },
     {
-      "id": "room_237",
-      "room": "237",
-      "sensorId": "light_237",
+      "id": "room_237c",
+      "room": "237c",
+      "sensorId": "light_237c",
       "type": "light",
       "value": "7005"
     },
@@ -4514,7 +4514,7 @@
       "room": "348",
       "sensorId": "light_348",
       "type": "light",
-      "value": "2376"
+      "value": "237c6"
     },
     {
       "id": "room_349",
@@ -5417,9 +5417,9 @@
       "value": "41.8"
     },
     {
-      "id": "room_237",
-      "room": "237",
-      "sensorId": "hum_237",
+      "id": "room_237c",
+      "room": "237c",
+      "sensorId": "hum_237c",
       "type": "humidity",
       "value": "57.4"
     },
@@ -6893,9 +6893,9 @@
       "value": "0"
     },
     {
-      "id": "room_237",
-      "room": "237",
-      "sensorId": "pir_237",
+      "id": "room_237c",
+      "room": "237c",
+      "sensorId": "pir_237c",
       "type": "pir",
       "value": "0"
     },

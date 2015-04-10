@@ -200,6 +200,9 @@ ul.nav {
     .myGrid {
         height:calc(100% - 66px);
     }
+    #content {
+        position: relative;
+    }
 }
 
 #content {

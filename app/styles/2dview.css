@@ -140,13 +140,7 @@
 	#searchContainer {
         margin-left: 10%;
 	    margin-right: 10%;
-    }
-  
-    #legendBar {
-        margin-left: 15px;
-        margin-top: 12px;
-    }
-    
+    }    
     
     /* Desktop user - disable portrait adjustments */
     .modal-portrait {
@@ -276,6 +270,8 @@
 #legendBar {
   pointer-events: none;
   height: 30%;
+  margin-left: 8px;
+  margin-top: 5px;
 }
 
 #legendContainingSvg {
@@ -283,8 +279,6 @@
 }
 
 #gradientRect {
-  stroke-width: 1px;
-  stroke: black;
   pointer-events: all;
 }
 
@@ -294,6 +288,23 @@
 
 #legendMaxText {
   
+}
+
+#binaryRectTop {
+  
+}
+
+#binaryRectBottom {
+  
+}
+
+.legendRect {
+  stroke-width: 1px;
+  stroke: black;
+}
+
+.binaryRect {
+  pointer-events: none;
 }
 
 /* styling for black buttons in 2dview */

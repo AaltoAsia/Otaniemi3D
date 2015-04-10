@@ -1,4 +1,8 @@
 <div ng-hide="pano" id="searchContainer" ng-class="searchContainer">
+<script>function getText()
+{
+    return "Hello World!";
+}</script>
   <button class="btn btn-black mobile-button" ng-click="open()">Options</button>
   <!-- Sensor Type  -->
   <div class="btn-group desktop-dropdown" dropdown>
@@ -72,9 +76,27 @@
 <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
 <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floors-1"></i> <!-- button that loads up higher (aka next) floor -->
 
+<!-- The actual floorplan -->
 <floorplan class="fp" plan="selectedPlan" data="sensorData" highlighted-room="highlightedRoom" room-value-type="roomValueType" reset-view="resetView">
-  <div id="legendBar" style="position: absolute"></div>
-</floorplan> <!-- The actual floorplan -->
+  <div id="legendBar" style="position: absolute">
+    <p id="legendMinText" class="legendText"></p>
+      <svg id="legendContainingSvg">
+        <g>
+          <defs>
+            <lineargradient id="legendGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+              <stop></stop>
+            </lineargradient>
+          </defs>
+        </g>
+        <rect id="gradientRect" class="legendRect" fill="url(#legendGradient)" rx="10" ry="10" ng-show="showGradient()" ng-cloak></rect>
+        <rect id="binaryRectTop" class="binaryRect legendRect" rx="10" ry="10" ng-hide="showGradient()" ng-cloak></rect>
+        <rect id="binaryRectBottom" class="binaryRect legendRect" rx="10" ry="10" ng-hide="showGradient()" ng-cloak></rect>
+        <line id="legendLine"></line>
+        <text id="legendLineText"></text>
+      </svg>
+      <p id="legendMaxText" class="legendText"></p>
+  </div>
+</floorplan> 
 </div>
 
 <script type="text/ng-template" id="myModalContent.html">
