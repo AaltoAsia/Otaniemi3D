@@ -1,6 +1,6 @@
-<carousel class="frontpage-carousel" interval="interval">
-    <slide class="carousel-slide" ng-repeat="slide in slides" active="slide.active">
-        <div class="carousel-caption">
+<carousel class="frontpage-carousel" interval="interval" >
+    <slide class="carousel-slide" ng-repeat="slide in slides" active="slide.active" style="background-image:url({{slide.img}});">
+        <div class="carousel-caption"  >
             <article>
                 <h1 class="carousel-heading">{{slide.caption}}</h1>
                 <h3 class="carousel-heading">{{slide.description}}</h3>
