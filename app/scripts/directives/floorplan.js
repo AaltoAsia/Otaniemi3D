@@ -101,14 +101,31 @@ angular.module('otaniemi3dApp')
         
         //Add one row to the tooltip table.
         function addTooltipText (type, value) {
+          var unit = '';
+          switch (type.toLowerCase()) {
+            case 'temperature':
+              unit = ' °C';                        
+              break;
+            case 'humidity':
+              unit = ' %';
+              break;
+            case 'co2':
+              unit = ' ppm';
+              break;
+            case 'pir':
+              break;
+            case 'light':
+              unit = ' lux';
+              break;
+          }
           var newRow = tooltip.select('#infocontent').append('tr');
           var newType = newRow.append('th').text(type);
-          var newValue = newRow.append('td').text(value);
+          var newValue = newRow.append('td').text(value + unit);
           return {type: newType, value: newValue};
         }
 
         /*
-        * Add tooltip that shows room's sensor values.
+        * Add tooltip that shows room's sensor values. This is called again every time the tooltip is shown for a specific room.
         */
         function addTooltip(room) {
           //Add room-specific information to the tooltip and make tooltip visible
@@ -119,32 +136,19 @@ angular.module('otaniemi3dApp')
             
             scope.$parent.room = room.name; //Pass the room name to controller function
             tooltip.append('table').attr('id', 'infocontent').attr('class', 'tooltip-table');
-            var firstRow = addTooltipText("Room", room.name);
+            var firstRow = addTooltipText('Room', room.name);
             var lastRow;
 
             for (var i = 0; i < room.sensors.length; i++) {
-                switch (room.sensors[i].type) {
-                    case 'temperature':
-                        lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value + ' °C');
-                        break;
-                    case 'humidity':
-                        lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value + ' %');
-                        break;
-                    case 'co2':
-                        lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value +  ' ppm');
-                        break;
-                    case 'pir':
-                        var occupancyState;
-                        if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
-                        lastRow = addTooltipText('occupied', occupancyState);
-                        break;
-                    case 'light':
-                        lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value + ' lux');
-                        break;
-                }
+              lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value);
+              if(scope.roomValueType.toLowerCase() === room.sensors[i].type.toLowerCase()) {
+                var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
+                lastRow.type.style('background-color', color.rgbaString);
+                lastRow.value.style('background-color', color.rgbaString);
+              }
             }
             
-            if (i == 0) {
+            if (i === 0) {
               lastRow = firstRow;
             }
             
@@ -545,7 +549,7 @@ angular.module('otaniemi3dApp')
             .attr('stroke-width', 1)
             .style('visibility', 'hidden');
           
-          legendLineText = d3.select("#legendLineText")
+          legendLineText = d3.select('#legendLineText')
             .attr('x', x1 + barWidth)
             .attr('y', y1)
             .style('visibility', 'hidden')
