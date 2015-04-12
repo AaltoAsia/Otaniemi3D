@@ -211,8 +211,8 @@
 }
 /* panoramabutton in tooltip */
 #panobtn{
-    order: 2;
-    display: none;
+  order: 2;
+  display: none;
 }
 
 /* CSS definitions for the sensor type popover (tooltip) */
