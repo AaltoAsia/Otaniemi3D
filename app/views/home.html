@@ -3,9 +3,10 @@
         <div class="carousel-caption"  >
             <article>
                 <h1 class="carousel-heading">{{slide.caption}}</h1>
+                <h2 class="carousel-heading"> {{slide.second_caption}}</h2>
                 <h3 class="carousel-heading">{{slide.description}}</h3>
                 <p ng-hide="slide.link == 'support'">
-                    <a class="btn btn-lg btn-primary" role="button" href="#{{slide.link}}">{{slide.linktext}}</a>
+                    <a class="btn btn-black btn-primary" role="button" href="#{{slide.link}}">{{slide.linktext}}</a>
                 </p>
             </article>
         </div>

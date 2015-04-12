@@ -22,6 +22,9 @@
         height:calc(100% - 50px)!important;
         height:90%; /*This is a fallback for devices with no calc support*/
     }
+    .carousel-slide {
+    background-size: 100%;
+    }
 }
 
 /* Set the background color of landing page here*/
@@ -29,6 +32,7 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center; 
+
 
 }
 .carousel-caption{
@@ -50,6 +54,10 @@
 .carousel-control{
     color: black;
     }
+
+.btn-primary{
+    color:black;
+}
 
 /*Compress the content a bit to make it fit in landscape view*/
 @media screen and (max-height: 350px) {
