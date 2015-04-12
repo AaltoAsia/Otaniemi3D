@@ -18,6 +18,7 @@ angular.module('otaniemi3dApp')
         else if (data[i].sensorId === undefined) { return false; }
         else if (data[i].type     === undefined) { return false; }
         else if (data[i].value    === undefined) { return false; }
+        data[i].value = Number(data[i].value);
       }
       return true;
     };
