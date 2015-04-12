@@ -88,15 +88,21 @@ body {
     border: 1px solid #e5e5e5;
 }
 
+.tooltip-table {
+  
+}
+
 .mouse-tooltip {
     margin-top: 19px;
     border: 1px solid #e5e5e5;
     border-radius: 5px;
     background: #A3CCCC;
     z-index: 10;
-    position: absolute;
+    position: fixed;
     visibility: hidden;
     pointer-events: none;
+    display: flex;
+    flex-flow: column;
 }
 
 .home-navs > li {
