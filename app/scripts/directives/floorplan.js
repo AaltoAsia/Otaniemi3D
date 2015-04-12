@@ -63,7 +63,6 @@ angular.module('otaniemi3dApp')
         *==============================================
         */
         var tooltip = d3.select('.mouse-tooltip');
-        var tooltipTable = d3.select('#tooltip-table');
 
         //Make tooltip window follow mouse movement
         function mouseMove (skipSelectedCheck) {
@@ -117,6 +116,10 @@ angular.module('otaniemi3dApp')
             case 'light':
               unit = ' lux';
               break;
+          }
+          if (type === 'pir') {
+            type = 'occupied';
+            value = value <= 0 ? 'no' : 'yes';
           }
           var newRow = tooltip.select('#infocontent').append('tr');
           var newType = newRow.append('th').text(type);
