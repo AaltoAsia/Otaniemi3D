@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
 
-  .controller('onedview', function ($scope, $location, Datahandler) {
+  .controller('onedview', function ($scope, $location, Datahandler, uiGridConstants) {
 
     $scope.timeFrame = 'Latest';
 
@@ -94,24 +94,40 @@ angular.module('otaniemi3dApp')
       columnDefs: [
         {
           field: 'room',
-          filter: {
-            condition:  function(searchTerm, cellValue) {
-              var strippedValue = cellValue.toLowerCase();
-              return strippedValue.indexOf(searchTerm.toLowerCase()) >= 0;
-              }
+          filters: [
+            {
+              condition:  function(searchTerm, cellValue) {
+                var strippedValue = cellValue.toLowerCase();
+                return strippedValue.indexOf(searchTerm.toLowerCase()) >= 0;
+              },
+              placeholder: 'room name'
             }
-          },
+          ]
+        },
         {
           field: 'type',
-          filter: {
-            condition:  function(searchTerm, cellValue) {
-              var strippedValue = cellValue.toLowerCase();
-              return strippedValue.indexOf(searchTerm.toLowerCase()) >= 0;
-              }
+          filters: [
+            {
+              condition:  function(searchTerm, cellValue) {
+                var strippedValue = cellValue.toLowerCase();
+                return strippedValue.indexOf(searchTerm.toLowerCase()) >= 0;
+              },
+              placeholder: 'sensor type'
             }
-          },
+          ]
+        },
         {
-          field: 'value'
+          field: 'value',
+          filters: [
+            {
+              condition: uiGridConstants.filter.GREATER_THAN,
+              placeholder: 'greater than'
+            },
+            {
+              condition: uiGridConstants.filter.LESS_THAN,
+              placeholder: 'less than'
+            }
+          ]
         }
       ]
     };
