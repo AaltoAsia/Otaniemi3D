@@ -102,8 +102,9 @@ angular.module('otaniemi3dApp')
         //Add one row to the tooltip table.
         function addTooltipText (type, value) {
           var newRow = tooltip.select('#infocontent').append('tr');
-          newRow.append('th').text(type);
-          newRow.append('td').text(value);          
+          var newType = newRow.append('th').text(type);
+          var newValue = newRow.append('td').text(value);
+          return {type: newType, value: newValue};
         }
 
         /*
@@ -118,29 +119,39 @@ angular.module('otaniemi3dApp')
             
             scope.$parent.room = room.name; //Pass the room name to controller function
             tooltip.append('table').attr('id', 'infocontent').attr('class', 'tooltip-table');
-            addTooltipText("Room", room.name);
+            var firstRow = addTooltipText("Room", room.name);
+            var lastRow;
 
             for (var i = 0; i < room.sensors.length; i++) {
                 switch (room.sensors[i].type) {
                     case 'temperature':
-                        addTooltipText(room.sensors[i].type, room.sensors[i].value + ' °C');
+                        lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value + ' °C');
                         break;
                     case 'humidity':
-                        addTooltipText(room.sensors[i].type, room.sensors[i].value + ' %');
+                        lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value + ' %');
                         break;
                     case 'co2':
-                        addTooltipText(room.sensors[i].type, room.sensors[i].value +  ' ppm');
+                        lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value +  ' ppm');
                         break;
                     case 'pir':
                         var occupancyState;
                         if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
-                        addTooltipText('occupied', occupancyState);
+                        lastRow = addTooltipText('occupied', occupancyState);
                         break;
                     case 'light':
-                        addTooltipText(room.sensors[i].type, room.sensors[i].value + ' lux');
+                        lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value + ' lux');
                         break;
                 }
             }
+            
+            if (i == 0) {
+              lastRow = firstRow;
+            }
+            
+            firstRow.type.style('border-top-left-radius', '5px');
+            firstRow.value.style('border-top-right-radius', '5px');
+            lastRow.type.style('border-bottom-left-radius', '5px');
+            lastRow.value.style('border-bottom-right-radius', '5px');
             
             var roomsWithPanorama = [
               '238d','237c','235','232b','232a',

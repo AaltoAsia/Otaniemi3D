@@ -89,14 +89,29 @@ body {
 }
 
 .tooltip-table {
+  border-collapse: separate;
+}
+
+/*Styling common for headers and values (sensor types and values)*/
+.tooltip-table th, .tooltip-table td {
+  border: 1px solid #E6E6E6;
+  padding: 4px;
+}
+
+/*Header (sensor type) element inside the tooltip*/
+.tooltip-table th {
+  
+}
+/*Sensor value element inside the tooltip*/
+.tooltip-table td {
   
 }
 
 .mouse-tooltip {
-    margin-top: 19px;
-    border: 1px solid #e5e5e5;
+    margin-top: 22px; /*to put it slightly lower, so the cursor doesn't hide anything*/
+    border: 1px solid black;
     border-radius: 5px;
-    background: #A3CCCC;
+    background: white;
     z-index: 10;
     position: fixed;
     visibility: hidden;
