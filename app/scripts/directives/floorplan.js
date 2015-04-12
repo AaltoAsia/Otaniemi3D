@@ -144,7 +144,8 @@ angular.module('otaniemi3dApp')
 
             for (var i = 0; i < room.sensors.length; i++) {
               lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value);
-              if(scope.roomValueType.toLowerCase() === room.sensors[i].type.toLowerCase()) {
+              if(scope.roomValueType.toLowerCase() === room.sensors[i].type.toLowerCase()
+                || (scope.roomValueType.toLowerCase()==='occupancy' && room.sensors[i].type.toLowerCase()==='pir')) {
                 var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
                 lastRow.type.style('background-color', color.rgbaString);
                 lastRow.value.style('background-color', color.rgbaString);
