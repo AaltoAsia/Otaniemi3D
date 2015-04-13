@@ -18,9 +18,10 @@ angular.module('otaniemi3dApp')
     /*
     * Add new room object to the list
     */
-    this.add = function(name, node) {
+    this.add = function(name, node, floor) {
       this.list.push({
         name: name,
+        floor: floor,
         node: node,
         sensors: [],
         pulse: null
@@ -84,7 +85,7 @@ angular.module('otaniemi3dApp')
                 }
               }
               if(!exists){
-                this.add(roomName, null);
+                this.add(roomName, null, null);
                 exists = false;
               }
             }
