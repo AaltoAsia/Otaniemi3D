@@ -51,9 +51,24 @@
 }
 
 /* Font size in modal bigger! */
-.modal-body {
+#sensor-modal {
     font-size: 14px;
 }
+
+.panel.panel-default {
+    margin: 0;
+}
+
+.modal {
+    text-align:center;
+}
+
+.modal-dialog {
+    width: auto;
+    display:inline-block;
+    text-align: left;
+}
+
 
 /* Make the sensor values bold in modal */
 #modalRoomValue {

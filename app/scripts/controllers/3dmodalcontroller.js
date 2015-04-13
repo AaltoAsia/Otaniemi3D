@@ -12,7 +12,6 @@ angular.module('otaniemi3dApp')
     /* fill modal with room data labels */
     $scope.roomInfo = roomInfo;
     $scope.roomName = roomName;
-    /* remove "Room: " from modal title */
     // Close modal.
     $scope.ok = function () {
       $modalInstance.dismiss('ok');
