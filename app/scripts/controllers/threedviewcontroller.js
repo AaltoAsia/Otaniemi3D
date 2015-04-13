@@ -69,19 +69,19 @@ angular.module('otaniemi3dApp')
     
     /* open modal window */
     $scope.modalTooltip = function (sensorLabel) {
-      $modal.open({
+    $modal.open({
         templateUrl: 'threedModal.html',
         controller: '3dModalCtrl',
         resolve: {
           roomInfo: function () {
             return Rooms.findRoom(sensorLabel);
+          },
+          roomName: function () {
+          return sensorLabel;
           }
         }
+
         });
-        $scope.roomLabel = roomInfo.split(" :")[0];
-        $scope.roomValue = roomInfo.split(" ")[1];
-        console.log($scope.roomLabel);
-        console.log($scope.roomValue);
     };
   }
 );

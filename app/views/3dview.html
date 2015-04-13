@@ -50,14 +50,18 @@
 <!-- Modal for displaying a sensor values when a sensor is clicked -->
 <script type="text/ng-template" id="threedModal.html">
   <div class="modal-header">
-    <h3 class="modal-title">Latest sensor data for room:<br><span id="sensorLabel">{{roomInfo[0]}}</span></h3>
+    <h3 class="modal-title">Latest sensor data for room:<br><span id="sensorLabel">{{roomName}}</span></h3>
   </div>
   <div class="modal-body">
     <!-- room data here, but do not show the room number again -->
-    <p>
-      <span ng-repeat="infoLabel in roomLabel" ng-show="!$first">{{infoLabel}} </span>
-      <span id="modalRoomValue" ng-repeat="infoValue in roomValue">: {{infoValue}} </span>
-    </p>
+  <div class="panel panel-default">
+    <table class="table table-bordered">
+      <tr ng-repeat="info in roomInfo">
+        <th>{{info.type}}</th> 
+        <td>{{info.value}}</td>
+      </tr>
+    </table>
+  </div>
   </div>
   <div class="modal-footer">
     <button class="btn btn-default " ng-click="ok()">OK</button>

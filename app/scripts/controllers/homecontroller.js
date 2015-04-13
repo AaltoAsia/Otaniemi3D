@@ -13,7 +13,7 @@ angular.module('otaniemi3dApp')
         var slides = $scope.slides = [];
         slides.push({
                 caption: 'Otaniemi3D',
-                second_caption: 'Enhance building efficiency',
+                secondCaption: 'Enhance building efficiency',
                 description: 'With Otaniemi3D you can visualize the sensor values of k1-building of Otaniemi',
                 link: 'support',
                 linktext: 'Support',

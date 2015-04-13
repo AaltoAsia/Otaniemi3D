@@ -17,7 +17,7 @@ angular.module('otaniemi3dApp')
     
     //Ok function, passes the variables, into resolve function in twodviewcontroller 
     $scope.ok = function () {
-      $modalInstance.close();
+      $modalInstance.close([$scope.roomValueType, $scope.timeFrame]);
     };
     
     //Shuts down modal without action.

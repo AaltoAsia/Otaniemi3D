@@ -198,7 +198,7 @@ angular.module('otaniemi3dApp')
         roomHTML += '[tr] [td]' + roomName + '[/td] [/tr]';
         for(var i =0 ; i < roomInfo.length; i++){
           tableInfo = '[tr]';
-          tableInfo += '[td]' + roomInfo[i].type+ '[/td]' + '[td]' + roomInfo[i].value + '[/td]';
+          tableInfo += '[th]' + roomInfo[i].type+ '[/th]' + '[td]' + roomInfo[i].value + '[/td]';
           tableInfo += '[/tr]';
           roomHTML += tableInfo;
         }

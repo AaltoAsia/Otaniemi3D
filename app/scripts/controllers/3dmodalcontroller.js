@@ -8,12 +8,11 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('3dModalCtrl', function ($scope, $modalInstance, Rooms, roomInfo) {
+  .controller('3dModalCtrl', function ($scope, $modalInstance, Rooms, roomInfo, roomName) {
     /* fill modal with room data labels */
     $scope.roomInfo = roomInfo;
+    $scope.roomName = roomName;
     /* remove "Room: " from modal title */
-    $scope.roomInfo[0] = $scope.roomInfo[0].split(': ')[1];
-
     // Close modal.
     $scope.ok = function () {
       $modalInstance.dismiss('ok');
