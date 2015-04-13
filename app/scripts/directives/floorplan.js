@@ -389,6 +389,7 @@ angular.module('otaniemi3dApp')
                       if (Rooms.list[j].name === roomText.textContent) {
                         if(Rooms.list[j].node === null){ //if rooms list contains nodes with null values,(in case initRoomList called earlier)
                           Rooms.list[j].node = roomArea; // replace those with actual roomArea values
+                          Rooms.list[j].floor = i;
                           addTooltip(Rooms.list[j]);
                         }
                         roomExists = true;
@@ -396,7 +397,7 @@ angular.module('otaniemi3dApp')
                       }
                     }
                     if (!roomExists) {
-                      Rooms.add(roomText.textContent, roomArea);
+                      Rooms.add(roomText.textContent, roomArea, i);
                       addTooltip(Rooms.list[Rooms.list.length-1]);
                     }
                   }
