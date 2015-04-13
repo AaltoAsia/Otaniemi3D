@@ -53,18 +53,34 @@ angular.module('otaniemi3dApp')
       $scope.changeView($item);
     };
     
+    var loaded = false;
 
     $scope.panoramaViewer = function(room) {
     $scope.pano = true; //make panorama(pano) div visible
-    var roomInfos = Rooms.krpanoHTML(room); //find information for krpano tooltip
-    var infos = {room: roomInfos};
-          embedpano({xml:'panorama/' + room.split(' ').join('_') +'.xml', id:'pano_obj', target:'pano', html5:'only', passQueryParameters:true, vars:infos});
-    };
-    $scope.stopPanorama = function(){
+    var roomInfo = Rooms.krpanoHTML(room); //find information for krpano tooltip
+    var infos = {room: roomInfo};
+    if(loaded === false){
+    embedpano({
+          xml:'panorama/' + room.split(' ').join('_') +'.xml',
+          id:'pano_obj',
+          target:'pano',
+          html5:'only',
+          passQueryParameters:true,
+          vars:infos
+        });
+    loaded = true;
+  }
+    else{
+        var xmlpath = room.split(' ').join('_') +'.xml';
+        document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
+        document.getElementById('pano_obj').call('set(room,' + roomInfo +');');
+
+    }
+};
+
+  $scope.stopPanorama = function(){
       $scope.pano = false;
-      var element = document.getElementById('pano_obj');
-      element.parentNode.removeChild(element); 
-    };
+  };
   
     $scope.modalTooltip = function (sensorLabel) {
       /* TODO: implement fetching and showing right values in Modal Tooltip.
