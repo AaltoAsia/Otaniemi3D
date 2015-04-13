@@ -63,10 +63,6 @@ angular.module('otaniemi3dApp')
         *==============================================
         */
         var tooltip = d3.select('.mouse-tooltip');
-        tooltip
-          .style('display','flex')
-          .style('flex-flow','column');
-          
 
         //Make tooltip window follow mouse movement
         function mouseMove (skipSelectedCheck) {
@@ -101,9 +97,38 @@ angular.module('otaniemi3dApp')
             .style('visibility', null);
           tooltip.select('#panobtn').style('display', 'none');
         } //end tooltip  helper functions
+        
+        //Add one row to the tooltip table.
+        function addTooltipText (type, value) {
+          var unit = '';
+          switch (type.toLowerCase()) {
+            case 'temperature':
+              unit = ' °C';                        
+              break;
+            case 'humidity':
+              unit = ' %';
+              break;
+            case 'co2':
+              unit = ' ppm';
+              break;
+            case 'pir':
+              break;
+            case 'light':
+              unit = ' lux';
+              break;
+          }
+          if (type === 'pir') {
+            type = 'occupied';
+            value = value <= 0 ? 'no' : 'yes';
+          }
+          var newRow = tooltip.select('#infocontent').append('tr');
+          var newType = newRow.append('th').text(type);
+          var newValue = newRow.append('td').text(value + unit);
+          return {type: newType, value: newValue};
+        }
 
         /*
-        * Add tooltip that shows room's sensor values.
+        * Add tooltip that shows room's sensor values. This is called again every time the tooltip is shown for a specific room.
         */
         function addTooltip(room) {
           //Add room-specific information to the tooltip and make tooltip visible
@@ -113,33 +138,28 @@ angular.module('otaniemi3dApp')
             }
             
             scope.$parent.room = room.name; //Pass the room name to controller function
-            tooltip.append('div').attr('id', 'infocontent');
-            tooltip.select('#infocontent').append('p').text('Room: ' + room.name);
+            tooltip.append('table').attr('id', 'infocontent').attr('class', 'tooltip-table');
+            var firstRow = addTooltipText('Room', room.name);
+            var lastRow;
 
             for (var i = 0; i < room.sensors.length; i++) {
-                switch (room.sensors[i].type) {
-                    case 'temperature':
-                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' °C');
-                        break;
-                    case 'humidity':
-                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' %');
-                        break;
-                    case 'co2':
-                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm');
-                        break;
-                    case 'pir':
-                        var occupancyState;
-                        if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
-                        tooltip.select('#infocontent').append('p').text('occupied' + ': ' + occupancyState);
-                        break;
-                    case 'light':
-                        tooltip.select('#infocontent').append('p').text(room.sensors[i].type + ': ' + room.sensors[i].value + ' lux');
-                        break;
-                }
+              lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value);
+              if(scope.roomValueType.toLowerCase() === room.sensors[i].type.toLowerCase()
+                || (scope.roomValueType.toLowerCase()==='occupancy' && room.sensors[i].type.toLowerCase()==='pir')) {
+                var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
+                lastRow.type.style('background-color', color.rgbaString);
+                lastRow.value.style('background-color', color.rgbaString);
+              }
             }
             
-
-            tooltip.selectAll('p').attr('class','roominfo');
+            if (i === 0) {
+              lastRow = firstRow;
+            }
+            
+            firstRow.type.style('border-top-left-radius', '5px');
+            firstRow.value.style('border-top-right-radius', '5px');
+            lastRow.type.style('border-bottom-left-radius', '5px');
+            lastRow.value.style('border-bottom-right-radius', '5px');
             
             var roomsWithPanorama = [
               '238d','237c','235','232b','232a',
@@ -167,6 +187,8 @@ angular.module('otaniemi3dApp')
               clearInterval(scope.highlightedRoom.pulse);
               scope.highlightedRoom = null;
             }
+            d3.select('#panobtn').style('pointer-events', 'all');
+            d3.select('.mouse-tooltip').style('pointer-events', 'all');
             clickWasOnRoom = true;
             if (d3.event.defaultPrevented) { // Ignore the click since this was called after dragend
               mouseOut(false);
@@ -336,6 +358,8 @@ angular.module('otaniemi3dApp')
 
             svg.on('click', function() {
               if (!clickWasOnRoom) {
+                d3.select('#panobtn').style('pointer-events', null);
+                d3.select('.mouse-tooltip').style('pointer-events', null);
                 scope.selectedRoom = null;
                 mouseOut(true);
               }
