@@ -13,8 +13,8 @@ angular.module('otaniemi3dApp')
     $scope.selected = undefined;
     $scope.webglSupport = Modernizr.webgl; //Use this boolean to check for webgl support
     $scope.pano = false;
-
-
+    
+  /* Fetch data for rooms */
   Datahandler.fetchData().then(
       function(data) {
         Rooms.initRoomList(data);
@@ -25,7 +25,7 @@ angular.module('otaniemi3dApp')
   );
 
 
-
+    /* x3d change viewpoint (camera location) */
     $scope.changeView = function(viewpoint){
       if(viewpoint === undefined) {
         var textField = document.getElementById('searchContent');
@@ -42,13 +42,14 @@ angular.module('otaniemi3dApp')
       }
     };
     $scope.text = undefined;  
+    /* items in search scope */
     $scope.items = ['Entrance','Cafeteria','Corridor Entrance Side',
       'Corridor Cafeteria Side','2nd Floor Sundeck','2nd Floor Corridor Start',
       '2nd Floor Corridor Middle','2nd Floor Corridor End','223','224','225',
       '226','227','228','229','232a','232c','232d', '235','236b','236b2','236a',
       '237d','237c','238b','238d','239','333','334','335','336','337','338','341a',
       '341b','341c', '348'];
-    
+    /* search item selected, change view */ 
     $scope.onSelect = function($item) {
       $scope.changeView($item);
     };
@@ -83,15 +84,15 @@ angular.module('otaniemi3dApp')
   };
   
     $scope.modalTooltip = function (sensorLabel) {
-      /* TODO: implement fetching and showing right values in Modal Tooltip.
-         document.getElementById('sensorLabel').innerHTML = sensorLabel;
-      */
-      $modal.open({
+    $modal.open({
         templateUrl: 'threedModal.html',
         controller: '3dModalCtrl',
         resolve: {
           roomInfo: function () {
             return Rooms.findRoom(sensorLabel);
+          },
+          roomName: function () {
+          return sensorLabel;
           }
         }
 

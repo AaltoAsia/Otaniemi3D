@@ -12,13 +12,20 @@
 	<!-- predefine a DEFAULT textstyle element -->
 	<textstyle name="DEFAULT" 
 					edge="lefttop"
+          font="'Helvetica Neue',Helvetica,Arial,sans-serif"
+					fontsize="14.0"
 					yoffset = "5"
-					xofset = "-3"/>
+					xofset = "-3"
+					css = "../styles/main.css"
+					roundedge= "4"/>
 	<textstyle name="mobile"
 				origin = "center"
 				showtime="5"
 				fadetime="3.0"
-				fontsize="18.0" />
+        font="'Helvetica Neue',Helvetica,Arial,sans-serif"
+				fontsize="18.0"
+				css = "../styles/main.css"
+				roundedge= "6" />
 
 
 	<!-- the automatic running (autorun=preinit) install action -->

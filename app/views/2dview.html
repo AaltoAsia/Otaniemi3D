@@ -11,11 +11,11 @@
     </button>
     <ul class="dropdown-menu pull-right typeMenu" role="menu">
       <li class="btn" disabled>Choose sensor type</li>
-      <li><a ng-disabled="roomValueType == 'CO2'" ng-click="changeColour('CO2')">CO2</a></li>
-      <li><a ng-disabled="roomValueType == 'Temperature'" ng-click="changeColour('Temperature')" active>Temperature</a></li>
-      <li><a ng-disabled="roomValueType == 'Humidity'" ng-click="changeColour('Humidity')">Humidity</a></li>
-      <li><a ng-disabled="roomValueType == 'Light'" ng-click="changeColour('Light')">Light</a></li>
-      <li><a ng-disabled="roomValueType == 'Occupancy'" ng-click="changeColour('Occupancy')">Occupancy</a></li>
+      <li ><a ng-disabled="roomValueType == 'CO2'" ng-click="changeColour('CO2')"><img class='icons' src='images/co2.svg'/> CO2</a></li>
+      <li><a ng-disabled="roomValueType == 'Temperature'" ng-click="changeColour('Temperature')" active><img src='images/temperature.svg' class='icons' />  Temperature</a></li>
+      <li><a ng-disabled="roomValueType == 'Humidity'" ng-click="changeColour('Humidity')"><img src='images/humidity.svg' class='icons' />  Humidity</a></li>
+      <li><a ng-disabled="roomValueType == 'Light'" ng-click="changeColour('Light')"><img src='images/light.svg' class='icons' />  Light</a></li>
+      <li><a ng-disabled="roomValueType == 'Occupancy'" ng-click="changeColour('Occupancy')"><img src='images/occupancy.svg' class='icons' />  Occupancy</a></li>
     </ul>
   </div>
   <!-- Sensor timeframe  -->
@@ -25,11 +25,11 @@
     </button>
     <ul class="dropdown-menu pull-right timeMenu" role="menu">
       <li class="btn" disabled>Choose data timeframe</li>
-      <li><a ng-disabled="timeFrame == 'Latest'" ng-click="selectTimeFrame('Latest')" uncheckable>Latest</a></li>
-      <li><a ng-disabled="timeFrame == 'Day'" ng-click="selectTimeFrame('Day')" uncheckable>Day</a></li>
-      <li><a ng-disabled="timeFrame == 'Week'" ng-click="selectTimeFrame('Week')" uncheckable>Week</a></li>
-      <li><a ng-disabled="timeFrame == 'Month'" ng-click="selectTimeFrame('Month')" uncheckable>Month</a></li>
-      <li><a ng-disabled="timeFrame == 'Year'" ng-click="selectTimeFrame('Year')" uncheckable>Year</a></li>
+      <li><a ng-disabled="timeFrame == 'Latest'" ng-click="selectTimeFrame('Latest')" uncheckable><img src='images/latest.svg' class='icons' /> Latest</a></li>
+      <li><a ng-disabled="timeFrame == 'Day'" ng-click="selectTimeFrame('Day')" uncheckable><img src='images/day.svg' class='icons' /> Day</a></li>
+      <li><a ng-disabled="timeFrame == 'Week'" ng-click="selectTimeFrame('Week')" uncheckable><img src='images/week.svg' class='icons' /> Week</a></li>
+      <li><a ng-disabled="timeFrame == 'Month'" ng-click="selectTimeFrame('Month')" uncheckable><img src='images/month.svg' class='icons' /> Month</a></li>
+      <li><a ng-disabled="timeFrame == 'Year'" ng-click="selectTimeFrame('Year')" uncheckable><img src='images/year.svg' class='icons' /> Year</a></li>
     </ul>
   </div>
 
@@ -145,7 +145,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="ok()">OK</button>
-    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" ng-click="ok()">OK</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
   </div>
 </script>

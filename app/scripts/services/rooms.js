@@ -149,31 +149,35 @@ angular.module('otaniemi3dApp')
         }
           if(room !== null){
             var roomInfo = [];
-            var roomData = 'Room: ' + room.name;
-            roomInfo.push(roomData);
+            var roomType, roomValue;
             for (var i = 0; i < room.sensors.length; i++) {
                 switch (room.sensors[i].type) {
                     case 'temperature':
-                         roomData = room.sensors[i].type + ': ' + room.sensors[i].value + ' °C' ;
-                         roomInfo.push(roomData);
+                         roomType = room.sensors[i].type;
+                         roomValue = room.sensors[i].value + ' °C' ;
+                         roomInfo.push({type:roomType, value:roomValue});
                         break;
                     case 'humidity':
-                        roomData = room.sensors[i].type + ': ' + room.sensors[i].value + ' %';
-                        roomInfo.push(roomData);
+                         roomType = room.sensors[i].type;
+                         roomValue = room.sensors[i].value + ' %' ;
+                         roomInfo.push({type:roomType, value:roomValue});
                         break;
                     case 'co2':
-                        roomData = room.sensors[i].type + ': ' + room.sensors[i].value + ' ppm';
-                        roomInfo.push(roomData);
+                         roomType = room.sensors[i].type;
+                         roomValue = room.sensors[i].value + ' ppm' ;
+                         roomInfo.push({type:roomType, value:roomValue});
                         break;
                     case 'pir':
                         var occupancyState;
                         if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
-                        roomData = 'occupied' + ': ' + occupancyState ;
-                        roomInfo.push(roomData);
+                         roomType = 'occupied';
+                         roomValue = occupancyState;
+                         roomInfo.push({type:roomType, value:roomValue});
                         break;
                     case 'light':
-                        roomData = room.sensors[i].type + ': ' + room.sensors[i].value + ' lux';
-                        roomInfo.push(roomData);
+                         roomType = room.sensors[i].type;
+                         roomValue = room.sensors[i].value + ' lux' ;
+                         roomInfo.push({type:roomType, value:roomValue});
                         break;
                 }
             }
@@ -188,12 +192,17 @@ angular.module('otaniemi3dApp')
     this.krpanoHTML = function(roomName){
       var roomInfo = this.findRoom(roomName);
       var roomHTML = '';
-      var paragraph = null;
+      var tableInfo = null;
       if(roomInfo !== null){
+        roomHTML = '[table class= "tooltip-table"]';
+        roomHTML += '[tr] [th]Room[/th] [td]' +  roomName + '[/td] [/tr]';
         for(var i =0 ; i < roomInfo.length; i++){
-          paragraph = '[p]' + roomInfo[i] + '[/p]';
-          roomHTML += paragraph;
+          tableInfo = '[tr]';
+          tableInfo += '[th]' + roomInfo[i].type+ '[/th]' + '[td]' + roomInfo[i].value + '[/td]';
+          tableInfo += '[/tr]';
+          roomHTML += tableInfo;
         }
+        roomHTML += '[/table]';
       }
       return roomHTML;
     };
