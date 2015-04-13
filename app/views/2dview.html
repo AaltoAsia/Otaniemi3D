@@ -78,7 +78,7 @@
 <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floors-1"></i> <!-- button that loads up higher (aka next) floor -->
 
 <!-- The actual floorplan -->
-<floorplan class="fp" plan="selectedPlan" data="sensorData" highlighted-room="highlightedRoom" room-value-type="roomValueType" reset-view="resetView">
+<floorplan class="fp" data-plan="selectedPlan" data-data="sensorData" data-highlighted-room="highlightedRoom" data-room-value-type="roomValueType" data-reset-view="resetView">
   <div id="legendBar" style="position: absolute">
     <p id="legendMinText" class="legendText"></p>
       <svg id="legendContainingSvg">

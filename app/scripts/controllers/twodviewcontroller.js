@@ -10,25 +10,34 @@
 angular.module('otaniemi3dApp')
     .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, twodservice, $rootScope, $modal) {
   
+var loaded = false;
 
-  $scope.panoramaViewer = function() {
-      $scope.pano = true; //make panorama(pano) div visible
-      var roomInfo = Rooms.krpanoHTML($scope.room); //find information for krpano tooltip
-      var infos = {room: roomInfo};
-      embedpano({
-            xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
-            id:'pano_obj',
-            target:'pano',
-            html5:'only',
-            passQueryParameters:true,
-            vars:infos
-          });
-  };
-  $scope.stopPanorama = function(){
-      $scope.pano = false;
-      var element = document.getElementById('pano_obj');
-      element.parentNode.removeChild(element); 
-  };
+$scope.panoramaViewer = function() {
+    $scope.pano = true; //make panorama(pano) div visible
+    var roomInfo = Rooms.krpanoHTML($scope.room); //find information for krpano tooltip
+    var infos = {room: roomInfo};
+    if(loaded === false){
+    embedpano({
+          xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
+          id:'pano_obj',
+          target:'pano',
+          html5:'only',
+          passQueryParameters:true,
+          vars:infos
+        });
+    loaded = true;
+  }
+    else{
+        var xmlpath = $scope.room.split(' ').join('_') +'.xml';
+        document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
+        document.getElementById('pano_obj').call('set(room,' + roomInfo +');');
+
+    }
+};
+$scope.stopPanorama = function(){
+    $scope.pano = false;
+
+};
 
   var floorplanClass = 'floorplan';
   var floorplanFullscreenClass = 'floorplan-fullscreen';

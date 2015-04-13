@@ -314,6 +314,7 @@ module.exports = function (grunt) {
             '*.html',
             'x3dom.js',
             'x3dom.css',
+            'sensor.x3d',
             'views/{,*/}*.html',
             'images/{,*/}*.{webp}',
             'fonts/*',

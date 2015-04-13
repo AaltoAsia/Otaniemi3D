@@ -23,6 +23,7 @@
     "d3": false,
     "FastClick": false,
 	"Modernizr": false,
-    "embedpano": false
+    "embedpano": false,
+    "removepano": false
   }
 }
