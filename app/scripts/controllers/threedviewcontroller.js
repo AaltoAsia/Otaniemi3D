@@ -79,7 +79,7 @@ angular.module('otaniemi3dApp')
         }
         });
         $scope.roomLabel = roomInfo.split(" :")[0];
-        $scope.roomValue = roomInfo.split(" :")[1];
+        $scope.roomValue = roomInfo.split(" ")[1];
         console.log($scope.roomLabel);
         console.log($scope.roomValue);
     };
