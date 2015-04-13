@@ -29,7 +29,6 @@ $scope.panoramaViewer = function() {
   }
     else{
         var xmlpath = $scope.room.split(' ').join('_') +'.xml';
-        console.log(roomInfo);
         document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
         document.getElementById('pano_obj').call('set(room,' + roomInfo +');');
 
