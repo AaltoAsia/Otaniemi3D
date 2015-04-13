@@ -138,9 +138,9 @@ angular.module('otaniemi3dApp')
             }
             
             scope.$parent.room = room.name; //Pass the room name to controller function
-            tooltip.append('table').attr('id', 'infocontent').attr('class', 'tooltip-table');
-            var firstRow = addTooltipText('Room', room.name);
-            var lastRow;
+            var table = tooltip.append('table').attr('id', 'infocontent').attr('class', 'tooltip-table');
+            var caption = table.append('caption').append('i').text('click the room to lock');
+            var lastRow = addTooltipText('Room', room.name);
 
             for (var i = 0; i < room.sensors.length; i++) {
               lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value);
@@ -152,12 +152,8 @@ angular.module('otaniemi3dApp')
               }
             }
             
-            if (i === 0) {
-              lastRow = firstRow;
-            }
-            
-            firstRow.type.style('border-top-left-radius', '5px');
-            firstRow.value.style('border-top-right-radius', '5px');
+            caption.style('border-top-left-radius', '5px');
+            caption.style('border-top-right-radius', '5px');
             lastRow.type.style('border-bottom-left-radius', '5px');
             lastRow.value.style('border-bottom-right-radius', '5px');
             

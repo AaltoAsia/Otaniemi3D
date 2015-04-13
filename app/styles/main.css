@@ -95,7 +95,12 @@ body {
 /*Styling common for headers and values (sensor types and values)*/
 .tooltip-table th, .tooltip-table td {
   border: 1px solid #E6E6E6;
-  padding: 4px;
+  padding: 2px;
+}
+
+.tooltip-table caption {
+  padding: 2px;
+  text-align: center;
 }
 
 /*Header (sensor type) element inside the tooltip*/
