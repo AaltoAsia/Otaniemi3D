@@ -49,3 +49,13 @@
 #sensorLabel{
     font-style: italic;
 }
+
+/* Font size in modal bigger! */
+.modal-body {
+    font-size: 14px;
+}
+
+/* Make the sensor values bold in modal */
+#modalRoomValue {
+    font-style: bold;
+}

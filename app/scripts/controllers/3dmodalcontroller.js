@@ -9,11 +9,10 @@
  */
 angular.module('otaniemi3dApp')
   .controller('3dModalCtrl', function ($scope, $modalInstance, Rooms, roomInfo) {
-
+    /* fill modal with room data labels */
     $scope.roomInfo = roomInfo;
-    console.log($scope.roomInfo[0]);
+    /* remove "Room: " from modal title */
     $scope.roomInfo[0] = $scope.roomInfo[0].split(': ')[1];
-        console.log($scope.roomInfo[0]);
 
     // Close modal.
     $scope.ok = function () {
@@ -21,9 +20,3 @@ angular.module('otaniemi3dApp')
     };
   });
 
- /* .filter('roomLabel', function(input, splitChar, splitIndex) {
-    return function(input, splitChar, splitIndex) {
-        return input.split(splitChar)[splitIndex];
-    }
-  });
-*/

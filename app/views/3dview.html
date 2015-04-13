@@ -53,7 +53,11 @@
     <h3 class="modal-title">Latest sensor data for room:<br><span id="sensorLabel">{{roomInfo[0]}}</span></h3>
   </div>
   <div class="modal-body">
-    <p ng-repeat="info in roomInfo" ng-show="!$first">{{info}}</p>
+    <!-- room data here, but do not show the room number again -->
+    <p>
+      <span ng-repeat="infoLabel in roomLabel" ng-show="!$first">{{infoLabel}} </span>
+      <span id="modalRoomValue" ng-repeat="infoValue in roomValue">: {{infoValue}} </span>
+    </p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-default " ng-click="ok()">OK</button>
