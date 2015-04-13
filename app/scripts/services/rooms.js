@@ -195,7 +195,7 @@ angular.module('otaniemi3dApp')
       var tableInfo = null;
       if(roomInfo !== null){
         roomHTML = '[table class= "tooltip-table"]';
-        roomHTML += '[tr] [td]' + roomName + '[/td] [/tr]';
+        roomHTML += '[tr] [th]Room[/th] [td]' +  roomName + '[/td] [/tr]';
         for(var i =0 ; i < roomInfo.length; i++){
           tableInfo = '[tr]';
           tableInfo += '[th]' + roomInfo[i].type+ '[/th]' + '[td]' + roomInfo[i].value + '[/td]';
