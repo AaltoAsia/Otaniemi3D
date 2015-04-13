@@ -88,14 +88,36 @@ body {
     border: 1px solid #e5e5e5;
 }
 
+.tooltip-table {
+  border-collapse: separate;
+}
+
+/*Styling common for headers and values (sensor types and values)*/
+.tooltip-table th, .tooltip-table td {
+  border: 1px solid #E6E6E6;
+  padding: 4px;
+}
+
+/*Header (sensor type) element inside the tooltip*/
+.tooltip-table th {
+  
+}
+/*Sensor value element inside the tooltip*/
+.tooltip-table td {
+  
+}
+
 .mouse-tooltip {
-    margin-top: 19px;
-    border: 1px solid #e5e5e5;
+    margin-top: 22px; /*to put it slightly lower, so the cursor doesn't hide anything*/
+    border: 1px solid black;
     border-radius: 5px;
-    background: #A3CCCC;
+    background: white;
     z-index: 10;
-    position: absolute;
+    position: fixed;
     visibility: hidden;
+    pointer-events: none;
+    display: flex;
+    flex-flow: column;
 }
 
 .home-navs > li {
@@ -136,6 +158,53 @@ ul.nav {
   background-color: #333;
   color: #9D9D9D;
 }
+
+.btn-black { 
+  color: #ffffff; 
+  background-color: #000000; 
+  border-color: #D4D4D4; 
+} 
+.btn-black:hover, 
+.btn-black:focus, 
+.btn-black:active, 
+.btn-black.active, 
+.open .dropdown-toggle.btn-black { 
+  color: #ffffff; 
+  background-color: #BABABA; 
+  border-color: #D4D4D4; 
+} 
+ 
+.btn-black:active, 
+.btn-black.active, 
+.open .dropdown-toggle.btn-black { 
+  background-image: none; 
+} 
+ 
+.btn-black.disabled, 
+.btn-black[disabled], 
+fieldset[disabled] .btn-black, 
+.btn-black.disabled:hover, 
+.btn-black[disabled]:hover, 
+fieldset[disabled] .btn-black:hover, 
+.btn-black.disabled:focus, 
+.btn-black[disabled]:focus, 
+fieldset[disabled] .btn-black:focus, 
+.btn-black.disabled:active, 
+.btn-black[disabled]:active, 
+fieldset[disabled] .btn-black:active, 
+.btn-black.disabled.active, 
+.btn-black[disabled].active, 
+fieldset[disabled] .btn-black.active { 
+  background-color: #000000; 
+  border-color: #D4D4D4; 
+} 
+ 
+.btn-black .badge { 
+  color: #000000; 
+  background-color: #ffffff; 
+}
+
+
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {

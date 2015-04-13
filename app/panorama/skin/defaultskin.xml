@@ -1,5 +1,5 @@
 <krpano>
-	<!-- krpano 1.17.4 default buttons skin -->
+	<!-- krpano 1.18 default buttons skin -->
 
 	<!-- default mouse control mode (moveto or drag2d) -->
 	<control mousetype="moveto" />
@@ -12,7 +12,7 @@
 	<style name="defaultskin_button" url="buttons-2.png" scale="0.5" align="lefttop" />
 
 	<!-- the container layer that contains the buttons -->
-	<layer name="defaultskin_buttons" type="container" width="360" height="40" align="bottom=" y="10"  scale="1.0">
+	<layer name="defaultskin_buttons" type="container" width="360" height="40" align="bottom=" y="10" scalechildren="true" scale="1.0" keep="true">
 		<layer name="btn_in"       x="0"   style="defaultskin_button" crop="320|0|80|80" onovercrop="320|80|80|80" ondown="set(fov_moveforce,-1);"     onup="set(fov_moveforce,0);"     />
 		<layer name="btn_out"      x="40"  style="defaultskin_button" crop="400|0|80|80" onovercrop="400|80|80|80" ondown="set(fov_moveforce,+1);"     onup="set(fov_moveforce,0);"     />
 		<layer name="btn_left"     x="80"  style="defaultskin_button" crop=  "0|0|80|80" onovercrop=  "0|80|80|80" ondown="set(hlookat_moveforce,-1);" onup="set(hlookat_moveforce,0);" />
@@ -90,81 +90,84 @@
 	</action>
 
 
-	<!-- context menu -->
+	<!--
+		inlined contextmenu.xml 1.18
+		- Change the control mode and the viewing projection via the right click contextmenu.
+		- The distorted view items will be only shown when Flash or WebGL are supported and when the
+		  pano image itself is a full 360x180 pano.
+		- Note: The distorted views will only work correctly when view.stereographic=true will be set.
+	-->
+
 	<contextmenu>
-		<item name="krp" caption="KRPANO"     />
-		<item name="fsc" caption="FULLSCREEN" />
-		<item name="scm" caption="Change Controlmode" onclick="switch(control.mousetype,moveto,drag2d); switch(control.touchtype,moveto,drag2d); update_ctrl_mode();" separator="true" />
-		<item name="nrm" caption="Normal View"        onclick="skin_view_normal();"        showif="view.vlookatrange == 180" separator="true"      />
-		<item name="fis" caption="Fisheye View"       onclick="skin_view_fisheye();"       showif="view.vlookatrange == 180" devices="flash|webgl" />
-		<item name="ste" caption="Stereographic View" onclick="skin_view_stereographic();" showif="view.vlookatrange == 180" devices="flash|webgl" />
-		<item name="arc" caption="Architectural View" onclick="skin_view_architectural();" showif="view.vlookatrange == 180"                       />
-		<item name="pan" caption="Pannini View"       onclick="skin_view_pannini();"       showif="view.vlookatrange == 180" devices="flash|webgl" />
-		<item name="lpv" caption="Little Planet View" onclick="skin_view_littleplanet();"  showif="view.vlookatrange == 180" devices="flash|webgl" />
+		<item name="kr" caption="KRPANO"     />
+		<item name="fs" caption="FULLSCREEN" />
+		<item name="cc" caption="Change Controlmode" onclick="cm_changecontrolmode();"  separator="true" />
+		<item name="nv" caption="Normal View"        onclick="cm_normal_view();"        showif="view.vlookatrange == 180" separator="true"      />
+		<item name="fv" caption="Fisheye View"       onclick="cm_fisheye_view();"       showif="view.vlookatrange == 180" devices="flash|webgl" />
+		<item name="sv" caption="Stereographic View" onclick="cm_stereographic_view();" showif="view.vlookatrange == 180" devices="flash|webgl" />
+		<item name="av" caption="Architectural View" onclick="cm_architectural_view();" showif="view.vlookatrange == 180"                       />
+		<item name="pv" caption="Pannini View"       onclick="cm_pannini_view();"       showif="view.vlookatrange == 180" devices="flash|webgl" />
+		<item name="lp" caption="Little Planet View" onclick="cm_littleplanet_view();"  showif="view.vlookatrange == 180" devices="flash|webgl" />
 	</contextmenu>
 
 
-	<!-- actions for view changing -->
-	<action name="skin_view_normal">
-		tween(view.fovmax,       150.0, distance(179, 1.00), easeoutquad);
-		tween(view.architectural,  0.0, distance(1.0, 0.45), easeoutquad);
-		tween(view.fisheye,        0.0, distance(1.0, 0.45), easeoutquad, set(view.stereographic,false); if(view.pannini, set(view.pannini,false); delayedcall(0,updateobject(true,true)); ); );
-		set(centerview,false);
-		if(view.architectural LT 0.2,
-			if(view.vlookat LT -60, set(centerview,true));
-			if(view.vlookat GT +60, set(centerview,true));
-			if(centerview, tween(view.vlookat, 0.0, distance(90, 0.45), easeoutquad));
+	<action name="cm_changecontrolmode">
+		switch(control.mousetype, moveto, drag2d);
+		switch(control.touchtype, moveto, drag2d);
+	</action>
+
+	<action name="cm_look_straight">
+		if(view.vlookat LT -80 OR view.vlookat GT +80,
+			tween(view.vlookat, 0.0, 1.0, easeInOutSine);
+			tween(view.fov,     100, distance(150,0.8));
 		  );
-		if(view.fov GE 150, tween(view.fov, 100.0, distance(50, 0.45), easeoutquad));
 	</action>
 
-	<action name="skin_view_fisheye">
-		tween(view.architectural, 0.0, distance(1.0, 0.30), easeoutquad);
-		tween(view.fisheye,       0.0 ,distance(1.0, 0.30), easeoutquad, set(view.stereographic,false); if(view.pannini, set(view.pannini,false); delayedcall(0,updateobject(true,true)); ); set(view.fovmax,179); tween(view.fisheye, 0.35, distance(1.0,1.25)); );
+	<action name="cm_normal_view">
+		cm_look_straight();
+		tween(view.architectural, 0.0, distance(1.0,0.5));
+		tween(view.pannini,       0.0, distance(1.0,0.5));
+		tween(view.fisheye,       0.0, distance(1.0,0.5));
 	</action>
 
-	<action name="skin_view_architectural">
-		tween(view.fovmax,       150.0, distance(179, 1.00), easeoutquad);
-		tween(view.architectural,  1.0, distance(1.0, 0.45), easeoutquad);
-		tween(view.fisheye,        0.0, distance(1.0, 0.45), easeoutquad, set(view.stereographic,false); if(view.pannini, set(view.pannini,false); delayedcall(0,updateobject(true,true)); ); );
+	<action name="cm_architectural_view">
+		cm_look_straight();
+		tween(view.architectural, 1.0, distance(1.0,0.5));
+		tween(view.pannini,       0.0, distance(1.0,0.5));
+		tween(view.fisheye,       0.0, distance(1.0,0.5));
 	</action>
 
-	<action name="skin_view_stereographic">
-		tween(view.architectural, 0.0, 0.25);
-		set(backtonormalfirst, false);
-		if(view.pannini       == true,  set(backtonormalfirst, true) );
-		if(view.stereographic == false, set(backtonormalfirst, true) );
-		if(backtonormalfirst, tween(view.fisheye, 0.0 ,distance(1.0, 0.25), easeoutquad, WAIT); );
-		if(view.pannini, set(view.pannini,false); delayedcall(0,updateobject(true,true)); );
-		set(view.stereographic, true);
-		set(view.fovmax, 150);
-		tween(view.fisheye, 1.0, distance(1.0, 0.75), easeoutquad);
+	<action name="cm_fisheye_view">
+		cm_look_straight();
+		tween(view.architectural, 0.0,  distance(1.0,0.5));
+		tween(view.pannini,       0.0,  distance(1.0,0.5));
+		tween(view.fisheye,       0.35, distance(1.0,0.5));
 	</action>
 
-	<action name="skin_view_pannini">
-		tween(view.architectural, 0.0, 0.25);
-		set(backtonormalfirst, false);
-		if(view.pannini       == false, set(backtonormalfirst, true) );
-		if(view.stereographic == false, set(backtonormalfirst, true) );
-		if(backtonormalfirst, tween(view.fisheye, 0.0 ,distance(1.0, 0.25), easeoutquad, WAIT); );
-		set(view.pannini, true);
-		set(view.stereographic, true);
-		set(view.fovmax, 150);
-		tween(view.fisheye, 1.0, distance(1.0, 0.75), easeoutquad);
+	<action name="cm_stereographic_view">
+		cm_look_straight();
+		tween(view.architectural, 0.0, distance(1.0,0.5));
+		tween(view.pannini,       0.0, distance(1.0,0.5));
+		tween(view.fisheye,       1.0, distance(1.0,0.8));
 	</action>
 
-	<action name="skin_view_littleplanet">
-		tween(view.architectural, 0.0, 0.25);
-		tween(view.vlookat,  90, distance(179, 1.50), easeoutquad);
-		set(backtonormalfirst, false);
-		if(view.pannini       == true,  set(backtonormalfirst, true) );
-		if(view.stereographic == false, set(backtonormalfirst, true) );
-		if(backtonormalfirst, tween(view.fisheye, 0.0 ,distance(1.0, 0.25), easeoutquad, WAIT); );
-		if(view.pannini, set(view.pannini,false); delayedcall(0,updateobject(true,true)); );
-		set(view.stereographic, true);
-		set(view.fovmax, 150);
-		tween(view.fisheye, 1.0, distance(1.0, 0.75), easeoutquad);
-		tween(view.fov,     150, distance(179, 0.75), easeoutquad);
+	<action name="cm_pannini_view">
+		cm_look_straight();
+		tween(view.architectural, 0.0, distance(1.0,0.5));
+		tween(view.pannini,       1.0, distance(1.0,0.8));
+		if(view.fisheye LT 0.1,
+			tween(view.fisheye, 1.0, distance(1.0,0.8));
+		  );
+	</action>
+
+	<action name="cm_littleplanet_view">
+		tween(view.architectural, 0.0, distance(1.0,0.5));
+		tween(view.pannini,       0.0, distance(1.0,0.5));
+		tween(view.fisheye,       1.0, distance(1.0,0.8));
+		tween(view.fov,           150, distance(150,0.8));
+		tween(view.vlookat,        90, distance(100,0.8));
+		add(new_hlookat, view.hlookat, 123.0);
+		tween(view.hlookat, get(new_hlookat), distance(100,0.8));
 	</action>
 
 </krpano>

@@ -41,9 +41,17 @@
         height: calc(100% - 45px);
     }
 	.pano-2d-view {
-	    height: calc(100%-45px);
+      height: calc(100% - 45px)!important;
       margin-top: -15px;
+      width:100%;
+      z-index:1;
 	}
+
+  .pano-2d-view-fullscreen {
+    height:calc(100%)!important;
+    width:100%;
+    z-index:1;
+  }
 
     /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
     margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
@@ -89,9 +97,17 @@
         height: calc(100% - 55px);
     }
 	
+  .pano-2d-view-fullscreen{
+    height:calc(100%)!important;
+    width:100%;
+    z-index:1;
+  }
+
 	.pano-2d-view {
 	    height: calc(100% - 100px)!important;
-		margin-top: -15px;
+		  margin-top: -15px;
+      width:100%;
+      z-index:1;
     }
 	
     /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
@@ -211,8 +227,8 @@
 }
 /* panoramabutton in tooltip */
 #panobtn{
-    order: 2;
-    display: none;
+  order: 2;
+  display: none;
 }
 
 /* CSS definitions for the sensor type popover (tooltip) */
@@ -313,43 +329,5 @@
   background-color: #000000; 
   border-color: #D4D4D4; 
 } 
+
  
-.btn-black:hover, 
-.btn-black:focus, 
-.btn-black:active, 
-.btn-black.active, 
-.open .dropdown-toggle.btn-black { 
-  color: #ffffff; 
-  background-color: #BABABA; 
-  border-color: #D4D4D4; 
-} 
- 
-.btn-black:active, 
-.btn-black.active, 
-.open .dropdown-toggle.btn-black { 
-  background-image: none; 
-} 
- 
-.btn-black.disabled, 
-.btn-black[disabled], 
-fieldset[disabled] .btn-black, 
-.btn-black.disabled:hover, 
-.btn-black[disabled]:hover, 
-fieldset[disabled] .btn-black:hover, 
-.btn-black.disabled:focus, 
-.btn-black[disabled]:focus, 
-fieldset[disabled] .btn-black:focus, 
-.btn-black.disabled:active, 
-.btn-black[disabled]:active, 
-fieldset[disabled] .btn-black:active, 
-.btn-black.disabled.active, 
-.btn-black[disabled].active, 
-fieldset[disabled] .btn-black.active { 
-  background-color: #000000; 
-  border-color: #D4D4D4; 
-} 
- 
-.btn-black .badge { 
-  color: #000000; 
-  background-color: #ffffff; 
-}

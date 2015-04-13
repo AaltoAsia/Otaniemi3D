@@ -32,9 +32,12 @@ angular.module('otaniemi3dApp')
 
   var floorplanClass = 'floorplan';
   var floorplanFullscreenClass = 'floorplan-fullscreen';
+  var panoramaNormal = 'pano-2d-view';
+  var panoramaFull = 'pano-2d-view-fullscreen';
 
   $scope.sensorData = null;
   $scope.floorplanClass = floorplanClass;
+  $scope.panoramaClass = panoramaNormal;
   $scope.rooms = Rooms;
   $scope.searchString = '';
   $scope.highlightedRoom = null;
@@ -68,7 +71,7 @@ angular.module('otaniemi3dApp')
   
   $scope.showGradient = function() {
     return $scope.roomValueType.toLowerCase() !== 'pir' && $scope.roomValueType.toLowerCase() !== 'occupancy';
-  }
+  };
 
   // Toggle fullscreen button. It broadcasts to rootscope to change the view to fullscreen
   // which in turn hides the footer and header. Also it changes the fullscreen button glyphicon
@@ -76,11 +79,13 @@ angular.module('otaniemi3dApp')
       $rootScope.fullscreen = !$rootScope.fullscreen;
       if ($scope.floorplanClass === floorplanClass) {
           $scope.floorplanClass = floorplanFullscreenClass;
+          $scope.panoramaClass = panoramaFull;
           $scope.searchContainer = 'search-container-full';
           $scope.buttonClass = ' glyphicon glyphicon-resize-small';
       }
       else {
           $scope.floorplanClass = floorplanClass;
+           $scope.panoramaClass = panoramaNormal;
           $scope.searchContainer = '';
           $scope.buttonClass = 'glyphicon glyphicon-resize-full';
       }

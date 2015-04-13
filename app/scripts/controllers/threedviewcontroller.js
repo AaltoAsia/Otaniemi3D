@@ -70,7 +70,7 @@ angular.module('otaniemi3dApp')
       /* TODO: implement fetching and showing right values in Modal Tooltip.
          document.getElementById('sensorLabel').innerHTML = sensorLabel;
       */
-      var modalInstance = $modal.open({
+      $modal.open({
         templateUrl: 'threedModal.html',
         controller: '3dModalCtrl',
         resolve: {
@@ -80,6 +80,6 @@ angular.module('otaniemi3dApp')
         }
 
         });
-    }
+    };
   }
 );

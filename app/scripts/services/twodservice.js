@@ -69,12 +69,15 @@ angular.module('otaniemi3dApp')
       
       var hueStart = 160, hueEnd = 0;
       var opacityStart = 0.3, opacityEnd = 1.0;
-      var theHue, rgbString, opacity;
+      var theHue, rgbString, opacity, fullString;
 
       theHue = hueStart + percentage * (hueEnd - hueStart);  
       rgbString = d3.hsl(theHue,1,0.6).toString();
       opacity = opacityStart + percentage * (opacityEnd - opacityStart);
-      return {rgb:rgbString, opacity:opacity};
+      var rgb = d3.hsl(theHue,1,0.6).rgb();
+      fullString = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + opacity + ')';
+      
+      return {rgb:rgbString, opacity:opacity, rgbaString:fullString};
     }
   
     //Percent is represented as 0.5, not 50% or 50
