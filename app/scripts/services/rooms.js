@@ -193,17 +193,17 @@ angular.module('otaniemi3dApp')
       var roomInfo = this.findRoom(roomName);
       var roomHTML = '';
       var tableInfo = null;
-      if(roomInfo !== null){
-        roomHTML = '[table class= "tooltip-table"]';
-        roomHTML += '[tr] [th]Room[/th] [td]' +  roomName + '[/td] [/tr]';
-        for(var i =0 ; i < roomInfo.length; i++){
-          tableInfo = '[tr]';
-          tableInfo += '[th]' + roomInfo[i].type+ '[/th]' + '[td]' + roomInfo[i].value + '[/td]';
-          tableInfo += '[/tr]';
-          roomHTML += tableInfo;
+      roomHTML = '[table class= "tooltip-table"]';
+      roomHTML += '[tr] [th]Room[/th] [td]' +  roomName + '[/td] [/tr]';
+        if(roomInfo !== null){
+          for(var i =0 ; i < roomInfo.length; i++){
+            tableInfo = '[tr]';
+            tableInfo += '[th]' + roomInfo[i].type+ '[/th]' + '[td]' + roomInfo[i].value + '[/td]';
+            tableInfo += '[/tr]';
+            roomHTML += tableInfo;
+          }
         }
         roomHTML += '[/table]';
-      }
       return roomHTML;
     };
 
