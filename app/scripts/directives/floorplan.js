@@ -93,8 +93,9 @@ angular.module('otaniemi3dApp')
             return;
           }
           tooltip
-            .select('#infocontent').remove()
-            .style('visibility', null);
+            .style('visibility', null)
+            .select('#infocontent').remove();
+
           tooltip.select('#panobtn').style('display', 'none');
         } //end tooltip  helper functions
         
@@ -139,7 +140,7 @@ angular.module('otaniemi3dApp')
             
             scope.$parent.room = room.name; //Pass the room name to controller function
             var table = tooltip.append('table').attr('id', 'infocontent').attr('class', 'tooltip-table');
-            var caption = table.append('caption').append('i').text('click the room to lock');
+            var caption = table.append('caption').append('i').text('Click to lock tooltip in place');
             var lastRow = addTooltipText('Room', room.name);
 
             for (var i = 0; i < room.sensors.length; i++) {
@@ -493,8 +494,8 @@ angular.module('otaniemi3dApp')
             appendFloorplan(scope.plan, floorplanContainer);
             // Hide the tooltip
             tooltip
-              .select('#infocontent').remove()
-              .style('visibility', null);
+              .style('visibility', null)
+              .select('#infocontent').remove();
             tooltip.select('#panobtn').style('display', 'none');
             scope.selectedRoom = null;
           }
