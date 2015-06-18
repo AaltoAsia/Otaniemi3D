@@ -92,6 +92,12 @@ angular.module('otaniemi3dApp')
         }
       ],
       columnDefs: [
+        {name: 'location'},
+        {name: 'sensor'},
+        {name: 'value'}
+      ]
+      /*,
+      columnDefs: [
         {
           field: 'room',
           filters: [
@@ -130,5 +136,6 @@ angular.module('otaniemi3dApp')
           ]
         }
       ]
+      */
     };
   });

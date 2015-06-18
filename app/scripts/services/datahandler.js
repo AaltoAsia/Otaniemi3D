@@ -8,9 +8,8 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('Datahandler', ['$http', '$q', function ($http, $q) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
-
+  .service('Datahandler', function ($http, $q, XmlParser) {
+    /*
     var dataIsOk = function (data) {
       for (var i = 0; i < data.length; i = i + 1) {
         if      (data[i].id       === undefined) { return false; }
@@ -22,12 +21,34 @@ angular.module('otaniemi3dApp')
       }
       return true;
     };
+    */
 
-    var fetchData = function (timeFrame) {
+    this.fetchData = function (timeFrame) {
       var deferred = $q.defer(),
-          time = timeFrame || '',
-          url;
-      
+          //time = timeFrame || '',
+          url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
+
+      $http.get('odf-requests/data-all.xml')
+        .success(function (xml) {
+
+          $http.post(url, xml, {headers: {'Content-Type': 'application/xml'}})
+            .success(function (data) {
+              deferred.resolve(XmlParser.parse(data));
+            })
+            .error(function (data, status, headers, config) {
+              console.log('Response:');
+              console.log(data);
+              console.log('Status: ' + status);
+              console.log('Headers:');
+              console.log(headers());
+              console.log('Config:');
+              console.log(config);
+            });
+        });
+
+      return deferred.promise;
+
+      /*
       switch(time) {
         case 'Day':
           url = 'sensor_data/data_day.json';
@@ -50,6 +71,7 @@ angular.module('otaniemi3dApp')
           //url = 'http://leap.cs.hut.fi/Otaniemi3DREST/webresources/entities.livedata';
       }
       
+      
       $http.get(url)
         .success(function (data) {
           if (dataIsOk(data))
@@ -68,6 +90,6 @@ angular.module('otaniemi3dApp')
             deferred.reject([{error: status}]);
         });
       return deferred.promise;
+      */
     };
-    return {fetchData: fetchData};
-  }]);
+  });
