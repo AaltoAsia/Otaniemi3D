@@ -113,6 +113,7 @@ body {
 }
 
 .mouse-tooltip {
+    min-width: 100px;
     margin-top: 22px; /*to put it slightly lower, so the cursor doesn't hide anything*/
     border: 1px solid black;
     border-radius: 5px;
