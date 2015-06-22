@@ -106,6 +106,12 @@ $scope.stopPanorama = function(){
   Datahandler.fetchData().then(
       function(data) {
           $scope.sensorData = data;
+          $('#jstree').jstree({
+            'core': {
+              'data': data
+            }
+          });
+          console.log(data);
       },
       function() {
           console.log('Error: Failed to fetch sensor data');
