@@ -1,8 +1,4 @@
 <div ng-hide="pano" id="searchContainer" ng-class="searchContainer">
-<script>function getText()
-{
-    return "Hello World!";
-}</script>
   <button class="btn btn-black mobile-button" ng-click="open()">Options</button>
   <!-- Sensor Type  -->
   <div class="btn-group desktop-dropdown" dropdown>
@@ -52,6 +48,8 @@
 </div>
 
 <div class="jumbotron" ng-hide="svgSupport"><h1>Your browser doesn't support svg!</h1></div>
+
+<div id="jstree"></div>
 
 
 <div id="pano" ng-class="panoramaClass" ng-show="pano">

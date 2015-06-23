@@ -14,10 +14,14 @@ angular.module('otaniemi3dApp')
 
       xml = $.parseXML(xml);
       var resultData = [];
+      var objects = $(xml).find('Objects')[0];
 
-      traverse($(xml).find('Objects')[0], resultData);
+      if (objects) {
+        traverse(objects, resultData);
+      } else {
+        console.log('Couldn\'t fetch any sensor data from the server.');
+      }
 
-      console.log(resultData);
       return resultData;
 
     };

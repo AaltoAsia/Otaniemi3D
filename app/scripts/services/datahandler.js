@@ -28,6 +28,12 @@ angular.module('otaniemi3dApp')
           //time = timeFrame || '',
           url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
 
+      $http.get('odf-requests/sample-response.xml')
+        .success(function (xml) {
+          deferred.resolve(XmlParser.parse(xml));
+        });
+
+      /*
       $http.get('odf-requests/data-all.xml')
         .success(function (xml) {
 
@@ -36,6 +42,7 @@ angular.module('otaniemi3dApp')
               deferred.resolve(XmlParser.parse(data));
             })
             .error(function (data, status, headers, config) {
+              console.log('Failed to fetch sensor data.');
               console.log('Response:');
               console.log(data);
               console.log('Status: ' + status);
@@ -45,7 +52,7 @@ angular.module('otaniemi3dApp')
               console.log(config);
             });
         });
-
+      */
       return deferred.promise;
 
       /*

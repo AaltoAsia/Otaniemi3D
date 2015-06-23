@@ -8,36 +8,38 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-    .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms, twodservice, $rootScope, $modal) {
+  .controller('twodview', function ($scope, Datahandler, Floorplans, Rooms,
+                                    twodservice, $rootScope, $modal) {
   
-var loaded = false;
+  var loaded = false;
 
-$scope.panoramaViewer = function() {
-    $scope.pano = true; //make panorama(pano) div visible
-    var roomInfo = Rooms.krpanoHTML($scope.room); //find information for krpano tooltip
+  $scope.panoramaViewer = function() {
+    //make panorama(pano) div visible
+    $scope.pano = true;
+    //find information for krpano tooltip
+    var roomInfo = Rooms.krpanoHTML($scope.room);
     var infos = {room: roomInfo};
-    if(loaded === false){
-    embedpano({
-          xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
-          id:'pano_obj',
-          target:'pano',
-          html5:'only',
-          passQueryParameters:true,
-          vars:infos
-        });
-    loaded = true;
-  }
-    else{
+
+    if (loaded === false) {
+      embedpano({
+        xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
+        id:'pano_obj',
+        target:'pano',
+        html5:'only',
+        passQueryParameters:true,
+        vars:infos
+      });
+      loaded = true;
+    } else {
         var xmlpath = $scope.room.split(' ').join('_') +'.xml';
         document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
         document.getElementById('pano_obj').call('set(room,' + roomInfo +');');
-
     }
-};
-$scope.stopPanorama = function(){
-    $scope.pano = false;
+  };
 
-};
+  $scope.stopPanorama = function(){
+    $scope.pano = false;
+  };
 
   var floorplanClass = 'floorplan';
   var floorplanFullscreenClass = 'floorplan-fullscreen';
@@ -54,17 +56,18 @@ $scope.stopPanorama = function(){
   $scope.floors = Floorplans.floors.length;
   $scope.selectedRoom = null;
   $scope.timeFrame = '';
-  $scope.room = null; // Room which panoramic button was clicked.
+  $scope.room = null;   //Room which panoramic button was clicked.
   $scope.selectedPlan = null;
   $scope.timeFrame = 'Latest';
   $scope.resetView = null;
 
-  $scope.searchContainer = ''; //This is used to set correct top margin for search container
+  //This is used to set correct top margin for search container
+  $scope.searchContainer = '';
 
   $scope.svgSupport = Modernizr.svg;
   $scope.pano = false;
 
-  /* These are ng-class definitions for buttons found in 2dview*/
+  //These are ng-class definitions for buttons found in 2dview
   $scope.buttonClass = 'glyphicon glyphicon-resize-full';
   $scope.nextButtonClass = 'glyphicon glyphicon-arrow-right';
   $scope.previousButtonClass = 'glyphicon glyphicon-arrow-left';
@@ -72,45 +75,64 @@ $scope.stopPanorama = function(){
   //Select default floorplan which is defined in Floorplans service
   $scope.planNumber = 0;
   for ($scope.planNumber; $scope.planNumber < Floorplans.floors.length; $scope.planNumber++) {
-      if (Floorplans.floors[$scope.planNumber].isSelected) {
-          $scope.selectedPlan = Floorplans.floors[$scope.planNumber];
-          break;
-      }
+    if (Floorplans.floors[$scope.planNumber].isSelected) {
+      $scope.selectedPlan = Floorplans.floors[$scope.planNumber];
+      break;
+    }
   }
   
   $scope.showGradient = function() {
-    return $scope.roomValueType.toLowerCase() !== 'pir' && $scope.roomValueType.toLowerCase() !== 'occupancy';
+    return $scope.roomValueType.toLowerCase() !== 'pir' && 
+           $scope.roomValueType.toLowerCase() !== 'occupancy';
   };
 
-  // Toggle fullscreen button. It broadcasts to rootscope to change the view to fullscreen
-  // which in turn hides the footer and header. Also it changes the fullscreen button glyphicon
+  /*
+   * Toggle fullscreen button. It broadcasts to rootscope to change the view
+   * to fullscreen which in turn hides the footer and header. Also it changes
+   * the fullscreen button glyphicon.
+   */
   $scope.toggleFullscreen = function(){
-      $rootScope.fullscreen = !$rootScope.fullscreen;
-      if ($scope.floorplanClass === floorplanClass) {
-          $scope.floorplanClass = floorplanFullscreenClass;
-          $scope.panoramaClass = panoramaFull;
-          $scope.searchContainer = 'search-container-full';
-          $scope.buttonClass = ' glyphicon glyphicon-resize-small';
-      }
-      else {
-          $scope.floorplanClass = floorplanClass;
-           $scope.panoramaClass = panoramaNormal;
-          $scope.searchContainer = '';
-          $scope.buttonClass = 'glyphicon glyphicon-resize-full';
-      }
+    $rootScope.fullscreen = !$rootScope.fullscreen;
+
+    if ($scope.floorplanClass === floorplanClass) {
+      $scope.floorplanClass = floorplanFullscreenClass;
+      $scope.panoramaClass = panoramaFull;
+      $scope.searchContainer = 'search-container-full';
+      $scope.buttonClass = ' glyphicon glyphicon-resize-small';
+    } else {
+      $scope.floorplanClass = floorplanClass;
+      $scope.panoramaClass = panoramaNormal;
+      $scope.searchContainer = '';
+      $scope.buttonClass = 'glyphicon glyphicon-resize-full';
+    }
   };
+
 
   /*
    * Fetch sensor data from the server.
    */
-  Datahandler.fetchData().then(
-      function(data) {
-          $scope.sensorData = data;
-      },
-      function() {
-          console.log('Error: Failed to fetch sensor data');
+  Datahandler.fetchData()
+    .then(function(data) {
+      $scope.sensorData = data;
+
+      var jstreeData = [];
+
+      //Transform sensor data to a suitable format for jstree.
+      for (var i = 0; i < data.length; i++) {
+        jstreeData.push({
+          text: data[i].location,
+          children: [{
+            text: data[i].sensor + ': ' + data[i].value
+          }]
+        });
       }
-  );
+
+      $('#jstree').jstree({
+        'core': {
+          'data': jstreeData
+        }
+      });
+    });
 
   /*
    * Change current floorplan to the previous of net floorplan
@@ -202,26 +224,26 @@ $scope.stopPanorama = function(){
   };
 
   $scope.changeColour = function(type) {
-      $scope.roomValueType = type;
-      $scope.refreshRoomColor(type);
+    $scope.roomValueType = type;
+    $scope.refreshRoomColor(type);
   };
 
   $scope.selectTimeFrame = function(timeFrame) {
-      var time = timeFrame;
+    var time = timeFrame;
 
-      if (time) {
-        $scope.timeFrame = time;
-      } else {
-        $scope.timeFrame = 'Latest';
+    if (time) {
+      $scope.timeFrame = time;
+    } else {
+      $scope.timeFrame = 'Latest';
+    }
+
+    Datahandler.fetchData(time).then(
+      function(data) {
+        $scope.sensorData = data;
+      },
+      function() {
+        console.log('Error: Failed to fetch sensor data');
       }
-
-      Datahandler.fetchData(time).then(
-        function(data) {
-            $scope.sensorData = data;
-        },
-        function() {
-            console.log('Error: Failed to fetch sensor data');
-        }
     );
   };
 

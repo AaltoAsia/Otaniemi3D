@@ -1,0 +1,44 @@
+<Objects xmlns="odf">
+  <Object>
+    <id>CoffeeMaker1</id>
+    <InfoItem name="temperature">
+      <value unixTime="1434453491" type="">207681</value>
+    </InfoItem>
+  </Object>
+  <Object>
+    <id>CoffeeMaker2</id>
+    <InfoItem name="temperature">
+      <value unixTime="1434453491" type="">20709</value>
+    </InfoItem>
+  </Object>
+  <Object>
+    <id>CoffeeMaker3</id>
+    <InfoItem name="temperature">
+      <value unixTime="1434453491" type="">71809</value>
+    </InfoItem>
+  </Object>
+  <Object>
+    <id>CoffeeMaker4</id>
+    <InfoItem name="temperature">
+      <value unixTime="1434453491" type="">20719</value>
+    </InfoItem>
+  </Object>
+  <Object>
+    <id>CoffeeMaker5</id>
+    <InfoItem name="temperature">
+      <value unixTime="1434453491" type="">20769</value>
+    </InfoItem>
+  </Object>
+  <Object>
+    <id>CoffeeMaker6</id>
+    <InfoItem name="temperature">
+      <value unixTime="1434453491" type="">2078809</value>
+    </InfoItem>
+  </Object>
+  <Object>
+    <id>CoffeeMaker7</id>
+    <InfoItem name="temperature">
+      <value unixTime="1434453491" type="">207819</value>
+    </InfoItem>
+  </Object>
+</Objects>
