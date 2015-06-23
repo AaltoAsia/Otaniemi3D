@@ -254,7 +254,7 @@ angular.module('otaniemi3dApp')
         } //end getFloorplan
 
 		
-		/*
+		    /*
         * Download remaining floorplans and parse their room info.
         */
         function getOtherFloorplans() {
@@ -407,8 +407,11 @@ angular.module('otaniemi3dApp')
 
                     for (var j = 0; j < Rooms.list.length; j++) {
                       if (Rooms.list[j].name === roomText.textContent) {
-                        if(Rooms.list[j].node === null){ //if rooms list contains nodes with null values,(in case initRoomList called earlier)
-                          Rooms.list[j].node = roomArea; // replace those with actual roomArea values
+                        //if rooms list contains nodes with null values 
+                        // initRoomList was called earlier.
+                        if (Rooms.list[j].node === null) { 
+                          // replace those with actual roomArea values
+                          Rooms.list[j].node = roomArea;
                           Rooms.list[j].floor = i;
                           addTooltip(Rooms.list[j]);
                         }

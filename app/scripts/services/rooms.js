@@ -8,12 +8,27 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('Rooms', function () {
+  .service('Rooms', function (SensorData) {
   
     /*
-    * Array where room objects are stored
+    * Dictionary object where all room objects are stored.
     */
-    this.list = [];
+    this.dict = {};
+
+    /*
+    * Return room dictionary as a list.
+    */
+    this.asList = function() {
+      var roomList = [];
+
+      for (var room in this.dict) {
+        if (this.dict.hasOwnProperty(room)) {
+          roomList.push(room);
+        }
+      }
+
+      return roomList;
+    };
   
     /*
     * Add new room object to the list
@@ -40,7 +55,7 @@ angular.module('otaniemi3dApp')
     };
   
     /*
-    * Add new sensor object to a room object
+    * Add new sensor object to a room object.
     */
     this.addSensor = function(roomIndex, sensor) {
       this.list[roomIndex].sensors.push(sensor);
@@ -65,10 +80,12 @@ angular.module('otaniemi3dApp')
       }
       
     };
+
     /*
-     * Initialize rooms list without svg roomAreas. 
-     * Do not use this function for 2dview since it needs those svg paths.
-    */ 
+     * Initialize rooms list without svg roomAreas. (Called from
+     * threedviewcontroller). This function shouldn't be called from 2dview
+     * since it needs those svg paths.
+     */ 
     this.initRoomList = function(data){
       if(!data) {
         return;
@@ -94,46 +111,22 @@ angular.module('otaniemi3dApp')
     };
 
     /*
-     * Go through the data and update rooms sensor information.
+     * Fetch new sensor data from the server and update every room's
+     * sensor information.
      */
-    this.updateRoomInfo = function(data) {
-      if(!data) {
-        return;
-      }
-
-      var i, j;
-      var sensorUpdated = false;
-
-      for (i = 0; i < data.length; i++) {
-        var roomName = data[i].room;
-
-        for (j = 0; j < this.list.length; j++) {
-          if (roomName === this.list[j].name) {
-            var k;
-            //Check if sensor already exists
-            for (k = 0; k < this.list[j].sensors.length; k++) {
-              if (this.list[j].sensors[k].id === data[i].sensorId && this.list[j].sensors[k].type === data[i].type) {
-                this.list[j].sensors[k].value = data[i].value;
-                sensorUpdated = true;
-              }
-            }
-
-            //If sensor doesn't yet exist, add it
-            if (!sensorUpdated) {
-              this.list[j].sensors.push({
-                id: data[i].sensorId,
-                type: data[i].type,
-                value: data[i].value
-              });
+    this.updateRoomInfo = function() {
+      SensorData.get().then(function (data) {
+        for (var room in data) {
+          if (data.hasOwnProperty(room)) {
+            if (this.dict.room) {
+              this.dict.room.sensors = data.room.sensors;
             } else {
-            //Reset updated flag
-              sensorUpdated = false;
+              //Room doesn't yet exist in the dictionary.
+              this.dict.room = data.room;
             }
-
-            break;
           }
         }
-      }
+      });
     };  
 
     /*
