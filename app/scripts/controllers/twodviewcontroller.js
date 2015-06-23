@@ -100,23 +100,32 @@ $scope.stopPanorama = function(){
       }
   };
 
+
   /*
    * Fetch sensor data from the server.
    */
-  Datahandler.fetchData().then(
-      function(data) {
-          $scope.sensorData = data;
-          $('#jstree').jstree({
-            'core': {
-              'data': data
-            }
-          });
-          console.log(data);
-      },
-      function() {
-          console.log('Error: Failed to fetch sensor data');
+  Datahandler.fetchData()
+    .then(function(data) {
+      $scope.sensorData = data;
+
+      var jstreeData = [];
+
+      //Transform sensor data to a suitable format for jstree.
+      for (var i = 0; i < data.length; i++) {
+        jstreeData.push({
+          text: data[i].location,
+          children: [{
+            text: data[i].sensor + ': ' + data[i].value
+          }]
+        });
       }
-  );
+
+      $('#jstree').jstree({
+        'core': {
+          'data': jstreeData
+        }
+      });
+    });
 
   /*
    * Change current floorplan to the previous of net floorplan
@@ -208,26 +217,26 @@ $scope.stopPanorama = function(){
   };
 
   $scope.changeColour = function(type) {
-      $scope.roomValueType = type;
-      $scope.refreshRoomColor(type);
+    $scope.roomValueType = type;
+    $scope.refreshRoomColor(type);
   };
 
   $scope.selectTimeFrame = function(timeFrame) {
-      var time = timeFrame;
+    var time = timeFrame;
 
-      if (time) {
-        $scope.timeFrame = time;
-      } else {
-        $scope.timeFrame = 'Latest';
+    if (time) {
+      $scope.timeFrame = time;
+    } else {
+      $scope.timeFrame = 'Latest';
+    }
+
+    Datahandler.fetchData(time).then(
+      function(data) {
+        $scope.sensorData = data;
+      },
+      function() {
+        console.log('Error: Failed to fetch sensor data');
       }
-
-      Datahandler.fetchData(time).then(
-        function(data) {
-            $scope.sensorData = data;
-        },
-        function() {
-            console.log('Error: Failed to fetch sensor data');
-        }
     );
   };
 

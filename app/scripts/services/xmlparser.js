@@ -22,7 +22,6 @@ angular.module('otaniemi3dApp')
         console.log('Couldn\'t fetch any sensor data from the server.');
       }
 
-      console.log(resultData);
       return resultData;
 
     };
