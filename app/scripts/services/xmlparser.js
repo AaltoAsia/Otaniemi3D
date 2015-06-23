@@ -19,7 +19,7 @@ angular.module('otaniemi3dApp')
       if (objects) {
         traverse(objects, resultData);
       } else {
-        console.log('Couldn\'t fetch any sensor data from the server.')
+        console.log('Couldn\'t fetch any sensor data from the server.');
       }
 
       console.log(resultData);
