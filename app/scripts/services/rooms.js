@@ -70,120 +70,121 @@ angular.module('otaniemi3dApp')
      * Do not use this function for 2dview since it needs those svg paths.
     */ 
     this.initRoomList = function(data){
-          if(!data) {
-            return;
-          }
-          var i, j, roomName;
-          var exists = false;
-          if(this.list.length === 0){
-            for (i = 0; i < data.length; i++) {
-              exists = false;
-              roomName = data[i].room;
-              for(j=0; j<this.list.length; j++){
-                if(roomName === this.list[j].name){
-                  exists = true;
-                }
-              }
-              if(!exists){
-                this.add(roomName, null, null);
-                exists = false;
-              }
+      if(!data) {
+        return;
+      }
+      var i, j, roomName;
+      var exists = false;
+      if(this.list.length === 0){
+        for (i = 0; i < data.length; i++) {
+          exists = false;
+          roomName = data[i].room;
+          for(j=0; j<this.list.length; j++){
+            if(roomName === this.list[j].name){
+              exists = true;
             }
           }
-          this.updateRoomInfo(data);  //after initializing get actual data for the rooms.list.
-        };
+          if(!exists){
+            this.add(roomName, null, null);
+            exists = false;
+          }
+        }
+      }
+      this.updateRoomInfo(data);  //after initializing get actual data for the rooms.list.
+    };
 
     /*
      * Go through the data and update rooms sensor information.
      */
     this.updateRoomInfo = function(data) {
-          if(!data) {
-            return;
-          }
+      if(!data) {
+        return;
+      }
 
-          var i, j;
-          var sensorUpdated = false;
+      var i, j;
+      var sensorUpdated = false;
 
-          for (i = 0; i < data.length; i++) {
-            var roomName = data[i].room;
+      for (i = 0; i < data.length; i++) {
+        var roomName = data[i].room;
 
-            for (j = 0; j < this.list.length; j++) {
-              if (roomName === this.list[j].name) {
-                var k;
-                //Check if sensor already exists
-                for (k = 0; k < this.list[j].sensors.length; k++) {
-                  if (this.list[j].sensors[k].id === data[i].sensorId && this.list[j].sensors[k].type === data[i].type) {
-                    this.list[j].sensors[k].value = data[i].value;
-                    sensorUpdated = true;
-                  }
-                }
-
-                //If sensor doesn't yet exist, add it
-                if (!sensorUpdated) {
-                  this.list[j].sensors.push({
-                    id: data[i].sensorId,
-                    type: data[i].type,
-                    value: data[i].value
-                  });
-                } else {
-                //Reset updated flag
-                  sensorUpdated = false;
-                }
-
-
-                break;
+        for (j = 0; j < this.list.length; j++) {
+          if (roomName === this.list[j].name) {
+            var k;
+            //Check if sensor already exists
+            for (k = 0; k < this.list[j].sensors.length; k++) {
+              if (this.list[j].sensors[k].id === data[i].sensorId && this.list[j].sensors[k].type === data[i].type) {
+                this.list[j].sensors[k].value = data[i].value;
+                sensorUpdated = true;
               }
             }
+
+            //If sensor doesn't yet exist, add it
+            if (!sensorUpdated) {
+              this.list[j].sensors.push({
+                id: data[i].sensorId,
+                type: data[i].type,
+                value: data[i].value
+              });
+            } else {
+            //Reset updated flag
+              sensorUpdated = false;
+            }
+
+            break;
           }
-        };  
+        }
+      }
+    };  
 
     /*
     * Find spesific room from room.list and return its information to the new list
     */
     this.findRoom = function(roomName) {
-        var room = null;
-        for(var j = 0; j < this.list.length; j++) {
-          if(this.list[j].name===roomName){
-            room = this.list[j];
+      var room = null;
+
+      for(var j = 0; j < this.list.length; j++) {
+        if(this.list[j].name===roomName){
+          room = this.list[j];
+        }
+      }
+
+      if(room !== null){
+        var roomInfo = [];
+        var roomType, roomValue;
+        for (var i = 0; i < room.sensors.length; i++) {
+          switch (room.sensors[i].type) {
+            case 'temperature':
+              roomType = room.sensors[i].type;
+              roomValue = room.sensors[i].value + ' °C' ;
+              roomInfo.push({type:roomType, value:roomValue});
+              break;
+            case 'humidity':
+              roomType = room.sensors[i].type;
+              roomValue = room.sensors[i].value + ' %' ;
+              roomInfo.push({type:roomType, value:roomValue});
+              break;
+            case 'co2':
+              roomType = room.sensors[i].type;
+              roomValue = room.sensors[i].value + ' ppm' ;
+              roomInfo.push({type:roomType, value:roomValue});
+              break;
+            case 'pir':
+              var occupancyState;
+              if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
+              roomType = 'occupied';
+              roomValue = occupancyState;
+              roomInfo.push({type:roomType, value:roomValue});
+              break;
+            case 'light':
+              roomType = room.sensors[i].type;
+              roomValue = room.sensors[i].value + ' lux' ;
+              roomInfo.push({type:roomType, value:roomValue});
+              break;
           }
         }
-          if(room !== null){
-            var roomInfo = [];
-            var roomType, roomValue;
-            for (var i = 0; i < room.sensors.length; i++) {
-                switch (room.sensors[i].type) {
-                    case 'temperature':
-                         roomType = room.sensors[i].type;
-                         roomValue = room.sensors[i].value + ' °C' ;
-                         roomInfo.push({type:roomType, value:roomValue});
-                        break;
-                    case 'humidity':
-                         roomType = room.sensors[i].type;
-                         roomValue = room.sensors[i].value + ' %' ;
-                         roomInfo.push({type:roomType, value:roomValue});
-                        break;
-                    case 'co2':
-                         roomType = room.sensors[i].type;
-                         roomValue = room.sensors[i].value + ' ppm' ;
-                         roomInfo.push({type:roomType, value:roomValue});
-                        break;
-                    case 'pir':
-                        var occupancyState;
-                        if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
-                         roomType = 'occupied';
-                         roomValue = occupancyState;
-                         roomInfo.push({type:roomType, value:roomValue});
-                        break;
-                    case 'light':
-                         roomType = room.sensors[i].type;
-                         roomValue = room.sensors[i].value + ' lux' ;
-                         roomInfo.push({type:roomType, value:roomValue});
-                        break;
-                }
-            }
         return roomInfo;
-    }
-    return null;
+      }
+      return null;
     };
 
     /*
