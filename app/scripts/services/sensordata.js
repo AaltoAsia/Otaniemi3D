@@ -37,6 +37,7 @@ angular.module('otaniemi3dApp')
               console.log(headers());
               console.log('Config:');
               console.log(config);
+              deferred.reject({});
             });
         });
       */
@@ -75,14 +76,14 @@ angular.module('otaniemi3dApp')
 
         $(object).children('InfoItem').each(function() {
           var sensor = $(this).attr('name');
-          var value = $(this).children('value');
+          var value = $(this).children('value')[0].textContent;
 
           if (sensor && value) {
             sensors.push(
               {
-                'id': 'room_' + id + '_' + sensor,
+                'sensorId': sensor + '_' + id,
                 'type': sensor,
-                'value': value
+                'value': Number(value)
               }
             );
           }

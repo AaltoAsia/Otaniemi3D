@@ -14,7 +14,6 @@ angular.module('otaniemi3dApp')
     $scope.timeFrame = timeFrame;
     $scope.roomValueType = roomValueType;
     
-    
     //Ok function, passes the variables, into resolve function in twodviewcontroller 
     $scope.ok = function () {
       $modalInstance.close([$scope.roomValueType, $scope.timeFrame]);

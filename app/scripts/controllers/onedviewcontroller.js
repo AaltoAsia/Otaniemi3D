@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
 
-  .controller('onedview', function ($scope, $location, Datahandler, uiGridConstants) {
+  .controller('onedview', function ($scope, $location, Rooms, uiGridConstants) {
 
     $scope.timeFrame = 'Latest';
 
@@ -21,24 +21,7 @@ angular.module('otaniemi3dApp')
       } else {
         $scope.timeFrame = 'Latest';
       }
-      
-      Datahandler.fetchData(time).then(
-        function(data) {
-            $scope.gridOptions.data = data;
-        },
-        function() {
-            console.log('Error: Failed to fetch sensor data');
-        }
-      );
     }
-
-    var fetchDataPromise = Datahandler.fetchData();
-    fetchDataPromise
-      .then(function (data) {
-        $scope.gridOptions.data = data;
-        }, function (reason) {    // something gone wrong
-        $scope.gridOptions.data = reason;
-      });
 
     $scope.gridOptions = {
       enableFiltering: true,
@@ -90,11 +73,6 @@ angular.module('otaniemi3dApp')
             return $scope.timeFrame === 'Year';
           }
         }
-      ],
-      columnDefs: [
-        {name: 'location'},
-        {name: 'sensor'},
-        {name: 'value'}
       ]
       /*,
       columnDefs: [
@@ -138,4 +116,25 @@ angular.module('otaniemi3dApp')
       ]
       */
     };
+
+    Rooms.updateRoomInfo().then(function () {
+      var sensorList = [];
+
+      for (var room in Rooms.dict) {
+        if (Rooms.dict.hasOwnProperty(room)) {
+          var sensors = Rooms.dict[room].sensors;
+
+          for (var i = 0; i < sensors.length; i++) {
+            var sensor = sensors[i];
+            sensor.room = Rooms.dict[room].name;
+            sensor.roomId = room;
+
+            sensorList.push(sensor);
+          }
+        }
+      }
+
+      $scope.gridOptions.data = sensorList;
+    });
+
   });

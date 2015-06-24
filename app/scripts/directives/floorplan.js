@@ -137,15 +137,27 @@ angular.module('otaniemi3dApp')
             if (!skipSelectedCheck && scope.selectedRoom) {
               return;
             }
-            
-            scope.$parent.room = room.name; //Pass the room name to controller function
-            var table = tooltip.append('table').attr('id', 'infocontent').attr('class', 'tooltip-table');
-            var caption = table.append('caption').append('i').text('Click to lock tooltip in place');
+            //Pass the room name to controller function
+            scope.$parent.room = room.name;
+
+            var table = tooltip
+              .append('table')
+              .attr('id', 'infocontent')
+              .attr('class', 'tooltip-table');
+
+            var caption = table
+              .append('caption')
+              .append('i')
+              .text('Click to lock tooltip in place');
+
             var lastRow = addTooltipText('Room', room.name);
 
             for (var i = 0; i < room.sensors.length; i++) {
               lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value);
-              if(scope.roomValueType.toLowerCase() === room.sensors[i].type.toLowerCase() || (scope.roomValueType.toLowerCase()==='occupancy' && room.sensors[i].type.toLowerCase()==='pir')) {
+
+              if(scope.roomValueType.toLowerCase() === room.sensors[i].type.toLowerCase() ||
+                  (scope.roomValueType.toLowerCase()==='occupancy' &&
+                  room.sensors[i].type.toLowerCase()==='pir')) {
                 var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
                 lastRow.type.style('background-color', color.rgbaString);
                 lastRow.value.style('background-color', color.rgbaString);
@@ -208,27 +220,26 @@ angular.module('otaniemi3dApp')
               .on('click', clicked);
           }
         } //end addTooltip
-        
-        /*
-        * Download and show default floorplan and then download
-        * other floorplans asynchronously.
-        */
 
-      if (scope.$parent.svgSupport) {  //Check if svg support. There is not point doing anything if there isn't
-        if (defaultFloorplan.svg === null) {
-            getDefaultFloorplan();
-            } else {
-              var roomsLength = Rooms.list.length;
-              for (var i = 0; i < roomsLength; i++) {
-                addTooltip(Rooms.list[i]);
+        //Check if svg support. There is not point doing anything if there isn't
+        if (scope.$parent.svgSupport) {
+          if (defaultFloorplan.svg === null) {
+              getDefaultFloorplan();
+          } else {
+            for (var room in Rooms.dict) {
+              if (Rooms.dict.hasOwnProperty(room)) {
+                addTooltip(Rooms.dict[room]);
               }
-              usSpinnerService.stop('spinner-1'); //floorplans loaded, hide the spinner
-              showFloorplan();
+            }
+            //floorplans loaded, hide the spinner
+            usSpinnerService.stop('spinner-1');
+            showFloorplan();
           }
         }
-          /*
-          * Use the given object to determine the svg to be fetched and append it according to the argument container
-          */
+
+        /*
+        * Use the given object to determine the svg to be fetched and append it according to the argument container
+        */
         function getFloorplan(floorplan, container, isDefault){
           d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
             if (xml) {
@@ -246,7 +257,7 @@ angular.module('otaniemi3dApp')
               }
               finally {
                 if (isDefault) {
-                    getOtherFloorplans();
+                  getOtherFloorplans();
                 }
               }
             }
@@ -274,7 +285,6 @@ angular.module('otaniemi3dApp')
         * Color range is from blue to red
         */
         function setRoomColor(room) {
-
           if (room.node) {
             var i;
             for (i = 0; i < room.sensors.length; i++) {
@@ -405,23 +415,27 @@ angular.module('otaniemi3dApp')
                   if (Floorplans.floors[i] === floorplan) {
                     var roomExists = false;
 
-                    for (var j = 0; j < Rooms.list.length; j++) {
-                      if (Rooms.list[j].name === roomText.textContent) {
-                        //if rooms list contains nodes with null values 
-                        // initRoomList was called earlier.
-                        if (Rooms.list[j].node === null) { 
-                          // replace those with actual roomArea values
-                          Rooms.list[j].node = roomArea;
-                          Rooms.list[j].floor = i;
-                          addTooltip(Rooms.list[j]);
+                    for (var key in Rooms.dict) {
+                      if (Rooms.dict.hasOwnProperty(key) &&
+                          Rooms.dict[key].name === roomText.textContent) {
+
+                        var room = Rooms.dict[key];
+                          
+                        if (!room.node) { 
+                          room.node = roomArea;
+                          room.floor = i;
+                          addTooltip(room);
                         }
                         roomExists = true;
                         break;
                       }
                     }
+
                     if (!roomExists) {
-                      Rooms.add(roomText.textContent, roomArea, i);
-                      addTooltip(Rooms.list[Rooms.list.length-1]);
+                      var id = 'room_' + roomText.textContent;
+
+                      Rooms.add(id, roomText.textContent, roomArea, i);
+                      addTooltip(Rooms.dict[id]);
                     }
                   }
                 }
@@ -448,10 +462,10 @@ angular.module('otaniemi3dApp')
         * Update or add new sensor data to rooms, and then color the rooms according to the data.
         */
         function updateRoomColors() {
-          Rooms.updateRoomInfo(scope.data);
-          var i;
-          for(i = 0; i < Rooms.list.length; i++){
-            setRoomColor(Rooms.list[i]);
+          for (var room in Rooms.dict) {
+            if (Rooms.dict.hasOwnProperty(room)) {
+              setRoomColor(Rooms.dict[room]);
+            }
           }
         }
 

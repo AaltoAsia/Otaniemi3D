@@ -8,10 +8,14 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('Rooms', function (SensorData) {
-  
+  .service('Rooms', function ($q, SensorData) {
+
+    //Can be used inside this service to reference this service's public
+    //properties and functions (e.g. self.dict).
+    var self = this;
+
     /*
-    * Dictionary object where all room objects are stored.
+    * Return dictionary object where all room objects are stored.
     */
     this.dict = {};
 
@@ -21,93 +25,15 @@ angular.module('otaniemi3dApp')
     this.asList = function() {
       var roomList = [];
 
-      for (var room in this.dict) {
-        if (this.dict.hasOwnProperty(room)) {
-          roomList.push(room);
+      for (var room in self.dict) {
+        if (self.dict.hasOwnProperty(room)) {
+          var roomObj = self.dict[room];
+          roomObj.id = room;
+          roomList.push(roomObj);
         }
       }
 
       return roomList;
-    };
-  
-    /*
-    * Add new room object to the list
-    */
-    this.add = function(name, node, floor) {
-      this.list.push({
-        name: name,
-        floor: floor,
-        node: node,
-        sensors: [],
-        pulse: null
-      });
-    };
-  
-    /*
-    * Construct and return new sensor object.
-    */
-    this.sensor = function(sensorId, type, value) {
-      return {
-        id: sensorId,
-        type: type,
-        value: value
-      };
-    };
-  
-    /*
-    * Add new sensor object to a room object.
-    */
-    this.addSensor = function(roomIndex, sensor) {
-      this.list[roomIndex].sensors.push(sensor);
-    };
-    
-    /*
-    * Update sensor's value. If sensor doesn't exist add sensor as a new sensor.
-    */
-    this.updateSensor = function(roomIndex, sensorId, type, value) {
-      var sensor = this.sensor(sensorId, type, value);
-      var sensorExists = false;
-      
-      for (var i = 0; i < this.list[roomIndex].sensors.length; i++) {
-        if (this.list[roomIndex].sensors[i].id === sensor.id && this.list[roomIndex].sensors[i].type === sensor.type) {
-          this.list[roomIndex].sensors[i].value = sensor.value;
-          sensorExists = true;
-        }
-      }
-      
-      if (!sensorExists) {
-        this.addSensor(roomIndex, sensor);
-      }
-      
-    };
-
-    /*
-     * Initialize rooms list without svg roomAreas. (Called from
-     * threedviewcontroller). This function shouldn't be called from 2dview
-     * since it needs those svg paths.
-     */ 
-    this.initRoomList = function(data){
-      if(!data) {
-        return;
-      }
-      var i, j, roomName;
-      var exists = false;
-      if(this.list.length === 0){
-        for (i = 0; i < data.length; i++) {
-          exists = false;
-          roomName = data[i].room;
-          for(j=0; j<this.list.length; j++){
-            if(roomName === this.list[j].name){
-              exists = true;
-            }
-          }
-          if(!exists){
-            this.add(roomName, null, null);
-            exists = false;
-          }
-        }
-      }
-      this.updateRoomInfo(data);  //after initializing get actual data for the rooms.list.
     };
 
     /*
@@ -115,29 +41,50 @@ angular.module('otaniemi3dApp')
      * sensor information.
      */
     this.updateRoomInfo = function() {
+      var deferred = $q.defer();
+
       SensorData.get().then(function (data) {
         for (var room in data) {
           if (data.hasOwnProperty(room)) {
-            if (this.dict.room) {
-              this.dict.room.sensors = data.room.sensors;
+            if (self.dict[room]) {
+              self.dict[room].sensors = data[room].sensors;
             } else {
               //Room doesn't yet exist in the dictionary.
-              this.dict.room = data.room;
+              self.dict[room] = data[room];
             }
           }
         }
+        deferred.resolve(self.dict);
       });
-    };  
+
+      return deferred.promise;
+    };
+  
+    /*
+    * Add new room object to the list
+    */
+    this.add = function(id, name, node, floor) {
+      self.dict[id] = {
+        name: name,
+        floor: floor,
+        node: node,
+        sensors: [],
+        pulse: null
+      };
+    };
 
     /*
-    * Find spesific room from room.list and return its information to the new list
+    * Find spesific room from room.list and return its information to
+    * the new list.
     */
     this.findRoom = function(roomName) {
       var room = null;
 
-      for(var j = 0; j < this.list.length; j++) {
-        if(this.list[j].name===roomName){
-          room = this.list[j];
+      for (var key in self.dict) {
+        if (self.dict.hasOwnProperty(key)) {
+          if (self.dict[key].name === roomName){
+            room = self.dict[key];
+          }
         }
       }
 
@@ -181,10 +128,11 @@ angular.module('otaniemi3dApp')
     };
 
     /*
-    * Find room for panorama-tooltip and return information with []-tags(krpano recognize these tags as HTML-tags)
+    * Find room for panorama-tooltip and return information with []-tags
+    * (krpano recognize these tags as HTML-tags).
     */
     this.krpanoHTML = function(roomName){
-      var roomInfo = this.findRoom(roomName);
+      var roomInfo = self.findRoom(roomName);
       var roomHTML = '';
       var tableInfo = null;
       roomHTML = '[table class= "tooltip-table"]';
@@ -200,7 +148,5 @@ angular.module('otaniemi3dApp')
         roomHTML += '[/table]';
       return roomHTML;
     };
-
-
 
   });

@@ -10,41 +10,12 @@
 angular.module('otaniemi3dApp')
   .controller('twodview', function ($scope, Floorplans, Rooms,
                                     twodservice, $rootScope, $modal) {
-  
-  var loaded = false;
-
-  $scope.panoramaViewer = function() {
-    //make panorama(pano) div visible
-    $scope.pano = true;
-    //find information for krpano tooltip
-    var roomInfo = Rooms.krpanoHTML($scope.room);
-    var infos = {room: roomInfo};
-
-    if (loaded === false) {
-      embedpano({
-        xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
-        id:'pano_obj',
-        target:'pano',
-        html5:'only',
-        passQueryParameters:true,
-        vars:infos
-      });
-      loaded = true;
-    } else {
-        var xmlpath = $scope.room.split(' ').join('_') +'.xml';
-        document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
-        document.getElementById('pano_obj').call('set(room,' + roomInfo +');');
-    }
-  };
-
-  $scope.stopPanorama = function(){
-    $scope.pano = false;
-  };
 
   var floorplanClass = 'floorplan';
   var floorplanFullscreenClass = 'floorplan-fullscreen';
   var panoramaNormal = 'pano-2d-view';
   var panoramaFull = 'pano-2d-view-fullscreen';
+  var panoramaLoaded = false;
 
   $scope.sensorData = null;
   $scope.floorplanClass = floorplanClass;
@@ -80,6 +51,38 @@ angular.module('otaniemi3dApp')
       break;
     }
   }
+
+  Rooms.updateRoomInfo().then(function (data) {
+    $scope.sensorData = data;
+  });
+
+  $scope.panoramaViewer = function() {
+    //make panorama(pano) div visible
+    $scope.pano = true;
+    //find information for krpano tooltip
+    var roomInfo = Rooms.krpanoHTML($scope.room);
+    var infos = {room: roomInfo};
+
+    if (panoramaLoaded === false) {
+      embedpano({
+        xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
+        id:'pano_obj',
+        target:'pano',
+        html5:'only',
+        passQueryParameters:true,
+        vars:infos
+      });
+      panoramaLoaded = true;
+    } else {
+      var xmlpath = $scope.room.split(' ').join('_') +'.xml';
+      document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
+      document.getElementById('pano_obj').call('set(room,' + roomInfo +');');
+    }
+  };
+
+  $scope.stopPanorama = function(){
+    $scope.pano = false;
+  };
   
   $scope.showGradient = function() {
     return $scope.roomValueType.toLowerCase() !== 'pir' && 
@@ -106,15 +109,6 @@ angular.module('otaniemi3dApp')
       $scope.buttonClass = 'glyphicon glyphicon-resize-full';
     }
   };
-
-
-  /*
-   * Fetch sensor data from the server.
-   */
-  Datahandler.fetchData()
-    .then(function(data) {
-      $scope.sensorData = data;
-    });
 
   /*
    * Change current floorplan to the previous of net floorplan
@@ -159,8 +153,10 @@ angular.module('otaniemi3dApp')
       $scope.highlightRoom(searchString);
     } else {
       var selected;
-      for (var room in Rooms.dict) {
-        if (Rooms.dict.hasOwnProperty(room)) {
+      for (var key in Rooms.dict) {
+        if (Rooms.dict.hasOwnProperty(key)) {
+          var room = Rooms.dict[key];
+
           if (room.name.toLowerCase() === searchString.toLowerCase()) {
             selected = room;
             break;
@@ -187,8 +183,9 @@ angular.module('otaniemi3dApp')
   / co2 sensors.
   */
   $scope.refreshRoomColor = function(type) {
-    for (var room in Rooms.dict) {
-      if (Rooms.dict.hasOwnProperty(room)) {
+    for (var key in Rooms.dict) {
+      if (Rooms.dict.hasOwnProperty(key)) {
+        var room = Rooms.dict[key];
         //Colour the room white, in case the room doesn't have any values for 
         //that particular sensor.
         d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
@@ -221,15 +218,6 @@ angular.module('otaniemi3dApp')
     } else {
       $scope.timeFrame = 'Latest';
     }
-
-    Datahandler.fetchData(time).then(
-      function(data) {
-        $scope.sensorData = data;
-      },
-      function() {
-        console.log('Error: Failed to fetch sensor data');
-      }
-    );
   };
 
 
