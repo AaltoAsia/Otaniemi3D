@@ -116,7 +116,6 @@ angular.module('otaniemi3dApp')
    * if the user pressed previous button
    */
   $scope.selectPlan = function (direction) {
-
     if (direction === 1) {
       Floorplans.floors[$scope.planNumber].isSelected = false;
       Floorplans.floors[$scope.planNumber+1].isSelected = true;
@@ -133,17 +132,15 @@ angular.module('otaniemi3dApp')
 
 
   $scope.highlightRoom = function(item) {
-
-    if ($scope.highlightedRoom !== null) {
+    if ($scope.highlightedRoom) {
       clearInterval($scope.highlightedRoom.pulse);
     }
-
     $scope.highlightedRoom = item;
-    $scope.planNumber = $scope.highlightedRoom.floor;
+    $scope.planNumber = $scope.highlightedRoom.floor || $scope.planNumber;
   };
 
-  $scope.onSelect = function($item) {
-    $scope.highlightRoom($item);
+  $scope.onSelect = function(item) {
+    $scope.highlightRoom(item);
   };
 
   $scope.onSearch = function(searchString) {
@@ -163,7 +160,7 @@ angular.module('otaniemi3dApp')
           }
         }
       }
-      if (selected !== undefined) {
+      if (selected) {
         $scope.highlightRoom(selected);
       }
     }

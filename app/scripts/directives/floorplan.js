@@ -385,7 +385,6 @@ angular.module('otaniemi3dApp')
         * and save data to the Rooms service.
         */
         function parseRooms(floorplan) {
-
           d3.select('.' + parserContainer.class).style('display', 'block');
 
           d3.select(floorplan.svg).selectAll('.' + floorplan.roomNumber).each(function () {
@@ -420,8 +419,8 @@ angular.module('otaniemi3dApp')
                           Rooms.dict[key].name === roomText.textContent) {
 
                         var room = Rooms.dict[key];
-                          
-                        if (!room.node) { 
+                        
+                        if (!room.node) {
                           room.node = roomArea;
                           room.floor = i;
                           addTooltip(room);
@@ -476,14 +475,24 @@ angular.module('otaniemi3dApp')
           var duration = 3000;
           var pulseColor = 'grey';
           var initialColor = d3.select(room.node).style('fill');
+
           if (initialColor === 'none') {
             initialColor = 'rgb(255,255,255)';
           }
           //Color it first, fade away and color again because the first iteration of setInterval takes a while...
-          d3.select(room.node).style('fill', pulseColor);
-          d3.select(room.node).transition().duration(duration*2/3).style('fill', initialColor);
-          d3.select(room.node).transition().delay(duration*2/3).duration(duration*2/3).style('fill', pulseColor);
-          d3.select(room.node).transition().delay(duration*4/3).duration(duration*2/3).style('fill', initialColor);
+          d3.select(room.node)
+            .style('fill', pulseColor)
+            .transition()
+            .duration(duration*2/3)
+            .style('fill', initialColor)
+            .transition()
+            .delay(duration*2/3)
+            .duration(duration*2/3)
+            .style('fill', pulseColor)
+            .transition()
+            .delay(duration*4/3)
+            .duration(duration*2/3)
+            .style('fill', initialColor);
 
           var pulsing = window.setInterval(function() {
             d3.select(room.node)
@@ -535,7 +544,7 @@ angular.module('otaniemi3dApp')
         });
 
         scope.$watch('highlightedRoom', function() {
-          if (scope.highlightedRoom !== null) {
+          if (scope.highlightedRoom && scope.highlightedRoom.node) {
             scope.plan = Floorplans.floors[scope.highlightedRoom.floor];
             scope.plan.translate = [0, 0];
             scope.plan.scale = 1;

@@ -81,9 +81,9 @@ angular.module('otaniemi3dApp')
           if (sensor && value) {
             sensors.push(
               {
-                'sensorId': sensor + '_' + id,
-                'type': sensor,
-                'value': Number(value)
+                sensorId: sensor + '_' + id,
+                type: sensor,
+                value: Number(value)
               }
             );
           }
@@ -93,8 +93,9 @@ angular.module('otaniemi3dApp')
           var roomId = 'room_' + id;
 
           sensorData[roomId] = {
-            'name': id,
-            'sensors': sensors
+            name: id,
+            sensors: sensors,
+            node: null
           };
         }
       }
