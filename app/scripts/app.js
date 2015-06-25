@@ -36,6 +36,10 @@ angular
         templateUrl: 'views/3dview.html',
         controller: 'threedview'
       })
+      .when('/analytics', {
+        templateUrl: 'views/analytics.html',
+        controller: 'analytics'
+      })
       .when('/support', {
         templateUrl: 'views/support.html',
         controller: 'support'
