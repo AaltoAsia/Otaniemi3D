@@ -24,13 +24,12 @@ angular.module('otaniemi3dApp')
     */
     this.asList = function() {
       var roomList = [];
-
-      for (var room in self.dict) {
-        if (self.dict.hasOwnProperty(room)) {
-          var roomObj = self.dict[room];
-          roomObj.id = room;
-          roomList.push(roomObj);
-        }
+      
+      var keys = Object.keys(self.dict);
+      for (var i = 0; i < keys.length; i++) {
+        var room = self.dict[keys[i]];
+        room.id = keys[i];
+        roomList.push(room);
       }
 
       return roomList;

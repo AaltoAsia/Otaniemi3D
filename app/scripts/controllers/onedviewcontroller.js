@@ -120,17 +120,17 @@ angular.module('otaniemi3dApp')
     Rooms.updateRoomInfo().then(function () {
       var sensorList = [];
 
-      for (var room in Rooms.dict) {
-        if (Rooms.dict.hasOwnProperty(room)) {
-          var sensors = Rooms.dict[room].sensors;
+      var keys = Object.keys(Rooms.dict);
+      for (var i = 0; i < keys.length; i++) {
+        var room = Rooms.dict[keys[i]];
+        var sensors = room.sensors;
 
-          for (var i = 0; i < sensors.length; i++) {
-            var sensor = sensors[i];
-            sensor.room = Rooms.dict[room].name;
-            sensor.roomId = room;
+        for (var j = 0; j < sensors.length; j++) {
+          var sensor = sensors[j];
+          sensor.room = room.name;
+          sensor.roomId = keys[i];
 
-            sensorList.push(sensor);
-          }
+          sensorList.push(sensor);
         }
       }
 

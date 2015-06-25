@@ -135,8 +135,10 @@ angular.module('otaniemi3dApp')
     if ($scope.highlightedRoom) {
       clearInterval($scope.highlightedRoom.pulse);
     }
-    $scope.highlightedRoom = item;
-    $scope.planNumber = $scope.highlightedRoom.floor || $scope.planNumber;
+    if (typeof item.floor === 'number' && !isNaN(item.floor)) {
+      $scope.highlightedRoom = item;
+      $scope.planNumber = item.floor;
+    }
   };
 
   $scope.onSelect = function(item) {
@@ -150,14 +152,13 @@ angular.module('otaniemi3dApp')
       $scope.highlightRoom(searchString);
     } else {
       var selected;
-      for (var key in Rooms.dict) {
-        if (Rooms.dict.hasOwnProperty(key)) {
-          var room = Rooms.dict[key];
+      var keys = Object.keys(Rooms.dict);
+      for (var i = 0; i < keys.length; i++) {
+        var room = Rooms.dict[keys[i]];
 
-          if (room.name.toLowerCase() === searchString.toLowerCase()) {
-            selected = room;
-            break;
-          }
+        if (room.name.toLowerCase() === searchString.toLowerCase()) {
+          selected = room;
+          break;
         }
       }
       if (selected) {
@@ -180,23 +181,22 @@ angular.module('otaniemi3dApp')
   / co2 sensors.
   */
   $scope.refreshRoomColor = function(type) {
-    for (var key in Rooms.dict) {
-      if (Rooms.dict.hasOwnProperty(key)) {
-        var room = Rooms.dict[key];
-        //Colour the room white, in case the room doesn't have any values for 
-        //that particular sensor.
-        d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
+    var keys = Object.keys(Rooms.dict);
+    for (var i = 0; i < keys.length; i++) {
+      var room = Rooms.dict[keys[i]];
+      //Colour the room white, in case the room doesn't have any values for 
+      //that particular sensor.
+      d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
 
-        //Loop through sensors and check the value of the sensor that matches 
-        //the parameter given.
-        for (var i = 0; i < room.sensors.length; i++) {
-          if (room.sensors[i].type.toLowerCase() === type.toLowerCase() ||
-             (room.sensors[i].type.toLowerCase() === 'pir' && type.toLowerCase() === 'occupancy')) {
-            var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
-            d3.select(room.node)
-              .style('fill', color.rgb)
-              .style('fill-opacity', color.opacity);
-          }
+      //Loop through sensors and check the value of the sensor that matches 
+      //the parameter given.
+      for (var j = 0; j < room.sensors.length; j++) {
+        if (room.sensors[j].type.toLowerCase() === type.toLowerCase() ||
+           (room.sensors[j].type.toLowerCase() === 'pir' && type.toLowerCase() === 'occupancy')) {
+          var color = twodservice.getColor(room.sensors[j].type, room.sensors[j].value);
+          d3.select(room.node)
+            .style('fill', color.rgb)
+            .style('fill-opacity', color.opacity);
         }
       }
     }

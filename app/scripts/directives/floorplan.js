@@ -228,10 +228,9 @@ angular.module('otaniemi3dApp')
       if (defaultFloorplan.svg === null) {
           getDefaultFloorplan();
       } else {
-        for (var room in Rooms.dict) {
-          if (Rooms.dict.hasOwnProperty(room)) {
-            addTooltip(Rooms.dict[room]);
-          }
+        var keys = Object.keys(Rooms.dict);
+        for (var i = 0; i < keys.length; i++) {
+          addTooltip(Rooms.dict[keys[i]]);
         }
         //floorplans loaded, hide the spinner
         usSpinnerService.stop('spinner-1');
@@ -416,12 +415,11 @@ angular.module('otaniemi3dApp')
               if (Floorplans.floors[i] === floorplan) {
                 var roomExists = false;
 
-                for (var key in Rooms.dict) {
-                  if (Rooms.dict.hasOwnProperty(key) &&
-                      Rooms.dict[key].name === roomText.textContent) {
+                var keys = Object.keys(Rooms.dict);
+                for (var j = 0; j < keys.length; j++) {
+                  var room = Rooms.dict[keys[j]];
 
-                    var room = Rooms.dict[key];
-                    
+                  if (room.name === roomText.textContent) {
                     if (!room.node) {
                       room.node = roomArea;
                       room.floor = i;
