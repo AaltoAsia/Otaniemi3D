@@ -125,5 +125,3 @@ angular.module('otaniemi3dApp')
     }
 
   });
-
-//curl http://otaniemi3d.cs.hut.fi/omi/node/ -H "Content-Type: text/xml" --data msg="<?xml version="1.0" encoding="UTF-8"?><omi:omiEnvelope version="1.0" ttl="10"><omi:read><omi:msg></omi:msg></omi:read></omi:omiEnvelope>"
