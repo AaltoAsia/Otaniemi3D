@@ -44,69 +44,90 @@ angular.module('otaniemi3dApp')
       return deferred.promise;
     };
 
-
     /*
      * Convert the sensor data xml to a javascript object and return it.
      */
     function parseData(xml) {
-      xml = $.parseXML(xml);
-      var objects = $(xml).find('Objects')[0];
       var sensorData = {};
 
-      if (objects) {
-        //Pass data storage variable (sensorData) to the function.
-        traverse(objects, sensorData);
-      } else {
+      xml = new DOMParser().parseFromString(xml, 'text/xml');
+
+      var objects = evaluateXPath(xml, '//Object');
+
+      if (objects.length === 0) {
         console.log('Couldn\'t fetch any sensor data from the server.');
       }
 
+      for (var i = 0; i < objects.length; i++) {
+        var id = objects[i].getElementsByTagName('id');
+
+        if (id.length > 0) {
+          id = id[0].textContent;
+        } else {
+          continue;
+        }
+
+        //Check if id starts with string 'room'
+        if (id.lastIndexOf('room', 0) === 0) {
+          var sensors = objects[i].children;
+          var sensorList = [];
+
+          for (var j = 0; j < sensors.length; j++) {
+            if (sensors[j].tagName !== 'InfoItem') {
+              continue;
+            }
+            var name = sensors[j].getAttribute('name');
+            var value = Number(sensors[j].children[0].textContent);
+
+            if (name && value) {
+              sensorList.push({
+                sensorId: name + '_' + id,
+                type: name,
+                value: value
+              });
+            }
+          }
+
+          if (sensorList.length > 0) {
+            sensorData[id] = {
+              name: id.split(/_(.+)/)[1],
+              sensors: sensorList,
+              node: null
+            };
+          }
+        }
+        //Break from the xpath iteration loop. There's no need to return
+        //the list of elements.
+        //return false;
+      }
       return sensorData;
     }
 
-
     /*
-     * Traverse recursively through the xml elements and transform them
-     * into javascript objects.
+     * Evaluate an XPath expression aExpr against a given DOM node
+     * or Document object (aNode), returning the results as an array.
+     * This function can also be given a callback that is called on every
+     * element found.
+     * https://developer.mozilla.org/en-US/docs/Using_XPath
      */
-    function traverse(object, sensorData) {
-      var id = $(object).children('id').text();
+    function evaluateXPath(aNode, aExpr, fn) {
+      var xpe = new XPathEvaluator();
+      var nsResolver = xpe.createNSResolver(aNode.ownerDocument === null ?
+        aNode.documentElement : aNode.ownerDocument.documentElement);
+      var result = xpe.evaluate(aExpr, aNode, nsResolver, 0, null);
+      var found = [];
+      var callback = (typeof fn === 'function');
+      var res = result.iterateNext();
 
-      if (id) {
-        var sensors = [];
-
-        $(object).children('InfoItem').each(function() {
-          var sensor = $(this).attr('name');
-          var value = $(this).children('value')[0].textContent;
-
-          if (sensor && value) {
-            sensors.push(
-              {
-                sensorId: sensor + '_' + id,
-                type: sensor,
-                value: Number(value)
-              }
-            );
-          }
-        });
-
-        if (sensors.length > 0) {
-          var roomId = 'room_' + id;
-
-          sensorData[roomId] = {
-            name: id,
-            sensors: sensors,
-            node: null
-          };
+      while (res) {
+        if (callback) {
+          fn(res);
         }
+        found.push(res);
+        res = result.iterateNext();
       }
 
-      if (object.hasChildNodes()) {
-        var node = object.firstChild;
-
-        while (node) {
-          traverse(node, sensorData);
-          node = node.nextSibling;
-        }
-      }
+      return found;
     }
+
   });
