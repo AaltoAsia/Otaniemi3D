@@ -8,24 +8,19 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('threedview', function ($scope, Rooms, Datahandler, $modal) {
+  .controller('threedview', function ($scope, Rooms, $modal) {
+
     $scope.panoramabox = 'images/panoramabox.svg';
     $scope.selected = undefined;
-    $scope.webglSupport = Modernizr.webgl; //Use this boolean to check for webgl support
+    //Use this boolean to check for webgl support
+    $scope.webglSupport = Modernizr.webgl;
     $scope.pano = false;
+
+    var panoramaLoaded = false;
     
-  /* Fetch data for rooms */
-  Datahandler.fetchData().then(
-      function(data) {
-        Rooms.initRoomList(data);
-      },
-      function() {
-          console.log('Error: Failed to fetch sensor data');
-      }
-  );
+    Rooms.updateRoomInfo();
 
-
-    /* x3d change viewpoint (camera location) */
+    //x3d change viewpoint (camera location)
     $scope.changeView = function(viewpoint){
       if(viewpoint === undefined) {
         var textField = document.getElementById('searchContent');
@@ -42,26 +37,28 @@ angular.module('otaniemi3dApp')
       }
     };
     $scope.text = undefined;  
-    /* items in search scope */
+    //items in search scope
     $scope.items = ['Entrance','Cafeteria','Corridor Entrance Side',
       'Corridor Cafeteria Side','2nd Floor Sundeck','2nd Floor Corridor Start',
       '2nd Floor Corridor Middle','2nd Floor Corridor End','223','224','225',
       '226','227','228','229','232a','232c','232d', '235','236b','236b2','236a',
       '237d','237c','238b','238d','239','333','334','335','336','337','338','341a',
       '341b','341c', '348'];
-    /* search item selected, change view */ 
+
+    //search item selected, change view
     $scope.onSelect = function($item) {
       $scope.changeView($item);
     };
-    
-    var loaded = false;
 
     $scope.panoramaViewer = function(room) {
-    $scope.pano = true; //make panorama(pano) div visible
-    var roomInfo = Rooms.krpanoHTML(room); //find information for krpano tooltip
-    var infos = {room: roomInfo};
-    if(loaded === false){
-    embedpano({
+      //make panorama(pano) div visible
+      $scope.pano = true;
+      //find information for krpano tooltip
+      var roomInfo = Rooms.krpanoHTML(room);
+      var infos = {room: roomInfo};
+
+      if(panoramaLoaded === false){
+        embedpano({
           xml:'panorama/' + room.split(' ').join('_') +'.xml',
           id:'pano_obj',
           target:'pano',
@@ -69,15 +66,13 @@ angular.module('otaniemi3dApp')
           passQueryParameters:true,
           vars:infos
         });
-    loaded = true;
-  }
-    else{
+        panoramaLoaded = true;
+      } else{
         var xmlpath = room.split(' ').join('_') +'.xml';
         document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
         document.getElementById('pano_obj').call('set(room,' + roomInfo +');');
-
-    }
-};
+      }
+    };
 
   $scope.stopPanorama = function(){
       $scope.pano = false;

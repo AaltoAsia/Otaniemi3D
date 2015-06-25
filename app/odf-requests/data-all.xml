@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<omi:omiEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" xsi:schemaLocation="omi.xsd omi.xsd" version="1.0" ttl="0">
+  <omi:read msgformat="odf">
+    <omi:msg xmlns="odf.xsd" xsi:schemaLocation="odf.xsd odf.xsd">
+      <Objects>
+        <Object>
+          <id>CoffeeMaker</id>
+          <InfoItem name="temperature" ></InfoItem>
+        </Object>
+        <Object>
+          <id>OMI-Service</id>
+          <Object>
+            <id>Settings</id>
+            <InfoItem name="num-latest-values-stored" ></InfoItem>
+          </Object>
+        </Object>
+        <Object>
+          <id>SmartHouse</id>
+          <InfoItem name="BackDoor" ></InfoItem>
+          <InfoItem name="FrontDoor" ></InfoItem>
+          <Object>
+            <id>Kitchen</id>
+            <InfoItem name="CO2" ></InfoItem>
+            <InfoItem name="Consumption" ></InfoItem>
+            <InfoItem name="Humidity" ></InfoItem>
+            <InfoItem name="Light" ></InfoItem>
+            <InfoItem name="Temperature" ></InfoItem>
+            <Object>
+              <id>AirContitioner</id>
+              <InfoItem name="AirFlow" ></InfoItem>
+              <InfoItem name="Consumption" ></InfoItem>
+              <InfoItem name="Power" ></InfoItem>
+              <InfoItem name="TargetTemperature" ></InfoItem>
+              <InfoItem name="Temperature" ></InfoItem>
+              <InfoItem name="TemperatureFlow" ></InfoItem>
+            </Object>
+            <Object>
+              <id>Fridge</id>
+              <InfoItem name="Consumption" ></InfoItem>
+              <InfoItem name="Humidity" ></InfoItem>
+              <InfoItem name="Light" ></InfoItem>
+              <InfoItem name="Temperature" ></InfoItem>
+            </Object>
+            <Object>
+              <id>Oven</id>
+              <InfoItem name="Consumption" ></InfoItem>
+              <InfoItem name="Light" ></InfoItem>
+              <InfoItem name="Power" ></InfoItem>
+              <InfoItem name="Temperature" ></InfoItem>
+            </Object>
+          </Object>
+          <Object>
+            <id>LivingRoom</id>
+            <InfoItem name="CO2" ></InfoItem>
+            <InfoItem name="Consumption" ></InfoItem>
+            <InfoItem name="Humidity" ></InfoItem>
+            <InfoItem name="Light" ></InfoItem>
+            <InfoItem name="Temperature" ></InfoItem>
+            <Object>
+              <id>AirContitioner</id>
+              <InfoItem name="AirFlow" ></InfoItem>
+              <InfoItem name="Consumption" ></InfoItem>
+              <InfoItem name="Power" ></InfoItem>
+              <InfoItem name="TargetTemperature" ></InfoItem>
+              <InfoItem name="Temperature" ></InfoItem>
+              <InfoItem name="TemperatureFlow" ></InfoItem>
+            </Object>
+          </Object>
+          <Object>
+            <id>Sauna</id>
+            <InfoItem name="CO2" ></InfoItem>
+            <InfoItem name="Consumption" ></InfoItem>
+            <InfoItem name="Humidity" ></InfoItem>
+            <InfoItem name="Light" ></InfoItem>
+            <InfoItem name="Temperature" ></InfoItem>
+            <Object>
+              <id>Kiuas</id>
+              <InfoItem name="Power" ></InfoItem>
+            </Object>
+          </Object>
+          <Object>
+            <id>WorkingRoom</id>
+            <InfoItem name="CO2" ></InfoItem>
+            <InfoItem name="Consumption" ></InfoItem>
+            <InfoItem name="Humidity" ></InfoItem>
+            <InfoItem name="Light" ></InfoItem>
+            <InfoItem name="Temperature" ></InfoItem>
+            <Object>
+              <id>AirContitioner</id>
+              <InfoItem name="AirFlow" ></InfoItem>
+              <InfoItem name="Consumption" ></InfoItem>
+              <InfoItem name="Power" ></InfoItem>
+              <InfoItem name="TargetTemperature" ></InfoItem>
+              <InfoItem name="Temperature" ></InfoItem>
+              <InfoItem name="TemperatureFlow" ></InfoItem>
+            </Object>
+          </Object>
+        </Object>
+        <Object>
+          <id>vtt</id>
+          <Object>
+            <id>otaakari4</id>
+            <Object>
+              <id>12631</id>
+              <InfoItem name="temperature" ></InfoItem>
+            </Object>
+            <Object>
+              <id>4203</id>
+              <InfoItem name="humidity" ></InfoItem>
+              <InfoItem name="nop" ></InfoItem>
+            </Object>
+            <Object>
+              <id>4204</id>
+              <InfoItem name="co2" ></InfoItem>
+              <InfoItem name="humidity" ></InfoItem>
+              <InfoItem name="light" ></InfoItem>
+            </Object>
+            <Object>
+              <id>4218</id>
+              <InfoItem name="anop" ></InfoItem>
+              <InfoItem name="dos" ></InfoItem>
+            </Object>
+            <Object>
+              <id>4308</id>
+              <InfoItem name="light" ></InfoItem>
+              <InfoItem name="pmv" ></InfoItem>
+            </Object>
+            <Object>
+              <id>4330</id>
+              <InfoItem name="co2" ></InfoItem>
+              <InfoItem name="rcre" ></InfoItem>
+            </Object>
+            <Object>
+              <id>4405</id>
+              <InfoItem name="dos" ></InfoItem>
+              <InfoItem name="humidity" ></InfoItem>
+              <InfoItem name="light" ></InfoItem>
+            </Object>
+            <Object>
+              <id>4607</id>
+              <InfoItem name="co2" ></InfoItem>
+              <InfoItem name="cpce" ></InfoItem>
+              <InfoItem name="light" ></InfoItem>
+              <InfoItem name="pmv" ></InfoItem>
+            </Object>
+            <Object>
+              <id>p4206</id>
+              <InfoItem name="co2" ></InfoItem>
+              <InfoItem name="thl" ></InfoItem>
+            </Object>
+            <Object>
+              <id>today</id>
+              <InfoItem name="electric" ></InfoItem>
+            </Object>
+            <Object>
+              <id>week</id>
+              <InfoItem name="electric" ></InfoItem>
+            </Object>
+          </Object>
+        </Object>
+      </Objects>
+    </omi:msg>
+  </omi:read>
+</omi:omiEnvelope>

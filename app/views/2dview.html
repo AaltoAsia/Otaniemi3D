@@ -1,8 +1,4 @@
 <div ng-hide="pano" id="searchContainer" ng-class="searchContainer">
-<script>function getText()
-{
-    return "Hello World!";
-}</script>
   <button class="btn btn-black mobile-button" ng-click="open()">Options</button>
   <!-- Sensor Type  -->
   <div class="btn-group desktop-dropdown" dropdown>
@@ -37,7 +33,7 @@
          type="text"
          ng-model="searchString"
          placeholder="Search for room..."
-         typeahead="room as room.name for room in rooms.list | filter:{name:$viewValue} | limitTo:8"
+         typeahead="room as room.name for room in rooms.asList() | filter:{name:$viewValue} | limitTo:8"
          class="form-control"
          typeahead-on-select="onSelect($item)">
 
@@ -52,7 +48,6 @@
 </div>
 
 <div class="jumbotron" ng-hide="svgSupport"><h1>Your browser doesn't support svg!</h1></div>
-
 
 <div id="pano" ng-class="panoramaClass" ng-show="pano">
   <button class="panobtn" ng-click="stopPanorama()" >
