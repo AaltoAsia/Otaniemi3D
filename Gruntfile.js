@@ -321,7 +321,8 @@ module.exports = function (grunt) {
             'floorplans/*',
             'sensor_data/*',
             'panorama/*',
-            'panorama/*/*'
+            'panorama/*/*',
+            'odf-requests/*'
           ]
         }, {
           expand: true,
@@ -377,7 +378,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['build', 'connect:dist:keepalive']);
+      return grunt.task.run(['connect:dist:keepalive']);
     }
 
     grunt.task.run([

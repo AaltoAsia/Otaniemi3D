@@ -12,35 +12,29 @@ angular.module('otaniemi3dApp')
 
     this.get = function () {
       var deferred = $q.defer();
-      //var url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
+      var url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
       //time = timeFrame || '';
+      var debug = true;   //use local data if true
 
-      $http.get('odf-requests/sample-response.xml')
-        .success(function (xml) {
-          deferred.resolve(parseData(xml));
-        });
+      if (debug) {
+        $http.get('odf-requests/sample-response.xml')
+          .success(function (xml) {
+            deferred.resolve(parseData(xml));
+          });
+      } else {
+        $http.get('odf-requests/data-all.xml')
+          .success(function (xml) {
 
-      /*
-      $http.get('odf-requests/data-all.xml')
-        .success(function (xml) {
-
-          $http.post(url, xml, {headers: {'Content-Type': 'application/xml'}})
-            .success(function (data) {
-              deferred.resolve(XmlParser.parse(data));
-            })
-            .error(function (data, status, headers, config) {
-              console.log('Failed to fetch sensor data.');
-              console.log('Response:');
-              console.log(data);
-              console.log('Status: ' + status);
-              console.log('Headers:');
-              console.log(headers());
-              console.log('Config:');
-              console.log(config);
-              deferred.reject({});
-            });
-        });
-      */
+            $http.post(url, xml, {headers: {'Content-Type': 'application/xml'}})
+              .success(function (data) {
+                deferred.resolve(parseData(data));
+              })
+              .error(function () {
+                console.log('Failed to fetch sensor data.');
+                deferred.reject({});
+              });
+          });
+      }
       return deferred.promise;
     };
 
@@ -131,3 +125,5 @@ angular.module('otaniemi3dApp')
     }
 
   });
+
+//curl http://otaniemi3d.cs.hut.fi/omi/node/ -H "Content-Type: text/xml" --data msg="<?xml version="1.0" encoding="UTF-8"?><omi:omiEnvelope version="1.0" ttl="10"><omi:read><omi:msg></omi:msg></omi:read></omi:omiEnvelope>"
