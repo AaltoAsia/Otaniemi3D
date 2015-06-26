@@ -340,6 +340,11 @@ module.exports = function (grunt) {
           src: ['ui-grid.ttf',
               'ui-grid.woff'],
           dest: '<%= yeoman.dist %>/styles'
+        }, {
+          expand: true,
+          cwd: 'bower_components/jstree/dist/themes/default',
+          src: '*.*',
+          dest: '<%= yeoman.dist %>/styles'
         }]
       },
       styles: {
