@@ -431,8 +431,18 @@ angular.module('otaniemi3dApp')
                 var keys = Object.keys(Rooms.dict);
                 for (var j = 0; j < keys.length; j++) {
                   var room = Rooms.dict[keys[j]];
+                  var roomNum;
 
-                  if (room.name === roomText.textContent) {
+                  //If room.name starts with 'Room' prefix then room
+                  //number is room.name without the 'Room-' prefix.
+                  if (room.name.lastIndexOf('Room', 0) === 0) {
+                    roomNum = room.name.split(/ (.+)/)[1];
+                  //e.g. Cafeteria don't have 'Room' prefix.
+                  } else {
+                    roomNum = room.name;
+                  }
+
+                  if (roomNum === roomText.textContent) {
                     if (!room.node) {
                       room.node = roomArea;
                       room.floor = i;
@@ -444,9 +454,15 @@ angular.module('otaniemi3dApp')
                 }
 
                 if (!roomExists) {
-                  var id = 'room_' + roomText.textContent;
+                  var id;
 
-                  Rooms.add(id, roomText.textContent, roomArea, i);
+                  if (isNaN(Number(roomText.textContent.substring(0, 2)))) {
+                    id = roomText.textContent;
+                  } else {
+                    id = 'Room-' + roomText.textContent;
+                  }
+
+                  Rooms.add(id, 'Room ' + roomText.textContent, roomArea, i);
                   addTooltip(Rooms.dict[id]);
                 }
               }

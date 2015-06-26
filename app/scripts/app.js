@@ -52,9 +52,9 @@ angular
         redirectTo: '/home'
       });
   })
-  .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+  .config(function(cfpLoadingBarProvider) {
       cfpLoadingBarProvider.includeSpinner = false;
-  }])
+  })
   .run(function() {
     FastClick.attach(document.body);
   });

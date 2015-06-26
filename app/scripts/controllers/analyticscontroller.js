@@ -18,7 +18,7 @@ angular.module('otaniemi3dApp')
       var keys = Object.keys(Rooms.dict);
       for (var i = 0; i < keys.length; i++) {
         var room = Rooms.dict[keys[i]];
-        room.text = 'Room ' + room.name;
+        room.text = room.name;
         room.children = [];
 
         for (var j = 0; j < room.sensors.length; j++) {

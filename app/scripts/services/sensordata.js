@@ -13,16 +13,15 @@ angular.module('otaniemi3dApp')
     this.get = function () {
       var deferred = $q.defer();
       var url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
-      //time = timeFrame || '';
       var debug = true;   //use local data if true
 
       if (debug) {
-        $http.get('odf-requests/sample-response.xml')
+        $http.get('odf-requests/example-response.xml')
           .success(function (xml) {
             deferred.resolve(parseData(xml));
           });
       } else {
-        $http.get('odf-requests/data-all.xml')
+        $http.get('odf-requests/K1-request.xml')
           .success(function (xml) {
 
             $http.post(url, xml, {headers: {'Content-Type': 'application/xml'}})
@@ -46,7 +45,7 @@ angular.module('otaniemi3dApp')
 
       xml = new DOMParser().parseFromString(xml, 'text/xml');
 
-      var objects = evaluateXPath(xml, '//Object');
+      var objects = evaluateXPath(xml, '//*[local-name()="Object"]');
 
       if (objects.length === 0) {
         console.log('Couldn\'t fetch any sensor data from the server.');
@@ -61,67 +60,64 @@ angular.module('otaniemi3dApp')
           continue;
         }
 
-        //Check if id starts with string 'room'
-        if (id.lastIndexOf('room', 0) === 0) {
-          var sensors = objects[i].children;
-          var sensorList = [];
+        var sensors = objects[i].children;
+        var sensorList = [];
 
-          for (var j = 0; j < sensors.length; j++) {
-            if (sensors[j].tagName !== 'InfoItem') {
-              continue;
-            }
-            var name = sensors[j].getAttribute('name');
-            var values = sensors[j].children;
-            var valueList = [];
+        for (var j = 0; j < sensors.length; j++) {
+          if (sensors[j].tagName !== 'InfoItem') {
+            continue;
+          }
+          var name = sensors[j].getAttribute('name');
+          var values = sensors[j].children;
+          var valueList = [];
 
-            for (var k = 0; k < values.length; k++) {
-              if (values[k].tagName === 'value') {
-                var value = values[k].textContent;
-                var unixTime = values[k].getAttribute('unixTime');
-                var dateTime = values[k].getAttribute('dateTime');
-                var time;
+          for (var k = 0; k < values.length; k++) {
+            if (values[k].tagName === 'value') {
+              var value = values[k].textContent;
+              var unixTime = values[k].getAttribute('unixTime');
+              var dateTime = values[k].getAttribute('dateTime');
+              var time;
 
-                //Check if value is empty string because Number()
-                //turns empty strings into zero.
-                if (value) { value = Number(value); }
+              //Check if value is empty string because Number()
+              //turns empty strings into zero.
+              if (value) {
+                value = Number(value);
+                value = parseFloat(Math.round(value * 100) / 100).toFixed(2);
+              }
 
-                if (dateTime) {
-                  time = new Date(dateTime);
-                } else {
-                  time = new Date(Number(unixTime) * 1000);
-                }
+              if (dateTime) {
+                time = new Date(dateTime);
+              } else {
+                time = new Date(Number(unixTime) * 1000);
+              }
 
-                if (!isNaN(value) && time) {
-                  valueList.push({
-                    value: value,
-                    time: time
-                  });
-                }
+              if (!isNaN(value) && time) {
+                valueList.push({
+                  value: value,
+                  time: time
+                });
               }
             }
-
-            if (name && valueList.length > 0) {
-              sortDates(valueList);
-
-              sensorList.push({
-                sensorId: name + '_' + id,
-                type: name,
-                values: valueList
-              });
-            }
           }
 
-          if (sensorList.length > 0) {
-            sensorData[id] = {
-              name: id.split(/_(.+)/)[1],
-              sensors: sensorList,
-              node: null
-            };
+          if (name && valueList.length > 0) {
+            sortDates(valueList);
+
+            sensorList.push({
+              sensorId: name + '-' + id,
+              type: name,
+              values: valueList
+            });
           }
         }
-        //Break from the xpath iteration loop. There's no need to return
-        //the list of elements.
-        //return false;
+
+        if (sensorList.length > 0) {
+          sensorData[id] = {
+            name: id.split('-').join(' '),
+            sensors: sensorList,
+            node: null
+          };
+        }
       }
       return sensorData;
     }

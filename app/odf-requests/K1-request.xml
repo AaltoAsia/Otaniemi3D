@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<omi:omiEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" xsi:schemaLocation="omi.xsd omi.xsd" version="1.0" ttl="0">
+  <omi:read msgformat="odf">
+    <omi:msg xmlns="odf.xsd" xsi:schemaLocation="odf.xsd odf.xsd">
+      <Objects>
+        <Object>
+          <id>K1</id>
+        </Object>
+      </Objects>
+    </omi:msg>
+  </omi:read>
+</omi:omiEnvelope>
