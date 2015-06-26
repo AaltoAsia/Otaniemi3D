@@ -23,7 +23,17 @@ angular.module('otaniemi3dApp')
 
         for (var j = 0; j < room.sensors.length; j++) {
           var sensor = room.sensors[j];
-          sensor.text = sensor.type + ': ' + sensor.value;
+          sensor.text = sensor.type;
+          sensor.children = [];
+
+          for (var k = 0; k < sensor.values.length; k++) {
+            var sensorValue = sensor.values[k];
+            sensor.children.push({
+              text: sensorValue.value + ' - ' + 
+                sensorValue.time.toUTCString()
+            });
+          }
+
           room.children.push(sensor);
         }
 

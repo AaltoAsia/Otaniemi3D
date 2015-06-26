@@ -77,11 +77,19 @@ angular.module('otaniemi3dApp')
             for (var k = 0; k < values.length; k++) {
               if (values[k].tagName === 'value') {
                 var value = values[k].textContent;
-                var time = values[k].getAttribute('unixTime');
+                var unixTime = values[k].getAttribute('unixTime');
+                var dateTime = values[k].getAttribute('dateTime');
+                var time;
 
                 //Check if value is empty string because Number()
                 //turns empty strings into zero.
                 if (value) { value = Number(value); }
+
+                if (dateTime) {
+                  time = new Date(dateTime);
+                } else {
+                  time = new Date(Number(unixTime) * 1000);
+                }
 
                 if (!isNaN(value) && time) {
                   valueList.push({
