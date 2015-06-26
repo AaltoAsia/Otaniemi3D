@@ -101,6 +101,7 @@ angular.module('otaniemi3dApp')
       };
 
       $('#sensor-tree').jstree({
+        plugins: ['search', 'sort'],
         core: {
           data: treeData
         }
