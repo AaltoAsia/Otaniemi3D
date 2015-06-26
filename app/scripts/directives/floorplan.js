@@ -155,14 +155,18 @@ angular.module('otaniemi3dApp')
         var lastRow = addTooltipText('Room', room.name);
 
         for (var i = 0; i < room.sensors.length; i++) {
-          lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value);
+          var sensor = room.sensors[i];
 
-          if(scope.roomValueType.toLowerCase() === room.sensors[i].type.toLowerCase() ||
-              (scope.roomValueType.toLowerCase()==='occupancy' &&
-              room.sensors[i].type.toLowerCase()==='pir')) {
-            var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
-            lastRow.type.style('background-color', color.rgbaString);
-            lastRow.value.style('background-color', color.rgbaString);
+          if (sensor.values.length > 0) {
+            lastRow = addTooltipText(sensor.type, sensor.values[0].value);
+
+            if(scope.roomValueType.toLowerCase() === sensor.type.toLowerCase() ||
+                (scope.roomValueType.toLowerCase()==='occupancy' &&
+                sensor.type.toLowerCase()==='pir')) {
+              var color = twodservice.getColor(sensor.type, sensor.values[0].value);
+              lastRow.type.style('background-color', color.rgbaString);
+              lastRow.value.style('background-color', color.rgbaString);
+            }
           }
         }
         
@@ -289,11 +293,20 @@ angular.module('otaniemi3dApp')
       if (room.node) {
         var i;
         for (i = 0; i < room.sensors.length; i++) {
-          if (room.sensors[i].type.toLowerCase() === scope.$parent.roomValueType.toLowerCase() || ((room.sensors[i].type.toLowerCase() === 'pir') && (scope.$parent.roomValueType.toLowerCase() === 'occupancy'))) {
-            var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
-            d3.select(room.node)
-              .style('fill', color.rgb)
-              .style('fill-opacity', color.opacity);
+          var sensor = room.sensors[i];
+
+          if (sensor.type.toLowerCase() === scope.$parent.roomValueType.toLowerCase() ||
+              ((sensor.type.toLowerCase() === 'pir') &&
+              (scope.$parent.roomValueType.toLowerCase() === 'occupancy'))) {
+
+            if (sensor.values.length > 0) {
+              var color = twodservice.getColor(room.sensors[i].type,
+                room.sensors[i].values[0].value);
+
+              d3.select(room.node)
+                .style('fill', color.rgb)
+                .style('fill-opacity', color.opacity);
+            }
           }
         }
       }
@@ -418,8 +431,18 @@ angular.module('otaniemi3dApp')
                 var keys = Object.keys(Rooms.dict);
                 for (var j = 0; j < keys.length; j++) {
                   var room = Rooms.dict[keys[j]];
+                  var roomNum;
 
-                  if (room.name === roomText.textContent) {
+                  //If room.name starts with 'Room' prefix then room
+                  //number is room.name without the 'Room-' prefix.
+                  if (room.name.lastIndexOf('Room', 0) === 0) {
+                    roomNum = room.name.split(/ (.+)/)[1];
+                  //e.g. Cafeteria don't have 'Room' prefix.
+                  } else {
+                    roomNum = room.name;
+                  }
+
+                  if (roomNum === roomText.textContent) {
                     if (!room.node) {
                       room.node = roomArea;
                       room.floor = i;
@@ -431,9 +454,15 @@ angular.module('otaniemi3dApp')
                 }
 
                 if (!roomExists) {
-                  var id = 'room_' + roomText.textContent;
+                  var id;
 
-                  Rooms.add(id, roomText.textContent, roomArea, i);
+                  if (isNaN(Number(roomText.textContent.substring(0, 2)))) {
+                    id = roomText.textContent;
+                  } else {
+                    id = 'Room-' + roomText.textContent;
+                  }
+
+                  Rooms.add(id, 'Room ' + roomText.textContent, roomArea, i);
                   addTooltip(Rooms.dict[id]);
                 }
               }
