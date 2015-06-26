@@ -71,13 +71,34 @@ angular.module('otaniemi3dApp')
               continue;
             }
             var name = sensors[j].getAttribute('name');
-            var value = Number(sensors[j].children[0].textContent);
+            var values = sensors[j].children;
+            var valueList = [];
 
-            if (name && value) {
+            for (var k = 0; k < values.length; k++) {
+              if (values[k].tagName === 'value') {
+                var value = values[k].textContent;
+                var time = values[k].getAttribute('unixTime');
+
+                //Check if value is empty string because Number()
+                //turns empty strings into zero.
+                if (value) { value = Number(value); }
+
+                if (!isNaN(value) && time) {
+                  valueList.push({
+                    value: value,
+                    time: time
+                  });
+                }
+              }
+            }
+
+            if (name && valueList.length > 0) {
+              sortDates(valueList);
+
               sensorList.push({
                 sensorId: name + '_' + id,
                 type: name,
-                value: value
+                values: valueList
               });
             }
           }
@@ -98,25 +119,28 @@ angular.module('otaniemi3dApp')
     }
 
     /*
+     * Sort value list by date
+     */
+    function sortDates (array) {
+      array.sort(function(a, b){
+        return new Date(a) - new Date(b);
+      });
+    }
+
+    /*
      * Evaluate an XPath expression aExpr against a given DOM node
      * or Document object (aNode), returning the results as an array.
-     * This function can also be given a callback that is called on every
-     * element found.
      * https://developer.mozilla.org/en-US/docs/Using_XPath
      */
-    function evaluateXPath(aNode, aExpr, fn) {
+    function evaluateXPath(aNode, aExpr) {
       var xpe = new XPathEvaluator();
       var nsResolver = xpe.createNSResolver(aNode.ownerDocument === null ?
         aNode.documentElement : aNode.ownerDocument.documentElement);
       var result = xpe.evaluate(aExpr, aNode, nsResolver, 0, null);
       var found = [];
-      var callback = (typeof fn === 'function');
       var res = result.iterateNext();
 
       while (res) {
-        if (callback) {
-          fn(res);
-        }
         found.push(res);
         res = result.iterateNext();
       }

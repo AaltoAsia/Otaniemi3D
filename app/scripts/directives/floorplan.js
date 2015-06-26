@@ -155,14 +155,18 @@ angular.module('otaniemi3dApp')
         var lastRow = addTooltipText('Room', room.name);
 
         for (var i = 0; i < room.sensors.length; i++) {
-          lastRow = addTooltipText(room.sensors[i].type, room.sensors[i].value);
+          var sensor = room.sensors[i];
 
-          if(scope.roomValueType.toLowerCase() === room.sensors[i].type.toLowerCase() ||
-              (scope.roomValueType.toLowerCase()==='occupancy' &&
-              room.sensors[i].type.toLowerCase()==='pir')) {
-            var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
-            lastRow.type.style('background-color', color.rgbaString);
-            lastRow.value.style('background-color', color.rgbaString);
+          if (sensor.values.length > 0) {
+            lastRow = addTooltipText(sensor.type, sensor.values[0].value);
+
+            if(scope.roomValueType.toLowerCase() === sensor.type.toLowerCase() ||
+                (scope.roomValueType.toLowerCase()==='occupancy' &&
+                sensor.type.toLowerCase()==='pir')) {
+              var color = twodservice.getColor(sensor.type, sensor.values[0].value);
+              lastRow.type.style('background-color', color.rgbaString);
+              lastRow.value.style('background-color', color.rgbaString);
+            }
           }
         }
         
@@ -289,11 +293,20 @@ angular.module('otaniemi3dApp')
       if (room.node) {
         var i;
         for (i = 0; i < room.sensors.length; i++) {
-          if (room.sensors[i].type.toLowerCase() === scope.$parent.roomValueType.toLowerCase() || ((room.sensors[i].type.toLowerCase() === 'pir') && (scope.$parent.roomValueType.toLowerCase() === 'occupancy'))) {
-            var color = twodservice.getColor(room.sensors[i].type, room.sensors[i].value);
-            d3.select(room.node)
-              .style('fill', color.rgb)
-              .style('fill-opacity', color.opacity);
+          var sensor = room.sensors[i];
+
+          if (sensor.type.toLowerCase() === scope.$parent.roomValueType.toLowerCase() ||
+              ((sensor.type.toLowerCase() === 'pir') &&
+              (scope.$parent.roomValueType.toLowerCase() === 'occupancy'))) {
+
+            if (sensor.values.length > 0) {
+              var color = twodservice.getColor(room.sensors[i].type,
+                room.sensors[i].values[0].value);
+
+              d3.select(room.node)
+                .style('fill', color.rgb)
+                .style('fill-opacity', color.opacity);
+            }
           }
         }
       }
