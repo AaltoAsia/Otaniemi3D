@@ -43,6 +43,8 @@ angular.module('otaniemi3dApp')
       var deferred = $q.defer();
 
       SensorData.get().then(function (data) {
+        //Update only sensor info if room already exists. This way
+        //the svg nodes stored in room objects won't reset.
         for (var room in data) {
           if (data.hasOwnProperty(room)) {
             if (self.dict[room]) {
@@ -94,29 +96,29 @@ angular.module('otaniemi3dApp')
           switch (room.sensors[i].type) {
             case 'temperature':
               roomType = room.sensors[i].type;
-              roomValue = room.sensors[i].value + ' °C' ;
+              roomValue = room.sensors[i].values[0].value + ' °C' ;
               roomInfo.push({type:roomType, value:roomValue});
               break;
             case 'humidity':
               roomType = room.sensors[i].type;
-              roomValue = room.sensors[i].value + ' %' ;
+              roomValue = room.sensors[i].values[0].value + ' %' ;
               roomInfo.push({type:roomType, value:roomValue});
               break;
             case 'co2':
               roomType = room.sensors[i].type;
-              roomValue = room.sensors[i].value + ' ppm' ;
+              roomValue = room.sensors[i].values[0].value + ' ppm' ;
               roomInfo.push({type:roomType, value:roomValue});
               break;
             case 'pir':
               var occupancyState;
-              if (room.sensors[i].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
+              if (room.sensors[i].values[0].value > 0) {occupancyState = 'yes';} else {occupancyState = 'no';}
               roomType = 'occupied';
               roomValue = occupancyState;
               roomInfo.push({type:roomType, value:roomValue});
               break;
             case 'light':
               roomType = room.sensors[i].type;
-              roomValue = room.sensors[i].value + ' lux' ;
+              roomValue = room.sensors[i].values[0].value + ' lux' ;
               roomInfo.push({type:roomType, value:roomValue});
               break;
           }

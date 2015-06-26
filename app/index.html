@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="styles/home.css"/>
     <link rel="stylesheet" href="styles/2dview.css"/>
     <link rel="stylesheet" href="styles/3dview.css"/>
+    <link rel="stylesheet" href="styles/analytics.css"/>
     <!-- endbuild -->
 
 </head>
@@ -50,6 +51,7 @@
                     <li ng-class="{ active: isActive('/1dview')}"><a id="1dview" ng-click="isCollapsed = true" ng-href="#/1dview">1D View</a></li>
                     <li ng-class="{ active: isActive('/2dview')}"><a id="2dview" ng-click="isCollapsed = true" ng-href="#/2dview">2D View</a></li>
                     <li ng-class="{ active: isActive('/3dview')}"><a id="3dview" ng-click="isCollapsed = true" ng-href="#/3dview">3D View</a></li>
+                    <li ng-class="{ active: isActive('/analytics')}"><a id="analytics" ng-click="isCollapsed = true" ng-href="#/analytics">Analytics</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -109,6 +111,9 @@
 <script src="bower_components/spin.js/spin.js"></script>
 <script src="bower_components/angular-spinner/angular-spinner.js"></script>
 <script src="bower_components/jstree/dist/jstree.js"></script>
+<script src="bower_components/highcharts/highcharts.js"></script>
+<script src="bower_components/highcharts/highcharts-more.js"></script>
+<script src="bower_components/highcharts/modules/exporting.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -131,6 +136,7 @@
 <script src="scripts/controllers/3dmodalcontroller.js"></script>
 
 <script src="scripts/services/legendbar.js"></script>
+<script src="scripts/controllers/analyticscontroller.js"></script>
 <!-- endbuild -->
 </body>
 </html>

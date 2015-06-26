@@ -56,7 +56,9 @@ angular.module('otaniemi3dApp')
 
       var percentage;
       
-      if (sensorLower === 'occupancy' || sensorLower === 'pir' || sensorLower === 'occupied'){
+      if (sensorLower === 'occupancy' ||
+          sensorLower === 'pir' ||
+          sensorLower === 'occupied'){
         if (value <= 0) {
           percentage = 0;
         } else {

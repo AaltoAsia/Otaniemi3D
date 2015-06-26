@@ -191,9 +191,11 @@ angular.module('otaniemi3dApp')
       //Loop through sensors and check the value of the sensor that matches 
       //the parameter given.
       for (var j = 0; j < room.sensors.length; j++) {
-        if (room.sensors[j].type.toLowerCase() === type.toLowerCase() ||
-           (room.sensors[j].type.toLowerCase() === 'pir' && type.toLowerCase() === 'occupancy')) {
-          var color = twodservice.getColor(room.sensors[j].type, room.sensors[j].value);
+        var sensor = room.sensors[j];
+        
+        if (sensor.type.toLowerCase() === type.toLowerCase() ||
+           (sensor.type.toLowerCase() === 'pir' && type.toLowerCase() === 'occupancy')) {
+          var color = twodservice.getColor(sensor.type, sensor.values[0].value);
           d3.select(room.node)
             .style('fill', color.rgb)
             .style('fill-opacity', color.opacity);
