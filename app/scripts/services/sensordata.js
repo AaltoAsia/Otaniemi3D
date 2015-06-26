@@ -13,7 +13,7 @@ angular.module('otaniemi3dApp')
     this.get = function () {
       var deferred = $q.defer();
       var url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
-      var debug = false;   //use local data if true
+      var debug = true;   //use local data if true
 
       if (debug) {
         $http.get('odf-requests/example-response.xml')
