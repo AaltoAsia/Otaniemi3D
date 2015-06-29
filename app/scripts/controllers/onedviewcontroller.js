@@ -56,12 +56,14 @@ angular.module('otaniemi3dApp')
       */
     };
 
-    Rooms.updateRoomInfo().then(function () {
+    Rooms.updateRoomInfo();
+
+    $scope.$on('sensordata-update', function(event, data) {
       var sensorList = [];
 
-      var keys = Object.keys(Rooms.dict);
+      var keys = Object.keys(data);
       for (var i = 0; i < keys.length; i++) {
-        var room = Rooms.dict[keys[i]];
+        var room = data[keys[i]];
         var sensors = room.sensors;
 
         for (var j = 0; j < sensors.length; j++) {

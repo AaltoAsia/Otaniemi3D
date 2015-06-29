@@ -8,7 +8,7 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('Rooms', function ($q, SensorData) {
+  .service('Rooms', function ($rootScope, $q, SensorData) {
 
     //Can be used inside this service to reference this service's public
     //properties and functions (e.g. self.dict).
@@ -24,7 +24,7 @@ angular.module('otaniemi3dApp')
     */
     this.asList = function() {
       var roomList = [];
-      
+
       var keys = Object.keys(self.dict);
       for (var i = 0; i < keys.length; i++) {
         var room = self.dict[keys[i]];
@@ -40,27 +40,9 @@ angular.module('otaniemi3dApp')
      * sensor information.
      */
     this.updateRoomInfo = function() {
-      var deferred = $q.defer();
-
-      SensorData.get().then(function (data) {
-        //Update only sensor info if room already exists. This way
-        //the svg nodes stored in room objects won't reset.
-        for (var room in data) {
-          if (data.hasOwnProperty(room)) {
-            if (self.dict[room]) {
-              self.dict[room].sensors = data[room].sensors;
-            } else {
-              //Room doesn't yet exist in the dictionary.
-              self.dict[room] = data[room];
-            }
-          }
-        }
-        deferred.resolve(self.dict);
-      });
-
-      return deferred.promise;
+      SensorData.get();
     };
-  
+
     /*
     * Add new room object to the list
     */
@@ -149,5 +131,33 @@ angular.module('otaniemi3dApp')
         roomHTML += '[/table]';
       return roomHTML;
     };
+
+    /*
+     * Watch for new sensor data sent by SensorData service.
+     */
+    $rootScope.$on('sensordata-new', function(event, data) {
+      var keys = Object.keys(data);
+      for (var i = 0; i < keys.length; i++) {
+        var room = self.dict[keys[i]];
+        if (room) {
+          //Update only sensor info if room already exists. This way
+          //the svg nodes stored in room objects won't reset.
+          room.sensors = data[keys[i]].sensors;
+        } else {
+          //Room doesn't yet exist in the dictionary.
+          self.dict[keys[i]] = data[keys[i]];
+        }
+      }
+      $rootScope.$broadcast('sensordata-update', self.dict);
+    });
+
+    /*
+     * Watch for changes made into the self.dict object.
+     */
+    $rootScope.$watch(function() { return self.dict; }, function() {
+      if (Object.keys(self.dict).length > 0) {
+        $rootScope.$broadcast('sensordata-update', self.dict);
+      }
+    });
 
   });

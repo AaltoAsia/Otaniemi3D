@@ -8,7 +8,7 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('SensorData', function ($http, $q) {
+  .service('SensorData', function ($http, $q, $rootScope) {
 
     this.get = function () {
       var deferred = $q.defer();
@@ -18,7 +18,9 @@ angular.module('otaniemi3dApp')
       if (debug) {
         $http.get('odf-requests/example-response.xml')
           .success(function (xml) {
-            deferred.resolve(parseData(xml));
+            var data = parseData(xml);
+            deferred.resolve(data);
+            $rootScope.$broadcast('sensordata-new', data);
           });
       } else {
         $http.get('odf-requests/K1-request.xml')
@@ -26,7 +28,9 @@ angular.module('otaniemi3dApp')
 
             $http.post(url, xml, {headers: {'Content-Type': 'application/xml'}})
               .success(function (data) {
-                deferred.resolve(parseData(data));
+                var data = parseData(data);
+                deferred.resolve(data);
+                $rootScope.$broadcast('sensordata-new', data);
               })
               .error(function () {
                 console.log('Failed to fetch sensor data.');
