@@ -12,17 +12,6 @@ angular.module('otaniemi3dApp')
 
     $scope.selectedRoom = null;
     $scope.selectedSensor = null;
-
-    Rooms.updateRoomInfo();
-
-    $('#sensor-tree').jstree({
-      plugins: ['search', 'sort'],
-      core: {
-        check_callback: true,
-        data: []
-      }
-    });
-
     $scope.chartConfig = {
       xAxis: {
         type: 'datetime',
@@ -32,22 +21,60 @@ angular.module('otaniemi3dApp')
       },
       tooltip: {
         valueSuffix: '°C'
-      },
-      series: [{
-        data: [
-          [1,2],
-          [3,4]
-        ]
-      }]
+      }
     };
-    /*
-    if ($('#sensor-chart').highcharts()) {
-      $('#sensor-chart').highcharts().destroy();
+
+    function selectRoom(room) {
+      $scope.selectedRoom = room;
+      selectSensor(room.sensors[0]);
     }
-    $('#sensor-chart').highcharts(chartOpt);
-    var sensorChart = $('#sensor-chart').highcharts();
-    console.log(Highcharts.charts.length);
-    */
+
+    function selectSensor(sensor) {
+      var sensorData = [];
+      $scope.selectedSensor = sensor;
+
+      for (var i = 0; i < sensor.values.length; i++) {
+        sensorData.push([
+          sensor.values[i].time,
+          sensor.values[i].value,
+        ]);
+      }
+
+      $scope.chartConfig.series = [{
+        name: sensor.type,
+        data: sensorData
+      }];
+
+      $scope.chartConfig.title = $scope.selectedRoom.name + ': ' +
+                                 $scope.selectedSensor.type;
+      $scope.chartConfig.yAxis = {
+        title: $scope.selectedSensor.type
+      };
+    }
+
+    Rooms.updateRoomInfo();
+
+    var sensorTree = $('#sensor-tree').jstree({
+      plugins: ['search', 'sort'],
+      core: {
+        check_callback: true,
+        data: []
+      }
+    });
+    var a = $('#sensor-tree').jstree();
+    sensorTree.on('select_node.jstree', function(event, data) {
+      var b = a;
+      var node = data.node;
+      if (node.original.sensors) {
+        selectRoom(node.original);
+      } else if (node.original.values) {
+        var room = sensorTree.get_node(node.parent);
+        $scope.selectedRoom = room;
+        selectSensor(node.original);
+      }
+    });
+
+    /*
     $scope.$watch('selectedRoom', function (room) {
       if (room && room.sensors.length > 0) {
         $scope.selectedSensor = room.sensors[0];
@@ -77,8 +104,8 @@ angular.module('otaniemi3dApp')
         $scope.chartConfig.yAxis = {
           title: $scope.selectedSensor.type
         };
-        
-        /*
+
+
         sensorChart.setTitle({
           text: $scope.selectedRoom.name + ': ' + sensor.type
         });
@@ -90,9 +117,10 @@ angular.module('otaniemi3dApp')
           name: sensor.type,
           data: sensorData
         }, true);
-        */
+
       }
     });
+    */
 
     $scope.$on('sensordata-update', function (event, data) {
 

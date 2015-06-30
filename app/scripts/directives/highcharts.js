@@ -32,6 +32,10 @@ angular.module('otaniemi3dApp')
         options.chart.renderTo = element[0];
         var chart = new $window.Highcharts.Chart(options);
 
+        scope.$watch('config', function() {
+          console.log('a');
+        }, true);
+
         scope.$watch('config.series', function(newSeries) {
           if (chart.series.length > 0 && angular.isArray(newSeries)) {
             for (var i = 0; i < chart.series.length; i++) {
