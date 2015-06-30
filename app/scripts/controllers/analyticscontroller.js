@@ -24,19 +24,21 @@ angular.module('otaniemi3dApp')
     });
 
     $scope.chartConfig = {
-      options: {
-        xAxis: {
-          type: 'datetime',
-          title: {
-              text: 'Date'
-          }
-        },
-        tooltip: {
-          valueSuffix: '°C'
+      xAxis: {
+        type: 'datetime',
+        title: {
+          text: 'Date'
         }
       },
-      yAxis: {},
-      series: []
+      tooltip: {
+        valueSuffix: '°C'
+      },
+      series: [{
+        data: [
+          [1,2],
+          [3,4]
+        ]
+      }]
     };
     /*
     if ($('#sensor-chart').highcharts()) {
@@ -64,6 +66,7 @@ angular.module('otaniemi3dApp')
           ]);
         }
 
+
         $scope.chartConfig.series = [{
           name: sensor.type,
           data: sensorData
@@ -74,6 +77,7 @@ angular.module('otaniemi3dApp')
         $scope.chartConfig.yAxis = {
           title: $scope.selectedSensor.type
         };
+        
         /*
         sensorChart.setTitle({
           text: $scope.selectedRoom.name + ': ' + sensor.type

@@ -16,8 +16,7 @@ angular
     'ui.bootstrap',
     'ui.grid',
     'angular-loading-bar',
-    'angularSpinner',
-    'highcharts-ng'
+    'angularSpinner'
   ])
   .config(function ($routeProvider) {
     $routeProvider
