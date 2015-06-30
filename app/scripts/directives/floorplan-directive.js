@@ -7,8 +7,8 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('floorplan', function (Rooms, Floorplans, usSpinnerService,
-    twodservice, Legendbar) {
+  .directive('floorplan', function (Rooms, floorplanService, usSpinnerService,
+    heatmapService, legendbarService) {
     
   return {
     restrict: 'E',
@@ -163,7 +163,7 @@ angular.module('otaniemi3dApp')
             if(scope.roomValueType.toLowerCase() === sensor.type.toLowerCase() ||
                 (scope.roomValueType.toLowerCase()==='occupancy' &&
                 sensor.type.toLowerCase()==='pir')) {
-              var color = twodservice.getColor(sensor.type, sensor.values[0].value);
+              var color = heatmapService.getColor(sensor.type, sensor.values[0].value);
               lastRow.type.style('background-color', color.rgbaString);
               lastRow.value.style('background-color', color.rgbaString);
             }
@@ -236,7 +236,7 @@ angular.module('otaniemi3dApp')
         for (var i = 0; i < keys.length; i++) {
           addTooltip(Rooms.dict[keys[i]]);
         }
-        //floorplans loaded, hide the spinner
+        //floorplanService loaded, hide the spinner
         usSpinnerService.stop('spinner-1');
         showFloorplan();
       }
@@ -254,7 +254,7 @@ angular.module('otaniemi3dApp')
             parseRooms(floorplan);
             //Remove title elements so that the browser's built-in tooltip doesn't show
             d3.select('.' + floorplanContainer.class).selectAll('title').remove();
-            if (Floorplans.allLoaded()) {
+            if (floorplanService.allLoaded()) {
               updateRoomColors();
               usSpinnerService.stop('spinner-1');
               showFloorplan();
@@ -262,7 +262,7 @@ angular.module('otaniemi3dApp')
           }
           finally {
             if (isDefault) {
-              getOtherFloorplans();
+              getOtherfloorplanService();
             }
           }
         }
@@ -271,18 +271,18 @@ angular.module('otaniemi3dApp')
 
 
     /*
-    * Download remaining floorplans and parse their room info.
+    * Download remaining floorplanService and parse their room info.
     */
-    function getOtherFloorplans() {
+    function getOtherfloorplanService() {
       var i;
-      for (i = 0; i < Floorplans.floors.length; i++) {
-        var floorplan = Floorplans.floors[i];
+      for (i = 0; i < floorplanService.floors.length; i++) {
+        var floorplan = floorplanService.floors[i];
 
         if (floorplan !== defaultFloorplan && floorplan.svg === null) {
           getFloorplan(floorplan, parserContainer, false);
         }
       }
-    } //end getOtherFloorplans
+    } //end getOtherfloorplanService
 
 
     /*
@@ -300,7 +300,7 @@ angular.module('otaniemi3dApp')
               (scope.$parent.roomValueType.toLowerCase() === 'occupancy'))) {
 
             if (sensor.values.length > 0) {
-              var color = twodservice.getColor(room.sensors[i].type,
+              var color = heatmapService.getColor(room.sensors[i].type,
                 room.sensors[i].values[0].value);
 
               d3.select(room.node)
@@ -328,7 +328,7 @@ angular.module('otaniemi3dApp')
           .style('display', container.display);
       }
 
-      if (!Floorplans.allLoaded()) {
+      if (!floorplanService.allLoaded()) {
         containerElement.style('visibility', 'hidden');
       }
 
@@ -424,8 +424,8 @@ angular.module('otaniemi3dApp')
 
           //Check if room name overlaps with room rectangle in svg.
           if (isInside) {
-            for (var i = 0; i < Floorplans.floors.length; i++) {
-              if (Floorplans.floors[i] === floorplan) {
+            for (var i = 0; i < floorplanService.floors.length; i++) {
+              if (floorplanService.floors[i] === floorplan) {
                 var roomExists = false;
 
                 var keys = Object.keys(Rooms.dict);
@@ -537,7 +537,7 @@ angular.module('otaniemi3dApp')
       return pulsing;
     }
     
-    Legendbar.fillLegend();
+    legendbarService.fillLegend();
 
     /*
     * Watch for changes in twodviewcontroller's $scope.floorplan and
@@ -574,7 +574,7 @@ angular.module('otaniemi3dApp')
 
     scope.$watch('highlightedRoom', function() {
       if (scope.highlightedRoom && scope.highlightedRoom.node) {
-        scope.plan = Floorplans.floors[scope.highlightedRoom.floor];
+        scope.plan = floorplanService.floors[scope.highlightedRoom.floor];
         scope.plan.translate = [0, 0];
         scope.plan.scale = 1;
         appendFloorplan(scope.plan, floorplanContainer);
@@ -583,9 +583,9 @@ angular.module('otaniemi3dApp')
     });
     
     scope.$watch('roomValueType', function() {
-      Legendbar.setRoomValueType(scope.roomValueType);
-      Legendbar.changeLegendText();
-      Legendbar.changeLegendStyle();
+      legendbarService.setRoomValueType(scope.roomValueType);
+      legendbarService.changeLegendText();
+      legendbarService.changeLegendStyle();
     });
     
     scope.$watch('resetView', function() {

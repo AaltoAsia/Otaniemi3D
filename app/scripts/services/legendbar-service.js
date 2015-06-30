@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc service
- * @name otaniemi3dApp.Legendbar
+ * @name otaniemi3dApp.legendbarService
  * @description
- * # Legendbar
+ * # legendbarService
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('Legendbar', function (twodservice) {
+  .service('legendbarService', function (heatmapService) {
 
     var barWidth = 20,
         svgWidth = 80,
@@ -47,8 +47,8 @@ angular.module('otaniemi3dApp')
 
       //e.g. 60% if it's just below half way.
       var positionOnLegend = ((coordinates[1] - y1) / bBoxHeight);
-      var valueText = twodservice.valueAtPercent(roomValueType.toLowerCase(), positionOnLegend) +
-                        twodservice.getValueUnit(roomValueType);
+      var valueText = heatmapService.valueAtPercent(roomValueType.toLowerCase(), positionOnLegend) +
+                        heatmapService.getValueUnit(roomValueType);
       
       //The line shouldn't go all the way to top or bottom because
       //text would not fit completely inside the svg. Always
@@ -65,14 +65,14 @@ angular.module('otaniemi3dApp')
 
       d3.select('#legendMinText')
         .style('margin', '0px')
-        .text(twodservice.temperatureMin + twodservice.getValueUnit('temperature'));
+        .text(heatmapService.temperatureMin + heatmapService.getValueUnit('temperature'));
       
       d3.select('#legendContainingSvg')
         .attr('width', svgWidth)
         .attr('height', '100%');
       
       d3.select('#legendMaxText')
-        .text(twodservice.temperatureMax + twodservice.getValueUnit('temperature'));
+        .text(heatmapService.temperatureMax + heatmapService.getValueUnit('temperature'));
       
       //create the bar for the legend to go into
       // the "fill" attribute hooks the gradient up to this rect
@@ -145,8 +145,8 @@ angular.module('otaniemi3dApp')
         });
       
       //And for binary rectangles, that is, for occupancy legend:
-      var lowColor = twodservice.getColor('occupancy', 0);
-      var highColor = twodservice.getColor('occupancy', 1);
+      var lowColor = heatmapService.getColor('occupancy', 0);
+      var highColor = heatmapService.getColor('occupancy', 1);
 
       d3.select('#binaryRectTop')
         .attr('x',x1)
@@ -169,32 +169,32 @@ angular.module('otaniemi3dApp')
       var minText, maxText;
       switch (roomValueType.toLowerCase()) {
         case 'temperature':
-          minText = twodservice.temperatureMin;
-          maxText = twodservice.temperatureMax;
+          minText = heatmapService.temperatureMin;
+          maxText = heatmapService.temperatureMax;
           break;
         case 'humidity':
-          minText = twodservice.humidityMin;
-          maxText = twodservice.humidityMax;
+          minText = heatmapService.humidityMin;
+          maxText = heatmapService.humidityMax;
           break;
         case 'co2':
-          minText = twodservice.co2Min;
-          maxText = twodservice.co2Max;
+          minText = heatmapService.co2Min;
+          maxText = heatmapService.co2Max;
           break;
         case 'pir': //We treat pir as occupancy
-          minText = twodservice.occupancyMin;
-          maxText = twodservice.occupancyMax;
+          minText = heatmapService.occupancyMin;
+          maxText = heatmapService.occupancyMax;
           break;
         case 'light':
-          minText = twodservice.lightMin;
-          maxText = twodservice.lightMax;
+          minText = heatmapService.lightMin;
+          maxText = heatmapService.lightMax;
           break;
         case 'occupancy':
-          minText = twodservice.occupancyMin;
-          maxText = twodservice.occupancyMax;
+          minText = heatmapService.occupancyMin;
+          maxText = heatmapService.occupancyMax;
           break;
       }
-      minText = minText + twodservice.getValueUnit(roomValueType);
-      maxText = maxText + twodservice.getValueUnit(roomValueType);
+      minText = minText + heatmapService.getValueUnit(roomValueType);
+      maxText = maxText + heatmapService.getValueUnit(roomValueType);
       d3.select('#legendMinText').text(minText);
       d3.select('#legendMaxText').text(maxText);
     };

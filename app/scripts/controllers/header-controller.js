@@ -2,17 +2,15 @@
 
 /**
  * @ngdoc function
- * @name otaniemi3dApp.controller:HeaderController
+ * @name otaniemi3dApp.controller:HeaderCtrl
  * @description
- * # HeaderController
+ * # HeaderCtrl
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('HeaderController', function ($scope, $location, $rootScope) {
+  .controller('HeaderCtrl', function ($scope, $location, $rootScope) {
 
-
-   // Check if current URL-location matches the highlighted item
-   //
+    // Check if current URL-location matches the highlighted item
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
@@ -21,4 +19,5 @@ angular.module('otaniemi3dApp')
     $scope.$on('$routeChangeSuccess', function () {
         $rootScope.fullscreen = false;
     });
+
   });

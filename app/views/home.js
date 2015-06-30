@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('home', function ($scope) {
+  .controller('HomeCtrl', function ($scope) {
     $scope.interval = 0;
     var slides = $scope.slides = [];
     slides.push({

@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name otaniemi3dApp.controller:ModalcontrollerCtrl
+ * @name otaniemi3dApp.controller:ModalCtrl
  * @description
- * # ModalcontrollerCtrl
+ * # ModalCtrl
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('ModalcontrollerCtrl', function ($scope, $modalInstance, timeFrame, roomValueType) {
+  .controller('ModalCtrl', function ($scope, $modalInstance, timeFrame, roomValueType) {
     
     //Values that are manipulated by radio buttons.
     $scope.timeFrame = timeFrame;

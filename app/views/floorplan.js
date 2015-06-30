@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc function
- * @name otaniemi3dApp.controller:twoDViewCtrl
+ * @name otaniemi3dApp.controller:FloorplanCtrl
  * @description
- * # twoDViewCtrl
+ * # FloorplanCtrl
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('twodview', function ($scope, Floorplans, Rooms,
-    twodservice, $rootScope, $modal) {
+  .controller('FloorplanCtrl', function ($scope, floorplanService, Rooms,
+    heatmapService, $rootScope, $modal) {
 
   var floorplanClass = 'floorplan';
   var floorplanFullscreenClass = 'floorplan-fullscreen';
@@ -24,7 +24,7 @@ angular.module('otaniemi3dApp')
   $scope.searchString = '';
   $scope.highlightedRoom = null;
   $scope.roomValueType = 'Temperature';
-  $scope.floors = Floorplans.floors.length;
+  $scope.floors = floorplanService.floors.length;
   $scope.selectedRoom = null;
   $scope.timeFrame = '';
   $scope.room = null;   //Room which panoramic button was clicked.
@@ -43,11 +43,11 @@ angular.module('otaniemi3dApp')
   $scope.nextButtonClass = 'glyphicon glyphicon-arrow-right';
   $scope.previousButtonClass = 'glyphicon glyphicon-arrow-left';
 
-  //Select default floorplan which is defined in Floorplans service
+  //Select default floorplan which is defined in floorplanService service
   $scope.planNumber = 0;
-  for ($scope.planNumber; $scope.planNumber < Floorplans.floors.length; $scope.planNumber++) {
-    if (Floorplans.floors[$scope.planNumber].isSelected) {
-      $scope.selectedPlan = Floorplans.floors[$scope.planNumber];
+  for ($scope.planNumber; $scope.planNumber < floorplanService.floors.length; $scope.planNumber++) {
+    if (floorplanService.floors[$scope.planNumber].isSelected) {
+      $scope.selectedPlan = floorplanService.floors[$scope.planNumber];
       break;
     }
   }
@@ -117,15 +117,15 @@ angular.module('otaniemi3dApp')
    */
   $scope.selectPlan = function (direction) {
     if (direction === 1) {
-      Floorplans.floors[$scope.planNumber].isSelected = false;
-      Floorplans.floors[$scope.planNumber+1].isSelected = true;
-      $scope.selectedPlan = Floorplans.floors[$scope.planNumber+1];
+      floorplanService.floors[$scope.planNumber].isSelected = false;
+      floorplanService.floors[$scope.planNumber+1].isSelected = true;
+      $scope.selectedPlan = floorplanService.floors[$scope.planNumber+1];
       $scope.planNumber++;
     }
     if (direction === -1) {
-      Floorplans.floors[$scope.planNumber].isSelected = false;
-      Floorplans.floors[$scope.planNumber-1].isSelected = true;
-      $scope.selectedPlan = Floorplans.floors[$scope.planNumber-1];
+      floorplanService.floors[$scope.planNumber].isSelected = false;
+      floorplanService.floors[$scope.planNumber-1].isSelected = true;
+      $scope.selectedPlan = floorplanService.floors[$scope.planNumber-1];
       $scope.planNumber--;
     }
   };
@@ -177,7 +177,7 @@ angular.module('otaniemi3dApp')
   /*
   / Refresh the room colours according to sensor that is chosen.
   / For example if the user changes from temperature heatmap to co2 heatmap
-  / this function will colour the floorplans according to values measured by
+  / this function will colour the floorplanService according to values measured by
   / co2 sensors.
   */
   $scope.refreshRoomColor = function(type) {
@@ -195,7 +195,7 @@ angular.module('otaniemi3dApp')
         
         if (sensor.type.toLowerCase() === type.toLowerCase() ||
            (sensor.type.toLowerCase() === 'pir' && type.toLowerCase() === 'occupancy')) {
-          var color = twodservice.getColor(sensor.type, sensor.values[0].value);
+          var color = heatmapService.getColor(sensor.type, sensor.values[0].value);
           d3.select(room.node)
             .style('fill', color.rgb)
             .style('fill-opacity', color.opacity);

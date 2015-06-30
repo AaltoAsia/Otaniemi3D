@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name otaniemi3dApp.controller:MainCtrl
+ * @name otaniemi3dApp.controller:Model3dCtrl
  * @description
- * # MainCtrl
+ * # Model3dCtrl
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('threedview', function ($scope, Rooms, $modal) {
+  .controller('Model3dCtrl', function ($scope, Rooms, $modal) {
 
     $scope.panoramabox = 'images/panoramabox.svg';
     $scope.selected = undefined;

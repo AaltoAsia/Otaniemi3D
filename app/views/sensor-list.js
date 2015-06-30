@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc function
- * @name otaniemi3dApp.controller:OneDViewCtrl
+ * @name otaniemi3dApp.controller:SensorListCtrl
  * @description
- * # oneDViewCtrl
+ * # SensorListCtrl
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
 
-  .controller('onedview', function ($scope, $location, Rooms) {
+  .controller('SensorListCtrl', function ($scope, Rooms) {
 
     $scope.gridOptions = {
       enableFiltering: true

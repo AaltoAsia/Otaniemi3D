@@ -22,31 +22,23 @@ angular
     $routeProvider
       .when('/home', {
         templateUrl: 'views/home.html',
-        controller: 'home'
+        controller: 'HomeCtrl'
       })
-      .when('/1dview', {
-        templateUrl: 'views/1dview.html',
-        controller: 'onedview'
+      .when('/sensor-list', {
+        templateUrl: 'views/sensor-list.html',
+        controller: 'SensorListCtrl'
       })
-      .when('/2dview', {
-        templateUrl: 'views/2dview.html',
-        controller: 'twodview'
+      .when('/floorplan', {
+        templateUrl: 'views/floorplan.html',
+        controller: 'FloorplanCtrl'
       })
-      .when('/3dview', {
-        templateUrl: 'views/3dview.html',
-        controller: 'threedview'
+      .when('/model-3d', {
+        templateUrl: 'views/model-3d.html',
+        controller: 'Model3dCtrl'
       })
       .when('/analytics', {
         templateUrl: 'views/analytics.html',
-        controller: 'analytics'
-      })
-      .when('/support', {
-        templateUrl: 'views/support.html',
-        controller: 'support'
-      })
-      .when('/panorama', {
-        templateUrl: 'views/panorama.html',
-        controller: 'PanoramaCtrl'
+        controller: 'AnalyticsCtrl'
       })
       .otherwise({
         redirectTo: '/home'

@@ -4,7 +4,7 @@
  * @ngdoc function
  * @name otaniemi3dApp.controller:3dModalCtrl
  * @description
- * # ModalcontrollerCtrl
+ * # 3dModalCtrl
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')

@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('analytics', function ($scope, Rooms) {
+  .controller('AnalyticsCtrl', function ($scope, Rooms) {
 
     $scope.room = null;
     $scope.sensor = null;
