@@ -90,7 +90,7 @@ angular.module('otaniemi3dApp')
               }
 
               if (dateTime) {
-                time = new Date(dateTime);
+                time = new Date(dateTime).getTime();
               } else {
                 time = Number(unixTime) * 1000;
               }
