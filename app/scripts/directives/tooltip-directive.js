@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc directive
- * @name otaniemi3dApp.directive:tooltipDirective
+ * @name otaniemi3dApp.directive:mouseTooltip
  * @description
- * # tooltipDirective
+ * # mouseTooltip
  */
 angular.module('otaniemi3dApp')
   .directive('mouseTooltip', function ($compile) {

@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc service
- * @name otaniemi3dApp.Room
+ * @name otaniemi3dApp.Rooms
  * @description
- * # Room
+ * # Rooms
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')

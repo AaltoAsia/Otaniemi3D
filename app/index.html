@@ -17,8 +17,8 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css"/>
     <link rel="stylesheet" href="styles/home.css"/>
-    <link rel="stylesheet" href="styles/2dview.css"/>
-    <link rel="stylesheet" href="styles/3dview.css"/>
+    <link rel="stylesheet" href="styles/floorplan.css"/>
+    <link rel="stylesheet" href="styles/model-3d.css"/>
     <link rel="stylesheet" href="styles/analytics.css"/>
     <!-- endbuild -->
 
@@ -29,7 +29,7 @@
 <![endif]-->
 
 
-<header ng-controller="HeaderController" ng-hide="fullscreen">
+<header ng-controller="HeaderCtrl" ng-hide="fullscreen">
     <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
         <div class="container-fluid" >
 
@@ -41,16 +41,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" id="home" ng-click="isCollapsed = true" ng-href="#/home">Otaniemi3D</a>
+                <a class="navbar-brand" id="home-view" ng-click="isCollapsed = true" ng-href="#/home">Otaniemi3D</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
 
             <div collapse="isCollapsed"  class="nav-collapse collapse navbar-responsive-collapse">
                 <ul class="nav navbar-nav">
-                    <li ng-class="{ active: isActive('/1dview')}"><a id="1dview" ng-click="isCollapsed = true" ng-href="#/1dview">1D View</a></li>
-                    <li ng-class="{ active: isActive('/2dview')}"><a id="2dview" ng-click="isCollapsed = true" ng-href="#/2dview">2D View</a></li>
-                    <li ng-class="{ active: isActive('/3dview')}"><a id="3dview" ng-click="isCollapsed = true" ng-href="#/3dview">3D View</a></li>
+                    <li ng-class="{ active: isActive('/sensor-list')}"><a id="sensor-list-view" ng-click="isCollapsed = true" ng-href="#/sensor-list">Sensor List</a></li>
+                    <li ng-class="{ active: isActive('/floorplan')}"><a id="floorplan-view" ng-click="isCollapsed = true" ng-href="#/floorplan">Floorplans</a></li>
+                    <li ng-class="{ active: isActive('/model-3d')}"><a id="model-3d-view" ng-click="isCollapsed = true" ng-href="#/model-3d">3D Model</a></li>
                     <li ng-class="{ active: isActive('/analytics')}"><a id="analytics" ng-click="isCollapsed = true" ng-href="#/analytics">Analytics</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -120,23 +120,24 @@
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="panorama/embedpano.js"></script>
 <script src="panorama/HTMLviewer.js"></script>
-<script src="scripts/app.js"></script>
-<script src="scripts/controllers/homecontroller.js"></script>
-<script src="scripts/controllers/twodviewcontroller.js"></script>
-<script src="scripts/controllers/onedviewcontroller.js"></script>
-<script src="scripts/controllers/threedviewcontroller.js"></script>
-<script src="scripts/controllers/headercontroller.js"></script>
-<script src="scripts/services/sensordata.js"></script>
-<script src="scripts/directives/floorplan.js"></script>
-<script src="scripts/services/floorplans.js"></script>
-<script src="scripts/services/rooms.js"></script>
-<script src="scripts/services/twodservice.js"></script>
-<script src="scripts/directives/tooltipdirective.js"></script>
-<script src="scripts/controllers/modalcontroller.js"></script>
-<script src="scripts/controllers/3dmodalcontroller.js"></script>
+<script src="app.js"></script>
+<script src="views/home.js"></script>
+<script src="views/floorplan.js"></script>
+<script src="views/sensor-list.js"></script>
+<script src="views/model-3d.js"></script>
+<script src="views/analytics.js"></script>
+<script src="scripts/controllers/header-controller.js"></script>
+<script src="scripts/controllers/modal-controller.js"></script>
+<script src="scripts/controllers/3d-modal-controller.js"></script>
+<script src="scripts/directives/floorplan-directive.js"></script>
+<script src="scripts/directives/tooltip-directive.js"></script>
+<script src="scripts/directives/load-x3dom-directive.js"></script>
+<script src="scripts/services/floorplan-service.js"></script>
+<script src="scripts/services/rooms-service.js"></script>
+<script src="scripts/services/heatmap-service.js"></script>
+<script src="scripts/services/sensor-data-service.js"></script>
+<script src="scripts/services/legendbar-service.js"></script>
 
-<script src="scripts/services/legendbar.js"></script>
-<script src="scripts/controllers/analyticscontroller.js"></script>
 <!-- endbuild -->
 </body>
 </html>

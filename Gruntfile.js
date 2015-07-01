@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
-  
+
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
@@ -34,7 +34,9 @@ module.exports = function (grunt) {
         tasks: ['wiredep']
       },
       js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+        files: ['<%= yeoman.app %>/scripts/{,*/}*.js',
+                '<%= yeoman.app %>/views/*.js',
+                '<%= yeoman.app %>/app.js'],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -119,7 +121,9 @@ module.exports = function (grunt) {
       all: {
         src: [
           'Gruntfile.js',
-          '<%= yeoman.app %>/scripts/{,*/}*.js'
+          '<%= yeoman.app %>/scripts/{,*/}*.js',
+          '<%= yeoman.app %>/views/*.js',
+          '<%= yeoman.app %>/app.js'
         ]
       },
       test: {
@@ -308,21 +312,10 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
-            '*.{ico,png,txt}',
-            '.htaccess',
-            '*.html',
-            'x3dom.js',
-            'x3dom.css',
-            'sensor.x3d',
-            'views/{,*/}*.html',
-            'images/{,*/}*.{webp}',
-            'fonts/*',
-            'binGeo/*',
-            'floorplans/*',
-            'sensor_data/*',
-            'panorama/*',
-            'panorama/*/*',
-            'odf-requests/*'
+            '**/*.*',
+            '!scripts/',
+            '!views/*.js',
+            '!app.js'
           ]
         }, {
           expand: true,
