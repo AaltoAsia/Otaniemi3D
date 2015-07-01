@@ -13,14 +13,16 @@ angular.module('otaniemi3dApp')
     $scope.selectedRoom = null;
     $scope.selectedSensor = null;
     $scope.chartConfig = {
+      options: {
+        tooltip: {
+          valueSuffix: '°C'
+        }
+      },
       xAxis: {
         type: 'datetime',
         title: {
           text: 'Date'
         }
-      },
-      tooltip: {
-        valueSuffix: '°C'
       }
     };
 
@@ -35,7 +37,9 @@ angular.module('otaniemi3dApp')
 
       for (var i = 0; i < sensor.values.length; i++) {
         sensorData.push([
-          sensor.values[i].time,
+          //TODO: Find where sensor.values[i].time is transformed to a string.
+          //It should always stay as a Date object.
+          Number(sensor.values[i].time),
           sensor.values[i].value,
         ]);
       }
@@ -50,6 +54,14 @@ angular.module('otaniemi3dApp')
       $scope.chartConfig.yAxis = {
         title: $scope.selectedSensor.type
       };
+      
+      //Check if angular's $digest or $apply is in progress
+      if(!$scope.$$phase) {
+        //Not sure why but this is needed for highcharts-ng directive to be 
+        //able to detect changes in $scope.chartConfig
+        //TODO: Figure out why
+        $scope.$apply();
+      }
     }
 
     Rooms.updateRoomInfo();
@@ -61,16 +73,21 @@ angular.module('otaniemi3dApp')
         data: []
       }
     });
-    var a = $('#sensor-tree').jstree();
+
     sensorTree.on('select_node.jstree', function(event, data) {
-      var b = a;
-      var node = data.node;
-      if (node.original.sensors) {
-        selectRoom(node.original);
-      } else if (node.original.values) {
-        var room = sensorTree.get_node(node.parent);
-        $scope.selectedRoom = room;
-        selectSensor(node.original);
+      if(!$scope.$$phase) {
+        //Use $apply because jstree works outside of angular's scope
+        $scope.$apply(function() {
+          var node = data.node;
+          if (node.original.sensors) {
+            selectRoom(node.original);
+          } else if (node.original.values) {
+            //TODO: Make this return the room object and not a jquery object
+            //var room = $('#jstree').jstree('get_json', node.parent);
+            //$scope.selectedRoom = room;
+            selectSensor(node.original);
+          }
+        });
       }
     });
 
@@ -123,66 +140,6 @@ angular.module('otaniemi3dApp')
     */
 
     $scope.$on('sensordata-update', function (event, data) {
-
-      Rooms.dict['Entrance'].sensors = [
-        {
-          id: 'temperature_room_Entrance',
-          type: 'temperature',
-          values: [
-            {
-              time: new Date(1435238442000),
-              value: 20.1
-            },
-            {
-              time: new Date(1435238455000),
-              value: 20.2
-            },
-            {
-              time: new Date(1435238464000),
-              value: 20.1
-            },
-            {
-              time: new Date(143523847000),
-              value: 20.3
-            }
-          ]
-        },
-        {
-          id: 'light_room_101a',
-          type: 'light',
-          values: [
-            {
-              time: new Date(1435238460000),
-              value: 2070
-            },
-            {
-              time: new Date(1435238470000),
-              value: 2070
-            },
-            {
-              time: new Date(1435238480000),
-              value: 55
-            },
-            {
-              time: new Date(143523890000),
-              value: 55
-            }
-          ]
-        },
-        {
-          id: 'co2_room_101a',
-          type: 'co2',
-          values: [
-            {
-              time: new Date(1435238442000),
-              value: 120
-            }
-          ]
-        }
-      ];
-
-      $scope.selectedRoom = Rooms.dict['Entrance'];
-
       var treeData = [];
       var keys = Object.keys(data);
       for (var i = 0; i < keys.length; i++) {
@@ -197,9 +154,9 @@ angular.module('otaniemi3dApp')
 
           for (var k = 0; k < sensor.values.length; k++) {
             var sensorValue = sensor.values[k];
+            var time = new Date(sensorValue.time).toUTCString();
             sensor.children.push({
-              text: sensorValue.value + ' - ' +
-                sensorValue.time.toUTCString()
+              text: sensorValue.value + '  -  ' + time
             });
           }
 

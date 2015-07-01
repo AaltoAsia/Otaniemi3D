@@ -28,7 +28,7 @@ angular.module('otaniemi3dApp')
 
             $http.post(url, xml, {headers: {'Content-Type': 'application/xml'}})
               .success(function (data) {
-                var data = parseData(data);
+                data = parseData(data);
                 deferred.resolve(data);
                 $rootScope.$broadcast('sensordata-new', data);
               })
@@ -86,13 +86,13 @@ angular.module('otaniemi3dApp')
               //turns empty strings into zero.
               if (value) {
                 value = Number(value);
-                value = parseFloat(Math.round(value * 100) / 100).toFixed(2);
+                value = Math.round(value * 100) / 100;
               }
 
               if (dateTime) {
                 time = new Date(dateTime);
               } else {
-                time = new Date(Number(unixTime) * 1000);
+                time = Number(unixTime) * 1000;
               }
 
               if (!isNaN(value) && time) {
@@ -131,7 +131,7 @@ angular.module('otaniemi3dApp')
      */
     function sortDates (array) {
       array.sort(function(a, b){
-        return new Date(a) - new Date(b);
+        return a.time - b.time;
       });
     }
 
