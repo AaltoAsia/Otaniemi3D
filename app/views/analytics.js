@@ -91,54 +91,6 @@ angular.module('otaniemi3dApp')
       }
     });
 
-    /*
-    $scope.$watch('selectedRoom', function (room) {
-      if (room && room.sensors.length > 0) {
-        $scope.selectedSensor = room.sensors[0];
-        //sensorChart.setTitle(room.name);
-      }
-    });
-
-    $scope.$watch('selectedSensor', function (sensor) {
-      if (sensor) {
-        var sensorData = [];
-
-        for (var i = 0; i < sensor.values.length; i++) {
-          sensorData.push([
-            sensor.values[i].time,
-            sensor.values[i].value,
-          ]);
-        }
-
-
-        $scope.chartConfig.series = [{
-          name: sensor.type,
-          data: sensorData
-        }];
-
-        $scope.chartConfig.title = $scope.selectedRoom.name + ': ' +
-                                   $scope.selectedSensor.type;
-        $scope.chartConfig.yAxis = {
-          title: $scope.selectedSensor.type
-        };
-
-
-        sensorChart.setTitle({
-          text: $scope.selectedRoom.name + ': ' + sensor.type
-        });
-        sensorChart.yAxis[0].setTitle({
-          text: sensor.type
-        });
-        sensorChart.series[0].remove();
-        sensorChart.addSeries({
-          name: sensor.type,
-          data: sensorData
-        }, true);
-
-      }
-    });
-    */
-
     $scope.$on('sensordata-update', function (event, data) {
       var treeData = [];
       var keys = Object.keys(data);

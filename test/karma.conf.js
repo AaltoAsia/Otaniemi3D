@@ -33,9 +33,15 @@ module.exports = function(config) {
             'bower_components/angular-spinner/angular-spinner.js',
             'bower_components/fastclick/lib/fastclick.js',
             'bower_components/modernizr/modernizr.js',
+            'bower_components/highcharts/highcharts.js',
+            'bower_components/highcharts/highcharts-more.js',
+            'bower_components/highcharts-ng/dist/highcharts-ng.js',
+            'bower_components/jstree/dist/jstree.js',
+            'app/app.js',
             'app/panorama/embedpano.js',
             'app/panorama/HTMLviewer.js',
             'app/scripts/**/*.js',
+            'app/views/*.js',
             'test/spec/**/*.js'
         ],
 
@@ -87,7 +93,8 @@ module.exports = function(config) {
         // source files, that you wanna generate coverage for
         // do not include tests or libraries
         // (these files will be instrumented by Istanbul)
-            'app/scripts/**/*.js': ['coverage']
+            'app/scripts/**/*.js': ['coverage'],
+            'app/views/*.js': ['coverage']
         },
         coverageReporter: {
             dir: 'test/coverage/',
