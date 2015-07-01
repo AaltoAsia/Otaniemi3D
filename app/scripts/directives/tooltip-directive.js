@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc directive
- * @name otaniemi3dApp.directive:tooltip
+ * @name otaniemi3dApp.directive:mouseTooltip
  * @description
- * # tooltip
+ * # mouseTooltip
  */
 angular.module('otaniemi3dApp')
-  .directive('tooltip', function ($compile) {
+  .directive('mouseTooltip', function ($compile) {
     return {
       template: '<div id="panobtn"><button ng-click="panoramaViewer()" class="btn black-btn">360°  <span class="glyphicon glyphicon glyphicon-camera" ></span> </button><div>',
       restrict: 'C',

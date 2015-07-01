@@ -437,7 +437,7 @@ angular.module('otaniemi3dApp')
                   //number is room.name without the 'Room-' prefix.
                   if (room.name.lastIndexOf('Room', 0) === 0) {
                     roomNum = room.name.split(/ (.+)/)[1];
-                  //e.g. Cafeteria don't have 'Room' prefix.
+                  //e.g. Cafeteria doesn't have 'Room' prefix.
                   } else {
                     roomNum = room.name;
                   }
@@ -454,15 +454,16 @@ angular.module('otaniemi3dApp')
                 }
 
                 if (!roomExists) {
-                  var id;
+                  var id, name;
 
                   if (isNaN(Number(roomText.textContent.substring(0, 2)))) {
-                    id = roomText.textContent;
+                    id = name = roomText.textContent;
                   } else {
                     id = 'Room-' + roomText.textContent;
+                    name = 'Room ' + roomText.textContent;
                   }
 
-                  Rooms.add(id, 'Room ' + roomText.textContent, roomArea, i);
+                  Rooms.add(id, name, roomArea, i);
                   addTooltip(Rooms.dict[id]);
                 }
               }
