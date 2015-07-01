@@ -8,17 +8,19 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('SensorData', function ($http, $q) {
+  .service('SensorData', function ($http, $q, $rootScope) {
 
     this.get = function () {
       var deferred = $q.defer();
       var url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
-      var debug = true;   //use local data if true
+      var debug = false;   //use local data if true
 
       if (debug) {
         $http.get('odf-requests/example-response.xml')
           .success(function (xml) {
-            deferred.resolve(parseData(xml));
+            var data = parseData(xml);
+            deferred.resolve(data);
+            $rootScope.$broadcast('sensordata-new', data);
           });
       } else {
         $http.get('odf-requests/K1-request.xml')
@@ -26,7 +28,9 @@ angular.module('otaniemi3dApp')
 
             $http.post(url, xml, {headers: {'Content-Type': 'application/xml'}})
               .success(function (data) {
-                deferred.resolve(parseData(data));
+                data = parseData(data);
+                deferred.resolve(data);
+                $rootScope.$broadcast('sensordata-new', data);
               })
               .error(function () {
                 console.log('Failed to fetch sensor data.');
@@ -82,13 +86,13 @@ angular.module('otaniemi3dApp')
               //turns empty strings into zero.
               if (value) {
                 value = Number(value);
-                value = parseFloat(Math.round(value * 100) / 100).toFixed(2);
+                value = Math.round(value * 100) / 100;
               }
 
               if (dateTime) {
-                time = new Date(dateTime);
+                time = new Date(dateTime).getTime();
               } else {
-                time = new Date(Number(unixTime) * 1000);
+                time = Number(unixTime) * 1000;
               }
 
               if (!isNaN(value) && time) {
@@ -127,7 +131,7 @@ angular.module('otaniemi3dApp')
      */
     function sortDates (array) {
       array.sort(function(a, b){
-        return new Date(a) - new Date(b);
+        return a.time - b.time;
       });
     }
 

@@ -24,6 +24,7 @@
     "$": false,
     "jQuery": false,
     "FastClick": false,
+    "Highcharts": false,
 	"Modernizr": false,
     "embedpano": false,
     "removepano": false

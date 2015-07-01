@@ -52,7 +52,9 @@ angular.module('otaniemi3dApp')
     }
   }
 
-  Rooms.updateRoomInfo().then(function (data) {
+  Rooms.updateRoomInfo();
+
+  $scope.$on('sensordata-update', function(event, data) {
     $scope.sensorData = data;
   });
 
@@ -83,9 +85,9 @@ angular.module('otaniemi3dApp')
   $scope.stopPanorama = function(){
     $scope.pano = false;
   };
-  
+
   $scope.showGradient = function() {
-    return $scope.roomValueType.toLowerCase() !== 'pir' && 
+    return $scope.roomValueType.toLowerCase() !== 'pir' &&
            $scope.roomValueType.toLowerCase() !== 'occupancy';
   };
 
@@ -166,7 +168,7 @@ angular.module('otaniemi3dApp')
       }
     }
   };
-  
+
   $scope.resetZoom = function() {
     if ($scope.resetView === null) {
       $scope.resetView = false;
@@ -184,15 +186,15 @@ angular.module('otaniemi3dApp')
     var keys = Object.keys(Rooms.dict);
     for (var i = 0; i < keys.length; i++) {
       var room = Rooms.dict[keys[i]];
-      //Colour the room white, in case the room doesn't have any values for 
+      //Colour the room white, in case the room doesn't have any values for
       //that particular sensor.
       d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
 
-      //Loop through sensors and check the value of the sensor that matches 
+      //Loop through sensors and check the value of the sensor that matches
       //the parameter given.
       for (var j = 0; j < room.sensors.length; j++) {
         var sensor = room.sensors[j];
-        
+
         if (sensor.type.toLowerCase() === type.toLowerCase() ||
            (sensor.type.toLowerCase() === 'pir' && type.toLowerCase() === 'occupancy')) {
           var color = heatmapService.getColor(sensor.type, sensor.values[0].value);

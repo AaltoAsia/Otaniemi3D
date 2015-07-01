@@ -10,14 +10,140 @@
 angular.module('otaniemi3dApp')
   .controller('AnalyticsCtrl', function ($scope, Rooms) {
 
-    $scope.room = null;
-    $scope.sensor = null;
+    $scope.selectedRoom = null;
+    $scope.selectedSensor = null;
+    $scope.chartConfig = {
+      options: {
+        tooltip: {
+          valueSuffix: '°C'
+        }
+      },
+      xAxis: {
+        type: 'datetime',
+        title: {
+          text: 'Date'
+        }
+      }
+    };
 
-    Rooms.updateRoomInfo().then(function () {
+    function selectRoom(room) {
+      $scope.selectedRoom = room;
+      selectSensor(room.sensors[0]);
+    }
+
+    function selectSensor(sensor) {
+      var sensorData = [];
+      $scope.selectedSensor = sensor;
+
+      for (var i = 0; i < sensor.values.length; i++) {
+        sensorData.push([
+          //TODO: Find where sensor.values[i].time is transformed to a string.
+          //It should always stay as a Date object.
+          Number(sensor.values[i].time),
+          sensor.values[i].value,
+        ]);
+      }
+
+      $scope.chartConfig.series = [{
+        name: sensor.type,
+        data: sensorData
+      }];
+
+      $scope.chartConfig.title = $scope.selectedRoom.name + ': ' +
+                                 $scope.selectedSensor.type;
+      $scope.chartConfig.yAxis = {
+        title: $scope.selectedSensor.type
+      };
+      
+      //Check if angular's $digest or $apply is in progress
+      if(!$scope.$$phase) {
+        //Not sure why but this is needed for highcharts-ng directive to be 
+        //able to detect changes in $scope.chartConfig
+        //TODO: Figure out why
+        $scope.$apply();
+      }
+    }
+
+    Rooms.updateRoomInfo();
+
+    var sensorTree = $('#sensor-tree').jstree({
+      plugins: ['search', 'sort'],
+      core: {
+        check_callback: true,
+        data: []
+      }
+    });
+
+    sensorTree.on('select_node.jstree', function(event, data) {
+      if(!$scope.$$phase) {
+        //Use $apply because jstree works outside of angular's scope
+        $scope.$apply(function() {
+          var node = data.node;
+          if (node.original.sensors) {
+            selectRoom(node.original);
+          } else if (node.original.values) {
+            //TODO: Make this return the room object and not a jquery object
+            //var room = $('#jstree').jstree('get_json', node.parent);
+            //$scope.selectedRoom = room;
+            selectSensor(node.original);
+          }
+        });
+      }
+    });
+
+    /*
+    $scope.$watch('selectedRoom', function (room) {
+      if (room && room.sensors.length > 0) {
+        $scope.selectedSensor = room.sensors[0];
+        //sensorChart.setTitle(room.name);
+      }
+    });
+
+    $scope.$watch('selectedSensor', function (sensor) {
+      if (sensor) {
+        var sensorData = [];
+
+        for (var i = 0; i < sensor.values.length; i++) {
+          sensorData.push([
+            sensor.values[i].time,
+            sensor.values[i].value,
+          ]);
+        }
+
+
+        $scope.chartConfig.series = [{
+          name: sensor.type,
+          data: sensorData
+        }];
+
+        $scope.chartConfig.title = $scope.selectedRoom.name + ': ' +
+                                   $scope.selectedSensor.type;
+        $scope.chartConfig.yAxis = {
+          title: $scope.selectedSensor.type
+        };
+
+
+        sensorChart.setTitle({
+          text: $scope.selectedRoom.name + ': ' + sensor.type
+        });
+        sensorChart.yAxis[0].setTitle({
+          text: sensor.type
+        });
+        sensorChart.series[0].remove();
+        sensorChart.addSeries({
+          name: sensor.type,
+          data: sensorData
+        }, true);
+
+      }
+    });
+    */
+
+    $scope.$on('sensordata-update', function (event, data) {
       var treeData = [];
-      var keys = Object.keys(Rooms.dict);
+      var keys = Object.keys(data);
       for (var i = 0; i < keys.length; i++) {
-        var room = Rooms.dict[keys[i]];
+        var room = data[keys[i]];
         room.text = room.name;
         room.children = [];
 
@@ -28,9 +154,9 @@ angular.module('otaniemi3dApp')
 
           for (var k = 0; k < sensor.values.length; k++) {
             var sensorValue = sensor.values[k];
+            var time = new Date(sensorValue.time).toUTCString();
             sensor.children.push({
-              text: sensorValue.value + ' - ' + 
-                sensorValue.time.toUTCString()
+              text: sensorValue.value + '  -  ' + time
             });
           }
 
@@ -40,116 +166,8 @@ angular.module('otaniemi3dApp')
         treeData.push(room);
       }
 
-      $scope.room = {
-        name: '101a',
-        sensors: [
-          {
-            id: 'temperature_room_101a',
-            type: 'temperature',
-            values: [
-              {
-                timestamp: 1435238442,
-                value: 20.1
-              },
-              {
-                timestamp: 1435238455,
-                value: 20.2
-              },
-              {
-                timestamp: 1435238464,
-                value: 20.1
-              },
-              {
-                timestamp: 143523847,
-                value: 20.3
-              }
-            ]
-          },
-          {
-            id: 'light_room_101a',
-            type: 'light',
-            values: [
-              {
-                timestamp: 1435238460,
-                value: 2070
-              },
-              {
-                timestamp: 1435238470,
-                value: 2070
-              },
-              {
-                timestamp: 1435238480,
-                value: 55
-              },
-              {
-                timestamp: 143523890,
-                value: 55
-              }
-            ]
-          },
-          {
-            id: 'co2_room_101a',
-            type: 'co2',
-            value: [
-              {
-                timestamp: 1435238442,
-                value: 120
-              }
-            ]
-          }
-        ]
-      };
-
-      $('#sensor-tree').jstree({
-        plugins: ['search', 'sort'],
-        core: {
-          data: treeData
-        }
-      });
+      $('#sensor-tree').jstree(true).settings.core.data = treeData;
+      $('#sensor-tree').jstree(true).refresh();
     });
-
-    var chartOpt = {
-      title: {
-        text: 'Room 101: Temperature'
-      },
-      xAxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-      },
-      yAxis: {
-        title: {
-          text: 'Temperature (°C)'
-        },
-        plotLines: [{
-          value: 0,
-          width: 1,
-          color: '#808080'
-        }]
-      },
-      tooltip: {
-        valueSuffix: '°C'
-      },
-      legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle',
-        borderWidth: 0
-      },
-      series: [{
-        name: 'Tokyo',
-        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-      }, {
-        name: 'New York',
-        data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-      }, {
-        name: 'Berlin',
-        data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-      }, {
-        name: 'London',
-        data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-      }]
-    };
-
-    $('#sensor-chart').highcharts(chartOpt);
 
   });
