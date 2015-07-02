@@ -42,7 +42,8 @@ module.exports = function(config) {
             'app/panorama/HTMLviewer.js',
             'app/scripts/**/*.js',
             'app/views/*.js',
-            'test/spec/**/*.js'
+            'test/spec/**/*.js',
+            'test/e2e/**/*.js'
         ],
 
         // list of files / patterns to exclude
@@ -82,11 +83,11 @@ module.exports = function(config) {
         logLevel: config.LOG_INFO,
 
         // Uncomment the following lines if you are using grunt's server to run the tests
-        // proxies: {
-        //   '/': 'http://localhost:9000/'
-        // },S
+        proxies: {
+            '/': 'http://localhost:9000/'
+        },
         // URL root prevent conflicts with the site root
-        // urlRoot: '_karma_'
+        urlRoot: '_karma_',
 
         reporters: ['progress', 'coverage'],
         preprocessors: {
