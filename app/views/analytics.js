@@ -54,14 +54,6 @@ angular.module('otaniemi3dApp')
       $scope.chartConfig.yAxis = {
         title: $scope.selectedSensor.type
       };
-      
-      //Check if angular's $digest or $apply is in progress
-      if(!$scope.$$phase) {
-        //Not sure why but this is needed for highcharts-ng directive to be 
-        //able to detect changes in $scope.chartConfig
-        //TODO: Figure out why
-        $scope.$apply();
-      }
     }
 
     Rooms.updateRoomInfo();
