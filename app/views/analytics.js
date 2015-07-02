@@ -27,19 +27,19 @@ angular.module('otaniemi3dApp')
       }
     };
 
-    $scope.selectSensor = function (sensor) {
-      //Check if a room was selected insted of a single sensor.
-      if (sensor.sensors) {
-        $scope.selectedRoom = sensor;
-        if (sensor.sensors.length > 0) {
-          sensor = sensor.sensors[0];
+    $scope.selectSensor = function (room, sensor) {
+      if (!sensor) {
+        if (room.sensors && room.sensors.length > 0) {
+          sensor = room.sensors[0];
         } else {
-          return;
+          sensor = null;
         }
       }
 
-      var sensorData = [];
+      $scope.selectedRoom = room;
       $scope.selectedSensor = sensor;
+
+      var sensorData = [];
 
       for (var i = 0; i < sensor.values.length; i++) {
         sensorData.push([
