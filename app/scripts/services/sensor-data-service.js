@@ -10,6 +10,7 @@
 angular.module('otaniemi3dApp')
   .service('SensorData', function ($http, $q, $rootScope) {
 
+    //Store pending requests to this object
     var pendingRequests = {};
 
     this.get = function () {
@@ -34,6 +35,7 @@ angular.module('otaniemi3dApp')
             pendingRequests[url] = false;
           });
       } else {
+        //If a pending request with the same url exists don't send a new one
         if (pendingRequests[url]) {
           return;
         }
@@ -110,7 +112,7 @@ angular.module('otaniemi3dApp')
               if (dateTime) {
                 time = new Date(dateTime).getTime();
               } else {
-                time = Number(unixTime) * 1000;
+                time = new Date(Number(unixTime) * 1000);
               }
 
               if (!isNaN(value) && time) {

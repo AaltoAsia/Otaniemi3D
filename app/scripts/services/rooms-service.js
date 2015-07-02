@@ -15,9 +15,10 @@ angular.module('otaniemi3dApp')
     var self = this;
 
     /*
-    * Return dictionary object where all room objects are stored.
+    * A dictionary object where all room objects are stored.
     */
     this.dict = {};
+    this.list = [];
 
     /*
     * Return room dictionary as a list.
@@ -136,6 +137,7 @@ angular.module('otaniemi3dApp')
      * Watch for new sensor data sent by SensorData service.
      */
     $rootScope.$on('sensordata-new', function(event, data) {
+      self.list = [];
       var keys = Object.keys(data);
       for (var i = 0; i < keys.length; i++) {
         var room = self.dict[keys[i]];
@@ -146,6 +148,13 @@ angular.module('otaniemi3dApp')
         } else {
           //Room doesn't yet exist in the dictionary.
           self.dict[keys[i]] = data[keys[i]];
+        }
+        //Push sensors to self.list
+        for (var j = 0; j < data[keys[i]].sensors.length; j++) {
+          var sensor = data[keys[i]].sensors[j];
+          sensor.room = data[keys[i]].name;
+          sensor.roomId = keys[i];
+          self.list.push(sensor);
         }
       }
       $rootScope.$broadcast('sensordata-update', self.dict);
