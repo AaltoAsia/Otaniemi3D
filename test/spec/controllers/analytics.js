@@ -5,7 +5,9 @@ describe('AnalyticsCtrl', function () {
   // load the controller's module
   beforeEach(module('otaniemi3dApp'));
 
-  var $controller,
+  var $controller, $rootScope,
+
+      name = 'Room 101',
       sensorId1 = 'temperature-Room-101',
       sensorId2 = 'co2-Room-101',
       type1= 'temperature',
@@ -49,55 +51,27 @@ describe('AnalyticsCtrl', function () {
         node: node
       };
 
-  beforeEach(inject(function(_$controller_){
+  beforeEach(inject(function(_$controller_, _$rootScope_){
     //The injector unwraps the underscores (_) from around 
     //the parameter names when matching
     $controller = _$controller_;
+    $rootScope = _$rootScope_;
   }));
 
-  describe('selectRoom()', function () {
+  describe('Receiving \'sensordata-update\' event', function () {
     var $scope, controller;
 
     beforeEach(function() {
-      $scope = {};
+      $scope = $rootScope.$new();
       controller = $controller('AnalyticsCtrl', { $scope: $scope });
     });
 
     beforeEach(function () {
-      $scope.selectRoom(room);
+      $rootScope.$broadcast('sensordata-update', {'Room-101': room});
     });
 
     it('should set correct room for the $scope.selectedRoom', function () {
       expect($scope.selectedRoom).toEqual(room);
-    });
-
-  });
-
-  describe('selectSensor()', function () {
-    var $scope, controller, sensor;
-
-    beforeEach(function() {
-      $scope = {};
-      controller = $controller('AnalyticsCtrl', { $scope: $scope });
-    });
-
-    beforeEach(function () {
-      sensor = room.sensors[0];
-      $scope.selectSensor(sensor);
-    });
-
-    it('should set correct sensor for the $scope.selectedSensor', function () {
-      expect($scope.selectedSensor).toEqual(room.sensors[0]);
-    });
-
-    it('should update $scope.chartConfig', function () {
-      expect($scope.chartConfig.series[0]).toEqual({
-        name: 'temperature',
-        data: [
-          [values1[0].value, values1[0].time],
-          [values2[0].value, values2[0].time]
-        ]
-      });
     });
 
   });

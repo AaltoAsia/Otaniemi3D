@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: highcharts', function () {
+describe('Directive: sensorTree', function () {
 
   // load the directive's module
   beforeEach(module('otaniemi3dApp'));
@@ -13,8 +13,8 @@ describe('Directive: highcharts', function () {
   }));
 
   it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<highcharts></highcharts>');
+    element = angular.element('<sensor-tree></sensor-tree>');
     element = $compile(element)(scope);
-    expect(element.text()).toBe('this is the highcharts directive');
+    expect(element.text()).toBe('this is the sensorTree directive');
   }));
 });

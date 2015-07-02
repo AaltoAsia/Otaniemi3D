@@ -12,6 +12,7 @@ angular.module('otaniemi3dApp')
 
     $scope.selectedRoom = null;
     $scope.selectedSensor = null;
+    $scope.sensorData = [];
     $scope.chartConfig = {
       options: {
         tooltip: {
@@ -26,12 +27,17 @@ angular.module('otaniemi3dApp')
       }
     };
 
-    function selectRoom(room) {
-      $scope.selectedRoom = room;
-      selectSensor(room.sensors[0]);
-    }
+    $scope.selectSensor = function (sensor) {
+      //Check if a room was selected insted of a single sensor.
+      if (sensor.sensors) {
+        $scope.selectedRoom = sensor;
+        if (sensor.sensors.length > 0) {
+          sensor = sensor.sensors[0];
+        } else {
+          return;
+        }
+      }
 
-    function selectSensor(sensor) {
       var sensorData = [];
       $scope.selectedSensor = sensor;
 
@@ -54,42 +60,9 @@ angular.module('otaniemi3dApp')
       $scope.chartConfig.yAxis = {
         title: $scope.selectedSensor.type
       };
-      
-      //Check if angular's $digest or $apply is in progress
-      if(!$scope.$$phase) {
-        //Not sure why but this is needed for highcharts-ng directive to be 
-        //able to detect changes in $scope.chartConfig
-        //TODO: Figure out why
-        $scope.$apply();
-      }
-    }
+    };
 
     Rooms.updateRoomInfo();
-
-    var sensorTree = $('#sensor-tree').jstree({
-      plugins: ['search', 'sort'],
-      core: {
-        check_callback: true,
-        data: []
-      }
-    });
-
-    sensorTree.on('select_node.jstree', function(event, data) {
-      if(!$scope.$$phase) {
-        //Use $apply because jstree works outside of angular's scope
-        $scope.$apply(function() {
-          var node = data.node;
-          if (node.original.sensors) {
-            selectRoom(node.original);
-          } else if (node.original.values) {
-            //TODO: Make this return the room object and not a jquery object
-            //var room = $('#jstree').jstree('get_json', node.parent);
-            //$scope.selectedRoom = room;
-            selectSensor(node.original);
-          }
-        });
-      }
-    });
 
     $scope.$on('sensordata-update', function (event, data) {
       var treeData = [];
@@ -118,8 +91,7 @@ angular.module('otaniemi3dApp')
         treeData.push(room);
       }
 
-      $('#sensor-tree').jstree(true).settings.core.data = treeData;
-      $('#sensor-tree').jstree(true).refresh();
+      $scope.sensorData = treeData;
     });
 
   });
