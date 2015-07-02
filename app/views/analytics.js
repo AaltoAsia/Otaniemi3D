@@ -43,8 +43,9 @@ angular.module('otaniemi3dApp')
 
       for (var i = 0; i < sensor.values.length; i++) {
         sensorData.push([
+          //typeof sensor.values[i].time === 'string'
           //TODO: Find where sensor.values[i].time is transformed to a string.
-          //It should always stay as a Date object.
+          //It should always stay as a number.
           Number(sensor.values[i].time),
           sensor.values[i].value,
         ]);

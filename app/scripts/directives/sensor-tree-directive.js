@@ -36,6 +36,11 @@ angular.module('otaniemi3dApp')
             } else if (node.original.values) {
               sensor = node.original;
               room = element.jstree(true).get_json(node.parent);
+            } else {
+              room = element.jstree(true)
+                .get_node(node.parents[1]).original;
+              sensor = element.jstree(true)
+                .get_node(node.parents[0]).original;
             }
 
             scope.onSelect(room, sensor);
