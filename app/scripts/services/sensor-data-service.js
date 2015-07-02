@@ -10,23 +10,38 @@
 angular.module('otaniemi3dApp')
   .service('SensorData', function ($http, $q, $rootScope) {
 
+    var pendingRequests = {};
+
     this.get = function () {
-      var deferred = $q.defer();
-      var url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
-      var debug = false;   //use local data if true
+      var deferred = $q.defer(),
+          url = 'http://otaniemi3d.cs.hut.fi/omi/node/',
+          localUrl = 'odf-requests/example-response.xml',
+          requestXml = 'odf-requests/K1-request.xml',
+          debug = false;   //use local data if true
 
       if (debug) {
-        $http.get('odf-requests/example-response.xml')
+        if (pendingRequests[localUrl]) {
+          return;
+        }
+        pendingRequests[localUrl] = true;
+        $http.get(localUrl)
           .success(function (xml) {
             var data = parseData(xml);
             deferred.resolve(data);
             $rootScope.$broadcast('sensordata-new', data);
+          })
+          .finally(function () {
+            pendingRequests[url] = false;
           });
       } else {
-        $http.get('odf-requests/K1-request.xml')
-          .success(function (xml) {
+        if (pendingRequests[url]) {
+          return;
+        }
+        pendingRequests[url] = true;
+        $http.get(requestXml)
+          .success(function (responseXml) {
 
-            $http.post(url, xml, {headers: {'Content-Type': 'application/xml'}})
+            $http.post(url, responseXml, {headers: {'Content-Type': 'application/xml'}})
               .success(function (data) {
                 data = parseData(data);
                 deferred.resolve(data);
@@ -35,6 +50,9 @@ angular.module('otaniemi3dApp')
               .error(function () {
                 console.log('Failed to fetch sensor data.');
                 deferred.reject({});
+              })
+              .finally(function () {
+                pendingRequests[url] = false;
               });
           });
       }
