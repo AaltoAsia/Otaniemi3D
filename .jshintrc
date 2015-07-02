@@ -23,9 +23,8 @@
     "d3": false,
     "$": false,
     "jQuery": false,
-    "FastClick": false,
-    "Highcharts": false,
-	"Modernizr": false,
+    "FastClick": false
+    "Modernizr": false,
     "embedpano": false,
     "removepano": false
   }
