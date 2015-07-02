@@ -60,11 +60,7 @@ angular.module('otaniemi3dApp')
       $scope.chartConfig.yAxis = {
         title: $scope.selectedSensor.type
       };
-<<<<<<< HEAD
-    }
-=======
     };
->>>>>>> testing
 
     Rooms.updateRoomInfo();
 
