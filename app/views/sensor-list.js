@@ -13,7 +13,7 @@ angular.module('otaniemi3dApp')
 
     $scope.gridOptions = {
       enableFiltering: true,
-      data: Rooms.list,
+      data: Rooms.sensorList,
       columnDefs: [
         { field: 'room' },
         { field: 'type' },
@@ -22,11 +22,12 @@ angular.module('otaniemi3dApp')
       ]
     };
 
-    Rooms.updateRoomInfo();
-    //$scope.gridOptions.data = Rooms.list;
-
-    $scope.$on('sensordata-update', function(event, data) {
-      $scope.gridOptions.data = Rooms.list;
+    Rooms.updateRoomInfo().then(function () {
+      $scope.gridOptions.data = Rooms.sensorList;
     });
+
+    //$scope.$on('sensordata-update', function(event, data) {
+      //$scope.gridOptions.data = Rooms.sensorList;
+    //});
 
   });

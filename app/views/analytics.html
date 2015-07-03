@@ -1,5 +1,5 @@
 <div id="analytics" class="row">
-  <sensor-tree class="col-sm-3" data="sensorData" on-select="selectSensor"></sensor-tree>
+  <sensor-tree id="sensor-tree" class="col-sm-3" ng-model="sensorData" on-select="selectSensor"></sensor-tree>
 
   <highchart id="sensor-chart" class="col-sm-9" config="chartConfig"></highchart>
 </div>

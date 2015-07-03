@@ -18,7 +18,11 @@ angular.module('otaniemi3dApp')
     * A dictionary object where all room objects are stored.
     */
     this.dict = {};
-    this.list = [];
+
+    /*
+    * List of all sensors.
+    */
+    this.sensorList = [];
 
     /*
     * Return room dictionary as a list.
@@ -41,7 +45,32 @@ angular.module('otaniemi3dApp')
      * sensor information.
      */
     this.updateRoomInfo = function() {
-      SensorData.get();
+      var deferred = $q.defer();
+
+      SensorData.get().then(function (data) {
+        self.sensorList = [];
+        var keys = Object.keys(data);
+        for (var i = 0; i < keys.length; i++) {
+          var room = self.dict[keys[i]];
+          if (room) {
+            //Update only sensor info if room already exists. This way
+            //the svg nodes stored in room objects won't reset.
+            room.sensors = data[keys[i]].sensors;
+          } else {
+            //Room doesn't yet exist in the dictionary.
+            self.dict[keys[i]] = data[keys[i]];
+          }
+          //Push sensors to self.sensorList
+          for (var j = 0; j < data[keys[i]].sensors.length; j++) {
+            var sensor = data[keys[i]].sensors[j];
+            sensor.room = data[keys[i]].name;
+            sensor.roomId = keys[i];
+            self.sensorList.push(sensor);
+          }
+        }
+        deferred.resolve(self.dict);
+      });
+      return deferred.promise;
     };
 
     /*
@@ -136,8 +165,9 @@ angular.module('otaniemi3dApp')
     /*
      * Watch for new sensor data sent by SensorData service.
      */
+     /*
     $rootScope.$on('sensordata-new', function(event, data) {
-      self.list = [];
+      self.sensorList = [];
       var keys = Object.keys(data);
       for (var i = 0; i < keys.length; i++) {
         var room = self.dict[keys[i]];
@@ -149,12 +179,12 @@ angular.module('otaniemi3dApp')
           //Room doesn't yet exist in the dictionary.
           self.dict[keys[i]] = data[keys[i]];
         }
-        //Push sensors to self.list
+        //Push sensors to self.sensorList
         for (var j = 0; j < data[keys[i]].sensors.length; j++) {
           var sensor = data[keys[i]].sensors[j];
           sensor.room = data[keys[i]].name;
           sensor.roomId = keys[i];
-          self.list.push(sensor);
+          self.sensorList.push(sensor);
         }
       }
       $rootScope.$broadcast('sensordata-update', self.dict);
@@ -163,10 +193,11 @@ angular.module('otaniemi3dApp')
     /*
      * Watch for changes made into the self.dict object.
      */
+     /*
     $rootScope.$watch(function() { return self.dict; }, function() {
       if (Object.keys(self.dict).length > 0) {
         $rootScope.$broadcast('sensordata-update', self.dict);
       }
-    });
+    });*/
 
   });

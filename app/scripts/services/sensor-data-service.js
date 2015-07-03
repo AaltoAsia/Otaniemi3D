@@ -8,36 +8,37 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('SensorData', function ($http, $q, $rootScope) {
+  .service('SensorData', function ($http, $q) {
 
-    //Store pending requests to this object
+    //Store pending requests to an object
     var pendingRequests = {};
 
     this.get = function () {
       var deferred = $q.defer(),
           url = 'http://otaniemi3d.cs.hut.fi/omi/node/',
-          localUrl = 'odf-requests/example-response.xml',
+          localUrl = 'odf-requests/response1.xml',
           requestXml = 'odf-requests/K1-request.xml',
           debug = false;   //use local data if true
 
       if (debug) {
         if (pendingRequests[localUrl]) {
-          return;
+          deferred.reject();
+          return deferred.promise;
         }
         pendingRequests[localUrl] = true;
         $http.get(localUrl)
           .success(function (xml) {
             var data = parseData(xml);
             deferred.resolve(data);
-            $rootScope.$broadcast('sensordata-new', data);
           })
           .finally(function () {
             pendingRequests[url] = false;
           });
       } else {
-        //If a pending request with the same url exists don't send a new one
+        //If a pending request with the same url exists don't send a new request
         if (pendingRequests[url]) {
-          return;
+          deferred.reject();
+          return deferred.promise;
         }
         pendingRequests[url] = true;
         $http.get(requestXml)
@@ -47,11 +48,10 @@ angular.module('otaniemi3dApp')
               .success(function (data) {
                 data = parseData(data);
                 deferred.resolve(data);
-                $rootScope.$broadcast('sensordata-new', data);
               })
               .error(function () {
                 console.log('Failed to fetch sensor data.');
-                deferred.reject({});
+                deferred.reject();
               })
               .finally(function () {
                 pendingRequests[url] = false;

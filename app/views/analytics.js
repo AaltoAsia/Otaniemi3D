@@ -12,7 +12,7 @@ angular.module('otaniemi3dApp')
 
     $scope.selectedRoom = null;
     $scope.selectedSensor = null;
-    $scope.sensorData = [];
+    $scope.sensorData = Rooms.dict;
     $scope.chartConfig = {
       options: {
         tooltip: {
@@ -22,17 +22,27 @@ angular.module('otaniemi3dApp')
       xAxis: {
         type: 'datetime',
         title: {
-          text: 'Date'
+          text: 'Time'
         }
-      }
+      },
+      series: [{
+        name: '',
+        data : [
+          [],
+          [],
+          []
+        ]
+      }]
     };
+
+    Rooms.updateRoomInfo();
 
     $scope.selectSensor = function (room, sensor) {
       if (!sensor) {
         if (room.sensors && room.sensors.length > 0) {
           sensor = room.sensors[0];
         } else {
-          sensor = null;
+          return;
         }
       }
 
@@ -43,7 +53,7 @@ angular.module('otaniemi3dApp')
 
       for (var i = 0; i < sensor.values.length; i++) {
         sensorData.push([
-          sensor.values[i].time,
+          new Date(sensor.values[i].time).getTime(),
           sensor.values[i].value,
         ]);
       }
@@ -59,37 +69,5 @@ angular.module('otaniemi3dApp')
         title: $scope.selectedSensor.type
       };
     };
-
-    Rooms.updateRoomInfo();
-
-    $scope.$on('sensordata-update', function (event, data) {
-      var treeData = [];
-      var keys = Object.keys(data);
-      for (var i = 0; i < keys.length; i++) {
-        var room = data[keys[i]];
-        room.text = room.name;
-        room.children = [];
-
-        for (var j = 0; j < room.sensors.length; j++) {
-          var sensor = room.sensors[j];
-          sensor.text = sensor.type;
-          sensor.children = [];
-
-          for (var k = 0; k < sensor.values.length; k++) {
-            var sensorValue = sensor.values[k];
-            var time = new Date(sensorValue.time).toUTCString();
-            sensor.children.push({
-              text: sensorValue.value + '  -  ' + time
-            });
-          }
-
-          room.children.push(sensor);
-        }
-
-        treeData.push(room);
-      }
-
-      $scope.sensorData = treeData;
-    });
 
   });
