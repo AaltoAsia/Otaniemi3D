@@ -10,7 +10,6 @@
  */
 angular
   .module('otaniemi3dApp', [
-    'ngResource',
     'ngRoute',
     'ngTouch',
     'ui.bootstrap',
@@ -48,6 +47,8 @@ angular
   .config(function(cfpLoadingBarProvider) {
       cfpLoadingBarProvider.includeSpinner = false;
   })
-  .run(function() {
+  .run(function(SensorData) {
+    //Inject SensorData so that it can immediately start downloading data
+    //from the server
     FastClick.attach(document.body);
   });

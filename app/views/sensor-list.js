@@ -22,12 +22,8 @@ angular.module('otaniemi3dApp')
       ]
     };
 
-    Rooms.updateRoomInfo().then(function () {
-      $scope.gridOptions.data = Rooms.sensorList;
+    $scope.$on('sensordata-update', function (_, data) {
+      $scope.gridOptions.data = data.list;
     });
-
-    //$scope.$on('sensordata-update', function(event, data) {
-      //$scope.gridOptions.data = Rooms.sensorList;
-    //});
 
   });

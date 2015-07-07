@@ -8,8 +8,8 @@
  */
 angular.module('otaniemi3dApp')
   .directive('floorplan', function (Rooms, floorplanService, usSpinnerService,
-    heatmapService, legendbarService) {
-    
+    heatmapService, legendbarService, $interval) {
+
   return {
     restrict: 'E',
     scope: {
@@ -100,13 +100,13 @@ angular.module('otaniemi3dApp')
 
       tooltip.select('#panobtn').style('display', 'none');
     } //end tooltip  helper functions
-    
+
     //Add one row to the tooltip table.
     function addTooltipText (type, value) {
       var unit = '';
       switch (type.toLowerCase()) {
         case 'temperature':
-          unit = ' °C';                        
+          unit = ' °C';
           break;
         case 'humidity':
           unit = ' %';
@@ -169,12 +169,12 @@ angular.module('otaniemi3dApp')
             }
           }
         }
-        
+
         caption.style('border-top-left-radius', '5px');
         caption.style('border-top-right-radius', '5px');
         lastRow.type.style('border-bottom-left-radius', '5px');
         lastRow.value.style('border-bottom-right-radius', '5px');
-        
+
         var roomsWithPanorama = [
           '238d','237c','235','232b','232a',
           '2nd Floor Corridor Start',
@@ -194,11 +194,11 @@ angular.module('otaniemi3dApp')
         tooltip.style('visibility', 'visible');
 
       }
-      
+
 
       function clicked () {
         if (scope.highlightedRoom) {
-          clearInterval(scope.highlightedRoom.pulse);
+          $interval.cancel(scope.highlightedRoom.pulse);
           scope.highlightedRoom = null;
         }
         d3.select('#panobtn').style('pointer-events', 'all');
@@ -311,7 +311,7 @@ angular.module('otaniemi3dApp')
         }
       }
     }//end setRoomColor
-   
+
    /*
     * Append floorplan to the html element and register zoom and drag listener.
     */
@@ -372,7 +372,7 @@ angular.module('otaniemi3dApp')
             floorplan.translate = d3.event.translate;
             tooltip.style('visibility', 'hidden');
           });
-          
+
 
         svg.call(zoomListener);
 
@@ -509,7 +509,8 @@ angular.module('otaniemi3dApp')
       if (initialColor === 'none') {
         initialColor = 'rgb(255,255,255)';
       }
-      //Color it first, fade away and color again because the first iteration of setInterval takes a while...
+      //Color it first, fade away and color again because the first iteration
+      //of $interval takes a while...
       d3.select(room.node)
         .style('fill', pulseColor)
         .transition()
@@ -524,7 +525,7 @@ angular.module('otaniemi3dApp')
         .duration(duration*2/3)
         .style('fill', initialColor);
 
-      var pulsing = window.setInterval(function() {
+      var pulsing = $interval(function() {
         d3.select(room.node)
           .transition()
           .duration(duration)
@@ -537,7 +538,7 @@ angular.module('otaniemi3dApp')
 
       return pulsing;
     }
-    
+
     legendbarService.fillLegend();
 
     /*
@@ -556,7 +557,7 @@ angular.module('otaniemi3dApp')
         scope.selectedRoom = null;
       }
     });
-    
+
     function resetZoom() {
       scope.plan.translate = [0, 0];
       scope.plan.scale = 1;
@@ -567,10 +568,11 @@ angular.module('otaniemi3dApp')
     * Watch for sensor data updates and update every room's
     * info accordingly.
     */
-    scope.$watch('data', function () {
-      if (scope.data) {
-        updateRoomColors();
-      }
+    scope.$watch(function () { return JSON.stringify(scope.data); },
+      function () {
+        if (scope.data) {
+          updateRoomColors();
+        }
     });
 
     scope.$watch('highlightedRoom', function() {
@@ -582,17 +584,23 @@ angular.module('otaniemi3dApp')
         scope.highlightedRoom.pulse = highlightRoom(scope.highlightedRoom);
       }
     });
-    
+
     scope.$watch('roomValueType', function() {
       legendbarService.setRoomValueType(scope.roomValueType);
       legendbarService.changeLegendText();
       legendbarService.changeLegendStyle();
     });
-    
+
     scope.$watch('resetView', function() {
       if (scope.resetView === null) {return;}
-      
+
       resetZoom();
+    });
+
+    scope.$on('$destroy', function () {
+      if (scope.highlightedRoom) {
+        $interval.cancel(scope.highlightedRoom.pulse);
+      }
     });
     }//end link: function()
   }; //end return

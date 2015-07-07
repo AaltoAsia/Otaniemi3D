@@ -17,7 +17,7 @@ angular.module('otaniemi3dApp')
   var panoramaFull = 'pano-2d-view-fullscreen';
   var panoramaLoaded = false;
 
-  $scope.sensorData = null;
+  $scope.sensorData = Rooms.dict;
   $scope.floorplanClass = floorplanClass;
   $scope.panoramaClass = panoramaNormal;
   $scope.rooms = Rooms;
@@ -52,10 +52,8 @@ angular.module('otaniemi3dApp')
     }
   }
 
-  Rooms.updateRoomInfo();
-
-  $scope.$on('sensordata-update', function(event, data) {
-    $scope.sensorData = data;
+  $scope.$on('sensordata-update', function(_, data) {
+    $scope.sensorData = data.dict;
   });
 
   $scope.panoramaViewer = function() {
@@ -135,7 +133,7 @@ angular.module('otaniemi3dApp')
 
   $scope.highlightRoom = function(item) {
     if ($scope.highlightedRoom) {
-      clearInterval($scope.highlightedRoom.pulse);
+      $interval.cancel($scope.highlightedRoom.pulse);
     }
     if (typeof item.floor === 'number' && !isNaN(item.floor)) {
       $scope.highlightedRoom = item;

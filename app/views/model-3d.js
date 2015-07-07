@@ -17,8 +17,6 @@ angular.module('otaniemi3dApp')
     $scope.pano = false;
 
     var panoramaLoaded = false;
-    
-    Rooms.updateRoomInfo();
 
     //x3d change viewpoint (camera location)
     $scope.changeView = function(viewpoint){
@@ -26,17 +24,17 @@ angular.module('otaniemi3dApp')
         var textField = document.getElementById('searchContent');
         viewpoint = textField.value;
       }
-        
+
       var elem = document.getElementById(viewpoint);
-        
+
       if(elem !== null) {
-        elem.setAttribute('set_bind','true'); 
+        elem.setAttribute('set_bind','true');
 
         var x3dElem = document.getElementById('x3dElement');
         x3dElem.runtime.resetView();
       }
     };
-    $scope.text = undefined;  
+    $scope.text = undefined;
     //items in search scope
     $scope.items = ['Entrance','Cafeteria','Corridor Entrance Side',
       'Corridor Cafeteria Side','2nd Floor Sundeck','2nd Floor Corridor Start',
@@ -77,7 +75,7 @@ angular.module('otaniemi3dApp')
   $scope.stopPanorama = function(){
       $scope.pano = false;
   };
-  
+
     $scope.modalTooltip = function (sensorLabel) {
     $modal.open({
         templateUrl: 'threedModal.html',

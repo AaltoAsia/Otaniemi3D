@@ -18,7 +18,7 @@ angular.module('otaniemi3dApp')
       link: function postLink (scope, element, attrs, ngModel) {
 
         element.jstree({
-          plugins: ['search', 'sort', 'state'],
+          plugins: ['search', 'sort'],
           core: {
             check_callback: true,
             worker: false,
@@ -42,16 +42,16 @@ angular.module('otaniemi3dApp')
                 }
 
               } else if (node.original.sensors) {
-                for (var i = 0; i < node.original.sensors.length; i++) {
-                  var sensor = node.original.sensors[i];
+                for (var j = 0; j < node.original.sensors.length; j++) {
+                  var sensor = node.original.sensors[j];
                   sensor.children = true;
                   sensor.text = sensor.type;
                   children.push(sensor);
                 }
 
               } else if (node.original.values) {
-                for (var i = 0; i < node.original.values.length; i++) {
-                  var value = node.original.values[i];
+                for (var k = 0; k < node.original.values.length; k++) {
+                  var value = node.original.values[k];
                   children.push(
                     { text: value.value + '   --  ' + value.time.toISOString() }
                   );
@@ -64,48 +64,45 @@ angular.module('otaniemi3dApp')
         });
 
         element.on('select_node.jstree', function (event, data) {
-          if (scope.$$phase) {
+          var node = data.node,
+              room = null,
+              sensor = null;
+
+          if (node.text === 'K1') {
             return;
           }
-          //Use $apply because jstree works outside of angular's scope
-          scope.$apply(function() {
-            var node = data.node,
-                room = null,
-                sensor = null;
 
-            if (node.text === 'K1') {
-              return;
-            }
+          if (node.original.sensors) {
+            room = node.original;
+          } else if (node.original.values) {
+            sensor = node.original;
+            room = element.jstree(true).get_json(node.parent);
+          } else {
+            room = element.jstree(true)
+              .get_node(node.parents[1]).original;
+            sensor = element.jstree(true)
+              .get_node(node.parents[0]).original;
+          }
 
-            if (node.original.sensors) {
-              room = node.original;
-            } else if (node.original.values) {
-              sensor = node.original;
-              room = element.jstree(true).get_json(node.parent);
-            } else {
-              room = element.jstree(true)
-                .get_node(node.parents[1]).original;
-              sensor = element.jstree(true)
-                .get_node(node.parents[0]).original;
-            }
-
-            scope.onSelect(room, sensor);
-          });
+          if (!scope.$$phase) {
+            //Use $apply because jstree works outside of angular's scope
+            scope.$apply(scope.onSelect(room, sensor));
+          }
         });
 
         element.on('after_close.jstree', function (e, data) {
           var tree = element.jstree(true);
           data.node.children = true;
-          tree._model.data[data.node.id].state.loaded = false;
+          tree.get_node(data.node.id).state.loaded = false;
         });
 
-        scope.$watchCollection(function () { return ngModel.$modelValue; },
-          function (newData) {
-            if (!$.isEmptyObject(newData)) {
-              var tree = element.jstree(true);
-              tree.refresh();
-              console.log('refresh');
-            }
+        scope.$on('sensordata-update', function () {
+          var tree = element.jstree(true);
+          tree.refresh();
+        });
+
+        scope.$on('$destroy', function () {
+          $.jstree.destroy();
         });
       }
     };

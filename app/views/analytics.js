@@ -27,15 +27,9 @@ angular.module('otaniemi3dApp')
       },
       series: [{
         name: '',
-        data : [
-          [],
-          [],
-          []
-        ]
+        data : []
       }]
     };
-
-    Rooms.updateRoomInfo();
 
     $scope.selectSensor = function (room, sensor) {
       if (!sensor) {
@@ -69,5 +63,9 @@ angular.module('otaniemi3dApp')
         title: $scope.selectedSensor.type
       };
     };
+
+    $scope.$on('sensordata-update', function (_, data) {
+      $scope.sensorData = data.dict;
+    });
 
   });

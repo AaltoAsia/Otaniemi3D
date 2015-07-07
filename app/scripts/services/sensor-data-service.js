@@ -8,56 +8,86 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('SensorData', function ($http, $q) {
+  .service('SensorData', function ($http, $q, Rooms, $interval, $rootScope) {
 
-    //Store pending requests to an object
-    var pendingRequests = {};
+    //Store pending http requests to an object
+    var pendingRequests = {},
+        debugFile = 'odf-requests/response',
+        self = this,
+        debugNum = 1,
+        debug = true;
 
-    this.get = function () {
-      var deferred = $q.defer(),
-          url = 'http://otaniemi3d.cs.hut.fi/omi/node/',
-          localUrl = 'odf-requests/response1.xml',
-          requestXml = 'odf-requests/K1-request.xml',
-          debug = false;   //use local data if true
-
+    $interval(function () {
       if (debug) {
-        if (pendingRequests[localUrl]) {
-          deferred.reject();
-          return deferred.promise;
+        switch (debugNum) {
+          case 1:
+            self.get(debugFile + debugNum + '.xml');
+            debugNum = 2;
+            break;
+          case 2:
+            self.get(debugFile + debugNum + '.xml');
+            debugNum = 3;
+            break;
+          case 3:
+            self.get(debugFile + debugNum + '.xml');
+            debugNum = 1;
+            break;
         }
-        pendingRequests[localUrl] = true;
-        $http.get(localUrl)
-          .success(function (xml) {
-            var data = parseData(xml);
-            deferred.resolve(data);
-          })
-          .finally(function () {
-            pendingRequests[url] = false;
-          });
       } else {
-        //If a pending request with the same url exists don't send a new request
-        if (pendingRequests[url]) {
-          deferred.reject();
-          return deferred.promise;
-        }
+        self.get();
+      }
+    }, 2000);
+
+    this.get = function (url, broadcast) {
+      var deferred = $q.defer(),
+          url = url || 'http://otaniemi3d.cs.hut.fi/omi/node/',
+          requestXml = 'odf-requests/K1-request.xml',
+          broadcast = broadcast || 'sensordata-new';
+
+      //If a pending request with the same url exists don't send a new request
+      if (!pendingRequests[url]) {
         pendingRequests[url] = true;
+
         $http.get(requestXml)
           .success(function (responseXml) {
 
-            $http.post(url, responseXml, {headers: {'Content-Type': 'application/xml'}})
-              .success(function (data) {
-                data = parseData(data);
-                deferred.resolve(data);
-              })
-              .error(function () {
-                console.log('Failed to fetch sensor data.');
-                deferred.reject();
-              })
-              .finally(function () {
-                pendingRequests[url] = false;
-              });
+            if (debug) {
+              $http.get(url)
+                .success(function (data) {
+                  data = parseData(data);
+                  deferred.resolve(data);
+                  $rootScope.$broadcast(broadcast, data);
+                })
+                .error(function () {
+                  console.log('Failed to fetch sensor data.');
+                  deferred.reject();
+                })
+                .finally(function () {
+                  pendingRequests[url] = false;
+                });
+
+            } else {
+
+              $http.post(url, responseXml, {headers: {'Content-Type': 'application/xml'}})
+                .success(function (data) {
+                  data = parseData(data);
+                  deferred.resolve(data);
+                  $rootScope.$broadcast(broadcast, data);
+                })
+                .error(function () {
+                  console.log('Failed to fetch sensor data.');
+                  deferred.reject();
+                })
+                .finally(function () {
+                  pendingRequests[url] = false;
+                });
+            }
           });
+
+      } else {
+        deferred.reject();
       }
+
       return deferred.promise;
     };
 

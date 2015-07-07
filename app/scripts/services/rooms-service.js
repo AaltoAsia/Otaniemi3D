@@ -8,25 +8,25 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('Rooms', function ($rootScope, $q, SensorData) {
+  .service('Rooms', function ($rootScope, $q) {
 
     //Can be used inside this service to reference this service's public
     //properties and functions (e.g. self.dict).
     var self = this;
 
     /*
-    * A dictionary object where all room objects are stored.
-    */
+     * A dictionary object where all room objects are stored.
+     */
     this.dict = {};
 
     /*
-    * List of all sensors.
-    */
+     * List of all sensors.
+     */
     this.sensorList = [];
 
     /*
-    * Return room dictionary as a list.
-    */
+     * Return room dictionary as a list.
+     */
     this.asList = function() {
       var roomList = [];
 
@@ -47,7 +47,10 @@ angular.module('otaniemi3dApp')
     this.updateRoomInfo = function() {
       var deferred = $q.defer();
 
-      SensorData.get().then(function (data) {
+      //SensorData.get().then(function () {
+        deferred.resolve(self.dict);
+      //});
+      /*.then(function (data) {
         self.sensorList = [];
         var keys = Object.keys(data);
         for (var i = 0; i < keys.length; i++) {
@@ -69,13 +72,13 @@ angular.module('otaniemi3dApp')
           }
         }
         deferred.resolve(self.dict);
-      });
+      });*/
       return deferred.promise;
     };
 
     /*
-    * Add new room object to the list
-    */
+     * Add new room object to the list
+     */
     this.add = function(id, name, node, floor) {
       self.dict[id] = {
         name: name,
@@ -87,9 +90,9 @@ angular.module('otaniemi3dApp')
     };
 
     /*
-    * Find spesific room from room.list and return its information to
-    * the new list.
-    */
+     * Find spesific room from room.list and return its information to
+     * the new list.
+     */
     this.findRoom = function(roomName) {
       var room = null;
 
@@ -141,9 +144,9 @@ angular.module('otaniemi3dApp')
     };
 
     /*
-    * Find room for panorama-tooltip and return information with []-tags
-    * (krpano recognize these tags as HTML-tags).
-    */
+     * Find room for panorama-tooltip and return information with []-tags
+     * (krpano recognize these tags as HTML-tags).
+     */
     this.krpanoHTML = function(roomName){
       var roomInfo = self.findRoom(roomName);
       var roomHTML = '';
@@ -165,8 +168,7 @@ angular.module('otaniemi3dApp')
     /*
      * Watch for new sensor data sent by SensorData service.
      */
-     /*
-    $rootScope.$on('sensordata-new', function(event, data) {
+    $rootScope.$on('sensordata-new', function(_, data) {
       self.sensorList = [];
       var keys = Object.keys(data);
       for (var i = 0; i < keys.length; i++) {
@@ -187,17 +189,8 @@ angular.module('otaniemi3dApp')
           self.sensorList.push(sensor);
         }
       }
-      $rootScope.$broadcast('sensordata-update', self.dict);
+      $rootScope.$broadcast('sensordata-update',
+        {dict: self.dict, list: self.sensorList});
     });
-
-    /*
-     * Watch for changes made into the self.dict object.
-     */
-     /*
-    $rootScope.$watch(function() { return self.dict; }, function() {
-      if (Object.keys(self.dict).length > 0) {
-        $rootScope.$broadcast('sensordata-update', self.dict);
-      }
-    });*/
 
   });
