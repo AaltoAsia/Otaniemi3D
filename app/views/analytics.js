@@ -8,11 +8,12 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AnalyticsCtrl', function ($scope, Rooms) {
+  .controller('AnalyticsCtrl', function ($scope, Rooms, HistoricalData) {
 
     $scope.selectedRoom = null;
     $scope.selectedSensor = null;
     $scope.sensorData = Rooms.dict;
+    $scope.historicalData = HistoricalData.dict;
     $scope.chartConfig = {
       options: {
         tooltip: {
@@ -43,25 +44,39 @@ angular.module('otaniemi3dApp')
       $scope.selectedRoom = room;
       $scope.selectedSensor = sensor;
 
-      var sensorData = [];
+      HistoricalData.get(room).then(function (data) {
+        var sensorData = [];
+        var sensor;
+        var room = data[$scope.selectedRoom.id];
 
-      for (var i = 0; i < sensor.values.length; i++) {
-        sensorData.push([
-          new Date(sensor.values[i].time).getTime(),
-          sensor.values[i].value,
-        ]);
-      }
+        if (!room || !room.sensors) {
+          return;
+        }
 
-      $scope.chartConfig.series = [{
-        name: sensor.type,
-        data: sensorData
-      }];
+        for (var i = 0; i < room.sensors.length; i++) {
+          if (room.sensors[i].sensorId === $scope.selectedSensor.sensorId) {
+            sensor = room.sensors[i];
+            break;
+          }
+        }
 
-      $scope.chartConfig.title = $scope.selectedRoom.name + ': ' +
-                                 $scope.selectedSensor.type;
-      $scope.chartConfig.yAxis = {
-        title: $scope.selectedSensor.type
-      };
+        for (var j = 0; j < sensor.values.length; j++) {
+          sensorData.push([
+            new Date(sensor.values[j].time).getTime(),
+            sensor.values[j].value,
+          ]);
+        }
+
+        $scope.chartConfig.series = [{
+          name: sensor.type,
+          data: sensorData
+        }];
+
+        $scope.chartConfig.title = room.name + ': ' + sensor.type;
+        $scope.chartConfig.yAxis = {
+          title: sensor.type
+        };
+      });
     };
 
     $scope.$on('sensordata-update', function (_, data) {

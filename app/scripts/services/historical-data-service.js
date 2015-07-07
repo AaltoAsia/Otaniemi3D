@@ -8,17 +8,22 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('HistoricalData', function ($rootScope, SensorData) {
+  .service('HistoricalData', function ($q, $rootScope, SensorData) {
 
-    var self = this,
-        debug = true,
-        debugFile = 'odf-requests/response-historical.xml';
-
-    if (debug) {
-      SensorData.get(debugFile, 'sensordata-historical');
-    }
+    var self = this;
 
     this.dict = {};
+
+    this.get = function (room) {
+      var deferred = $q.defer();
+
+      SensorData.get(room.id, {newest: 20}, 'sensordata-historical')
+        .then(function (data) {
+          deferred.resolve(data);
+        });
+
+      return deferred.promise;
+    };
 
     $rootScope.$on('sensordata-historical', function (_, data) {
       self.dict = data;

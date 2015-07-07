@@ -1,4 +1,17 @@
 #sensor-tree {
   overflow-y: scroll;
-  max-height: 700px;
+  max-height: calc(100vh - 116px);
+}
+
+#drop-area {
+  border: 2px dashed black;
+  height: 400px;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#drop-area h3 {
+  text-align: center;
 }

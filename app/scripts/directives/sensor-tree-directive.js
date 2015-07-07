@@ -7,7 +7,7 @@
  * # sensorTree
  */
 angular.module('otaniemi3dApp')
-  .directive('sensorTree', function () {
+  .directive('sensorTree', function ($document) {
     return {
       template: '<div></div>',
       restrict: 'E',
@@ -18,7 +18,7 @@ angular.module('otaniemi3dApp')
       link: function postLink (scope, element, attrs, ngModel) {
 
         element.jstree({
-          plugins: ['search', 'sort'],
+          plugins: ['search', 'sort', 'dnd'],
           core: {
             check_callback: true,
             worker: false,
@@ -59,11 +59,29 @@ angular.module('otaniemi3dApp')
               }
 
               cb.call(this, children);
+            },
+            dnd: {
+              always_copy: true
             }
           }
         });
 
-        element.on('select_node.jstree', function (event, data) {
+        var tree = element.jstree(true);
+
+        function getNode(node, notOriginal) {
+          if (notOriginal) {
+            return tree.get_node(node);
+          } else {
+            return tree.get_node(node).original;
+          }
+        }
+
+        function getParent(node) {
+          var treeNode = tree.get_node(node);
+          return tree.get_node(treeNode.parent);
+        }
+
+        element.on('select_node.jstree', function (_, data) {
           var node = data.node,
               room = null,
               sensor = null;
@@ -76,12 +94,10 @@ angular.module('otaniemi3dApp')
             room = node.original;
           } else if (node.original.values) {
             sensor = node.original;
-            room = element.jstree(true).get_json(node.parent);
+            room = getNode(node.parent);
           } else {
-            room = element.jstree(true)
-              .get_node(node.parents[1]).original;
-            sensor = element.jstree(true)
-              .get_node(node.parents[0]).original;
+            room = getNode(node.parents[1]);
+            sensor = getNode(node.parents[0]);
           }
 
           if (!scope.$$phase) {
@@ -90,14 +106,21 @@ angular.module('otaniemi3dApp')
           }
         });
 
-        element.on('after_close.jstree', function (e, data) {
-          var tree = element.jstree(true);
+        element.on('after_close.jstree', function (_, data) {
           data.node.children = true;
-          tree.get_node(data.node.id).state.loaded = false;
+          getNode(data.node.id, true).state.loaded = false;
+        });
+
+        $document.on('dnd_stop.vakata', function (_, data) {
+          var target = $(data.event.target);
+          if(target.closest('#drop-area').length) {
+            var sensor = getNode(data.data.nodes[0], true);
+            var room = getNode(sensor.parent);
+            scope.onSelect(room, sensor.original);
+          }
         });
 
         scope.$on('sensordata-update', function () {
-          var tree = element.jstree(true);
           tree.refresh();
         });
 
