@@ -76,31 +76,26 @@ angular.module('otaniemi3dApp')
           }
         }
 
-        function getParent(node) {
-          var treeNode = tree.get_node(node);
-          return tree.get_node(treeNode.parent);
-        }
-
         element.on('select_node.jstree', function (_, data) {
-          var node = data.node,
-              room = null,
-              sensor = null;
+          if (data.event) {
+            var node = data.node,
+                room = null,
+                sensor = null;
 
-          if (node.text === 'K1') {
-            return;
-          }
+            if (node.text === 'K1') {
+              return;
+            }
 
-          if (node.original.sensors) {
-            room = node.original;
-          } else if (node.original.values) {
-            sensor = node.original;
-            room = getNode(node.parent);
-          } else {
-            room = getNode(node.parents[1]);
-            sensor = getNode(node.parents[0]);
-          }
+            if (node.original.sensors) {
+              room = node.original;
+            } else if (node.original.values) {
+              sensor = node.original;
+              room = getNode(node.parent);
+            } else {
+              room = getNode(node.parents[1]);
+              sensor = getNode(node.parents[0]);
+            }
 
-          if (!scope.$$phase) {
             //Use $apply because jstree works outside of angular's scope
             scope.$apply(scope.onSelect(room, sensor));
           }
@@ -121,7 +116,23 @@ angular.module('otaniemi3dApp')
         });
 
         scope.$on('sensordata-update', function () {
-          tree.refresh();
+          var state = tree.get_state(),
+              opened = state.core.open;
+
+          if (opened.length <= 1) {
+            tree.refresh();
+          } else {
+            for (var i = 0; i < opened.length; i++) {
+              var node = getNode(opened[i], true);
+              if (node.text !== 'K1') {
+                while (node.children.length) {
+                  node = getNode(node.children[0], true);
+                }
+                node = getNode(node.parent, true);
+                tree.refresh_node(node);
+              }
+            }
+          }
         });
 
         scope.$on('$destroy', function () {

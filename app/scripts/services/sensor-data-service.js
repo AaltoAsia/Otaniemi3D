@@ -8,7 +8,7 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('SensorData', function ($http, $q, Rooms, $interval, $rootScope) {
+  .service('SensorData', function ($http, $q, $interval, $rootScope) {
 
     //Store pending http requests to an object
     var pendingRequests = {},

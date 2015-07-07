@@ -8,12 +8,11 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AnalyticsCtrl', function ($scope, Rooms, HistoricalData) {
+  .controller('AnalyticsCtrl', function ($scope, Rooms) {
 
     $scope.selectedRoom = null;
     $scope.selectedSensor = null;
     $scope.sensorData = Rooms.dict;
-    $scope.historicalData = HistoricalData.dict;
     $scope.chartConfig = {
       options: {
         tooltip: {
@@ -44,7 +43,7 @@ angular.module('otaniemi3dApp')
       $scope.selectedRoom = room;
       $scope.selectedSensor = sensor;
 
-      HistoricalData.get(room).then(function (data) {
+      Rooms.get(room).then(function (data) {
         var sensorData = [];
         var sensor;
         var room = data[$scope.selectedRoom.id];

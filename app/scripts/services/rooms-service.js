@@ -8,7 +8,7 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('Rooms', function ($rootScope, $q) {
+  .service('Rooms', function ($rootScope, $q, SensorData) {
 
     //Can be used inside this service to reference this service's public
     //properties and functions (e.g. self.dict).
@@ -40,39 +40,14 @@ angular.module('otaniemi3dApp')
       return roomList;
     };
 
-    /*
-     * Fetch new sensor data from the server and update every room's
-     * sensor information.
-     */
-    this.updateRoomInfo = function() {
+    this.get = function (room) {
       var deferred = $q.defer();
 
-      //SensorData.get().then(function () {
-        deferred.resolve(self.dict);
-      //});
-      /*.then(function (data) {
-        self.sensorList = [];
-        var keys = Object.keys(data);
-        for (var i = 0; i < keys.length; i++) {
-          var room = self.dict[keys[i]];
-          if (room) {
-            //Update only sensor info if room already exists. This way
-            //the svg nodes stored in room objects won't reset.
-            room.sensors = data[keys[i]].sensors;
-          } else {
-            //Room doesn't yet exist in the dictionary.
-            self.dict[keys[i]] = data[keys[i]];
-          }
-          //Push sensors to self.sensorList
-          for (var j = 0; j < data[keys[i]].sensors.length; j++) {
-            var sensor = data[keys[i]].sensors[j];
-            sensor.room = data[keys[i]].name;
-            sensor.roomId = keys[i];
-            self.sensorList.push(sensor);
-          }
-        }
-        deferred.resolve(self.dict);
-      });*/
+      SensorData.get(room.id, {newest: 20}, 'sensordata-historical')
+        .then(function (data) {
+          deferred.resolve(data);
+        });
+
       return deferred.promise;
     };
 
