@@ -154,9 +154,23 @@ angular.module('otaniemi3dApp')
           if (name && valueList.length > 0) {
             sortDates(valueList);
 
+            var sensorName;
+            switch (name.toLowerCase()) {
+              case 'co2':
+                sensorName = 'CO2';
+                break;
+              case 'pir':
+                sensorName = 'PIR';
+                break;
+              default:
+                sensorName = name.charAt(0).toUpperCase() +
+                  name.slice(1);
+            }
+
             sensorList.push({
               sensorId: name + '-' + id,
               type: name,
+              name: sensorName,
               values: valueList
             });
           }

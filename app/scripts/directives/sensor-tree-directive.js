@@ -45,7 +45,7 @@ angular.module('otaniemi3dApp')
                 for (var j = 0; j < node.original.sensors.length; j++) {
                   var sensor = node.original.sensors[j];
                   sensor.children = true;
-                  sensor.text = sensor.type;
+                  sensor.text = sensor.name;
                   children.push(sensor);
                 }
 
@@ -116,23 +116,24 @@ angular.module('otaniemi3dApp')
         });
 
         scope.$on('sensordata-update', function () {
-          var state = tree.get_state(),
-              opened = state.core.open;
-
-          if (opened.length <= 1) {
-            tree.refresh();
-          } else {
-            for (var i = 0; i < opened.length; i++) {
-              var node = getNode(opened[i], true);
-              if (node.text !== 'K1') {
-                while (node.children.length) {
-                  node = getNode(node.children[0], true);
-                }
-                node = getNode(node.parent, true);
-                tree.refresh_node(node);
-              }
-            }
-          }
+          tree.refresh();
+          // var state = tree.get_state(),
+          //     opened = state.core.open;
+          //
+          // if (opened.length <= 1) {
+          //   tree.refresh();
+          // } else {
+          //   for (var i = 0; i < opened.length; i++) {
+          //     var node = getNode(opened[i], true);
+          //     if (node.text !== 'K1') {
+          //       while (node.children.length) {
+          //         node = getNode(node.children[0], true);
+          //       }
+          //       node = getNode(node.parent, true);
+          //       tree.refresh_node(node);
+          //     }
+          //   }
+          // }
         });
 
         scope.$on('$destroy', function () {

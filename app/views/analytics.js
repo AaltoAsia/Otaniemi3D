@@ -17,18 +17,33 @@ angular.module('otaniemi3dApp')
       options: {
         tooltip: {
           valueSuffix: '°C'
+        },
+        legend: {
+          enabled: false
         }
       },
       xAxis: {
-        type: 'datetime',
+        type: 'datetime'
+      },
+      yAxis: {
         title: {
-          text: 'Time'
+          text: 'Values (unit)',
+          rotation: 0,
+          offset: 0,
+          align: 'high',
+          y: -20
         }
       },
       series: [{
         name: '',
         data : []
-      }]
+      }],
+      title: {
+        text: 'Historical data'
+      },
+      subtitle: {
+        text: ''
+      }
     };
 
     $scope.selectSensor = function (room, sensor) {
@@ -44,9 +59,9 @@ angular.module('otaniemi3dApp')
       $scope.selectedSensor = sensor;
 
       Rooms.get(room).then(function (data) {
-        var sensorData = [];
-        var sensor;
-        var room = data[$scope.selectedRoom.id];
+        var sensorData = [],
+            sensor,
+            room = data[$scope.selectedRoom.id];
 
         if (!room || !room.sensors) {
           return;
@@ -67,14 +82,16 @@ angular.module('otaniemi3dApp')
         }
 
         $scope.chartConfig.series = [{
-          name: sensor.type,
+          name: sensor.name,
           data: sensorData
         }];
 
-        $scope.chartConfig.title = room.name + ': ' + sensor.type;
-        $scope.chartConfig.yAxis = {
-          title: sensor.type
-        };
+        var valueSuffix = Rooms.valueSuffix(sensor.type);
+
+        $scope.chartConfig.subtitle.text = room.name;
+        $scope.chartConfig.yAxis.title.text = valueSuffix ?
+          sensor.name + ' (' + valueSuffix + ')' : sensor.name;
+        $scope.chartConfig.options.tooltip.valueSuffix = ' ' + valueSuffix;
       });
     };
 

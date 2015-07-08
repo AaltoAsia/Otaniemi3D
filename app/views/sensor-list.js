@@ -8,7 +8,6 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-
   .controller('SensorListCtrl', function ($scope, Rooms) {
 
     $scope.gridOptions = {
@@ -16,7 +15,7 @@ angular.module('otaniemi3dApp')
       data: Rooms.sensorList,
       columnDefs: [
         { field: 'room' },
-        { field: 'type' },
+        { field: 'name', name: 'type' },
         { field: 'values[0].value', name: 'value' },
         { field: 'values[0].time.toISOString()', name: 'time' }
       ]

@@ -40,6 +40,32 @@ angular.module('otaniemi3dApp')
       return roomList;
     };
 
+    this.valueSuffix = function (sensorType) {
+      var suffix;
+
+      switch (sensorType.toLowerCase()) {
+        case 'temperature':
+          suffix = '°C';
+          break;
+        case 'co2':
+          suffix = 'ppm';
+          break;
+        case 'light':
+          suffix = 'lux';
+          break;
+        case 'humidity':
+          suffix = '%';
+          break;
+        case 'pir':
+          suffix = '';
+          break;
+        default:
+          suffix = '';
+      }
+
+      return suffix;
+    };
+
     this.get = function (room) {
       var deferred = $q.defer();
 
