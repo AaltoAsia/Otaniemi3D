@@ -85,7 +85,7 @@ angular.module('otaniemi3dApp')
           tooltip: {
             valueSuffix: ' ' + valueSuffix
           },
-          id: sensor.id
+          id: sensor.sensorId
         }];
 
         if (valueSuffix) {
@@ -123,37 +123,35 @@ angular.module('otaniemi3dApp')
           ]);
         }
 
-        var valueSuffix = Rooms.valueSuffix(sensor.type);
+        var valueSuffix = Rooms.valueSuffix(sensor.type),
+            chartSeries = $scope.chartConfig.series,
+            chartYAxis = $scope.chartConfig.yAxis;
 
-        if (valueSuffix) {
-          $scope.chartConfig.yAxis.title.text =
-            sensor.name + ' (' + valueSuffix + ')';
-        } else {
-          $scope.chartConfig.yAxis.title.text =
-            sensor.name;
+        if (chartSeries[0].id === 'placeholder-series') {
+          chartSeries = [];
         }
 
-        if ($scope.chartConfig.series[0].id === 'placeholder-series') {
-          $scope.chartConfig.series = [];
+        for (var k = 0; k < chartSeries.length; k++) {
+          if (chartSeries[k].id === sensor.id) {
+            return;
+          }
         }
 
-        $scope.chartConfig.series.push({
+        chartSeries.push({
           name: room.name + ': ' + sensor.name,
           data: sensorData,
           tooltip: {
             valueSuffix: ' ' + valueSuffix
           },
-          id: sensor.id
+          id: sensor.sensorId
         });
 
-        if ($scope.chartConfig.series.length > 1) {
-          $scope.chartConfig.yAxis.title.text = 'Values';
+        if (chartSeries.length > 1) {
+          chartYAxis.title.text = 'Values';
         } else if (valueSuffix) {
-          $scope.chartConfig.yAxis.title.text =
-            sensor.name + ' (' + valueSuffix + ')';
+          chartYAxis.title.text = sensor.name + ' (' + valueSuffix + ')';
         } else {
-          $scope.chartConfig.yAxis.title.text =
-            sensor.name;
+          chartYAxis.title.text = sensor.name;
         }
       });
     };

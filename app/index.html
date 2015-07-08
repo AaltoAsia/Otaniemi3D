@@ -48,10 +48,18 @@
 
             <div collapse="isCollapsed"  class="nav-collapse collapse navbar-responsive-collapse">
                 <ul class="nav navbar-nav">
-                    <li ng-class="{ active: isActive('/sensor-list')}"><a id="sensor-list-view" ng-click="isCollapsed = true" ng-href="#/sensor-list">Sensor List</a></li>
-                    <li ng-class="{ active: isActive('/floorplan')}"><a id="floorplan-view" ng-click="isCollapsed = true" ng-href="#/floorplan">Floorplans</a></li>
-                    <li ng-class="{ active: isActive('/model-3d')}"><a id="model-3d-view" ng-click="isCollapsed = true" ng-href="#/model-3d">3D Model</a></li>
-                    <li ng-class="{ active: isActive('/analytics')}"><a id="analytics" ng-click="isCollapsed = true" ng-href="#/analytics">Analytics</a></li>
+                    <li ng-class="{ active: isActive('/sensor-list')}">
+                      <a id="sensor-list-view" ng-click="isCollapsed = true" ng-href="#/sensor-list">Sensor List</a>
+                    </li>
+                    <li ng-class="{ active: isActive('/floorplans')}">
+                      <a id="floorplans-view" ng-click="isCollapsed = true" ng-href="#/floorplans">Heat Map</a>
+                    </li>
+                    <li ng-class="{ active: isActive('/model-3d')}">
+                      <a id="model-3d-view" ng-click="isCollapsed = true" ng-href="#/model-3d">3D Model</a>
+                    </li>
+                    <li ng-class="{ active: isActive('/analytics')}">
+                      <a id="analytics" ng-click="isCollapsed = true" ng-href="#/analytics">Analytics</a>
+                    </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -138,7 +146,6 @@
 <script src="scripts/services/sensor-data-service.js"></script>
 <script src="scripts/services/legendbar-service.js"></script>
 <script src="scripts/directives/sensor-tree-directive.js"></script>
-<script src="scripts/services/historical-data-service.js"></script>
 <!-- endbuild -->
 </body>
 </html>
