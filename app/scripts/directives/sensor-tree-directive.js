@@ -13,7 +13,9 @@ angular.module('otaniemi3dApp')
       restrict: 'E',
       require: 'ngModel',
       scope: {
-        onSelect: '='
+        selectSensor: '=',
+        addSensor: '=',
+        search: '='
       },
       link: function postLink (scope, element, attrs, ngModel) {
 
@@ -59,60 +61,81 @@ angular.module('otaniemi3dApp')
               }
 
               cb.call(this, children);
-            },
-            dnd: {
-              always_copy: true
             }
+          },
+          search: {
+            show_only_matches: true,
+            show_only_matches_children: true
           }
         });
 
         var tree = element.jstree(true);
 
-        function getNode(node, notOriginal) {
-          if (notOriginal) {
+        function getNode(node, noOriginal) {
+          if (noOriginal) {
             return tree.get_node(node);
           } else {
             return tree.get_node(node).original;
           }
         }
 
-        element.on('select_node.jstree', function (_, data) {
-          if (data.event) {
-            var node = data.node,
-                room = null,
-                sensor = null;
+        element
+          .on('select_node.jstree', function (_, data) {
+            if (data.event) {
+              var node = data.node,
+                  room = null,
+                  sensor = null;
 
-            if (node.text === 'K1') {
-              return;
+              if (node.text === 'K1') {
+                return;
+              }
+
+              if (node.original.sensors) {
+                room = node.original;
+              } else if (node.original.values) {
+                sensor = node.original;
+                room = getNode(node.parent);
+              } else {
+                room = getNode(node.parents[1]);
+                sensor = getNode(node.parents[0]);
+              }
+
+              //Use $apply because jstree works outside of angular's scope
+              scope.$apply(scope.selectSensor(room, sensor));
             }
+          })
+          .on('after_close.jstree', function (_, data) {
+            data.node.children = true;
+            getNode(data.node.id, true).state.loaded = false;
+          });
 
-            if (node.original.sensors) {
-              room = node.original;
-            } else if (node.original.values) {
-              sensor = node.original;
-              room = getNode(node.parent);
-            } else {
-              room = getNode(node.parents[1]);
-              sensor = getNode(node.parents[0]);
+        $document
+          .on('dnd_stop.vakata', function (_, data) {
+            var target = $(data.event.target);
+            if(target.closest('#drop-area').length) {
+              var sensor = getNode(data.data.nodes[0], true);
+              var room = getNode(sensor.parent);
+              scope.addSensor(room, sensor.original);
             }
+          })
+          .on('dnd_move.vakata', function (_, data) {
+            var target = $(data.event.target);
+            if(!target.closest(element).length) {
+              if(target.closest('#drop-area').length) {
+                data.helper.find('.jstree-icon')
+                  .removeClass('jstree-er')
+                  .addClass('jstree-ok');
+              }
+              else {
+                data.helper.find('.jstree-icon')
+                  .removeClass('jstree-ok')
+                  .addClass('jstree-er');
+              }
+            }
+          });
 
-            //Use $apply because jstree works outside of angular's scope
-            scope.$apply(scope.onSelect(room, sensor));
-          }
-        });
-
-        element.on('after_close.jstree', function (_, data) {
-          data.node.children = true;
-          getNode(data.node.id, true).state.loaded = false;
-        });
-
-        $document.on('dnd_stop.vakata', function (_, data) {
-          var target = $(data.event.target);
-          if(target.closest('#drop-area').length) {
-            var sensor = getNode(data.data.nodes[0], true);
-            var room = getNode(sensor.parent);
-            scope.onSelect(room, sensor.original);
-          }
+        scope.$watch('search', function (str) {
+          tree.search(str);
         });
 
         scope.$on('sensordata-update', function () {
@@ -138,6 +161,7 @@ angular.module('otaniemi3dApp')
 
         scope.$on('$destroy', function () {
           $.jstree.destroy();
+          $document.off('dnd_stop.vakata dnd_move.vakata');
         });
       }
     };

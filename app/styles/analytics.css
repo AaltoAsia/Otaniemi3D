@@ -3,6 +3,10 @@
   max-height: calc(100vh - 116px);
 }
 
+#sensor-tree-search {
+  margin: 10px;
+}
+
 #drop-area {
   border: 2px dashed black;
   height: 400px;
@@ -14,4 +18,5 @@
 
 #drop-area h3 {
   text-align: center;
+  cursor: default;
 }

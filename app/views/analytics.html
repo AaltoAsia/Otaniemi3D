@@ -1,5 +1,16 @@
 <div id="analytics" class="row">
-  <sensor-tree id="sensor-tree" class="col-sm-3" ng-model="sensorData" on-select="selectSensor"></sensor-tree>
+  <div class="col-sm-3">
+    <input id="sensor-tree-search" class="form-control"
+      ng-model="searchStr"
+      type="text"
+      placeholder="Search">
+    <sensor-tree id="sensor-tree"
+      ng-model="sensorData"
+      select-sensor="selectSensor"
+      add-sensor="addSensor"
+      search="searchStr">
+    </sensor-tree>
+  </div>
 
   <div class="col-sm-9">
     <div class="row">
