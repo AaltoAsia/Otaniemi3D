@@ -13,7 +13,6 @@ angular.module('otaniemi3dApp')
     //Store pending http requests to an object
     var pendingRequests = {},
         debugFile = 'odf-requests/response',
-        requestXml = 'odf-requests/K1-request.xml',
         self = this,
         debugNum = 1,
         debug = true;
