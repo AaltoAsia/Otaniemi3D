@@ -13,7 +13,7 @@ angular.module('otaniemi3dApp')
     // Check if current URL-location matches the highlighted item
     $scope.isActive = function (viewLocation) {
       //startsWith()
-        return $location.path().indexOf(viewLocation) === 0;
+        return $location.path().lastIndexOf(viewLocation, 0) === 0;
     };
     $scope.isCollapsed = true;
 
