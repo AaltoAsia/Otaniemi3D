@@ -14,8 +14,16 @@
 
   <div class="col-sm-9">
     <div class="row">
-      <div id="drop-area" class="col-xs-1">
-        <h3>Drop a sensor here</h3>
+      <div id="sensor-ctrl" class="col-xs-1">
+        <div id="drop-area"
+          title="You can view multiple sensor values at a time by dragging sensors to the drop area.">
+          <div class="sensor-legend" ng-repeat="sensor in selectedSensors" draggable="true">
+            <img ng-src="images/{{sensor.type}}.svg">
+            <div>{{sensor.name}}</div>
+          </div>
+          <h3 ng-if="!selectedSensors.length">Drop a sensor here</h3>
+        </div>
+        <button id="clear-btn" class="btn btn-default" ng-click="clearSensors()">Clear sensors</button>
       </div>
       <highchart id="sensor-chart" class="col-xs-10" config="chartConfig"></highchart>
     </div>

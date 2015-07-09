@@ -48,19 +48,26 @@ angular.module('otaniemi3dApp')
                   var sensor = node.original.sensors[j];
                   sensor.children = true;
                   sensor.text = sensor.name;
+                  sensor.icon = 'images/' + sensor.type + '.svg';
                   children.push(sensor);
                 }
 
               } else if (node.original.values) {
                 for (var k = 0; k < node.original.values.length; k++) {
                   var value = node.original.values[k];
-                  children.push(
-                    { text: value.value + '   --  ' + value.time.toISOString() }
+                  children.push({
+                    text: value.value + '   --  ' + value.time.toISOString(),
+                    icon: ' '
+                  }
                   );
                 }
               }
 
               cb.call(this, children);
+            },
+            themes: {
+              icons: false,
+              responsive: true
             }
           },
           search: {
@@ -139,24 +146,24 @@ angular.module('otaniemi3dApp')
         });
 
         scope.$on('sensordata-update', function () {
-          tree.refresh();
-          // var state = tree.get_state(),
-          //     opened = state.core.open;
-          //
-          // if (opened.length <= 1) {
-          //   tree.refresh();
-          // } else {
-          //   for (var i = 0; i < opened.length; i++) {
-          //     var node = getNode(opened[i], true);
-          //     if (node.text !== 'K1') {
-          //       while (node.children.length) {
-          //         node = getNode(node.children[0], true);
-          //       }
-          //       node = getNode(node.parent, true);
-          //       tree.refresh_node(node);
-          //     }
-          //   }
-          // }
+          var state = tree.get_state(),
+              opened = state.core.open;
+
+          if (opened.length < 2) {
+            tree.refresh();
+          } else {
+            for (var i = 0; i < opened.length; i++) {
+              var node = getNode(opened[i], true);
+              if (node.text !== 'K1') {
+                while (node.children.length) {
+                  node = getNode(node.children[0], true);
+                }
+                node = getNode(node.parent, true);
+                tree.refresh_node(node);
+              }
+            }
+            tree.set_state(state);
+          }
         });
 
         scope.$on('$destroy', function () {

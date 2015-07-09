@@ -1,6 +1,6 @@
-#sensor-tree {
+#sensor-tree > ul > li {
   overflow-y: scroll;
-  max-height: calc(100vh - 116px);
+  max-height: calc(100vh - 170px);
 }
 
 #sensor-tree-search {
@@ -10,13 +10,33 @@
 #drop-area {
   border: 2px dashed black;
   height: 400px;
-  margin-left: 10px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  padding: 7px;
+}
+
+#sensor-ctrl {
+  width: 140px;
+  padding: 0px;
+  margin-left: 10px;
 }
 
 #drop-area h3 {
   text-align: center;
   cursor: default;
+}
+
+.sensor-legend {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.sensor-legend:hover {
+  background-color: #e5e5e5;
+}
+
+#clear-btn {
+  margin: 10px;
 }

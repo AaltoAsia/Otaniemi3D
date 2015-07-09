@@ -168,7 +168,7 @@ angular.module('otaniemi3dApp')
             }
 
             sensorList.push({
-              sensorId: name + '-' + id,
+              id: name + '-' + id,
               type: name,
               name: sensorName,
               values: valueList

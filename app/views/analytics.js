@@ -30,7 +30,7 @@ angular.module('otaniemi3dApp')
         id: 'placeholder-y-axis'
       },
       series: [{
-        name: '',
+        name: ' ',
         data : [],
         legend: {
           enabled: false
@@ -40,6 +40,30 @@ angular.module('otaniemi3dApp')
       title: {
         text: 'Historical data'
       }
+    };
+
+    $scope.clearSensors = function () {
+      $scope.selectedSensors = [];
+      $scope.selectedSensor = null;
+      $scope.selectedRoom = null;
+      $scope.chartConfig.series = [{
+        name: ' ',
+        data : [],
+        legend: {
+          enabled: false
+        },
+        id: 'placeholder-series'
+      }];
+      $scope.chartConfig.yAxis = {
+        title: {
+          text: 'Values (unit)',
+          rotation: 0,
+          offset: 0,
+          align: 'high',
+          y: -20
+        },
+        id: 'placeholder-y-axis'
+      };
     };
 
     $scope.selectSensor = function (room, sensor) {
@@ -53,6 +77,7 @@ angular.module('otaniemi3dApp')
 
       $scope.selectedRoom = room;
       $scope.selectedSensor = sensor;
+      $scope.selectedSensors = [sensor];
 
       Rooms.get(room).then(function (data) {
         var sensorData = [],
@@ -64,7 +89,7 @@ angular.module('otaniemi3dApp')
         }
 
         for (var i = 0; i < room.sensors.length; i++) {
-          if (room.sensors[i].sensorId === $scope.selectedSensor.sensorId) {
+          if (room.sensors[i].id === $scope.selectedSensor.id) {
             sensor = room.sensors[i];
             break;
           }
@@ -85,7 +110,7 @@ angular.module('otaniemi3dApp')
           tooltip: {
             valueSuffix: ' ' + valueSuffix
           },
-          id: sensor.sensorId
+          id: sensor.id
         }];
 
         if (valueSuffix) {
@@ -109,49 +134,52 @@ angular.module('otaniemi3dApp')
           return;
         }
 
+        var sensorToAdd;
         for (var i = 0; i < room.sensors.length; i++) {
-          if (room.sensors[i].sensorId === sensor.sensorId) {
-            sensor = room.sensors[i];
+          if (room.sensors[i].id === sensor.id) {
+            sensorToAdd = room.sensors[i];
             break;
           }
         }
 
-        for (var j = 0; j < sensor.values.length; j++) {
+        for (var j = 0; j < sensorToAdd.values.length; j++) {
           sensorData.push([
-            new Date(sensor.values[j].time).getTime(),
-            sensor.values[j].value,
+            new Date(sensorToAdd.values[j].time).getTime(),
+            sensorToAdd.values[j].value,
           ]);
         }
 
-        var valueSuffix = Rooms.valueSuffix(sensor.type),
-            chartSeries = $scope.chartConfig.series,
-            chartYAxis = $scope.chartConfig.yAxis;
+        var valueSuffix = Rooms.valueSuffix(sensorToAdd.type);
 
-        if (chartSeries[0].id === 'placeholder-series') {
-          chartSeries = [];
+        if ($scope.chartConfig.series.length &&
+            $scope.chartConfig.series[0].id === 'placeholder-series') {
+          $scope.chartConfig.series = [];
         }
 
-        for (var k = 0; k < chartSeries.length; k++) {
-          if (chartSeries[k].id === sensor.id) {
+        for (var k = 0; k < $scope.chartConfig.series.length; k++) {
+          if ($scope.chartConfig.series[k].id === sensorToAdd.id) {
             return;
           }
         }
 
-        chartSeries.push({
-          name: room.name + ': ' + sensor.name,
+        $scope.selectedSensors.push(sensorToAdd);
+
+        $scope.chartConfig.series.push({
+          name: room.name + ': ' + sensorToAdd.name,
           data: sensorData,
           tooltip: {
             valueSuffix: ' ' + valueSuffix
           },
-          id: sensor.sensorId
+          id: sensorToAdd.id
         });
 
-        if (chartSeries.length > 1) {
-          chartYAxis.title.text = 'Values';
+        if ($scope.chartConfig.series.length > 1) {
+          $scope.chartConfig.yAxis.title.text = 'Values';
         } else if (valueSuffix) {
-          chartYAxis.title.text = sensor.name + ' (' + valueSuffix + ')';
+          $scope.chartConfig.yAxis.title.text = sensorToAdd.name +
+            ' (' + valueSuffix + ')';
         } else {
-          chartYAxis.title.text = sensor.name;
+          $scope.chartConfig.yAxis.title.text = sensorToAdd.name;
         }
       });
     };
