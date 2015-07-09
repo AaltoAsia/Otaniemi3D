@@ -74,6 +74,11 @@ body {
 .jumbotron .btn {
     font-size: 21px;
     padding: 14px 24px;
+    margin: 10px;
+}
+
+.jumbotron.centered {
+    margin-top: 10%;
 }
 
 /* Supporting marketing content */
@@ -105,11 +110,11 @@ body {
 
 /*Header (sensor type) element inside the tooltip*/
 .tooltip-table th {
-  
+
 }
 /*Sensor value element inside the tooltip*/
 .tooltip-table td {
-  
+
 }
 
 .mouse-tooltip {
@@ -165,51 +170,51 @@ ul.nav {
   color: #9D9D9D;
 }
 
-.btn-black { 
-  color: #FFFFFF; 
-  background-color: #000000; 
-  border-color: #000000; 
-} 
- 
-.btn-black:hover, 
-.btn-black:focus, 
-.btn-black:active, 
-.btn-black.active, 
-.open .dropdown-toggle.btn-black { 
-  color: #FFFFFF; 
-  background-color: #A8A8A8; 
-  border-color: #000000; 
-} 
- 
-.btn-black:active, 
-.btn-black.active, 
-.open .dropdown-toggle.btn-black { 
-  background-image: none; 
-} 
- 
-.btn-black.disabled, 
-.btn-black[disabled], 
-fieldset[disabled] .btn-black, 
-.btn-black.disabled:hover, 
-.btn-black[disabled]:hover, 
-fieldset[disabled] .btn-black:hover, 
-.btn-black.disabled:focus, 
-.btn-black[disabled]:focus, 
-fieldset[disabled] .btn-black:focus, 
-.btn-black.disabled:active, 
-.btn-black[disabled]:active, 
-fieldset[disabled] .btn-black:active, 
-.btn-black.disabled.active, 
-.btn-black[disabled].active, 
-fieldset[disabled] .btn-black.active { 
-  background-color: #000000; 
-  border-color: #000000; 
-} 
- 
-.btn-black .badge { 
-  color: #000000; 
-  background-color: #FFFFFF; 
-  border-color: #000000; 
+.btn-black {
+  color: #FFFFFF;
+  background-color: #000000;
+  border-color: #000000;
+}
+
+.btn-black:hover,
+.btn-black:focus,
+.btn-black:active,
+.btn-black.active,
+.open .dropdown-toggle.btn-black {
+  color: #FFFFFF;
+  background-color: #A8A8A8;
+  border-color: #000000;
+}
+
+.btn-black:active,
+.btn-black.active,
+.open .dropdown-toggle.btn-black {
+  background-image: none;
+}
+
+.btn-black.disabled,
+.btn-black[disabled],
+fieldset[disabled] .btn-black,
+.btn-black.disabled:hover,
+.btn-black[disabled]:hover,
+fieldset[disabled] .btn-black:hover,
+.btn-black.disabled:focus,
+.btn-black[disabled]:focus,
+fieldset[disabled] .btn-black:focus,
+.btn-black.disabled:active,
+.btn-black[disabled]:active,
+fieldset[disabled] .btn-black:active,
+.btn-black.disabled.active,
+.btn-black[disabled].active,
+fieldset[disabled] .btn-black.active {
+  background-color: #000000;
+  border-color: #000000;
+}
+
+.btn-black .badge {
+  color: #000000;
+  background-color: #FFFFFF;
+  border-color: #000000;
 }
 
 
@@ -230,7 +235,7 @@ fieldset[disabled] .btn-black.active {
     .jumbotron {
         border-bottom: 0;
     }
-	
+
 	/*For some reason bootstrap doesn't set these(these make the navbar buttons visible) automatically for larger devices so it is done here*/
 	.collapse {
 	    display: inline!important;

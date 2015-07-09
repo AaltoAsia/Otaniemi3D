@@ -32,9 +32,17 @@ angular
         templateUrl: 'views/floorplan.html',
         controller: 'FloorplanCtrl'
       })
-      .when('/model-3d', {
+      .when('/3d-model', {
         templateUrl: 'views/model-3d.html',
         controller: 'Model3dCtrl'
+      })
+      .when('/3d-model/x3dom', {
+        templateUrl: 'views/x3dom.html',
+        controller: 'X3DomCtrl'
+      })
+      .when('/3d-model/unity', {
+        templateUrl: 'views/unity.html',
+        controller: 'UnityCtrl'
       })
       .when('/analytics', {
         templateUrl: 'views/analytics.html',

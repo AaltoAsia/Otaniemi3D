@@ -36,7 +36,7 @@ angular.module('otaniemi3dApp')
     {
       caption: '3D Model',
       description: 'You can explore the 3D model of K1-building with sensors placed in.',
-      link: 'model-3d',
+      link: '3d-model',
       linktext: '3D Model',
       img: 'images/3d.jpg'
     });

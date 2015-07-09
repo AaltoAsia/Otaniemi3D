@@ -184,10 +184,7 @@ angular.module('otaniemi3dApp')
         }
         //Push sensors to self.sensorList
         for (var j = 0; j < data[keys[i]].sensors.length; j++) {
-          var sensor = data[keys[i]].sensors[j];
-          sensor.room = data[keys[i]].name;
-          sensor.roomId = keys[i];
-          self.sensorList.push(sensor);
+          self.sensorList.push(data[keys[i]].sensors[j]);
         }
       }
       $rootScope.$broadcast('sensordata-update',

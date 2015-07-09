@@ -170,6 +170,8 @@ angular.module('otaniemi3dApp')
             sensorList.push({
               id: name + '-' + id,
               type: name,
+              room: id.split('-').join(' '),
+              roomId: id,
               name: sensorName,
               values: valueList
             });

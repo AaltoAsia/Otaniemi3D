@@ -31,7 +31,8 @@ angular.module('otaniemi3dApp')
                 children.push({
                   text: 'K1',
                   children: true,
-                  state: { opened: true }
+                  state: { opened: true },
+                  icon: 'images/icon-building.svg'
                 });
 
               } else if (node.text === 'K1') {
@@ -40,6 +41,7 @@ angular.module('otaniemi3dApp')
                   var room = ngModel.$modelValue[keys[i]];
                   room.children = true;
                   room.text = room.name;
+                  room.icon = 'images/icon-room.svg';
                   children.push(room);
                 }
 
@@ -48,7 +50,7 @@ angular.module('otaniemi3dApp')
                   var sensor = node.original.sensors[j];
                   sensor.children = true;
                   sensor.text = sensor.name;
-                  sensor.icon = 'images/' + sensor.type + '.svg';
+                  sensor.icon = 'images/icon-' + sensor.type + '.svg';
                   children.push(sensor);
                 }
 
@@ -66,7 +68,6 @@ angular.module('otaniemi3dApp')
               cb.call(this, children);
             },
             themes: {
-              icons: false,
               responsive: true
             }
           },
@@ -93,13 +94,11 @@ angular.module('otaniemi3dApp')
                   room = null,
                   sensor = null;
 
-              if (node.text === 'K1') {
+              if (node.text === 'K1' || node.original.sensors) {
                 return;
               }
 
-              if (node.original.sensors) {
-                room = node.original;
-              } else if (node.original.values) {
+              if (node.original.values) {
                 sensor = node.original;
                 room = getNode(node.parent);
               } else {
@@ -114,6 +113,16 @@ angular.module('otaniemi3dApp')
           .on('after_close.jstree', function (_, data) {
             data.node.children = true;
             getNode(data.node.id, true).state.loaded = false;
+          })
+          .on('before_open.jstree', function (_, data) {
+            if (data.node.children.length) {
+              var node = getNode(data.node.children[0], true);
+              if (!node.icon || node.icon === ' ') {
+                element
+                  .find('#' + node.id + '_anchor')
+                  .find('i').remove();
+              }
+            }
           });
 
         $document
