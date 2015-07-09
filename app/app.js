@@ -28,7 +28,7 @@ angular
         templateUrl: 'views/sensor-list.html',
         controller: 'SensorListCtrl'
       })
-      .when('/floorplans', {
+      .when('/floorplans/:floorNumber', {
         templateUrl: 'views/floorplan.html',
         controller: 'FloorplanCtrl'
       })

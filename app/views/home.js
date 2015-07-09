@@ -29,7 +29,7 @@ angular.module('otaniemi3dApp')
     {
       caption: 'Heat Map',
       description: 'You can inspect floor plans of K1-building with heat maps of all sensor values. You can also view historical sensor values.',
-      link: 'floorplans',
+      link: 'floorplans/1',
       linktext: 'Heat Map',
       img: 'images/2d.jpg'
     },
