@@ -67,19 +67,26 @@ angular.module('otaniemi3dApp')
     };
 
     $scope.selectSensor = function (room, sensor) {
-      if (!sensor) {
-        if (room.sensors && room.sensors.length > 0) {
-          sensor = room.sensors[0];
-        } else {
-          return;
-        }
-      }
-
       $scope.selectedRoom = room;
       $scope.selectedSensor = sensor;
       $scope.selectedSensors = [sensor];
 
-      Rooms.get(room).then(function (data) {
+      var request = {
+        'Objects': {
+          'Object': {
+            'id': {
+              'keyValue': 'K1'
+            },
+            'Object': {
+              'id': {
+                'keyValue': room.id
+              }
+            }
+          }
+        }
+      };
+
+      Rooms.get(request).then(function (data) {
         var sensorData = [],
             sensor,
             room = data[$scope.selectedRoom.id];

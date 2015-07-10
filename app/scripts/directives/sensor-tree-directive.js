@@ -45,8 +45,10 @@ angular.module('otaniemi3dApp')
 
                   if (values.length) {
                     children = [{
+                      values: values,
                       text: values[0].value + '  --  ' +
                         values[0].time.toISOString(),
+                      icon: false,
                       type: 'value'
                     }];
                   }
@@ -62,7 +64,7 @@ angular.module('otaniemi3dApp')
                     var id = room.infoItems[i];
 
                     children.push({
-                      id: id,
+                      id: id + '-' + node.id,
                       text: id.charAt(0).toUpperCase() + id.slice(1),
                       children: true,
                       icon: 'images/icon-' + id + '.svg',
@@ -85,53 +87,13 @@ angular.module('otaniemi3dApp')
                       text: id.split('-').join(' '),
                       children: true,
                       icon: 'images/icon-room.svg',
-                      type: 'room'
+                      type: 'room',
+                      url: baseUrl + id
                     });
                   }
                   cb.call(this, children);
                 });
               }
-
-              /*
-              if (node.id === '#') {
-                children.push({
-                  text: 'K1',
-                  children: true,
-                  state: { opened: true },
-                  icon: 'images/icon-building.svg'
-                });
-
-              }  else if (node.original.sensors) {
-                for (var j = 0; j < node.original.sensors.length; j++) {
-                  var sensor = node.original.sensors[j];
-                  sensor.children = true;
-                  sensor.text = sensor.name;
-                  sensor.icon = 'images/icon-' + sensor.type + '.svg';
-                  children.push(sensor);
-                }
-
-              } else if (node.text === 'K1') {
-                var keys = Object.keys(ngModel.$modelValue);
-                for (var i = 0; i < keys.length; i++) {
-                  var room = ngModel.$modelValue[keys[i]];
-                  room.children = true;
-                  room.text = room.name;
-                  room.icon = 'images/icon-room.svg';
-                  children.push(room);
-                }
-
-              } else if (node.original.values) {
-                for (var k = 0; k < node.original.values.length; k++) {
-                  var value = node.original.values[k];
-                  children.push({
-                    text: value.value + '   --  ' + value.time.toISOString(),
-                    icon: ' '
-                  });
-                }
-              }
-
-              cb.call(this, children);
-              */
             },
             themes: {
               responsive: true
@@ -157,19 +119,21 @@ angular.module('otaniemi3dApp')
           .on('select_node.jstree', function (_, data) {
             if (data.event) {
               var node = data.node,
-                  room = null,
-                  sensor = null;
+                  room,
+                  sensor;
 
-              if (node.text === 'K1' || node.original.sensors) {
-                return;
-              }
-
-              if (node.original.values) {
-                sensor = node.original;
-                room = getNode(node.parent);
-              } else {
-                room = getNode(node.parents[1]);
-                sensor = getNode(node.parents[0]);
+              switch (node.original.type) {
+                case 'sensor':
+                  node.state.opened = true;
+                  room = getNode(node.parent, true);
+                  sensor = node;
+                  break;
+                case 'value':
+                  room = getNode(node.parents[1], true);
+                  sensor = getNode(node.parent, true);
+                  break;
+                default:
+                  return;
               }
 
               //Use $apply because jstree works outside of angular's scope
@@ -179,16 +143,6 @@ angular.module('otaniemi3dApp')
           .on('after_close.jstree', function (_, data) {
             data.node.children = true;
             getNode(data.node.id, true).state.loaded = false;
-          })
-          .on('before_open.jstree', function (_, data) {
-            if (data.node.children.length) {
-              var node = getNode(data.node.children[0], true);
-              if (!node.icon || node.icon === ' ') {
-                element
-                  .find('#' + node.id + '_anchor')
-                  .find('i').remove();
-              }
-            }
           });
 
         $document
