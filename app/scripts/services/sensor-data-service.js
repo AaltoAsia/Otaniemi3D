@@ -15,11 +15,12 @@ angular.module('otaniemi3dApp')
         debugFile = 'odf-requests/response',
         self = this,
         debugNum = 1,
-        debug = true;
-
+        debug = false;
+/*
     $interval(function () {
       self.get('K1', {}, 'sensordata-new');
-    }, 2000);
+    }, 2000);*/
+
 
     /*
      * @param {string} id - Id of the object whose data should be fetched.
@@ -86,6 +87,63 @@ angular.module('otaniemi3dApp')
 
       return deferred.promise;
     };
+    //this.get('K1', {newest: 1}, 'sensordata-new');
+
+    this.parseInfoItem = function (xml) {
+      xml = new DOMParser().parseFromString(xml, 'text/xml');
+
+      var values = [];
+
+      $(xml).find('value').each(function () {
+        var time = $(this).attr('unixTime');
+        if (!time) {
+          time = $(this).attr('dateTime');
+          time = new Date(time);
+        } else {
+          time = new Date(Number(time) * 1000);
+        }
+
+        var value = $(this).text();
+        if (value) {
+          value = Math.round(Number(value) * 100) / 100;
+        }
+
+        values.push({
+          value: value,
+          time: time
+        });
+      });
+
+      return values;
+    };
+
+    this.parseObject = function(xml) {
+      xml = new DOMParser().parseFromString(xml, 'text/xml');
+
+      var root = $(xml).find(':root'),
+          id = root.children('id').first().text(),
+          childObjects = [],
+          infoItems = [];
+
+      root.children('Object').each(function () {
+        childObjects.push(
+          $(this).children('id').text()
+        );
+      });
+
+      root.children('InfoItem').each(function () {
+        infoItems.push(
+          $(this).attr('name')
+        );
+      });
+
+      return {
+        id: id,
+        text: id.split('-').join(' '),
+        infoItems: infoItems,
+        objects: childObjects
+      };
+    };
 
     /*
      * Convert the sensor data xml to a javascript object and return it.
@@ -131,8 +189,7 @@ angular.module('otaniemi3dApp')
               //Check if value is empty string because Number()
               //turns empty strings into zero.
               if (value) {
-                value = Number(value);
-                value = Math.round(value * 100) / 100;
+                value = Math.round(Number(value) * 100) / 100;
               }
 
               if (dateTime) {
@@ -199,7 +256,7 @@ angular.module('otaniemi3dApp')
           xml = (new window.DOMParser())
             .parseFromString(xmlString, 'text/xml').documentElement;
 
-      var methodElem = document.createElementNS(omi, method);
+      var methodElem = document.createElementNS(omi, 'omi:' + method);
       methodElem.setAttribute('msgformat', 'odf');
 
       var keys = Object.keys(params);
@@ -207,13 +264,13 @@ angular.module('otaniemi3dApp')
         methodElem.setAttribute(keys[i], params[keys[i]].toString());
       }
 
-      var msg = document.createElementNS(omi, 'msg');
+      var msg = document.createElementNS(omi, 'omi:msg');
       msg.setAttribute('xmlns', 'odf.xsd');
-      msg.setAttributeNS(xsi, 'schemaLocation', 'odf.xsd odf.xsd');
+      msg.setAttributeNS(xsi, 'xsi:schemaLocation', 'odf.xsd odf.xsd');
 
-      var objects = document.createElement('Objects'),
-          object = document.createElement('Object'),
-          idElem = document.createElement('id'),
+      var objects = document.createElementNS(null, 'Objects'),
+          object = document.createElementNS(null, 'Object'),
+          idElem = document.createElementNS(null, 'id'),
           idText = document.createTextNode(id);
 
       idElem.appendChild(idText);
@@ -223,8 +280,8 @@ angular.module('otaniemi3dApp')
       methodElem.appendChild(msg);
       xml.appendChild(methodElem);
 
-      return xml;
-    };
+      return (new XMLSerializer()).serializeToString(xml);
+    }
 
     /*
      * Sort value list by date
