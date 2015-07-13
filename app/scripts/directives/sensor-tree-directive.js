@@ -26,7 +26,10 @@ angular.module('otaniemi3dApp')
             check_callback: true,
             worker: false,
             data: function (node, cb) {
-              var children = [];
+              var children = [],
+                  error = [{
+                    text: 'Error. Close and reopen this node to try again.'
+                  }];
 
               if (node.id === '#') {
                 var id = scope.root.split('/'),
@@ -68,6 +71,9 @@ angular.module('otaniemi3dApp')
                   }
 
                   cb.call(this, children);
+                })
+                .error(function () {
+                  cb.call(this, error);
                 });
 
               } else if (node.original.type === 'room') {
@@ -89,6 +95,9 @@ angular.module('otaniemi3dApp')
                     });
                   }
                   cb.call(this, children);
+                })
+                .error(function () {
+                  cb.call(this, error);
                 });
 
               } else if (node.original.type === 'building') {
@@ -108,6 +117,10 @@ angular.module('otaniemi3dApp')
                     });
                   }
                   cb.call(this, children);
+                })
+                .error(function () {
+                  cb.call(this, error);
+                  node.children = true;
                 });
               }
             },
