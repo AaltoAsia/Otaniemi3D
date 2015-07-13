@@ -15,7 +15,8 @@ angular.module('otaniemi3dApp')
       scope: {
         selectSensor: '=',
         addSensor: '=',
-        search: '='
+        search: '=',
+        root: '='
       },
       link: function postLink (scope, element, attrs, ngModel) {
 
@@ -25,18 +26,31 @@ angular.module('otaniemi3dApp')
             check_callback: true,
             worker: false,
             data: function (node, cb) {
-              var baseUrl = 'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/';
               var children = [];
 
               if (node.id === '#') {
-                children.push({
-                  id: 'K1',
-                  text: 'K1',
+                var id = scope.root.split('/'),
+                    icon,
+                    type;
+                id = id[id.length-1].length ? id[id.length-1] : id[id.length-2];
+
+                //TODO: data from server should have type as a metadata
+                if (id === 'K1') {
+                  icon = 'images/icon-building.svg';
+                  type = 'building';
+                } else {
+                  icon = 'images/icon-room.svg';
+                  type = 'room';
+                }
+
+                children = [{
+                  id: id,
+                  text: id.split('-').join(' '),
                   children: true,
-                  //state: { opened: true },
-                  icon: 'images/icon-building.svg',
-                  type: 'building'
-                });
+                  type: type,
+                  icon: icon
+                }];
+
                 cb.call(this, children);
 
               } else if (node.original.type === 'sensor') {
@@ -57,7 +71,7 @@ angular.module('otaniemi3dApp')
                 });
 
               } else if (node.original.type === 'room') {
-                $http.get(baseUrl + node.id).success(function (data) {
+                $http.get(scope.root + node.id).success(function (data) {
                   var room = SensorData.parseObject(data);
 
                   for (var i = 0; i < room.infoItems.length; i++) {
@@ -71,14 +85,14 @@ angular.module('otaniemi3dApp')
                       children: true,
                       icon: 'images/icon-' + id + '.svg',
                       type: 'sensor',
-                      url: baseUrl + node.id + '/' + id
+                      url: scope.root + node.id + '/' + id
                     });
                   }
                   cb.call(this, children);
                 });
 
               } else if (node.original.type === 'building') {
-                $http.get(baseUrl).success(function (data) {
+                $http.get(scope.root).success(function (data) {
                   var building = SensorData.parseObject(data);
 
                   for (var i = 0; i < building.objects.length; i++) {
@@ -90,7 +104,7 @@ angular.module('otaniemi3dApp')
                       children: true,
                       icon: 'images/icon-room.svg',
                       type: 'room',
-                      url: baseUrl + id
+                      url: scope.root + id
                     });
                   }
                   cb.call(this, children);
