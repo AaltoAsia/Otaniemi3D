@@ -55,8 +55,8 @@ angular
   .config(function(cfpLoadingBarProvider) {
       cfpLoadingBarProvider.includeSpinner = false;
   })
-  .run(function(SensorData) {
-    //Inject SensorData so that it can immediately start downloading data
-    //from the server
+  .run(function(SensorData, Rooms) {
+    //Inject SensorData and Room services so that browser can immediately
+    //start to download sensor data from the server.
     FastClick.attach(document.body);
   });

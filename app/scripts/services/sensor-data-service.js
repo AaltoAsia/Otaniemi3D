@@ -32,7 +32,7 @@ angular.module('otaniemi3dApp')
      * @param {string} broadcast - Name of the event broadcasted by angular when
      *                             response has arrived.
      */
-    this.get = function (request, params, broadcast) {
+    this.get = function (request, params, broadcast, loadingBar) {
       var deferred = $q.defer(),
           url = 'http://otaniemi3d.cs.hut.fi/omi/node/',
           requestXml = generateXml(request, 'read', params);
@@ -70,7 +70,11 @@ angular.module('otaniemi3dApp')
 
         } else {
 
-          $http.post(url, requestXml, {headers: {'Content-Type': 'application/xml'}})
+          $http.post(url, requestXml,
+            {
+              headers: {'Content-Type': 'application/xml'},
+              ignoreLoadingBar: !loadingBar
+            })
             .success(function (data) {
               data = parseData(data);
               deferred.resolve(data);
@@ -92,12 +96,12 @@ angular.module('otaniemi3dApp')
       return deferred.promise;
     };
 
-    self.get(requestK1, {}, 'sensordata-new');
-    /*
+    self.get(requestK1, {}, 'sensordata-new', true);
+
     $interval(function () {
       self.get(requestK1, {}, 'sensordata-new');
     }, 10000);
-    */
+
 
     this.parseInfoItem = function (xml) {
       xml = new DOMParser().parseFromString(xml, 'text/xml');

@@ -20,6 +20,11 @@ angular.module('otaniemi3dApp')
     this.dict = {};
 
     /*
+     * A JSON representation of the dictionary object.
+     */
+    this.json = '';
+
+    /*
      * List of all sensors.
      */
     this.sensorList = [];
@@ -189,6 +194,9 @@ angular.module('otaniemi3dApp')
           self.sensorList.push(data[keys[i]].sensors[j]);
         }
       }
+
+      //self.json = JSON.stringify(self.dict);
+
       $rootScope.$broadcast('sensordata-update',
         {dict: self.dict, list: self.sensorList});
     });
