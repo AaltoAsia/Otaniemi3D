@@ -18,8 +18,8 @@
         <div id="drop-area"
           title="You can view multiple sensor values at a time by dragging sensors to the drop area.">
           <div id="{{sensor.id}}" class="sensor-legend" ng-repeat="sensor in selectedSensors" draggable="true">
-            <img ng-src="images/{{sensor.type}}.svg">
-            <div>{{sensor.room}}: {{sensor.name}}</div>
+            <img ng-src="images/{{sensor.original.name}}.svg">
+            <div>{{sensor.original.room}}: {{sensor.text}}</div>
           </div>
           <h3 ng-if="!selectedSensors.length">Drop a sensor here</h3>
         </div>

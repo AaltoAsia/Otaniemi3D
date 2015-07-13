@@ -74,7 +74,7 @@ angular.module('otaniemi3dApp')
             })
             .error(function () {
               console.log('Failed to fetch sensor data.');
-              deferred.reject();
+              deferred.reject('Failed to fetch sensor data.');
             })
             .finally(function () {
               pendingRequests[requestXml] = false;
@@ -253,7 +253,7 @@ angular.module('otaniemi3dApp')
       var xsi = 'http://www.w3.org/2001/XMLSchema-instance',
           omi = 'omi.xsd',
           xmlString = '<?xml version="1.0" encoding="UTF-8" ?><omi:omiEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" xsi:schemaLocation="omi.xsd omi.xsd" version="1.0" ttl="0"></omi:omiEnvelope>',
-          xml = (new window.DOMParser())
+          xml = new window.DOMParser()
             .parseFromString(xmlString, 'text/xml').documentElement;
 
       var methodElem = document.createElementNS(omi, 'omi:' + method);
@@ -289,7 +289,7 @@ angular.module('otaniemi3dApp')
       xml.appendChild(methodElem);
       */
 
-      return (new XMLSerializer()).serializeToString(xml);
+      return new XMLSerializer().serializeToString(xml);
     }
 
     /*
@@ -322,48 +322,48 @@ angular.module('otaniemi3dApp')
       return found;
     }
 
-/*
- * JXON Snippet #5 - Mozilla Developer Network
- * https://developer.mozilla.org/en-US/docs/JXON
- */
-function createXML (oObjTree) {
-  function loadObjTree (oParentEl, oParentObj) {
-    var vValue, oChild;
-    if (oParentObj.constructor === String || oParentObj.constructor === Number || oParentObj.constructor === Boolean) {
-      oParentEl.appendChild(oNewDoc.createTextNode(oParentObj.toString())); /* verbosity level is 0 or 1 */
-      if (oParentObj === oParentObj.valueOf()) { return; }
-    } else if (oParentObj.constructor === Date) {
-      oParentEl.appendChild(oNewDoc.createTextNode(oParentObj.toGMTString()));
-    }
-    for (var sName in oParentObj) {
-      if (isFinite(sName)) { continue; } /* verbosity level is 0 */
-      vValue = oParentObj[sName];
-      if (sName === 'keyValue') {
-        if (vValue !== null && vValue !== true) { oParentEl.appendChild(oNewDoc.createTextNode(vValue.constructor === Date ? vValue.toGMTString() : String(vValue))); }
-      } else if (sName === 'keyAttributes') { /* verbosity level is 3 */
-        for (var sAttrib in vValue) { oParentEl.setAttribute(sAttrib, vValue[sAttrib]); }
-      } else if (sName.charAt(0) === '@') {
-        oParentEl.setAttribute(sName.slice(1), vValue);
-      } else if (vValue.constructor === Array) {
-        for (var nItem = 0; nItem < vValue.length; nItem++) {
-          oChild = oNewDoc.createElement(sName);
-          loadObjTree(oChild, vValue[nItem]);
-          oParentEl.appendChild(oChild);
+    /*
+     * JXON Snippet #5 - Mozilla Developer Network
+     * https://developer.mozilla.org/en-US/docs/JXON
+     */
+    function createXML (oObjTree) {
+      function loadObjTree (oParentEl, oParentObj) {
+        var vValue, oChild;
+        if (oParentObj.constructor === String || oParentObj.constructor === Number || oParentObj.constructor === Boolean) {
+          oParentEl.appendChild(oNewDoc.createTextNode(oParentObj.toString())); /* verbosity level is 0 or 1 */
+          if (oParentObj === oParentObj.valueOf()) { return; }
+        } else if (oParentObj.constructor === Date) {
+          oParentEl.appendChild(oNewDoc.createTextNode(oParentObj.toGMTString()));
         }
-      } else {
-        oChild = oNewDoc.createElement(sName);
-        if (vValue instanceof Object) {
-          loadObjTree(oChild, vValue);
-        } else if (vValue !== null && vValue !== true) {
-          oChild.appendChild(oNewDoc.createTextNode(vValue.toString()));
+        for (var sName in oParentObj) {
+          if (isFinite(sName)) { continue; } /* verbosity level is 0 */
+          vValue = oParentObj[sName];
+          if (sName === 'keyValue') {
+            if (vValue !== null && vValue !== true) { oParentEl.appendChild(oNewDoc.createTextNode(vValue.constructor === Date ? vValue.toGMTString() : String(vValue))); }
+          } else if (sName === 'keyAttributes') { /* verbosity level is 3 */
+            for (var sAttrib in vValue) { oParentEl.setAttribute(sAttrib, vValue[sAttrib]); }
+          } else if (sName.charAt(0) === '@') {
+            oParentEl.setAttribute(sName.slice(1), vValue);
+          } else if (vValue.constructor === Array) {
+            for (var nItem = 0; nItem < vValue.length; nItem++) {
+              oChild = oNewDoc.createElement(sName);
+              loadObjTree(oChild, vValue[nItem]);
+              oParentEl.appendChild(oChild);
+            }
+          } else {
+            oChild = oNewDoc.createElement(sName);
+            if (vValue instanceof Object) {
+              loadObjTree(oChild, vValue);
+            } else if (vValue !== null && vValue !== true) {
+              oChild.appendChild(oNewDoc.createTextNode(vValue.toString()));
+            }
+            oParentEl.appendChild(oChild);
+          }
         }
-        oParentEl.appendChild(oChild);
       }
+      const oNewDoc = document.implementation.createDocument('', '', null);
+      loadObjTree(oNewDoc, oObjTree);
+      return oNewDoc;
     }
-  }
-  const oNewDoc = document.implementation.createDocument('', '', null);
-  loadObjTree(oNewDoc, oObjTree);
-  return oNewDoc;
-}
 
   });

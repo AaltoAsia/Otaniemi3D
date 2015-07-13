@@ -65,7 +65,7 @@ angular.module('otaniemi3dApp')
         id: 'placeholder-y-axis'
       };
     };
-
+    /*
     $scope.selectSensor = function (room, sensor) {
       $scope.selectedRoom = room;
       $scope.selectedSensor = sensor;
@@ -128,66 +128,92 @@ angular.module('otaniemi3dApp')
             sensor.name;
         }
       });
-    };
+    };*/
 
     $scope.addSensor = function (room, sensor) {
-      var roomId = room.id;
+      for (var k = 0; k < $scope.chartConfig.series.length; k++) {
+        if ($scope.chartConfig.series[k].id === sensor.id) {
+          return;
+        }
+      }
 
-      Rooms.get(room).then(function (data) {
+      // Request must follow JXON notation and comply with ODF.
+      // https://developer.mozilla.org/en-US/docs/JXON
+      var request = {
+        'Objects': {
+          'Object': {
+            'id': {
+              'keyValue': 'K1'
+            },
+            'Object': {
+              'id': {
+                'keyValue': room.id
+              },
+              'InfoItem': {
+                '@name': sensor.original.name
+              }
+            }
+          }
+        }
+      };
+
+      $scope.chartConfig.loading = true;
+
+      Rooms.get(request).then(function success (data) {
         var sensorData = [],
-            room = data[roomId];
+            selectedRoom = data[room.id],
+            selectedSensor;
 
-        if (!room || !room.sensors) {
+        if (!selectedRoom || !selectedRoom.sensors) {
           return;
         }
 
-        var sensorToAdd;
-        for (var i = 0; i < room.sensors.length; i++) {
-          if (room.sensors[i].id === sensor.id) {
-            sensorToAdd = room.sensors[i];
+        for (var i = 0; i < selectedRoom.sensors.length; i++) {
+          if (selectedRoom.sensors[i].id === sensor.id) {
+            selectedSensor = selectedRoom.sensors[i];
             break;
           }
         }
 
-        for (var j = 0; j < sensorToAdd.values.length; j++) {
+        $scope.selectedRoom = selectedRoom;
+        $scope.selectedSensor = selectedSensor;
+        $scope.selectedSensors.push(selectedSensor);
+
+        for (var j = 0; j < selectedSensor.values.length; j++) {
           sensorData.push([
-            new Date(sensorToAdd.values[j].time).getTime(),
-            sensorToAdd.values[j].value,
+            new Date(selectedSensor.values[j].time).getTime(),
+            selectedSensor.values[j].value,
           ]);
         }
 
-        var valueSuffix = Rooms.valueSuffix(sensorToAdd.type);
+        var valueSuffix = Rooms.valueSuffix(selectedSensor.type);
 
         if ($scope.chartConfig.series.length &&
             $scope.chartConfig.series[0].id === 'placeholder-series') {
           $scope.chartConfig.series = [];
         }
 
-        for (var k = 0; k < $scope.chartConfig.series.length; k++) {
-          if ($scope.chartConfig.series[k].id === sensorToAdd.id) {
-            return;
-          }
-        }
-
-        $scope.selectedSensors.push(sensorToAdd);
-
         $scope.chartConfig.series.push({
-          name: room.name + ': ' + sensorToAdd.name,
+          name: selectedRoom.name + ': ' + selectedSensor.name,
           data: sensorData,
           tooltip: {
             valueSuffix: ' ' + valueSuffix
           },
-          id: sensorToAdd.id
+          id: selectedSensor.id
         });
 
         if ($scope.chartConfig.series.length > 1) {
           $scope.chartConfig.yAxis.title.text = 'Values';
         } else if (valueSuffix) {
-          $scope.chartConfig.yAxis.title.text = sensorToAdd.name +
+          $scope.chartConfig.yAxis.title.text = selectedSensor.name +
             ' (' + valueSuffix + ')';
         } else {
-          $scope.chartConfig.yAxis.title.text = sensorToAdd.name;
+          $scope.chartConfig.yAxis.title.text = selectedSensor.name;
         }
+
+      })
+      .finally(function () {
+        $scope.chartConfig.loading = false;
       });
     };
 

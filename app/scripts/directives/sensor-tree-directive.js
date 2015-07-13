@@ -65,6 +65,8 @@ angular.module('otaniemi3dApp')
 
                     children.push({
                       id: id + '-' + node.id,
+                      room: room.id,
+                      name: id,
                       text: id.charAt(0).toUpperCase() + id.slice(1),
                       children: true,
                       icon: 'images/icon-' + id + '.svg',
@@ -102,13 +104,19 @@ angular.module('otaniemi3dApp')
           search: {
             show_only_matches: true,
             show_only_matches_children: true
+          },
+          dnd: {
+            is_draggable: function (nodes) {
+              var node = nodes[0];
+              return node.original.type === 'sensor';
+            }
           }
         });
 
         var tree = element.jstree(true);
 
-        function getNode(node, noOriginal) {
-          if (noOriginal) {
+        function getNode(node, original) {
+          if (!original) {
             return tree.get_node(node);
           } else {
             return tree.get_node(node).original;
@@ -116,7 +124,7 @@ angular.module('otaniemi3dApp')
         }
 
         element
-          .on('select_node.jstree', function (_, data) {
+          /*.on('select_node.jstree', function (_, data) {
             if (data.event) {
               var node = data.node,
                   room,
@@ -125,12 +133,12 @@ angular.module('otaniemi3dApp')
               switch (node.original.type) {
                 case 'sensor':
                   node.state.opened = true;
-                  room = getNode(node.parent, true);
+                  room = getNode(node.parent);
                   sensor = node;
                   break;
                 case 'value':
-                  room = getNode(node.parents[1], true);
-                  sensor = getNode(node.parent, true);
+                  room = getNode(node.parents[1]);
+                  sensor = getNode(node.parent);
                   break;
                 default:
                   return;
@@ -139,19 +147,19 @@ angular.module('otaniemi3dApp')
               //Use $apply because jstree works outside of angular's scope
               scope.$apply(scope.selectSensor(room, sensor));
             }
-          })
+          })*/
           .on('after_close.jstree', function (_, data) {
             data.node.children = true;
-            getNode(data.node.id, true).state.loaded = false;
+            getNode(data.node.id).state.loaded = false;
           });
 
         $document
           .on('dnd_stop.vakata', function (_, data) {
             var target = $(data.event.target);
             if(target.closest('#drop-area').length) {
-              var sensor = getNode(data.data.nodes[0], true);
+              var sensor = getNode(data.data.nodes[0]);
               var room = getNode(sensor.parent);
-              scope.addSensor(room, sensor.original);
+              scope.addSensor(room, sensor);
             }
           })
           .on('dnd_move.vakata', function (_, data) {

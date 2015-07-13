@@ -70,8 +70,10 @@ angular.module('otaniemi3dApp')
       var deferred = $q.defer();
 
       SensorData.get(request, {newest: 20}, 'sensordata-historical')
-        .then(function (data) {
+        .then(function success (data) {
           deferred.resolve(data);
+        }, function error (reason) {
+          deferred.reject(reason);
         });
 
       return deferred.promise;
