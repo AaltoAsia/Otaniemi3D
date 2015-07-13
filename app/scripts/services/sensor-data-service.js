@@ -15,12 +15,16 @@ angular.module('otaniemi3dApp')
         debugFile = 'odf-requests/response',
         self = this,
         debugNum = 1,
-        debug = false;
-/*
-    $interval(function () {
-      self.get('K1', {}, 'sensordata-new');
-    }, 2000);*/
-
+        debug = false,
+        requestK1 = {
+          'Objects': {
+            'Object': {
+              'id': {
+                'keyValue': 'K1'
+              }
+            }
+          }
+        };
 
     /*
      * @param {string} id - Id of the object whose data should be fetched.
@@ -87,7 +91,13 @@ angular.module('otaniemi3dApp')
 
       return deferred.promise;
     };
-    //this.get('K1', {newest: 1}, 'sensordata-new');
+
+    self.get(requestK1, {}, 'sensordata-new');
+    /*
+    $interval(function () {
+      self.get(requestK1, {}, 'sensordata-new');
+    }, 10000);
+    */
 
     this.parseInfoItem = function (xml) {
       xml = new DOMParser().parseFromString(xml, 'text/xml');
@@ -361,7 +371,7 @@ angular.module('otaniemi3dApp')
           }
         }
       }
-      const oNewDoc = document.implementation.createDocument('', '', null);
+      var oNewDoc = document.implementation.createDocument('', '', null);
       loadObjTree(oNewDoc, oObjTree);
       return oNewDoc;
     }
