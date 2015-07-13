@@ -25,8 +25,11 @@ angular.module('otaniemi3dApp')
             check_callback: true,
             worker: false,
             data: function (node, cb) {
-              var baseUrl = 'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/';
-              var children = [];
+              var baseUrl = 'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/',
+                  children = [],
+                  error = [{
+                    text: 'Error. Close and reopen this node to try again.'
+                  }];
 
               if (node.id === '#') {
                 children.push({
@@ -54,6 +57,9 @@ angular.module('otaniemi3dApp')
                   }
 
                   cb.call(this, children);
+                })
+                .error(function () {
+                  cb.call(this, error);
                 });
 
               } else if (node.original.type === 'room') {
@@ -75,6 +81,9 @@ angular.module('otaniemi3dApp')
                     });
                   }
                   cb.call(this, children);
+                })
+                .error(function () {
+                  cb.call(this, error);
                 });
 
               } else if (node.original.type === 'building') {
@@ -94,6 +103,10 @@ angular.module('otaniemi3dApp')
                     });
                   }
                   cb.call(this, children);
+                })
+                .error(function () {
+                  cb.call(this, error);
+                  node.children = true;
                 });
               }
             },
