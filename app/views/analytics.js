@@ -175,9 +175,9 @@ angular.module('otaniemi3dApp')
           }
         }
 
-        $scope.selectedRoom = selectedRoom;
-        $scope.selectedSensor = selectedSensor;
-        $scope.selectedSensors.push(selectedSensor);
+        $scope.selectedRoom = room;
+        $scope.selectedSensor = sensor;
+        $scope.selectedSensors.push(sensor);
 
         for (var j = 0; j < selectedSensor.values.length; j++) {
           sensorData.push([
