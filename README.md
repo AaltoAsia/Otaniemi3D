@@ -16,7 +16,7 @@ Setup development environment
 4. Install required project dependencies:
 
         bower install
-       npm install
+        npm install
 
 5. To launch app on http://localhost:9000:
 
