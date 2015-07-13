@@ -11,7 +11,7 @@ angular.module('otaniemi3dApp')
   .service('floorplanService', function () {
 
     var self = this;
-    
+
     this.floors = [
       {
         url: 'floorplans/floor1.svg',
@@ -19,7 +19,7 @@ angular.module('otaniemi3dApp')
         roomNumber: 'st10',
         roomArea: 'st1',
         svg: null,
-        isSelected: true,
+        isSelected: false,
         translate: [0,0],
         scale: 1
       },
@@ -76,5 +76,5 @@ angular.module('otaniemi3dApp')
         }
       }
     };
-  
+
   });

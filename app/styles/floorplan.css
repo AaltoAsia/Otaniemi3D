@@ -1,12 +1,12 @@
-/* Responsive adjustment for a landscape mobile device */ 
+/* Responsive adjustment for a landscape mobile device */
 @media only screen and (max-width : 768px) and (orientation : landscape) {
     .modal-portrait {
         display:none;
-    }    
+    }
     .modal-landscape {
         display:inline;
     }
-    
+
     /* modal buttons default */
     #modalValue {
         margin-bottom: 0px;
@@ -14,15 +14,15 @@
 
 }
 
-/* Responsive adjustment for a portrait mobile device */ 
+/* Responsive adjustment for a portrait mobile device */
 @media only screen and (max-width : 768px) and (orientation : portrait) {
     .modal-portrait {
         display:inline;
-    }    
+    }
     .modal-landscape {
         display:none;
     }
-    
+
     /* Modal buttons centered */
     #modalValue {
         margin-bottom: 0px;
@@ -72,7 +72,7 @@
     .search-container-full {
         padding-top: 20px;
     }
-    
+
     #searchContent2 {
         width: 70%;
 		max-width: 160px;
@@ -96,7 +96,7 @@
     .floorplan-fullscreen {
         height: calc(100% - 55px);
     }
-	
+
   .pano-2d-view-fullscreen{
     height:calc(100%)!important;
     width:100%;
@@ -109,7 +109,7 @@
       width:100%;
       z-index:1;
     }
-	
+
     /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
     margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
 
@@ -142,7 +142,7 @@
     .search-container-full {
         padding-top: 20px;
     }
-    
+
     #searchContent2 {
         width: 50%;
         display:inline;
@@ -156,13 +156,13 @@
 	#searchContainer {
         margin-left: 10%;
 	    margin-right: 10%;
-    }    
-    
+    }
+
     /* Desktop user - disable portrait adjustments */
     .modal-portrait {
         display:none;
     }
-	
+
 }
 
 /*CSS for button that makes the floorplan fullscreen*/
@@ -218,7 +218,8 @@
 .timeMenu {
 }
 
-.typeMenu {
+.typeMenu li {
+    cursor: pointer;
 }
 
 /*we want to show room information before panoramabutto in tooltip */
@@ -291,7 +292,7 @@
 }
 
 #legendContainingSvg {
-  
+
 }
 
 #gradientRect {
@@ -299,19 +300,19 @@
 }
 
 #legendMinText {
-  
+
 }
 
 #legendMaxText {
-  
+
 }
 
 #binaryRectTop {
-  
+
 }
 
 #binaryRectBottom {
-  
+
 }
 
 .legendRect {
@@ -324,10 +325,8 @@
 }
 
 /* styling for black buttons in 2dview */
-.btn-black { 
-  color: #ffffff; 
-  background-color: #000000; 
-  border-color: #000000; 
-} 
-
- 
+.btn-black {
+  color: #ffffff;
+  background-color: #000000;
+  border-color: #000000;
+}

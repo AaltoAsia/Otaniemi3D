@@ -1,0 +1,77 @@
+<omi:omiEnvelope ttl="1.0" version="1.0" xmlns="odf.xsd" xmlns:omi="omi.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <omi:response>
+    <omi:result msgformat="odf">
+      <omi:return returnCode="200"/>
+      <omi:msg>
+        <Objects>
+          <Object>
+            <id>K1</id>
+            <Object>
+              <id>Room-101</id>
+              <InfoItem name="co2">
+                <value unixTime="1435323727">-926.1290040747563</value>
+                <value unixTime="1435323737">-927.4848202073595</value>
+                <value unixTime="1435323748">-951.2410729621215</value>
+                <value unixTime="1435323758">-1029.1959209720367</value>
+                <value unixTime="1435323775">-959.382677650771</value>
+                <value unixTime="1435323787">-934.7894296239293</value>
+                <value unixTime="1435323797">-897.5609293170378</value>
+                <value unixTime="1435323808">-909.2161201604658</value>
+                <value unixTime="1435323818">-965.4864553330012</value>
+                <value unixTime="1435323828">-970.7522524145768</value>
+              </InfoItem>
+              <InfoItem name="pir">
+                <value unixTime="1435323727">0.0</value>
+                <value unixTime="1435323737">0.0</value>
+                <value unixTime="1435323748">0.0</value>
+                <value unixTime="1435323758">0.0</value>
+                <value unixTime="1435323775">0.0</value>
+                <value unixTime="1435323787">0.0</value>
+                <value unixTime="1435323797">0.0</value>
+                <value unixTime="1435323808">0.0</value>
+                <value unixTime="1435323818">0.0</value>
+                <value unixTime="1435323828">0.0</value>
+              </InfoItem>
+              <InfoItem name="light">
+                <value unixTime="1435323727">-20267.769958845725</value>
+                <value unixTime="1435323737">-20156.19023910623</value>
+                <value unixTime="1435323748">-19886.90003546782</value>
+                <value unixTime="1435323758">-19913.504037977353</value>
+                <value unixTime="1435323775">-19211.82886035421</value>
+                <value unixTime="1435323787">-19291.07539754788</value>
+                <value unixTime="1435323797">-19847.059369112274</value>
+                <value unixTime="1435323808">-19677.905686338258</value>
+                <value unixTime="1435323818">-19847.177532068396</value>
+                <value unixTime="1435323828">-19690.183256894943</value>
+              </InfoItem>
+              <InfoItem name="temperature">
+                <value unixTime="1435323727">-27.46336721814863</value>
+                <value unixTime="1435323737">-27.202588105340897</value>
+                <value unixTime="1435323748">-26.73993138413978</value>
+                <value unixTime="1435323758">-25.91333264109146</value>
+                <value unixTime="1435323775">-24.097142499420688</value>
+                <value unixTime="1435323787">-25.609580875099386</value>
+                <value unixTime="1435323797">-24.70108888902832</value>
+                <value unixTime="1435323808">-26.593830955627595</value>
+                <value unixTime="1435323818">-24.708322498663538</value>
+                <value unixTime="1435323828">-26.21242454091747</value>
+              </InfoItem>
+              <InfoItem name="humidity">
+                <value unixTime="1435323727">62.67688093327331</value>
+                <value unixTime="1435323737">69.47323960482007</value>
+                <value unixTime="1435323748">65.28826005042309</value>
+                <value unixTime="1435323758">68.49677210858272</value>
+                <value unixTime="1435323775">64.89176246861517</value>
+                <value unixTime="1435323787">62.97839930348006</value>
+                <value unixTime="1435323797">59.89311596820196</value>
+                <value unixTime="1435323808">63.52568598097414</value>
+                <value unixTime="1435323818">63.28145532174282</value>
+                <value unixTime="1435323828">61.31586603748268</value>
+              </InfoItem>
+            </Object>
+          </Object>
+        </Objects>
+      </omi:msg>
+    </omi:result>
+  </omi:response>
+</omi:omiEnvelope>

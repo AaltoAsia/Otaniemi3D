@@ -12,86 +12,213 @@ angular.module('otaniemi3dApp')
 
     $scope.selectedRoom = null;
     $scope.selectedSensor = null;
-    $scope.sensorData = [];
+    $scope.selectedSensors = [];
+    $scope.searchStr = '';
+    $scope.sensorData = Rooms.dict;
     $scope.chartConfig = {
-      options: {
-        tooltip: {
-          valueSuffix: '°C'
-        }
-      },
       xAxis: {
-        type: 'datetime',
+        type: 'datetime'
+      },
+      yAxis: {
         title: {
-          text: 'Date'
-        }
+          text: 'Values (unit)',
+          rotation: 0,
+          offset: 0,
+          align: 'high',
+          y: -20
+        },
+        id: 'placeholder-y-axis'
+      },
+      series: [{
+        name: ' ',
+        data : [],
+        legend: {
+          enabled: false
+        },
+        id: 'placeholder-series'
+      }],
+      title: {
+        text: 'Historical data'
       }
     };
 
-    $scope.selectSensor = function (room, sensor) {
-      if (!sensor) {
-        if (room.sensors && room.sensors.length > 0) {
-          sensor = room.sensors[0];
-        } else {
-          sensor = null;
-        }
-      }
-
-      $scope.selectedRoom = room;
-      $scope.selectedSensor = sensor;
-
-      var sensorData = [];
-
-      for (var i = 0; i < sensor.values.length; i++) {
-        sensorData.push([
-          //TODO: Find where sensor.values[i].time is transformed to a string.
-          //It should always stay as a Date object.
-          Number(sensor.values[i].time),
-          sensor.values[i].value,
-        ]);
-      }
-
+    $scope.clearSensors = function () {
+      $scope.selectedSensors = [];
+      $scope.selectedSensor = null;
+      $scope.selectedRoom = null;
       $scope.chartConfig.series = [{
-        name: sensor.type,
-        data: sensorData
+        name: ' ',
+        data : [],
+        legend: {
+          enabled: false
+        },
+        id: 'placeholder-series'
       }];
-
-      $scope.chartConfig.title = $scope.selectedRoom.name + ': ' +
-                                 $scope.selectedSensor.type;
       $scope.chartConfig.yAxis = {
-        title: $scope.selectedSensor.type
+        title: {
+          text: 'Values (unit)',
+          rotation: 0,
+          offset: 0,
+          align: 'high',
+          y: -20
+        },
+        id: 'placeholder-y-axis'
       };
     };
+    /*
+    $scope.selectSensor = function (room, sensor) {
+      $scope.selectedRoom = room;
+      $scope.selectedSensor = sensor;
+      $scope.selectedSensors = [sensor];
 
-    Rooms.updateRoomInfo();
-
-    $scope.$on('sensordata-update', function (event, data) {
-      var treeData = [];
-      var keys = Object.keys(data);
-      for (var i = 0; i < keys.length; i++) {
-        var room = data[keys[i]];
-        room.text = room.name;
-        room.children = [];
-
-        for (var j = 0; j < room.sensors.length; j++) {
-          var sensor = room.sensors[j];
-          sensor.text = sensor.type;
-          sensor.children = [];
-
-          for (var k = 0; k < sensor.values.length; k++) {
-            var sensorValue = sensor.values[k];
-            var time = new Date(sensorValue.time).toUTCString();
-            sensor.children.push({
-              text: sensorValue.value + '  -  ' + time
-            });
+      var request = {
+        'Objects': {
+          'Object': {
+            'id': {
+              'keyValue': 'K1'
+            },
+            'Object': {
+              'id': {
+                'keyValue': room.id
+              }
+            }
           }
+        }
+      };
 
-          room.children.push(sensor);
+      Rooms.get(request).then(function (data) {
+        var sensorData = [],
+            sensor,
+            room = data[$scope.selectedRoom.id];
+
+        if (!room || !room.sensors) {
+          return;
         }
 
-        treeData.push(room);
+        for (var i = 0; i < room.sensors.length; i++) {
+          if (room.sensors[i].id === $scope.selectedSensor.id) {
+            sensor = room.sensors[i];
+            break;
+          }
+        }
+
+        for (var j = 0; j < sensor.values.length; j++) {
+          sensorData.push([
+            new Date(sensor.values[j].time).getTime(),
+            sensor.values[j].value,
+          ]);
+        }
+
+        var valueSuffix = Rooms.valueSuffix(sensor.type);
+
+        $scope.chartConfig.series = [{
+          name: room.name + ': ' + sensor.name,
+          data: sensorData,
+          tooltip: {
+            valueSuffix: ' ' + valueSuffix
+          },
+          id: sensor.id
+        }];
+
+        if (valueSuffix) {
+          $scope.chartConfig.yAxis.title.text =
+            sensor.name + ' (' + valueSuffix + ')';
+        } else {
+          $scope.chartConfig.yAxis.title.text =
+            sensor.name;
+        }
+      });
+    };*/
+
+    $scope.addSensor = function (room, sensor) {
+      for (var k = 0; k < $scope.chartConfig.series.length; k++) {
+        if ($scope.chartConfig.series[k].id === sensor.id) {
+          return;
+        }
       }
 
-      $scope.sensorData = treeData;
+      // Request must follow JXON notation and comply with ODF.
+      // https://developer.mozilla.org/en-US/docs/JXON
+      var request = {
+        'Objects': {
+          'Object': {
+            'id': {
+              'keyValue': 'K1'
+            },
+            'Object': {
+              'id': {
+                'keyValue': room.id
+              },
+              'InfoItem': {
+                '@name': sensor.original.name
+              }
+            }
+          }
+        }
+      };
+
+      $scope.chartConfig.loading = true;
+
+      Rooms.get(request).then(function success (data) {
+        var sensorData = [],
+            selectedRoom = data[room.id],
+            selectedSensor;
+
+        if (!selectedRoom || !selectedRoom.sensors) {
+          return;
+        }
+
+        for (var i = 0; i < selectedRoom.sensors.length; i++) {
+          if (selectedRoom.sensors[i].id === sensor.id) {
+            selectedSensor = selectedRoom.sensors[i];
+            break;
+          }
+        }
+
+        $scope.selectedRoom = room;
+        $scope.selectedSensor = sensor;
+        $scope.selectedSensors.push(sensor);
+
+        for (var j = 0; j < selectedSensor.values.length; j++) {
+          sensorData.push([
+            new Date(selectedSensor.values[j].time).getTime(),
+            selectedSensor.values[j].value,
+          ]);
+        }
+
+        var valueSuffix = Rooms.valueSuffix(selectedSensor.type);
+
+        if ($scope.chartConfig.series.length &&
+            $scope.chartConfig.series[0].id === 'placeholder-series') {
+          $scope.chartConfig.series = [];
+        }
+
+        $scope.chartConfig.series.push({
+          name: selectedRoom.name + ': ' + selectedSensor.name,
+          data: sensorData,
+          tooltip: {
+            valueSuffix: ' ' + valueSuffix
+          },
+          id: selectedSensor.id
+        });
+
+        if ($scope.chartConfig.series.length > 1) {
+          $scope.chartConfig.yAxis.title.text = 'Values';
+        } else if (valueSuffix) {
+          $scope.chartConfig.yAxis.title.text = selectedSensor.name +
+            ' (' + valueSuffix + ')';
+        } else {
+          $scope.chartConfig.yAxis.title.text = selectedSensor.name;
+        }
+
+      })
+      .finally(function () {
+        $scope.chartConfig.loading = false;
+      });
+    };
+
+    $scope.$on('sensordata-update', function (_, data) {
+      $scope.sensorData = data.dict;
     });
 
   });

@@ -76,40 +76,4 @@ describe('AnalyticsCtrl:', function () {
 
   });
 
-  describe('$scope.selectSensor()', function () {
-    var $scope, controller;
-
-    beforeEach(function() {
-      $scope = $rootScope.$new();
-      controller = $controller('AnalyticsCtrl', { $scope: $scope });
-    });
-
-    it('should select correct sensor', function () {
-      $scope.selectSensor(room, room.sensors[0]);
-      expect($scope.selectedSensor).toBe(room.sensors[0]);
-    });
-
-    it('should work with a room as a parameter', function () {
-      $scope.selectSensor(room, room.sensors[0]);
-      expect($scope.selectedSensor).toBe(room.sensors[0]);
-      expect($scope.selectedRoom).toBe(room);
-    });
-
-    it('should update $scope.chartConfig', function () {
-      var sensor = room.sensors[0];
-      var data = [
-        [values1[0].time, values1[0].value],
-        [values1[1].time, values1[1].value]
-      ];
-      $scope.selectSensor(room, room.sensors[0]);
-      expect($scope.chartConfig.series).toEqual([{
-        name: sensor.type,
-        data: data,
-      }]);
-      expect($scope.chartConfig.title).toEqual(room.name + ': ' + sensor.type);
-      expect($scope.chartConfig.yAxis).toEqual({title: sensor.type});
-    });
-
-  });
-
 });

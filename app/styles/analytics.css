@@ -1,4 +1,60 @@
-#sensor-tree {
+#analytics {
+  overflow-y: auto;
+}
+
+#sensor-tree > ul > li {
   overflow-y: scroll;
-  max-height: 700px;
+  max-height: calc(100vh - 170px);
+}
+
+#sensor-tree-search {
+  margin-bottom: 10px;
+}
+
+#drop-area {
+  border: 2px dashed black;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 7px;
+}
+
+#sensor-ctrl {
+  max-width: 180px;
+  padding: 0px;
+  margin-left: 10px;
+  cursor: default;
+}
+
+#drop-area h3 {
+  text-align: center;
+}
+
+.sensor-legend {
+  display: flex;
+  align-items: center;
+}
+
+.sensor-legend p {
+  margin: 0;
+}
+
+.sensor-legend:hover {
+  background-color: #e5e5e5;
+  cursor: pointer;
+}
+
+#clear-btn {
+  margin: 10px;
+}
+
+@media only screen and (min-width : 769px) {
+  #analytics {
+    margin: 0px;
+  }
+}
+
+@media only screen and (max-width : 768px) {
+
 }

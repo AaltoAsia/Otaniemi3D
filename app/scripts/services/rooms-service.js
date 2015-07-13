@@ -15,13 +15,18 @@ angular.module('otaniemi3dApp')
     var self = this;
 
     /*
-    * Return dictionary object where all room objects are stored.
-    */
+     * A dictionary object where all room objects are stored.
+     */
     this.dict = {};
 
     /*
-    * Return room dictionary as a list.
-    */
+     * List of all sensors.
+     */
+    this.sensorList = [];
+
+    /*
+     * Return room dictionary as a list.
+     */
     this.asList = function() {
       var roomList = [];
 
@@ -35,17 +40,48 @@ angular.module('otaniemi3dApp')
       return roomList;
     };
 
-    /*
-     * Fetch new sensor data from the server and update every room's
-     * sensor information.
-     */
-    this.updateRoomInfo = function() {
-      SensorData.get();
+    this.valueSuffix = function (sensorType) {
+      var suffix;
+
+      switch (sensorType.toLowerCase()) {
+        case 'temperature':
+          suffix = '°C';
+          break;
+        case 'co2':
+          suffix = 'ppm';
+          break;
+        case 'light':
+          suffix = 'lux';
+          break;
+        case 'humidity':
+          suffix = '%';
+          break;
+        case 'pir':
+          suffix = '';
+          break;
+        default:
+          suffix = '';
+      }
+
+      return suffix;
+    };
+
+    this.get = function (request) {
+      var deferred = $q.defer();
+
+      SensorData.get(request, {newest: 20}, 'sensordata-historical')
+        .then(function success (data) {
+          deferred.resolve(data);
+        }, function error (reason) {
+          deferred.reject(reason);
+        });
+
+      return deferred.promise;
     };
 
     /*
-    * Add new room object to the list
-    */
+     * Add new room object to the list
+     */
     this.add = function(id, name, node, floor) {
       self.dict[id] = {
         name: name,
@@ -57,9 +93,9 @@ angular.module('otaniemi3dApp')
     };
 
     /*
-    * Find spesific room from room.list and return its information to
-    * the new list.
-    */
+     * Find spesific room from room.list and return its information to
+     * the new list.
+     */
     this.findRoom = function(roomName) {
       var room = null;
 
@@ -111,9 +147,9 @@ angular.module('otaniemi3dApp')
     };
 
     /*
-    * Find room for panorama-tooltip and return information with []-tags
-    * (krpano recognize these tags as HTML-tags).
-    */
+     * Find room for panorama-tooltip and return information with []-tags
+     * (krpano recognize these tags as HTML-tags).
+     */
     this.krpanoHTML = function(roomName){
       var roomInfo = self.findRoom(roomName);
       var roomHTML = '';
@@ -135,7 +171,8 @@ angular.module('otaniemi3dApp')
     /*
      * Watch for new sensor data sent by SensorData service.
      */
-    $rootScope.$on('sensordata-new', function(event, data) {
+    $rootScope.$on('sensordata-new', function(_, data) {
+      self.sensorList = [];
       var keys = Object.keys(data);
       for (var i = 0; i < keys.length; i++) {
         var room = self.dict[keys[i]];
@@ -147,17 +184,13 @@ angular.module('otaniemi3dApp')
           //Room doesn't yet exist in the dictionary.
           self.dict[keys[i]] = data[keys[i]];
         }
+        //Push sensors to self.sensorList
+        for (var j = 0; j < data[keys[i]].sensors.length; j++) {
+          self.sensorList.push(data[keys[i]].sensors[j]);
+        }
       }
-      $rootScope.$broadcast('sensordata-update', self.dict);
-    });
-
-    /*
-     * Watch for changes made into the self.dict object.
-     */
-    $rootScope.$watch(function() { return self.dict; }, function() {
-      if (Object.keys(self.dict).length > 0) {
-        $rootScope.$broadcast('sensordata-update', self.dict);
-      }
+      $rootScope.$broadcast('sensordata-update',
+        {dict: self.dict, list: self.sensorList});
     });
 
   });

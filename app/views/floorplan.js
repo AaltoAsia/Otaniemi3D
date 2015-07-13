@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
   .controller('FloorplanCtrl', function ($scope, floorplanService, Rooms,
-    heatmapService, $rootScope, $modal) {
+    heatmapService, $rootScope, $modal, $interval, $route) {
 
   var floorplanClass = 'floorplan';
   var floorplanFullscreenClass = 'floorplan-fullscreen';
@@ -17,7 +17,7 @@ angular.module('otaniemi3dApp')
   var panoramaFull = 'pano-2d-view-fullscreen';
   var panoramaLoaded = false;
 
-  $scope.sensorData = null;
+  $scope.sensorData = Rooms.dict;
   $scope.floorplanClass = floorplanClass;
   $scope.panoramaClass = panoramaNormal;
   $scope.rooms = Rooms;
@@ -28,9 +28,9 @@ angular.module('otaniemi3dApp')
   $scope.selectedRoom = null;
   $scope.timeFrame = '';
   $scope.room = null;   //Room which panoramic button was clicked.
-  $scope.selectedPlan = null;
   $scope.timeFrame = 'Latest';
   $scope.resetView = null;
+  $scope.planNumber = $route.current.params.floorNumber - 1;
 
   //This is used to set correct top margin for search container
   $scope.searchContainer = '';
@@ -43,19 +43,12 @@ angular.module('otaniemi3dApp')
   $scope.nextButtonClass = 'glyphicon glyphicon-arrow-right';
   $scope.previousButtonClass = 'glyphicon glyphicon-arrow-left';
 
-  //Select default floorplan which is defined in floorplanService service
-  $scope.planNumber = 0;
-  for ($scope.planNumber; $scope.planNumber < floorplanService.floors.length; $scope.planNumber++) {
-    if (floorplanService.floors[$scope.planNumber].isSelected) {
-      $scope.selectedPlan = floorplanService.floors[$scope.planNumber];
-      break;
-    }
-  }
+  //Select current floorplan
+  floorplanService.floors[$scope.planNumber].isSelected = true;
+  $scope.selectedPlan = floorplanService.floors[$scope.planNumber];
 
-  Rooms.updateRoomInfo();
-
-  $scope.$on('sensordata-update', function(event, data) {
-    $scope.sensorData = data;
+  $scope.$on('sensordata-update', function(_, data) {
+    $scope.sensorData = data.dict;
   });
 
   $scope.panoramaViewer = function() {
@@ -135,7 +128,7 @@ angular.module('otaniemi3dApp')
 
   $scope.highlightRoom = function(item) {
     if ($scope.highlightedRoom) {
-      clearInterval($scope.highlightedRoom.pulse);
+      $interval.cancel($scope.highlightedRoom.pulse);
     }
     if (typeof item.floor === 'number' && !isNaN(item.floor)) {
       $scope.highlightedRoom = item;
@@ -221,8 +214,6 @@ angular.module('otaniemi3dApp')
     }
   };
 
-
-
    /*Create a new modal pass timeframe and roomValueType variables into it
       Also parse the return values to aforementioned variables*/
   $scope.open = function () {
@@ -252,4 +243,9 @@ angular.module('otaniemi3dApp')
       }
     });
   };
+
+  $scope.$watch('planNumber', function (planNumber) {
+    $route.updateParams({floorNumber: planNumber + 1});
+  });
+
 });

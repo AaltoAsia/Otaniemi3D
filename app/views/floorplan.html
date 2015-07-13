@@ -2,7 +2,7 @@
   <button class="btn btn-black mobile-button" ng-click="open()">Options</button>
   <!-- Sensor Type  -->
   <div class="btn-group desktop-dropdown" dropdown>
-    <button id="sensorTypeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement> 
+    <button id="sensorTypeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement>
       {{roomValueType}} <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right typeMenu" role="menu">
@@ -11,12 +11,12 @@
       <li><a ng-disabled="roomValueType == 'Temperature'" ng-click="changeColour('Temperature')" active><img src='images/temperature.svg' class='icons' />  Temperature</a></li>
       <li><a ng-disabled="roomValueType == 'Humidity'" ng-click="changeColour('Humidity')"><img src='images/humidity.svg' class='icons' />  Humidity</a></li>
       <li><a ng-disabled="roomValueType == 'Light'" ng-click="changeColour('Light')"><img src='images/light.svg' class='icons' />  Light</a></li>
-      <li><a ng-disabled="roomValueType == 'Occupancy'" ng-click="changeColour('Occupancy')"><img src='images/occupancy.svg' class='icons' />  Occupancy</a></li>
+      <li><a ng-disabled="roomValueType == 'Occupancy'" ng-click="changeColour('Occupancy')"><img src='images/pir.svg' class='icons' />  Occupancy</a></li>
     </ul>
   </div>
   <!-- Sensor timeframe  -->
   <div class="btn-group desktop-dropdown" dropdown>
-    <button id="sensorTimeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement> 
+    <button id="sensorTimeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement>
       {{ timeFrame }} <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right timeMenu" role="menu">
@@ -92,7 +92,7 @@
       </svg>
       <p id="legendMaxText" class="legendText"></p>
   </div>
-</floorplan> 
+</floorplan>
 </div>
 
 <script type="text/ng-template" id="myModalContent.html">

@@ -48,10 +48,18 @@
 
             <div collapse="isCollapsed"  class="nav-collapse collapse navbar-responsive-collapse">
                 <ul class="nav navbar-nav">
-                    <li ng-class="{ active: isActive('/sensor-list')}"><a id="sensor-list-view" ng-click="isCollapsed = true" ng-href="#/sensor-list">Sensor List</a></li>
-                    <li ng-class="{ active: isActive('/floorplan')}"><a id="floorplan-view" ng-click="isCollapsed = true" ng-href="#/floorplan">Floorplans</a></li>
-                    <li ng-class="{ active: isActive('/model-3d')}"><a id="model-3d-view" ng-click="isCollapsed = true" ng-href="#/model-3d">3D Model</a></li>
-                    <li ng-class="{ active: isActive('/analytics')}"><a id="analytics" ng-click="isCollapsed = true" ng-href="#/analytics">Analytics</a></li>
+                    <li ng-class="{ active: isActive('/sensor-list')}">
+                      <a id="sensor-list-view" ng-click="isCollapsed = true" ng-href="#/sensor-list">Sensor List</a>
+                    </li>
+                    <li ng-class="{ active: isActive('/heat-map')}">
+                      <a id="floorplans-view" ng-click="isCollapsed = true" ng-href="#/heat-map/1">Heat Map</a>
+                    </li>
+                    <li ng-class="{ active: isActive('/3d-model')}">
+                      <a id="3d-model-view" ng-click="isCollapsed = true" ng-href="#/3d-model">3D Model</a>
+                    </li>
+                    <li ng-class="{ active: isActive('/analytics')}">
+                      <a id="analytics" ng-click="isCollapsed = true" ng-href="#/analytics">Analytics</a>
+                    </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -100,7 +108,6 @@
 <script src="bower_components/modernizr/modernizr.js"></script>
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
-<script src="bower_components/angular-resource/angular-resource.js"></script>
 <script src="bower_components/angular-touch/angular-touch.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
@@ -126,7 +133,9 @@
 <script src="views/floorplan.js"></script>
 <script src="views/sensor-list.js"></script>
 <script src="views/model-3d.js"></script>
+<script src="views/x3dom.js"></script>
 <script src="views/analytics.js"></script>
+<script src="views/unity.js"></script>
 <script src="scripts/controllers/header-controller.js"></script>
 <script src="scripts/controllers/modal-controller.js"></script>
 <script src="scripts/controllers/3d-modal-controller.js"></script>
