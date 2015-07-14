@@ -27,23 +27,24 @@ angular.module('otaniemi3dApp')
             check_callback: true,
             worker: false,
             data: function (node, cb) {
-              var children = [],
-                  error = {
-                    error: [{ text: 'Error' }],
-                    errorMsg: 'Error when opening a tree node. Please close and reopen the node to try again.'
-                  };
 
-              function sendSuccess(children) {
-                cb.call(this, children);
+              function sendSuccess(self, cb, children) {
+                cb.call(self, children);
                 scope.error.show = false;
                 scope.error.message = '';
               }
 
-              function sendError(error) {
-                cb.call(this, error.error);
+              function sendError(self, cb, error) {
+                cb.call(self, error.errorNode);
                 scope.error.show = true;
                 scope.error.message = error.errorMsg;
               }
+
+              var children = [];
+              var error = {
+                errorNode: [{ text: 'Error' }],
+                errorMsg: 'Error when opening a tree node. Please close and reopen the node to try again.'
+              };
 
               if (node.id === '#') {
                 var id = scope.root.split('/'),
@@ -51,7 +52,7 @@ angular.module('otaniemi3dApp')
                     type;
                 id = id[id.length-1].length ? id[id.length-1] : id[id.length-2];
 
-                //TODO: data from server should have type as a metadata
+                //IDEA: data from server could have type as a metadata
                 if (id === 'K1') {
                   icon = 'images/icon-building.svg';
                   type = 'building';
@@ -84,10 +85,10 @@ angular.module('otaniemi3dApp')
                     }];
                   }
 
-                  sendSuccess(children);
+                  sendSuccess(this, cb, children);
                 })
                 .error(function () {
-                  sendError(error);
+                  sendError(this, cb, error);
                 });
 
               } else if (node.original.type === 'room') {
@@ -108,10 +109,10 @@ angular.module('otaniemi3dApp')
                       url: scope.root + node.id + '/' + id
                     });
                   }
-                  sendSuccess(children);
+                  sendSuccess(this, cb, children);
                 })
                 .error(function () {
-                  sendError(error);
+                  sendError(this, cb, error);
                 });
 
               } else if (node.original.type === 'building') {
@@ -130,10 +131,10 @@ angular.module('otaniemi3dApp')
                       url: scope.root + id
                     });
                   }
-                  sendSuccess(children);
+                  sendSuccess(this, cb, children);
                 })
                 .error(function () {
-                  sendError(error);
+                  sendError(this, cb, error);
                   node.children = true;
                 });
               }
@@ -165,30 +166,6 @@ angular.module('otaniemi3dApp')
         }
 
         element
-          /*.on('select_node.jstree', function (_, data) {
-            if (data.event) {
-              var node = data.node,
-                  room,
-                  sensor;
-
-              switch (node.original.type) {
-                case 'sensor':
-                  node.state.opened = true;
-                  room = getNode(node.parent);
-                  sensor = node;
-                  break;
-                case 'value':
-                  room = getNode(node.parents[1]);
-                  sensor = getNode(node.parent);
-                  break;
-                default:
-                  return;
-              }
-
-              //Use $apply because jstree works outside of angular's scope
-              scope.$apply(scope.selectSensor(room, sensor));
-            }
-          })*/
           .on('after_close.jstree', function (_, data) {
             data.node.children = true;
             getNode(data.node.id).state.loaded = false;
