@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
   .controller('FloorplanCtrl', function ($scope, floorplanService, Rooms,
-    heatmapService, $rootScope, $modal, $interval, $route) {
+    heatmapService, $rootScope, $modal, $interval, $route, $location) {
 
   var floorplanClass = 'floorplan';
   var floorplanFullscreenClass = 'floorplan-fullscreen';
@@ -52,6 +52,10 @@ angular.module('otaniemi3dApp')
   });
 
   $scope.panoramaViewer = function() {
+    var current = $location.path();
+    var b = $scope.room;
+    $location.path(current + '/panorama/' + $scope.room);
+    /*
     //make panorama(pano) div visible
     $scope.pano = true;
     //find information for krpano tooltip
@@ -73,6 +77,7 @@ angular.module('otaniemi3dApp')
       document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
       document.getElementById('pano_obj').call('set(room,' + roomInfo +');');
     }
+    */
   };
 
   $scope.stopPanorama = function(){

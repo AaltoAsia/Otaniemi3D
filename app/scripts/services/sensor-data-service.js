@@ -96,12 +96,12 @@ angular.module('otaniemi3dApp')
       return deferred.promise;
     };
 
-    self.get(requestK1, {}, 'sensordata-new', true);
-
+    self.get(requestK1, {newest: 1}, 'sensordata-new', true);
+    /*
     $interval(function () {
-      self.get(requestK1, {}, 'sensordata-new');
+      self.get(requestK1, {newest: 1}, 'sensordata-new');
     }, 10000);
-
+    */
 
     this.parseInfoItem = function (xml) {
       xml = new DOMParser().parseFromString(xml, 'text/xml');
