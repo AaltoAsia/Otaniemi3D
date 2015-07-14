@@ -3,39 +3,65 @@
   <!-- Sensor Type  -->
   <div class="btn-group desktop-dropdown" dropdown>
     <button id="sensorTypeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement>
-      {{roomValueType}} <span class="caret"></span>
+      {{roomValueType}}
+      <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right typeMenu" role="menu">
       <li class="btn" disabled>Choose sensor type</li>
-      <li ><a ng-disabled="roomValueType == 'CO2'" ng-click="changeColour('CO2')"><img class='icons' src='images/co2.svg'/> CO2</a></li>
-      <li><a ng-disabled="roomValueType == 'Temperature'" ng-click="changeColour('Temperature')" active><img src='images/temperature.svg' class='icons' />  Temperature</a></li>
-      <li><a ng-disabled="roomValueType == 'Humidity'" ng-click="changeColour('Humidity')"><img src='images/humidity.svg' class='icons' />  Humidity</a></li>
-      <li><a ng-disabled="roomValueType == 'Light'" ng-click="changeColour('Light')"><img src='images/light.svg' class='icons' />  Light</a></li>
-      <li><a ng-disabled="roomValueType == 'Occupancy'" ng-click="changeColour('Occupancy')"><img src='images/pir.svg' class='icons' />  Occupancy</a></li>
+      <li>
+        <a ng-disabled="roomValueType == 'CO2'" ng-click="changeColour('CO2')">
+          <img class='icons' src='images/co2.svg' /> CO2</a>
+      </li>
+      <li>
+        <a ng-disabled="roomValueType == 'Temperature'" ng-click="changeColour('Temperature')" active>
+          <img src='images/temperature.svg' class='icons' /> Temperature</a>
+      </li>
+      <li>
+        <a ng-disabled="roomValueType == 'Humidity'" ng-click="changeColour('Humidity')">
+          <img src='images/humidity.svg' class='icons' /> Humidity</a>
+      </li>
+      <li>
+        <a ng-disabled="roomValueType == 'Light'" ng-click="changeColour('Light')">
+          <img src='images/light.svg' class='icons' /> Light</a>
+      </li>
+      <li>
+        <a ng-disabled="roomValueType == 'Occupancy'" ng-click="changeColour('Occupancy')">
+          <img src='images/pir.svg' class='icons' /> Occupancy</a>
+      </li>
     </ul>
   </div>
   <!-- Sensor timeframe  -->
   <div class="btn-group desktop-dropdown" dropdown>
     <button id="sensorTimeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement>
-      {{ timeFrame }} <span class="caret"></span>
+      {{ timeFrame }}
+      <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right timeMenu" role="menu">
-      <li class="btn" disabled>Choose data timeframe</li>
-      <li><a ng-disabled="timeFrame == 'Latest'" ng-click="selectTimeFrame('Latest')" uncheckable><img src='images/latest.svg' class='icons' /> Latest</a></li>
-      <li><a ng-disabled="timeFrame == 'Day'" ng-click="selectTimeFrame('Day')" uncheckable><img src='images/day.svg' class='icons' /> Day</a></li>
-      <li><a ng-disabled="timeFrame == 'Week'" ng-click="selectTimeFrame('Week')" uncheckable><img src='images/week.svg' class='icons' /> Week</a></li>
-      <li><a ng-disabled="timeFrame == 'Month'" ng-click="selectTimeFrame('Month')" uncheckable><img src='images/month.svg' class='icons' /> Month</a></li>
-      <li><a ng-disabled="timeFrame == 'Year'" ng-click="selectTimeFrame('Year')" uncheckable><img src='images/year.svg' class='icons' /> Year</a></li>
+      <li class="btn" disabled>Choose time frame</li>
+      <li>
+        <a ng-disabled="timeFrame == 'Latest'" ng-click="selectTimeFrame('Latest')" uncheckable>
+          <img src='images/latest.svg' class='icons' /> Latest</a>
+      </li>
+      <li>
+        <a ng-disabled="timeFrame == 'Day'" ng-click="selectTimeFrame('Day')" uncheckable>
+          <img src='images/day.svg' class='icons' /> Day</a>
+      </li>
+      <li>
+        <a ng-disabled="timeFrame == 'Week'" ng-click="selectTimeFrame('Week')" uncheckable>
+          <img src='images/week.svg' class='icons' /> Week</a>
+      </li>
+      <li>
+        <a ng-disabled="timeFrame == 'Month'" ng-click="selectTimeFrame('Month')" uncheckable>
+          <img src='images/month.svg' class='icons' /> Month</a>
+      </li>
+      <li>
+        <a ng-disabled="timeFrame == 'Year'" ng-click="selectTimeFrame('Year')" uncheckable>
+          <img src='images/year.svg' class='icons' /> Year</a>
+      </li>
     </ul>
   </div>
 
-  <input id="searchContent2"
-         type="text"
-         ng-model="searchString"
-         placeholder="Search for room..."
-         typeahead="room as room.name for room in rooms.asList() | filter:{name:$viewValue} | limitTo:8"
-         class="form-control"
-         typeahead-on-select="onSelect($item)">
+  <input id="searchContent2" type="text" ng-model="searchString" placeholder="Search for room..." typeahead="room as room.name for room in rooms.asList() | filter:{name:$viewValue} | limitTo:8" class="form-control" typeahead-on-select="onSelect($item)">
 
   <button class="btn btn-default" id="searchDefault" ng-click="onSearch(searchString)">
     <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
@@ -47,12 +73,27 @@
 
 </div>
 
-<div class="jumbotron" ng-hide="svgSupport"><h1>Your browser doesn't support svg!</h1></div>
+<div class="jumbotron" ng-hide="svgSupport">
+  <h1>Your browser doesn't support svg!</h1>
+</div>
 
 <div id="pano" ng-class="panoramaClass" ng-show="pano">
-  <button class="panobtn" ng-click="stopPanorama()" >
-  <span class="glyphicon glyphicon glyphicon-backward" ></span> BACK </button>
-  <noscript><table style="width:100%;height:100%;"><tr style="vertical-align:middle;"><td><div style="text-align:center;">ERROR:<br/><br/>Javascript not activated<br/><br/></div></td></tr></table></noscript>
+  <button class="panobtn" ng-click="stopPanorama()">
+    <span class="glyphicon glyphicon glyphicon-backward"></span> BACK </button>
+  <noscript>
+    <table style="width:100%;height:100%;">
+      <tr style="vertical-align:middle;">
+        <td>
+          <div style="text-align:center;">ERROR:
+            <br/>
+            <br/>Javascript not activated
+            <br/>
+            <br/>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </noscript>
   <script>
   </script>
 </div>
@@ -61,21 +102,33 @@
   <div class="mouse-tooltip">
   </div>
 
-  <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span> <!-- Spinner that shows up during loading -->
-  <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->
-  <div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4> </div> <!-- Caption of floorplan -->
+  <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span>
+  <!-- Spinner that shows up during loading -->
+  <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i>
+  <!-- Expand / compress button -->
+  <div class="floorplan-caption">
+    <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4>
+  </div>
+  <!-- Caption of floorplan -->
 
-<span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span> <!-- Spinner that shows up during loading -->
-<i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i> <!-- Expand / compress button -->
-<div class="floorplan-caption"> <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4> </div> <!-- Caption of floorplan -->
+  <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span>
+  <!-- Spinner that shows up during loading -->
+  <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="buttonClass"></i>
+  <!-- Expand / compress button -->
+  <div class="floorplan-caption">
+    <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4>
+  </div>
+  <!-- Caption of floorplan -->
 
-<i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i> <!-- Button that loads up that lower (aka previous) floor -->
-<i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floors-1"></i> <!-- button that loads up higher (aka next) floor -->
+  <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button" ng-class="previousButtonClass" ng-disabled="planNumber == '0'"></i>
+  <!-- Button that loads up that lower (aka previous) floor -->
+  <i ng-click="selectPlan(1)" class="btn btn-lg next-button" ng-class="nextButtonClass" ng-disabled="planNumber == floors-1"></i>
+  <!-- button that loads up higher (aka next) floor -->
 
-<!-- The actual floorplan -->
-<floorplan class="fp" data-plan="selectedPlan" data-data="sensorData" data-highlighted-room="highlightedRoom" data-room-value-type="roomValueType" data-reset-view="resetView">
-  <div id="legendBar" style="position: absolute">
-    <p id="legendMinText" class="legendText"></p>
+  <!-- The actual floorplan -->
+  <floorplan class="fp" data-plan="selectedPlan" data-data="sensorData" data-highlighted-room="highlightedRoom" data-room-value-type="roomValueType" data-reset-view="resetView">
+    <div id="legendBar" style="position: absolute">
+      <p id="legendMinText" class="legendText"></p>
       <svg id="legendContainingSvg">
         <g>
           <defs>
@@ -91,8 +144,8 @@
         <text id="legendLineText"></text>
       </svg>
       <p id="legendMaxText" class="legendText"></p>
-  </div>
-</floorplan>
+    </div>
+  </floorplan>
 </div>
 
 <script type="text/ng-template" id="myModalContent.html">
@@ -104,19 +157,19 @@
       <p>
         <div class="btn-group" id="modalValue">
           <label class="btn btn-black" ng-model="roomValueType" btn-radio="'CO2'" uncheckable>CO2</label>
-            <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
-            <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
-            <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
-            <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Occupancy'" uncheckable>Occupancy</label>
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
+          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Occupancy'" uncheckable>Occupancy</label>
         </div>
       </p>
       <p>
         <div class="btn-group" id="modalTimeframe">
-            <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Latest'" uncheckable>Latest</label>
-            <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Day'" uncheckable>Day</label>
-            <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Week'" uncheckable>Week</label>
-            <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Month'" uncheckable>Month</label>
-            <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Year'" uncheckable>Year</label>
+          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Latest'" uncheckable>Latest</label>
+          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Day'" uncheckable>Day</label>
+          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Week'" uncheckable>Week</label>
+          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Month'" uncheckable>Month</label>
+          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Year'" uncheckable>Year</label>
         </div>
       </p>
     </div>
