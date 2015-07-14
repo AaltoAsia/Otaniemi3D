@@ -16,7 +16,8 @@ angular.module('otaniemi3dApp')
         selectSensor: '=',
         addSensor: '=',
         search: '=',
-        root: '='
+        root: '=',
+        error: '='
       },
       link: function postLink (scope, element, attrs, ngModel) {
 
@@ -27,9 +28,22 @@ angular.module('otaniemi3dApp')
             worker: false,
             data: function (node, cb) {
               var children = [],
-                  error = [{
-                    text: 'Error. Close and reopen this node to try again.'
-                  }];
+                  error = {
+                    error: [{ text: 'Error' }],
+                    errorMsg: 'Error when opening a tree node. Please close and reopen the node to try again.'
+                  };
+
+              function sendSuccess(children) {
+                cb.call(this, children);
+                scope.error.show = false;
+                scope.error.message = '';
+              }
+
+              function sendError(error) {
+                cb.call(this, error.error);
+                scope.error.show = true;
+                scope.error.message = error.errorMsg;
+              }
 
               if (node.id === '#') {
                 var id = scope.root.split('/'),
@@ -70,10 +84,10 @@ angular.module('otaniemi3dApp')
                     }];
                   }
 
-                  cb.call(this, children);
+                  sendSuccess(children);
                 })
                 .error(function () {
-                  cb.call(this, error);
+                  sendError(error);
                 });
 
               } else if (node.original.type === 'room') {
@@ -94,10 +108,10 @@ angular.module('otaniemi3dApp')
                       url: scope.root + node.id + '/' + id
                     });
                   }
-                  cb.call(this, children);
+                  sendSuccess(children);
                 })
                 .error(function () {
-                  cb.call(this, error);
+                  sendError(error);
                 });
 
               } else if (node.original.type === 'building') {
@@ -116,10 +130,10 @@ angular.module('otaniemi3dApp')
                       url: scope.root + id
                     });
                   }
-                  cb.call(this, children);
+                  sendSuccess(children);
                 })
                 .error(function () {
-                  cb.call(this, error);
+                  sendError(error);
                   node.children = true;
                 });
               }

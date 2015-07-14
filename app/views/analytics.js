@@ -15,6 +15,10 @@ angular.module('otaniemi3dApp')
     $scope.selectedSensors = [];
     $scope.searchStr = '';
     $scope.sensorData = Rooms.dict;
+    $scope.alert = {
+      show: false,
+      message: ''
+    };
     $scope.chartConfig = {
       xAxis: {
         type: 'datetime'
@@ -31,15 +35,65 @@ angular.module('otaniemi3dApp')
       },
       series: [{
         name: ' ',
-        data : [],
-        legend: {
-          enabled: false
-        },
         id: 'placeholder-series'
       }],
       title: {
         text: 'Historical data'
-      }
+      },
+      noData: 'Add sensors to drop area to see data chart'
+    };
+
+    var day, week, month, year;
+    day = week = month = year = new Date();
+
+    day.setDate(day.getDate() - 1);
+    week.setDate(week.getDate() - 7);
+    month.setMonth(month.getMonth() - 1);
+    year.setYear(year.getYear() - 1);
+
+    $scope.timeFrames = [
+      {
+        text: 'Current',
+        icon: 'images/latest.svg',
+        params: {
+          newest: 20
+        },
+      },
+      {
+        text: 'Last Week',
+        icon: 'images/week.svg',
+        params: {
+          begin: week.toISOString()
+        }
+      },
+      {
+        text: 'Last Month',
+        icon: 'images/month.svg',
+        params: {
+          begin: month.toISOString()
+        }
+      },
+      {
+        text: 'Last Year',
+        icon: 'images/year.svg',
+        params: {
+          begin: year.toISOString()
+        }
+      },
+      {
+        text: 'Select range',
+        icon: 'images/time-range.svg',
+        params: {
+          begin: null,
+          end: null
+        }
+      },
+    ];
+
+    $scope.selectedTimeFrame = $scope.timeFrames[0];
+
+    $scope.selectTime = function (timeFrame) {
+      $scope.selectedTimeFrame = timeFrame;
     };
 
     $scope.clearSensors = function () {
@@ -65,70 +119,6 @@ angular.module('otaniemi3dApp')
         id: 'placeholder-y-axis'
       };
     };
-    /*
-    $scope.selectSensor = function (room, sensor) {
-      $scope.selectedRoom = room;
-      $scope.selectedSensor = sensor;
-      $scope.selectedSensors = [sensor];
-
-      var request = {
-        'Objects': {
-          'Object': {
-            'id': {
-              'keyValue': 'K1'
-            },
-            'Object': {
-              'id': {
-                'keyValue': room.id
-              }
-            }
-          }
-        }
-      };
-
-      Rooms.get(request).then(function (data) {
-        var sensorData = [],
-            sensor,
-            room = data[$scope.selectedRoom.id];
-
-        if (!room || !room.sensors) {
-          return;
-        }
-
-        for (var i = 0; i < room.sensors.length; i++) {
-          if (room.sensors[i].id === $scope.selectedSensor.id) {
-            sensor = room.sensors[i];
-            break;
-          }
-        }
-
-        for (var j = 0; j < sensor.values.length; j++) {
-          sensorData.push([
-            new Date(sensor.values[j].time).getTime(),
-            sensor.values[j].value,
-          ]);
-        }
-
-        var valueSuffix = Rooms.valueSuffix(sensor.type);
-
-        $scope.chartConfig.series = [{
-          name: room.name + ': ' + sensor.name,
-          data: sensorData,
-          tooltip: {
-            valueSuffix: ' ' + valueSuffix
-          },
-          id: sensor.id
-        }];
-
-        if (valueSuffix) {
-          $scope.chartConfig.yAxis.title.text =
-            sensor.name + ' (' + valueSuffix + ')';
-        } else {
-          $scope.chartConfig.yAxis.title.text =
-            sensor.name;
-        }
-      });
-    };*/
 
     $scope.addSensor = function (room, sensor) {
       for (var k = 0; k < $scope.chartConfig.series.length; k++) {
@@ -157,9 +147,10 @@ angular.module('otaniemi3dApp')
         }
       };
 
+      var params = $scope.selectedTimeFrame.params;
       $scope.chartConfig.loading = true;
 
-      Rooms.get(request).then(function success (data) {
+      Rooms.get(request, params).then(function success (data) {
         var sensorData = [],
             selectedRoom = data[room.id],
             selectedSensor;
@@ -211,6 +202,12 @@ angular.module('otaniemi3dApp')
           $scope.chartConfig.yAxis.title.text = selectedSensor.name;
         }
 
+        $scope.alert.show = false;
+        $scope.alert.message = '';
+
+      }, function error (reason) {
+        $scope.alert.show = true;
+        $scope.alert.message = reason;
       })
       .finally(function () {
         $scope.chartConfig.loading = false;

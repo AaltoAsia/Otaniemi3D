@@ -61,7 +61,7 @@ angular.module('otaniemi3dApp')
               $rootScope.$broadcast(broadcast, data);
             })
             .error(function () {
-              console.log('Failed to fetch sensor data.');
+              console.log('Failed to fetch sensor data. Please try again');
               deferred.reject();
             })
             .finally(function () {
@@ -81,8 +81,8 @@ angular.module('otaniemi3dApp')
               $rootScope.$broadcast(broadcast, data);
             })
             .error(function () {
-              console.log('Failed to fetch sensor data.');
-              deferred.reject('Failed to fetch sensor data.');
+              console.log('Failed to fetch sensor data. Please try again');
+              deferred.reject('Failed to fetch sensor data. Please try again');
             })
             .finally(function () {
               pendingRequests[requestXml] = false;

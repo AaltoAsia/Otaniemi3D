@@ -33,7 +33,6 @@
 
 .sensor-legend {
   display: flex;
-  align-items: center;
 }
 
 .sensor-legend p {
@@ -45,8 +44,16 @@
   cursor: pointer;
 }
 
-#clear-btn {
-  margin: 10px;
+#clear-btn,
+#time-frame {
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+}
+
+#clear-btn button,
+#time-frame button {
+  width: 100%;
 }
 
 @media only screen and (min-width : 769px) {

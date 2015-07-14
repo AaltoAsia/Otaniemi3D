@@ -71,10 +71,10 @@ angular.module('otaniemi3dApp')
       return suffix;
     };
 
-    this.get = function (request) {
+    this.get = function (request, params) {
       var deferred = $q.defer();
 
-      SensorData.get(request, {newest: 20}, 'sensordata-historical')
+      SensorData.get(request, params, 'sensordata-historical')
         .then(function success (data) {
           deferred.resolve(data);
         }, function error (reason) {
