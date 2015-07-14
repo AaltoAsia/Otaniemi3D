@@ -20,9 +20,12 @@ angular
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/home', {
+      .when('/', {
         templateUrl: 'views/home.html',
         controller: 'HomeCtrl'
+      })
+      .when('/home', {
+        redirectTo: '/'
       })
       .when('/sensor-list', {
         templateUrl: 'views/sensor-list.html',
@@ -48,8 +51,12 @@ angular
         templateUrl: 'views/analytics.html',
         controller: 'AnalyticsCtrl'
       })
+      .when('/heat-map/:floorNumber/panorama/:panoramaId', {
+        templateUrl: 'views/panorama.html',
+        controller: 'PanoramaCtrl'
+      })
       .otherwise({
-        redirectTo: '/home'
+        templateUrl: 'views/not-found.html',
       });
   })
   .config(function(cfpLoadingBarProvider) {
