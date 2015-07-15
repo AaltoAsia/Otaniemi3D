@@ -14,18 +14,18 @@ angular.module('otaniemi3dApp')
       scope: {
         room: '='
       },
-      link: function postLink(scope, element) {
+      link: function postLink(scope) {
         embedpano({
-          xml: scope.room.panoramaPath,
-          id: 'pano_obj',
+          xml: scope.room.xmlPath,
+          id: 'panorama_obj',
           target: 'room-panorama',
           html5: 'only',
           passQueryParameters: true,
-          vars: scope.room.info
+          vars: {room: scope.room.sensorTable}
         });
 
         scope.$on('$destroy', function () {
-          element.remove();
+          removepano('panorama_obj');
         });
       }
     };

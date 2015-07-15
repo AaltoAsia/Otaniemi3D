@@ -237,13 +237,35 @@ angular.module('otaniemi3dApp')
                   name.slice(1);
             }
 
+            var suffix;
+            switch (name.toLowerCase()) {
+              case 'temperature':
+                suffix = '°C';
+                break;
+              case 'co2':
+                suffix = 'ppm';
+                break;
+              case 'light':
+                suffix = 'lux';
+                break;
+              case 'humidity':
+                suffix = '%';
+                break;
+              case 'pir':
+                suffix = '';
+                break;
+              default:
+                suffix = '';
+            }
+
             sensorList.push({
               id: name + '-' + id,
               type: name,
               room: id.split('-').join(' '),
               roomId: id,
               name: sensorName,
-              values: valueList
+              values: valueList,
+              suffix: suffix
             });
           }
         }

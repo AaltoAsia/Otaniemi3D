@@ -53,8 +53,7 @@ angular.module('otaniemi3dApp')
 
   $scope.panoramaViewer = function() {
     var current = $location.path();
-    var b = $scope.room;
-    $location.path(current + '/panorama/' + $scope.room);
+    $location.path(current + '/panorama/' + $scope.room.split(' ').join('-'));
     /*
     //make panorama(pano) div visible
     $scope.pano = true;

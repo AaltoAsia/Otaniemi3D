@@ -176,7 +176,7 @@ angular.module('otaniemi3dApp')
         lastRow.value.style('border-bottom-right-radius', '5px');
 
         var roomsWithPanorama = [
-          'Room 238d','Room 237c','Room 235','Room 232b','Room 232a',
+          'Room 238d','Room 237c','Room 235','Room 232a',
           '2nd Floor Corridor Start',
           '2nd Floor Corridor Middle',
           '2nd Floor Corridor End',

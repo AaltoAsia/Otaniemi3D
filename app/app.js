@@ -51,7 +51,7 @@ angular
         templateUrl: 'views/analytics.html',
         controller: 'AnalyticsCtrl'
       })
-      .when('/heat-map/:floorNumber/panorama/:panoramaId', {
+      .when('/heat-map/:floorNumber/panorama/:roomId', {
         templateUrl: 'views/panorama.html',
         controller: 'PanoramaCtrl'
       })

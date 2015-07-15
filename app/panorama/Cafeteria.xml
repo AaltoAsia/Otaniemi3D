@@ -1,12 +1,12 @@
 <krpano version="1.17.4">
-	
+
 	<!-- the skin -->
 	<include url="skin/defaultskin.xml" />
       <include url="plugins/showtext.xml" />
-	
+
 	<!-- view settings -->
 	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />
-	
+
 
 	<preview url="Cafeteria.tiles/preview.jpg" />
 
@@ -16,7 +16,6 @@
 			<cube url="Cafeteria.tiles/mobile_%s.jpg" />
 		</mobile>
 	</image>
-*
 
 	<hotspot name="cafeteria"
              ath="-117.25324838617138"
