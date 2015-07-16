@@ -9,7 +9,6 @@
 angular.module('otaniemi3dApp')
   .directive('panorama', function () {
     return {
-      template: '<div id="room-panorama"></div>',
       restrict: 'E',
       scope: {
         room: '='

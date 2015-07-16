@@ -13,13 +13,9 @@ angular.module('otaniemi3dApp')
 
   var floorplanClass = 'floorplan';
   var floorplanFullscreenClass = 'floorplan-fullscreen';
-  var panoramaNormal = 'pano-2d-view';
-  var panoramaFull = 'pano-2d-view-fullscreen';
-  var panoramaLoaded = false;
 
   $scope.sensorData = Rooms.dict;
   $scope.floorplanClass = floorplanClass;
-  $scope.panoramaClass = panoramaNormal;
   $scope.rooms = Rooms;
   $scope.searchString = '';
   $scope.highlightedRoom = null;
@@ -54,33 +50,6 @@ angular.module('otaniemi3dApp')
   $scope.panoramaViewer = function() {
     var current = $location.path();
     $location.path(current + '/panorama/' + $scope.room.split(' ').join('-'));
-    /*
-    //make panorama(pano) div visible
-    $scope.pano = true;
-    //find information for krpano tooltip
-    var roomInfo = Rooms.krpanoHTML($scope.room);
-    var infos = {room: roomInfo};
-
-    if (panoramaLoaded === false) {
-      embedpano({
-        xml:'panorama/' + $scope.room.split(' ').join('_') +'.xml',
-        id:'pano_obj',
-        target:'pano',
-        html5:'only',
-        passQueryParameters:true,
-        vars:infos
-      });
-      panoramaLoaded = true;
-    } else {
-      var xmlpath = $scope.room.split(' ').join('_') +'.xml';
-      document.getElementById('pano_obj').call('loadpano('+ xmlpath +');');
-      document.getElementById('pano_obj').call('set(room,' + roomInfo +');');
-    }
-    */
-  };
-
-  $scope.stopPanorama = function(){
-    $scope.pano = false;
   };
 
   $scope.showGradient = function() {

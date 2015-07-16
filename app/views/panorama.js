@@ -8,7 +8,8 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('PanoramaCtrl', function ($scope, $routeParams, Rooms) {
+  .controller('PanoramaCtrl',
+  function ($scope, $routeParams, $rootScope, $window, Rooms) {
 
     var roomId = $routeParams.roomId;
     if (roomId.lastIndexOf('Room', 0) !== 0) {
@@ -24,7 +25,7 @@ angular.module('otaniemi3dApp')
       roomName = room.name;
     }
 
-    var sensorTable = '[table class= "tooltip-table"]' +
+    var sensorTable = '[table class="tooltip-table"]' +
       '[tr] [th colspan="2"]' + roomName + '[/th] [/tr]';
 
     for (var i = 0; i < sensors.length; i++) {
@@ -39,6 +40,12 @@ angular.module('otaniemi3dApp')
     $scope.room = {
       sensorTable: sensorTable,
       xmlPath: xmlPath
+    };
+
+    $scope.fullscreen = $rootScope.fullscreen ? 'panorama-fullscreen' : '';
+
+    $scope.goBack = function () {
+      $window.history.back();
     };
 
   });

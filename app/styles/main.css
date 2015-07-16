@@ -160,16 +160,6 @@ ul.nav {
     transform: translateY(-50%);
 }
 
-.panobtn {
-  position: fixed;
-  z-index: 2;
-  width: 10em;
-  height: 3em;
-  border: none;
-  background-color: #333;
-  color: #9D9D9D;
-}
-
 .btn-black {
   color: #FFFFFF;
   background-color: #000000;
