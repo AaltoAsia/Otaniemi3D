@@ -1,27 +1,27 @@
 <!doctype html>
 <html class="no-js">
 <head>
-    <title>Otaniemi3D</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <meta charset="utf-8">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(.) styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
-    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
-    <link rel="stylesheet" href="bower_components/jstree/dist/themes/default/style.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css"/>
-    <link rel="stylesheet" href="styles/home.css"/>
-    <link rel="stylesheet" href="styles/floorplan.css"/>
-    <link rel="stylesheet" href="styles/model-3d.css"/>
-    <link rel="stylesheet" href="styles/analytics.css"/>
-    <link rel="stylesheet" href="styles/panorama.css"/>
-    <!-- endbuild -->
+  <title>Otaniemi3D</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta charset="utf-8">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+  <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+  <link rel="stylesheet" href="bower_components/jstree/dist/themes/default/style.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css"/>
+  <link rel="stylesheet" href="styles/home.css"/>
+  <link rel="stylesheet" href="styles/floorplan.css"/>
+  <link rel="stylesheet" href="styles/model-3d.css"/>
+  <link rel="stylesheet" href="styles/analytics.css"/>
+  <link rel="stylesheet" href="styles/panorama.css"/>
+  <!-- endbuild -->
 
 </head>
 <body ng-app="otaniemi3dApp">
@@ -29,68 +29,68 @@
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
 
+<div id="app" ng-controller="AppCtrl as App">
 
-<header ng-controller="HeaderCtrl" ng-hide="fullscreen">
+  <header ng-cloak ng-hide="App.fullscreen">
     <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-        <div class="container-fluid" >
+      <div class="container-fluid" >
 
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button ng-init="isCollapsed = true"  type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" id="home-view" ng-click="isCollapsed = true" ng-href="#/">Otaniemi3D</a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-
-            <div collapse="isCollapsed"  class="nav-collapse collapse navbar-responsive-collapse">
-                <ul class="nav navbar-nav">
-                    <li ng-class="{ active: isActive('/sensor-list')}">
-                      <a id="sensor-list-view" ng-click="isCollapsed = true" ng-href="#/sensor-list">Sensor List</a>
-                    </li>
-                    <li ng-class="{ active: isActive('/heat-map')}">
-                      <a id="floorplans-view" ng-click="isCollapsed = true" ng-href="#/heat-map/1">Heat Map</a>
-                    </li>
-                    <li ng-class="{ active: isActive('/3d-model')}">
-                      <a id="3d-model-view" ng-click="isCollapsed = true" ng-href="#/3d-model">3D Model</a>
-                    </li>
-                    <li ng-class="{ active: isActive('/analytics')}">
-                      <a id="analytics" ng-click="isCollapsed = true" ng-href="#/analytics">Analytics</a>
-                    </li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
-
-</header>
-
-
-<div class="container-fluid">
-    <div ng-view="" id="content"></div>
-    <footer class="footer hidden-xs" ng-hide="fullscreen">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <p>The Aalto Campus Project, contacts andrea.buda@aalto.fi</p>
-                </div>
-            </div>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle"
+                  ng-click="App.navbarCollapse = !App.navbarCollapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" id="home-view"
+             ng-click="App.navbarCollapse = true"
+             ui-sref="home">Otaniemi3D</a>
         </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div collapse="App.navbarCollapse"
+             class="nav-collapse collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav">
+            <li ng-repeat="nav in App.navigation" ui-sref-active="active">
+              <a ng-click="App.navbarCollapse = true" ui-sref="{{nav.state}}">
+                {{nav.name}}
+              </a>
+            </li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+  </header>
+
+  <div class="container-fluid">
+
+    <div ui-view id="content"></div>
+
+    <footer class="footer hidden-xs" ng-hide="App.fullscreen">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <p>The Aalto Campus Project, contacts andrea.buda@aalto.fi</p>
+          </div>
+        </div>
+      </div>
     </footer>
+
+  </div>
+
 </div>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
 <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-XXXXX-X');
-    ga('send', 'pageview');
+  ga('create', 'UA-XXXXX-X');
+  ga('send', 'pageview');
 </script>
 
 <!-- build:js(.) scripts/oldieshim.js -->
@@ -132,14 +132,14 @@
 <script src="panorama/HTMLviewer.js"></script>
 <script src="app.js"></script>
 <script src="views/home.js"></script>
-<script src="views/floorplan.js"></script>
+<script src="views/heat-map.js"></script>
 <script src="views/sensor-list.js"></script>
 <script src="views/model-3d.js"></script>
 <script src="views/x3dom.js"></script>
 <script src="views/analytics.js"></script>
 <script src="views/unity.js"></script>
 <script src="views/panorama.js"></script>
-<script src="scripts/controllers/header-controller.js"></script>
+<script src="scripts/controllers/app-controller.js"></script>
 <script src="scripts/controllers/modal-controller.js"></script>
 <script src="scripts/controllers/3d-modal-controller.js"></script>
 <script src="scripts/directives/floorplan-directive.js"></script>

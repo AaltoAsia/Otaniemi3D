@@ -63,5 +63,7 @@
 }
 
 @media only screen and (max-width : 768px) {
-
+  #sensor-tree-search {
+    margin-top: 10px;
+  }
 }

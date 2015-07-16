@@ -8,8 +8,8 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('FloorplanCtrl', function ($scope, floorplanService, Rooms,
-    heatmapService, $rootScope, $modal, $interval, $route, $location) {
+  .controller('HeatMapCtrl', function ($scope, floorplanService, Rooms,
+    heatmapService, $rootScope, $modal, $interval, $stateParams, $location, $state) {
 
   var floorplanClass = 'floorplan';
   var floorplanFullscreenClass = 'floorplan-fullscreen';
@@ -26,7 +26,7 @@ angular.module('otaniemi3dApp')
   $scope.room = null;   //Room which panoramic button was clicked.
   $scope.timeFrame = 'Latest';
   $scope.resetView = null;
-  $scope.planNumber = $route.current.params.floorNumber - 1;
+  $scope.planNumber = $stateParams ? $stateParams - 1 : 0;
 
   //This is used to set correct top margin for search container
   $scope.searchContainer = '';
@@ -67,12 +67,10 @@ angular.module('otaniemi3dApp')
 
     if ($scope.floorplanClass === floorplanClass) {
       $scope.floorplanClass = floorplanFullscreenClass;
-      $scope.panoramaClass = panoramaFull;
       $scope.searchContainer = 'search-container-full';
       $scope.buttonClass = ' glyphicon glyphicon-resize-small';
     } else {
       $scope.floorplanClass = floorplanClass;
-      $scope.panoramaClass = panoramaNormal;
       $scope.searchContainer = '';
       $scope.buttonClass = 'glyphicon glyphicon-resize-full';
     }
@@ -85,16 +83,12 @@ angular.module('otaniemi3dApp')
    */
   $scope.selectPlan = function (direction) {
     if (direction === 1) {
-      floorplanService.floors[$scope.planNumber].isSelected = false;
-      floorplanService.floors[$scope.planNumber+1].isSelected = true;
-      $scope.selectedPlan = floorplanService.floors[$scope.planNumber+1];
       $scope.planNumber++;
+      $state.go('heat-map', {floorNum: $scope.planNumber});
     }
     if (direction === -1) {
-      floorplanService.floors[$scope.planNumber].isSelected = false;
-      floorplanService.floors[$scope.planNumber-1].isSelected = true;
-      $scope.selectedPlan = floorplanService.floors[$scope.planNumber-1];
       $scope.planNumber--;
+      $state.go('heat-map', {floorNum: $scope.planNumber});
     }
   };
 
@@ -216,9 +210,5 @@ angular.module('otaniemi3dApp')
       }
     });
   };
-
-  $scope.$watch('planNumber', function (planNumber) {
-    $route.updateParams({floorNumber: planNumber + 1});
-  });
 
 });

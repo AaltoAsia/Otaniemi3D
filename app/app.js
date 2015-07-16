@@ -14,49 +14,67 @@ angular
     'ngTouch',
     'ui.bootstrap',
     'ui.grid',
+    'ui.router',
     'angular-loading-bar',
     'angularSpinner',
     'highcharts-ng'
   ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
+  .config(function ($stateProvider, $urlRouterProvider,
+      $urlMatcherFactoryProvider) {
+
+    $urlMatcherFactoryProvider.strictMode(false);
+
+    $urlRouterProvider
+      .when('', '/')
+      .when('/home', '/')
+      .otherwise('not-found', {
+        url: '',
+        templateUrl: 'views/not-found.html'
+      });
+
+    $stateProvider
+      .state('home', {
+        url: '/',
         templateUrl: 'views/home.html',
-        controller: 'HomeCtrl'
+        controller: 'HomeCtrl as home'
       })
-      .when('/home', {
-        redirectTo: '/'
-      })
-      .when('/sensor-list', {
+      .state('sensor-list', {
+        url: '/sensor-list',
         templateUrl: 'views/sensor-list.html',
-        controller: 'SensorListCtrl'
+        controller: 'SensorListCtrl as sensorlist'
       })
-      .when('/heat-map/:floorNumber', {
-        templateUrl: 'views/floorplan.html',
-        controller: 'FloorplanCtrl'
+      .state('heat-map', {
+        url: '/heat-map/:floorNum',
+        templateUrl: 'views/heat-map.html',
+        controller: 'HeatMapCtrl as heatmap'
       })
-      .when('/3d-model', {
+      .state('3d-model', {
+        url: '/3d-model',
         templateUrl: 'views/model-3d.html',
-        controller: 'Model3dCtrl'
       })
-      .when('/3d-model/x3dom', {
+      .state('3d-model.x3dom', {
+        url: '/x3dom',
         templateUrl: 'views/x3dom.html',
-        controller: 'X3DomCtrl'
+        controller: 'X3DomCtrl as x3dom'
       })
-      .when('/3d-model/unity', {
+      .state('3d-model.unity', {
+        url: '/unity',
         templateUrl: 'views/unity.html',
-        controller: 'UnityCtrl'
+        controller: 'UnityCtrl as unity'
       })
-      .when('/analytics', {
+      .state('analytics', {
+        url: '/analytics',
         templateUrl: 'views/analytics.html',
-        controller: 'AnalyticsCtrl'
+        controller: 'AnalyticsCtrl as analytics'
       })
-      .when('/heat-map/:floorNumber/panorama/:roomId', {
+      .state('panorama', {
+        url: '/panorama/:roomId',
         templateUrl: 'views/panorama.html',
-        controller: 'PanoramaCtrl'
+        controller: 'PanoramaCtrl as panorama'
       })
-      .otherwise({
-        templateUrl: 'views/not-found.html',
+      .state('not-found', {
+        url: '{path:.*}',
+        templateUrl: 'views/not-found.html'
       });
   })
   .config(function(cfpLoadingBarProvider) {
