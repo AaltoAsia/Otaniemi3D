@@ -169,15 +169,11 @@ angular.module('otaniemi3dApp')
   $scope.open = function () {
 
     var modalInstance = $modal.open({
-      templateUrl: 'myModalContent.html',
-      controller: 'ModalcontrollerCtrl',
+      templateUrl: 'sensor-options.html',
+      controller: 'ModalCtrl',
+      controllerAs: 'modal',
       resolve: {
-        timeFrame: function () {
-          return $scope.timeFrame;
-        },
-        roomValueType: function () {
-          return $scope.roomValueType;
-        }
+        params: {}
       }
     });
 

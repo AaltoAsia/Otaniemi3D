@@ -1,8 +1,8 @@
 <div id="searchContainer" ng-class="App.fullscreen ? 'search-container-full' : 'search-no-fullscreen'">
   <button class="btn btn-black mobile-button" ng-click="open()">Options</button>
   <!-- Sensor Type  -->
-  <div ng-cloak class="btn-group desktop-dropdown" dropdown>
-    <button id="sensorTypeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement>
+  <div class="btn-group desktop-dropdown" dropdown>
+    <button ng-cloak id="sensorTypeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement>
       {{roomValueType}}
       <span class="caret"></span>
     </button>
@@ -32,7 +32,7 @@
   </div>
   <!-- Sensor timeframe  -->
   <div class="btn-group desktop-dropdown" dropdown>
-    <button id="sensorTimeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement>
+    <button ng-cloak id="sensorTimeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement>
       {{ timeFrame }}
       <span class="caret"></span>
     </button>
@@ -70,7 +70,6 @@
     <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
   </button>
 
-
 </div>
 
 <div class="jumbotron" ng-hide="svgSupport">
@@ -85,19 +84,9 @@
   <!-- Spinner that shows up during loading -->
   <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="App.fullscreen ? 'glyphicon glyphicon-resize-small' : 'glyphicon glyphicon-resize-full'"></i>
   <!-- Expand / compress button -->
-  <div class="floorplan-caption">
+  <div ng-cloak class="floorplan-caption">
     <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4>
   </div>
-  <!-- Caption of floorplan -->
-
-  <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span>
-  <!-- Spinner that shows up during loading -->
-  <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="App.fullscreen ? 'glyphicon glyphicon-resize-small' : 'glyphicon glyphicon-resize-full'"></i>
-  <!-- Expand / compress button -->
-  <div class="floorplan-caption">
-    <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4>
-  </div>
-  <!-- Caption of floorplan -->
 
   <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button glyphicon glyphicon-arrow-left" ng-class="App.fullscreen ? 'btn-fullscreen' : ''" ng-disabled="planNumber == '0'"></i>
   <!-- Button that loads up that lower (aka previous) floor -->
@@ -127,7 +116,7 @@
   </floorplan>
 </div>
 
-<script type="text/ng-template" id="myModalContent.html">
+<script type="text/ng-template" id="sensor-options.html">
   <div class="modal-header">
     <h3 class="modal-title">Sensor type and timeframe</h3>
   </div>

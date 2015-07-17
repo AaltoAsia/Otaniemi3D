@@ -31,7 +31,7 @@
 
 <div id="app" ng-controller="AppCtrl as App">
 
-  <header ng-cloak ng-hide="App.fullscreen">
+  <header ng-hide="App.fullscreen">
     <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
       <div class="container-fluid" >
 
@@ -54,7 +54,7 @@
              class="nav-collapse collapse navbar-responsive-collapse">
           <ul ng-cloak class="nav navbar-nav">
             <li ng-repeat="nav in App.navigation" ui-sref-active="active">
-              <a ng-click="App.navbarCollapse = true" ui-sref="{{nav.state}}">
+              <a ng-cloak ng-click="App.navbarCollapse = true" ui-sref="{{nav.state}}">
                 {{nav.name}}
               </a>
             </li>
@@ -150,6 +150,7 @@
 <script src="scripts/services/heatmap-service.js"></script>
 <script src="scripts/services/sensor-data-service.js"></script>
 <script src="scripts/services/legendbar-service.js"></script>
+<script src="scripts/services/sensor-storage.js"></script>
 <script src="scripts/directives/sensor-tree-directive.js"></script>
 <script src="scripts/directives/panorama-directive.js"></script>
 <!-- endbuild -->

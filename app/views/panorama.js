@@ -9,7 +9,9 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function ($scope, $stateParams, $window, Rooms) {
+  function ($scope, $stateParams, $window, Rooms, $modal) {
+
+    var self = this;
 
     var roomId = $stateParams.roomId;
     if (roomId.lastIndexOf('Room', 0) !== 0) {
@@ -18,6 +20,8 @@ angular.module('otaniemi3dApp')
     var room = Rooms.dict[roomId];
     var sensors = room ? room.sensors : {};
     var roomName;
+    var roomUrl =
+      'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + roomId;
 
     if (!room) {
       roomName = roomId;
@@ -37,15 +41,39 @@ angular.module('otaniemi3dApp')
 
     var xmlPath = 'panorama/' + roomName.split(/ |-/g).join('_') + '.xml';
 
-    $scope.room = {
+    this.room = {
       sensorTable: sensorTable,
-      xmlPath: xmlPath
+      xmlPath: xmlPath,
+      url: roomUrl
     };
 
-    $scope.fullscreen = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
+    this.alert = {
+      show: false,
+      message: ''
+    };
 
-    $scope.goBack = function () {
+    this.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
+
+    this.goBack = function () {
       $window.history.back();
+    };
+
+    //Create global namespace for scripts used by krpano.
+    $window.krpano = {};
+
+    $window.krpano.addHotspot = function () {
+
+      var modalInstance = $modal.open({
+        templateUrl: 'hotspot-selection.html',
+        scope: $scope,
+        controller: 'ModalCtrl',
+        controllerAs: 'modal',
+        resolve: {
+          params: {
+            room: self.room
+          }
+        }
+      });
     };
 
   });
