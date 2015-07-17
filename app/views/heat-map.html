@@ -1,62 +1,44 @@
-<div id="searchContainer" ng-class="App.fullscreen ? 'search-container-full' : 'search-no-fullscreen'">
+<div id="searchContainer"
+     ng-class="App.fullscreen ? 'search-container-full' : 'search-no-fullscreen'">
   <button class="btn btn-black mobile-button" ng-click="open()">Options</button>
   <!-- Sensor Type  -->
   <div class="btn-group desktop-dropdown" dropdown>
-    <button ng-cloak id="sensorTypeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement>
+    <button id="sensorTypeButton"
+            ng-cloak
+            class="btn btn-black dropdown-toggle"
+            dropdown-toggle ng-disabled="disabled"
+            data-label-placement>
       {{roomValueType}}
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right typeMenu" role="menu">
       <li class="btn" disabled>Choose sensor type</li>
-      <li>
-        <a ng-disabled="roomValueType == 'CO2'" ng-click="changeColour('CO2')">
-          <img class='icons' src='images/co2.svg' /> CO2</a>
-      </li>
-      <li>
-        <a ng-disabled="roomValueType == 'Temperature'" ng-click="changeColour('Temperature')" active>
-          <img src='images/temperature.svg' class='icons' /> Temperature</a>
-      </li>
-      <li>
-        <a ng-disabled="roomValueType == 'Humidity'" ng-click="changeColour('Humidity')">
-          <img src='images/humidity.svg' class='icons' /> Humidity</a>
-      </li>
-      <li>
-        <a ng-disabled="roomValueType == 'Light'" ng-click="changeColour('Light')">
-          <img src='images/light.svg' class='icons' /> Light</a>
-      </li>
-      <li>
-        <a ng-disabled="roomValueType == 'Occupancy'" ng-click="changeColour('Occupancy')">
-          <img src='images/pir.svg' class='icons' /> Occupancy</a>
+      <li ng-repeat="sensor in sensorTypes">
+        <a ng-disabled="roomValueType == sensor.name"
+           ng-click="changeColour(sensor.name)">
+          <img class='icons' ng-src='{{sensor.icon}}'>{{sensor.name}}
+        </a>
       </li>
     </ul>
   </div>
   <!-- Sensor timeframe  -->
   <div class="btn-group desktop-dropdown" dropdown>
-    <button ng-cloak id="sensorTimeButton" class="btn btn-black dropdown-toggle" dropdown-toggle ng-disabled="disabled" data-label-placement>
-      {{ timeFrame }}
+    <button id="sensorTimeButton"
+            ng-cloak
+            class="btn btn-black dropdown-toggle"
+            dropdown-toggle
+            ng-disabled="disabled"
+            data-label-placement>
+      {{timeFrame.text}}
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right timeMenu" role="menu">
       <li class="btn" disabled>Choose time frame</li>
-      <li>
-        <a ng-disabled="timeFrame == 'Latest'" ng-click="selectTimeFrame('Latest')" uncheckable>
-          <img src='images/latest.svg' class='icons' /> Latest</a>
-      </li>
-      <li>
-        <a ng-disabled="timeFrame == 'Day'" ng-click="selectTimeFrame('Day')" uncheckable>
-          <img src='images/day.svg' class='icons' /> Day</a>
-      </li>
-      <li>
-        <a ng-disabled="timeFrame == 'Week'" ng-click="selectTimeFrame('Week')" uncheckable>
-          <img src='images/week.svg' class='icons' /> Week</a>
-      </li>
-      <li>
-        <a ng-disabled="timeFrame == 'Month'" ng-click="selectTimeFrame('Month')" uncheckable>
-          <img src='images/month.svg' class='icons' /> Month</a>
-      </li>
-      <li>
-        <a ng-disabled="timeFrame == 'Year'" ng-click="selectTimeFrame('Year')" uncheckable>
-          <img src='images/year.svg' class='icons' /> Year</a>
+      <li ng-repeat="time in timeFrames">
+        <a ng-disabled="timeFrame == time"
+           ng-click="selectTimeFrame(time)" uncheckable>
+          <img ng-src="{{time.icon}}" class="icons">{{time.text}}
+        </a>
       </li>
     </ul>
   </div>
@@ -161,7 +143,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" ng-click="ok()">OK</button>
-    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" ng-click="modal.ok()">OK</button>
+    <button class="btn btn-default" ng-click="modal.cancel()">Cancel</button>
   </div>
 </script>

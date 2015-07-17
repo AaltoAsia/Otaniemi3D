@@ -186,13 +186,13 @@
 
 #sensorTypeButton {
   text-align: right;
-  width: 110px;
+  width: 118px;
   margin-bottom:3px;
 }
 
 #sensorTimeButton {
   text-align:right;
-  width: 75px;
+  width: 116px;
   margin-bottom:3px;
 }
 
@@ -201,10 +201,8 @@
   right: 0;
 }
 
-.timeMenu {
-}
-
-.typeMenu li {
+.typeMenu li,
+.timeMenu li {
   cursor: pointer;
 }
 
