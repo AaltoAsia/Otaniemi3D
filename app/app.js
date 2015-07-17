@@ -25,8 +25,12 @@ angular
     $urlMatcherFactoryProvider.strictMode(false);
 
     $urlRouterProvider
-      .when('', '/')
-      .when('/home', '/')
+      .when('', ['$state', function ($state) {
+        $state.go('home');
+      }])
+      .when('/home', ['$state', function ($state) {
+        $state.go('home');
+      }])
       .otherwise('not-found', {
         url: '',
         templateUrl: 'views/not-found.html'
@@ -44,7 +48,7 @@ angular
         controller: 'SensorListCtrl as sensorlist'
       })
       .state('heat-map', {
-        url: '/heat-map/:floorNum',
+        url: '/heat-map/{floorNum:[1-5]}',
         templateUrl: 'views/heat-map.html',
         controller: 'HeatMapCtrl as heatmap'
       })

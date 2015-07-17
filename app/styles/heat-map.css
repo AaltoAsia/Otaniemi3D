@@ -78,139 +78,150 @@
 }
 
 @media only screen and (min-width : 769px) {
-    .floorplan {
-        height:calc(100% - 145px);
-    }
-    .floorplan-fullscreen {
-        height: calc(100% - 55px);
-    }
+  .floorplan {
+      height:calc(100% - 145px);
+  }
+  .floorplan-fullscreen {
+      height: calc(100% - 55px);
+  }
 
-    /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
-    margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
+  /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
+  margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
 
-    .previous-button, .next-button {
-        font-size: 48px; /*Increase the size of arrow a little*/
-        position: absolute;
-        bottom: 5%; /* Fallbacks for browsers that don't support vh measurements*/
-        margin-bottom: 5%;
-        bottom: 5vh;
-        margin-bottom: 5vh;
+  .previous-button, .next-button {
+    font-size: 48px; /*Increase the size of arrow a little*/
+    position: absolute;
+    bottom: 5%; /* Fallbacks for browsers that don't support vh measurements*/
+    margin-bottom: 75px;
+    bottom: 5vh;
+  }
 
-    }
-    .previous-button {
-        left: 5%;
-        left: 5vh;
-    }
-    .next-button {
-        right: 5%;
-        right: 5vh;
-    }
+  .btn-fullscreen {
+    margin-bottom: 0;
+  }
 
-    /*CSS definitions for those sensor buttons at the bottom of floorplan viewport*/
-    .sensor-class {
-        left:20%;
-        right:20%;
-        bottom: 50px;
-        position: fixed;
-        text-align:center;
-    }
-    .search-container-full {
-        padding-top: 20px;
-    }
+  .previous-button {
+    left: 5%;
+    left: 5vh;
+  }
+  .next-button {
+    right: 5%;
+    right: 5vh;
+  }
 
-    #searchContent2 {
-        width: 50%;
-        display:inline;
-    }
+  /*CSS definitions for those sensor buttons at the bottom of floorplan viewport*/
+  .sensor-class {
+    left:20%;
+    right:20%;
+    bottom: 50px;
+    position: fixed;
+    text-align:center;
+  }
+
+  #searchContainer {
+    margin-top: -10px !important;
+  }
+
+  .search-container-full {
+    padding-top: 20px;
+  }
+
+  #searchContent2 {
+    width: 50%;
+    display:inline;
+  }
+
 	/*Make desktop dropdown visible and make mobile modal button invisible*/
 	.mobile-button {
 		display:none;
 	}
+
 	.desktop-dropdown {
 	}
-	#searchContainer {
-        margin-left: 10%;
-	    margin-right: 10%;
-    }
 
-    /* Desktop user - disable portrait adjustments */
-    .modal-portrait {
-        display:none;
-    }
+	#searchContainer {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+
+  /* Desktop user - disable portrait adjustments */
+  .modal-portrait {
+    display:none;
+  }
 
 }
 
 /*CSS for button that makes the floorplan fullscreen*/
 .fullscreen-button {
-    position:absolute;
-    margin-top:1%;
-    margin-right: 1%; /*Fallbacks for older browsers*/
-    margin-top: 1vh;
-    margin-right: 1vh;
-    float: right;
-    right: 0px;
+  position:absolute;
+  margin-top:1%;
+  margin-right: 1%; /*Fallbacks for older browsers*/
+  margin-top: 1vh;
+  margin-right: 1vh;
+  float: right;
+  right: 0px;
 }
 
 
 /* CSS-definitions for the caption that is on top of floorplan*/
 .floorplan-caption {
-    left: 30%;
-    right: 30%;
-    position: absolute;
+  left: 30%;
+  right: 30%;
+  position: absolute;
 }
 .caption-text {
-    text-align: center;
-    color: #333;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  color: #333;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 
 /*CSS definitions for search bar next to it*/
 
 #searchContainer {
-    text-align: center;
-    margin-top:-10px;
-    margin-bottom:5px;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 #sensorTypeButton {
-    text-align: right;
-    width: 110px;
-    margin-bottom:3px;
+  text-align: right;
+  width: 110px;
+  margin-bottom:3px;
 }
 
 #sensorTimeButton {
-    text-align:right;
-    width: 75px;
-    margin-bottom:3px;
+  text-align:right;
+  width: 75px;
+  margin-bottom:3px;
 }
 
 .caret {
-    text-align: right;
-    right: 0;
+  text-align: right;
+  right: 0;
 }
 
 .timeMenu {
 }
 
 .typeMenu li {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /*we want to show room information before panoramabutto in tooltip */
 #infocontent{
-    order: 1;
+  order: 1;
 }
 /* panoramabutton in tooltip */
 #panobtn{
-  order: 2;
-  display: none;
+order: 2;
+display: none;
 }
 
 /* CSS definitions for the sensor type popover (tooltip) */
 .sensor-class .popover {
-    margin-top: 10px;
-    margin-left: 72px;
+  margin-top: 10px;
+  margin-left: 72px;
 }
 /* Dropdown styling per bootstrap2 */
 .timeMenu.dropdown-menu:before {

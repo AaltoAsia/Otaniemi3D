@@ -17,7 +17,7 @@
   <!-- build:css(.tmp) styles/main.css -->
   <link rel="stylesheet" href="styles/main.css"/>
   <link rel="stylesheet" href="styles/home.css"/>
-  <link rel="stylesheet" href="styles/floorplan.css"/>
+  <link rel="stylesheet" href="styles/heat-map.css"/>
   <link rel="stylesheet" href="styles/model-3d.css"/>
   <link rel="stylesheet" href="styles/analytics.css"/>
   <link rel="stylesheet" href="styles/panorama.css"/>
@@ -52,7 +52,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div collapse="App.navbarCollapse"
              class="nav-collapse collapse navbar-responsive-collapse">
-          <ul class="nav navbar-nav">
+          <ul ng-cloak class="nav navbar-nav">
             <li ng-repeat="nav in App.navigation" ui-sref-active="active">
               <a ng-click="App.navbarCollapse = true" ui-sref="{{nav.state}}">
                 {{nav.name}}

@@ -9,9 +9,9 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function ($scope, $routeParams, $rootScope, $window, Rooms) {
+  function ($scope, $stateParams, $window, Rooms) {
 
-    var roomId = $routeParams.roomId;
+    var roomId = $stateParams.roomId;
     if (roomId.lastIndexOf('Room', 0) !== 0) {
       roomId = roomId.split('-').join(' ');
     }
@@ -42,7 +42,7 @@ angular.module('otaniemi3dApp')
       xmlPath: xmlPath
     };
 
-    $scope.fullscreen = $rootScope.fullscreen ? 'panorama-fullscreen' : '';
+    $scope.fullscreen = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
 
     $scope.goBack = function () {
       $window.history.back();

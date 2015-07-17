@@ -272,10 +272,6 @@ fieldset[disabled] .btn-black.active {
     height:calc(100% - 66px);
   }
 
-  #content {
-    position: relative;
-  }
-
   .navbar {
     margin-bottom: 0px;
   }

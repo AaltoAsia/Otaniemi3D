@@ -12,7 +12,6 @@ angular.module('otaniemi3dApp')
 
     var self = this;
 
-    self.fullscreen = false;
     self.navbarCollapse = true;
     //states are defined in app.js
     self.navigation = [
@@ -33,6 +32,8 @@ angular.module('otaniemi3dApp')
         name: 'Analytics'
       }
     ];
+
+    $scope.fullscreen = false;
 
     //helper function (can be used in child controllers)
     $scope.startsWith = function (str, substr) {

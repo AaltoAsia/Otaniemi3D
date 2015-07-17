@@ -17,6 +17,7 @@
 
 .panorama-fullscreen {
   height: calc(100%);
+  margin-top: 0px;
 }
 
 @media only screen and (max-width : 769px) {

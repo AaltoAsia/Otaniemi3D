@@ -9,13 +9,16 @@
  */
 angular.module('otaniemi3dApp')
   .controller('HeatMapCtrl', function ($scope, floorplanService, Rooms,
-    heatmapService, $rootScope, $modal, $interval, $stateParams, $location, $state) {
+    heatmapService, $modal, $interval, $state) {
 
-  var floorplanClass = 'floorplan';
-  var floorplanFullscreenClass = 'floorplan-fullscreen';
+  var floorNum = Number($state.params.floorNum);
+
+  if (!floorNum) {
+    $state.go('heat-map', {floorNum: 1}, {notify: false});
+    floorNum = 1;
+  }
 
   $scope.sensorData = Rooms.dict;
-  $scope.floorplanClass = floorplanClass;
   $scope.rooms = Rooms;
   $scope.searchString = '';
   $scope.highlightedRoom = null;
@@ -26,18 +29,8 @@ angular.module('otaniemi3dApp')
   $scope.room = null;   //Room which panoramic button was clicked.
   $scope.timeFrame = 'Latest';
   $scope.resetView = null;
-  $scope.planNumber = $stateParams ? $stateParams - 1 : 0;
-
-  //This is used to set correct top margin for search container
-  $scope.searchContainer = '';
-
+  $scope.planNumber = floorNum - 1;
   $scope.svgSupport = Modernizr.svg;
-  $scope.pano = false;
-
-  //These are ng-class definitions for buttons found in 2dview
-  $scope.buttonClass = 'glyphicon glyphicon-resize-full';
-  $scope.nextButtonClass = 'glyphicon glyphicon-arrow-right';
-  $scope.previousButtonClass = 'glyphicon glyphicon-arrow-left';
 
   //Select current floorplan
   floorplanService.floors[$scope.planNumber].isSelected = true;
@@ -48,8 +41,7 @@ angular.module('otaniemi3dApp')
   });
 
   $scope.panoramaViewer = function() {
-    var current = $location.path();
-    $location.path(current + '/panorama/' + $scope.room.split(' ').join('-'));
+    $state.go('panorama', {roomId: $scope.room.split(' ').join('-')});
   };
 
   $scope.showGradient = function() {
@@ -58,22 +50,12 @@ angular.module('otaniemi3dApp')
   };
 
   /*
-   * Toggle fullscreen button. It broadcasts to rootscope to change the view
+   * Toggle fullscreen button. It broadcasts to parent scope to change the view
    * to fullscreen which in turn hides the footer and header. Also it changes
    * the fullscreen button glyphicon.
    */
   $scope.toggleFullscreen = function(){
-    $rootScope.fullscreen = !$rootScope.fullscreen;
-
-    if ($scope.floorplanClass === floorplanClass) {
-      $scope.floorplanClass = floorplanFullscreenClass;
-      $scope.searchContainer = 'search-container-full';
-      $scope.buttonClass = ' glyphicon glyphicon-resize-small';
-    } else {
-      $scope.floorplanClass = floorplanClass;
-      $scope.searchContainer = '';
-      $scope.buttonClass = 'glyphicon glyphicon-resize-full';
-    }
+    $scope.App.fullscreen = !$scope.App.fullscreen;
   };
 
   /*
@@ -83,11 +65,11 @@ angular.module('otaniemi3dApp')
    */
   $scope.selectPlan = function (direction) {
     if (direction === 1) {
-      $scope.planNumber++;
-      $state.go('heat-map', {floorNum: $scope.planNumber});
+      //floorNum indexing starts from 1 while planNumber starts from 0
+      //so we must add 2 to the planNumber to increase floorNum by 1
+      $state.go('heat-map', {floorNum: $scope.planNumber + 2});
     }
     if (direction === -1) {
-      $scope.planNumber--;
       $state.go('heat-map', {floorNum: $scope.planNumber});
     }
   };
@@ -100,6 +82,7 @@ angular.module('otaniemi3dApp')
     if (typeof item.floor === 'number' && !isNaN(item.floor)) {
       $scope.highlightedRoom = item;
       $scope.planNumber = item.floor;
+      $state.go('heat-map', {floorNum: $scope.planNumber});
     }
   };
 
