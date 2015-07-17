@@ -1,88 +1,92 @@
 /* Responsive adjustment for a landscape mobile device */
 @media only screen and (max-width : 768px) and (orientation : landscape) {
-    .modal-portrait {
-        display:none;
-    }
-    .modal-landscape {
-        display:inline;
-    }
+  .modal-portrait {
+    display:none;
+  }
+  .modal-landscape {
+    display:inline;
+  }
 
-    /* modal buttons default */
-    #modalValue {
-        margin-bottom: 0px;
-    }
+  /* modal buttons default */
+  #modalValue {
+    margin-bottom: 0px;
+  }
 
 }
 
 /* Responsive adjustment for a portrait mobile device */
 @media only screen and (max-width : 768px) and (orientation : portrait) {
-    .modal-portrait {
-        display:inline;
-    }
-    .modal-landscape {
-        display:none;
-    }
+  .modal-portrait {
+    display:inline;
+  }
+  .modal-landscape {
+    display:none;
+  }
 
-    /* Modal buttons centered */
-    #modalValue {
-        margin-bottom: 0px;
-        margin-left: 50px;
-        margin-right: 30px;
-    }
+  /* Modal buttons centered */
+  #modalValue {
+    margin-bottom: 0px;
+    margin-left: 50px;
+    margin-right: 30px;
+  }
 }
 
 @media only screen and (max-width : 769px) {
 
-    /*Make floorplan reach from header to footer or from top to bottom*/
-    .floorplan {
-        height:calc(100% - 95px);
-    }
-    .floorplan-fullscreen {
-        height: calc(100% - 45px);
-    }
+  /*Make floorplan reach from header to footer or from top to bottom*/
+  .floorplan {
+    height:calc(100% - 95px);
+  }
+  .floorplan-fullscreen {
+    height: calc(100% - 45px);
+  }
 
-    /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
-    margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
-    .previous-button, .next-button {
-        font-size: 36px; /*Increase the size of arrow a little*/
-        position: fixed;
-        bottom: 5%; /*fallback for browsers that don't support vh*/
-        bottom: 5vh;
-    }
+  /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
+  margin-bottom and bottom, since zooming out seemed to scale the button out of the floorplan viewbox on Chrome*/
+  .previous-button, .next-button {
+    font-size: 36px; /*Increase the size of arrow a little*/
+    position: fixed;
+    bottom: 5%; /*fallback for browsers that don't support vh*/
+    bottom: 5vh;
+  }
 
-    /*Make next-button hug the right side of floorplan div*/
-    .next-button {
-        right: 0px;
-    }
+  /*Make next-button hug the right side of floorplan div*/
+  .next-button {
+    right: 0px;
+  }
 
-    /*Padding needs to be 20 px since the search container all ready has -15px margin to
-      override header bottom margin*/
-    .search-container-full {
-        padding-top: 20px;
-    }
+  .search-no-fullscreen {
+    margin-top: 5px !important;
+  }
 
-    #searchContent2 {
-        width: 70%;
-		max-width: 160px;
-        display:inline;
-    }
-	/*Make desktop dropdown invisible and make mobile modal button visible*/
-	.mobile-button {
-		display:inline;
-		width:20%;
-        margin-bottom: 3px;
-	}
-	.desktop-dropdown {
-		display:none;
-	}
+  /*Padding needs to be 20 px since the search container all ready has -15px margin to override header bottom margin*/
+  .search-container-full {
+    padding-top: 20px;
+  }
+
+  #searchContent2 {
+    width: 70%;
+    max-width: 160px;
+    display:inline;
+  }
+
+  /*Make desktop dropdown invisible and make mobile modal button visible*/
+  .mobile-button {
+  	display:inline;
+  	width:20%;
+    margin-bottom: 3px;
+  }
+  .desktop-dropdown {
+  	display:none;
+  }
 }
 
 @media only screen and (min-width : 769px) {
   .floorplan {
-      height:calc(100% - 145px);
+    height:calc(100% - 145px);
   }
   .floorplan-fullscreen {
-      height: calc(100% - 55px);
+    height: calc(100% - 55px);
   }
 
   /*Sets the CSS of right and left arrow, also known as next and previous-button. There are distinct CSS definitions for
@@ -116,10 +120,6 @@
     bottom: 50px;
     position: fixed;
     text-align:center;
-  }
-
-  #searchContainer {
-    margin-top: -10px !important;
   }
 
   .search-container-full {
@@ -180,7 +180,7 @@
 
 #searchContainer {
   text-align: center;
-  margin-top: 5px;
+  margin-top: -10px;
   margin-bottom: 5px;
 }
 
