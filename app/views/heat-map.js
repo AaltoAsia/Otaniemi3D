@@ -11,6 +11,8 @@ angular.module('otaniemi3dApp')
   .controller('HeatMapCtrl', function ($scope, floorplanService, Rooms,
     heatmapService, $modal, $interval, $state) {
 
+    var self = this;
+
     var floorNum = Number($state.params.floorNum);
 
     if (!floorNum) {
@@ -215,7 +217,7 @@ angular.module('otaniemi3dApp')
         Also parse the return values to aforementioned variables*/
     $scope.open = function () {
 
-      var modalInstance = $modal.open({
+      self.modalInstance = $modal.open({
         templateUrl: 'sensor-options.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
@@ -231,11 +233,17 @@ angular.module('otaniemi3dApp')
         }
       });
 
-      modalInstance.result.then(function (params) {
+      self.modalInstance.result.then(function (params) {
         $scope.timeFrame = params.timeFrame;
         $scope.sensorType = params.sensorType;
         $scope.refreshRoomColor($scope.sensorType);
       });
     };
+
+    $scope.$on('$destroy', function () {
+      if (self.modalInstance) {
+        self.modalInstance.dismiss();
+      }
+    });
 
 });

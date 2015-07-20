@@ -161,9 +161,9 @@
     <div class="modal-landscape">
       <p>
         <div class="btn-group" id="modalValue">
-          <label ng-repeat="sensor in params.sensorTypes"
+          <label ng-repeat="sensor in modal.params.sensorTypes"
                  class="btn btn-black"
-                 ng-model="params.sensorType"
+                 ng-model="modal.params.sensorType"
                  btn-radio="sensor">
             {{sensor.name}}
           </label>
@@ -171,9 +171,9 @@
       </p>
       <p>
         <div class="btn-group" id="modalTimeframe">
-          <label ng-repeat="time in params.timeFrames"
+          <label ng-repeat="time in modal.params.timeFrames"
                  class="btn btn-black"
-                 ng-model="params.timeFrame"
+                 ng-model="modal.params.timeFrame"
                  btn-radio="time">
             {{time.text}}
           </label>
@@ -183,17 +183,17 @@
     <div class="modal-portrait">
       <p class="center">
         <div class="btn-group-vertical" id="modalValue">
-          <label ng-repeat="sensor in params.sensorTypes"
+          <label ng-repeat="sensor in modal.params.sensorTypes"
                  class="btn btn-black"
-                 ng-model="params.sensorType"
+                 ng-model="modal.params.sensorType"
                  btn-radio="sensor">
             {{sensor.name}}
           </label>
         </div>
         <div class="btn-group-vertical" id="modalTimeframe">
-        <label ng-repeat="time in params.timeFrames"
+        <label ng-repeat="time in modal.params.timeFrames"
                class="btn btn-black"
-               ng-model="params.timeFrame"
+               ng-model="modal.params.timeFrame"
                btn-radio="time.text">
           {{time.text}}
         </label>

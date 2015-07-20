@@ -13,15 +13,19 @@ angular.module('otaniemi3dApp')
       restrict: 'E',
       scope: {
         selectSensor: '=',
-        addSensor: '=',
+        dragSensor: '=',
         search: '=',
         rootUrl: '=',
         error: '='
       },
-      link: function postLink (scope, element) {
-
+      link: function postLink (scope, element, attrs) {
         element.jstree({
-          plugins: ['search', 'sort', 'dnd'],
+          plugins: [
+            'sort',
+            typeof attrs.checkbox === 'string' ? 'checkbox' : '',
+            typeof attrs.search === 'string' ? 'search' : '',
+            typeof attrs.dragSensor === 'string' ? 'dnd' : ''
+          ],
           core: {
             check_callback: true,
             worker: false,
@@ -178,6 +182,18 @@ angular.module('otaniemi3dApp')
           .on('after_close.jstree', function (_, data) {
             data.node.children = true;
             getNode(data.node.id).state.loaded = false;
+          })
+          .on('select_node.jstree', function (_, data) {
+            var selectedSensors = [];
+
+            for (var i = 0; i < data.selected.length; i++) {
+              var sensor = getNode(data.selected[i], true);
+              if (sensor.type === 'sensor') {
+                selectedSensors.push(sensor);
+              }
+            }
+
+            scope.selectSensor(selectedSensors);
           });
 
         $document
@@ -186,7 +202,7 @@ angular.module('otaniemi3dApp')
             if(target.closest('#drop-area').length) {
               var sensor = getNode(data.data.nodes[0]);
               var room = getNode(sensor.parent);
-              scope.addSensor(room, sensor);
+              scope.dragSensor(room, sensor);
             }
           })
           .on('dnd_move.vakata', function (_, data) {

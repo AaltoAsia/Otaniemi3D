@@ -29,6 +29,4 @@
            onout="set(alpha,0.4);"
   />
 
-	<events name="addHotspot" onclick="js(krpano.addHotspot());" />
-
 </krpano>

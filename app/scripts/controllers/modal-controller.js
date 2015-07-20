@@ -10,13 +10,15 @@
 angular.module('otaniemi3dApp')
   .controller('ModalCtrl', function ($scope, $modalInstance, params) {
 
-    $scope.params = params;
+    var self = this;
 
-    this.ok = function () {
-      $modalInstance.close($scope.params);
+    self.params = params;
+
+    self.ok = function () {
+      $modalInstance.close(self.params);
     };
 
-    this.cancel = function () {
+    self.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
   });

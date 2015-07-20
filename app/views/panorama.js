@@ -41,20 +41,26 @@ angular.module('otaniemi3dApp')
 
     var xmlPath = 'panorama/' + roomName.split(/ |-/g).join('_') + '.xml';
 
-    this.room = {
+    self.room = {
       sensorTable: sensorTable,
       xmlPath: xmlPath,
       url: roomUrl
     };
 
-    this.alert = {
+    self.alert = {
       show: false,
       message: ''
     };
 
-    this.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
+    self.newSensors = [];
 
-    this.goBack = function () {
+    self.addSensors = function (sensors) {
+      self.newSensors = sensors;
+    };
+
+    self.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
+
+    self.goBack = function () {
       $window.history.back();
     };
 
@@ -63,17 +69,31 @@ angular.module('otaniemi3dApp')
 
     $window.krpano.addHotspot = function () {
 
-      var modalInstance = $modal.open({
+      self.modalInstance = $modal.open({
         templateUrl: 'hotspot-selection.html',
         scope: $scope,
         controller: 'ModalCtrl',
         controllerAs: 'modal',
         resolve: {
-          params: {
-            room: self.room
+          params: function () {
+            return {
+              room: self.room,
+              alert: self.alert,
+              addSensors: self.addSensors
+            };
           }
         }
       });
+
+      self.modalInstance.result.then(function () {
+        console.log(self.newSensors);
+      });
     };
+
+    $scope.$on('$destroy', function () {
+      if (self.modalInstance) {
+        self.modalInstance.dismiss();
+      }
+    });
 
   });

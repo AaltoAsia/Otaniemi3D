@@ -1,11 +1,11 @@
 <krpano version="1.17.4">
-	
+
 	<!-- the skin -->
 	<include url="skin/defaultskin.xml" />
-	
+
 	<!-- view settings -->
 	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />
-	
+
 
 	<preview url="2th_Floor_-_Corridor_Middle.tiles/preview.jpg" />
 
