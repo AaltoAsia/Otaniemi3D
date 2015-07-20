@@ -74,12 +74,6 @@
 
   <div class="mouse-tooltip"></div>
 
-  <!-- Spinner that shows up during loading -->
-  <span us-spinner="{radius:30, width:8, length: 16}"
-        spinner-key="spinner-1"
-        spinner-start-active="true">
-  </span>
-
   <!-- Expand / compress button -->
   <i ng-click="toggleFullscreen()"
      class="btn fullscreen-button"
@@ -88,7 +82,7 @@
 
   <div ng-cloak class="floorplan-caption">
     <h4 class="caption-text">
-      {{selectedPlan.name}} ({{planNumber+1}}/{{floors}})
+      {{selectedPlan.name}} ({{planNumber+1}}/{{floorplans.length}})
     </h4>
   </div>
 
@@ -107,12 +101,12 @@
   </i>
 
   <!-- The actual floorplan -->
-  <floorplan class="fp"
-             plan="selectedPlan"
-             data="sensorData"
-             highlighted-room="highlightedRoom"
-             sensor-type="sensorType"
-             reset-view="resetView">
+  <heat-map id="heat-map"
+            class="fp"
+            floorplans="floorplans"
+            sensor-data="sensorData"
+            selected-room="selectedRoom"
+            sensor-type="sensorType">
 
     <div id="legendBar" style="position: absolute">
       <p id="legendMinText" class="legendText"></p>
@@ -149,7 +143,7 @@
       <p id="legendMaxText" class="legendText"></p>
     </div>
 
-  </floorplan>
+  </heat-map>
 
 </div>
 

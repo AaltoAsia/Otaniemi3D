@@ -8,18 +8,18 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('floorplanService', function () {
+  .service('floorplanStorage', function () {
 
     var self = this;
 
-    this.floors = [
+    self.list = [
       {
         url: 'floorplans/floor1.svg',
         name: 'Floor 1',
         roomNumber: 'st10',
         roomArea: 'st1',
         svg: null,
-        isSelected: false,
+        isSelected: true,
         translate: [0,0],
         scale: 1
       },
@@ -64,17 +64,5 @@ angular.module('otaniemi3dApp')
         scale: 1
       }
     ];
-
-    this.allLoaded = function() {
-      //Returns true or false if all floorplans have been loaded
-      for (var i = 0; i < self.floors.length; i++) {
-        if (self.floors[i].svg === null) {
-          return false;
-        } else if (i === self.floors.length - 1) {
-          //Loop continues here only if all the floors have a non-null svg attribute
-          return true;
-        }
-      }
-    };
 
   });

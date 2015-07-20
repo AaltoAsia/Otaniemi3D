@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('HeatMapCtrl', function ($scope, floorplanService, Rooms,
+  .controller('HeatMapCtrl', function ($scope, floorplanStorage, Rooms,
     heatmapService, $modal, $interval, $state) {
 
     var self = this;
@@ -24,7 +24,7 @@ angular.module('otaniemi3dApp')
     $scope.rooms = Rooms;
     $scope.searchString = '';
     $scope.highlightedRoom = null;
-    $scope.floors = floorplanService.floors.length;
+    $scope.floorplans = floorplanStorage.list;
     $scope.selectedRoom = null;
     $scope.room = null;   //Room in which panoramic button was clicked.
     $scope.resetView = null;
@@ -32,8 +32,8 @@ angular.module('otaniemi3dApp')
     $scope.svgSupport = Modernizr.svg;
 
     //Select current floorplan
-    floorplanService.floors[$scope.planNumber].isSelected = true;
-    $scope.selectedPlan = floorplanService.floors[$scope.planNumber];
+    $scope.floorplans[$scope.planNumber].isSelected = true;
+    $scope.selectedPlan = $scope.floorplans[$scope.planNumber];
 
     $scope.sensorTypes = [
       { name: 'Temperature',
@@ -171,7 +171,7 @@ angular.module('otaniemi3dApp')
     /*
      * Refresh the room colours according to sensor that is chosen.
      * For example if the user changes from temperature heatmap to co2 heatmap
-     * this function will colour the floorplanService according to values
+     * this function will colour the floorplanStorage according to values
      * measured by co2 sensors.
      */
     $scope.refreshRoomColor = function(sensorType) {
