@@ -16,7 +16,7 @@ angular.module('otaniemi3dApp')
       plan: '=',
       data: '=',
       highlightedRoom: '=',
-      roomValueType: '=',
+      sensorType: '=',
       resetView: '='
     },
     link: function (scope, element) {
@@ -153,6 +153,7 @@ angular.module('otaniemi3dApp')
           .text('Click to lock tooltip in place');
 
         var lastRow = addTooltipText('Room', room.name);
+        var sensorType = scope.sensorType.name.toLowerCase();
 
         for (var i = 0; i < room.sensors.length; i++) {
           var sensor = room.sensors[i];
@@ -160,9 +161,9 @@ angular.module('otaniemi3dApp')
           if (sensor.values.length > 0) {
             lastRow = addTooltipText(sensor.type, sensor.values[0].value);
 
-            if(scope.roomValueType.toLowerCase() === sensor.type.toLowerCase() ||
-                (scope.roomValueType.toLowerCase()==='occupancy' &&
-                sensor.type.toLowerCase()==='pir')) {
+            if(sensorType === sensor.type.toLowerCase() ||
+                (sensorType ==='occupancy' &&
+                  sensor.type.toLowerCase() === 'pir')) {
               var color = heatmapService.getColor(sensor.type, sensor.values[0].value);
               lastRow.type.style('background-color', color.rgbaString);
               lastRow.value.style('background-color', color.rgbaString);
@@ -292,12 +293,13 @@ angular.module('otaniemi3dApp')
     function setRoomColor(room) {
       if (room.node) {
         var i;
+        var sensorType = scope.sensorType.name.toLowerCase();
         for (i = 0; i < room.sensors.length; i++) {
           var sensor = room.sensors[i];
 
-          if (sensor.type.toLowerCase() === scope.$parent.roomValueType.toLowerCase() ||
-              ((sensor.type.toLowerCase() === 'pir') &&
-              (scope.$parent.roomValueType.toLowerCase() === 'occupancy'))) {
+          if (sensor.type.toLowerCase() === sensorType ||
+             (sensor.type.toLowerCase() === 'pir' &&
+                sensorType === 'occupancy')) {
 
             if (sensor.values.length > 0) {
               var color = heatmapService.getColor(room.sensors[i].type,
@@ -585,8 +587,8 @@ angular.module('otaniemi3dApp')
       }
     });
 
-    scope.$watch('roomValueType', function() {
-      legendbarService.setRoomValueType(scope.roomValueType);
+    scope.$watch('sensorType.name', function() {
+      legendbarService.setSensorType(scope.sensorType);
       legendbarService.changeLegendText();
       legendbarService.changeLegendStyle();
     });

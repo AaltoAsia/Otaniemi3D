@@ -11,15 +11,15 @@
             class="btn btn-black dropdown-toggle"
             dropdown-toggle ng-disabled="disabled"
             data-label-placement>
-      {{roomValueType}}
+      {{sensorType.name}}
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right typeMenu" role="menu">
       <li class="btn" disabled>Choose sensor type</li>
       <li ng-repeat="sensor in sensorTypes">
-        <a ng-disabled="roomValueType == sensor.name"
-           ng-click="changeColour(sensor.name)">
-          <img class='icons' ng-src='{{sensor.icon}}'>{{sensor.name}}
+        <a ng-disabled="sensorType == sensor"
+           ng-click="changeColour(sensor)">
+          <img class="icons" ng-src="{{sensor.icon}}">{{sensor.name}}
         </a>
       </li>
     </ul>
@@ -108,11 +108,11 @@
 
   <!-- The actual floorplan -->
   <floorplan class="fp"
-             data-plan="selectedPlan"
-             data-data="sensorData"
-             data-highlighted-room="highlightedRoom"
-             data-room-value-type="roomValueType"
-             data-reset-view="resetView">
+             plan="selectedPlan"
+             data="sensorData"
+             highlighted-room="highlightedRoom"
+             sensor-type="sensorType"
+             reset-view="resetView">
 
     <div id="legendBar" style="position: absolute">
       <p id="legendMinText" class="legendText"></p>
@@ -161,22 +161,20 @@
     <div class="modal-landscape">
       <p>
         <div class="btn-group" id="modalValue">
-          <label ng-repeat="sensor in sensorTypes"
+          <label ng-repeat="sensor in params.sensorTypes"
                  class="btn btn-black"
-                 ng-model="roomValueType"
-                 btn-radio="sensor.name"
-                 uncheckable>
+                 ng-model="params.sensorType"
+                 btn-radio="sensor">
             {{sensor.name}}
           </label>
         </div>
       </p>
       <p>
         <div class="btn-group" id="modalTimeframe">
-          <label ng-repeat="time in timeFrames"
+          <label ng-repeat="time in params.timeFrames"
                  class="btn btn-black"
-                 ng-model="timeFrame"
-                 btn-radio="time"
-                 uncheckable>
+                 ng-model="params.timeFrame"
+                 btn-radio="time">
             {{time.text}}
           </label>
         </div>
@@ -185,20 +183,18 @@
     <div class="modal-portrait">
       <p class="center">
         <div class="btn-group-vertical" id="modalValue">
-          <label ng-repeat="sensor in sensorTypes"
+          <label ng-repeat="sensor in params.sensorTypes"
                  class="btn btn-black"
-                 ng-model="roomValueType"
-                 btn-radio="sensor"
-                 uncheckable>
+                 ng-model="params.sensorType"
+                 btn-radio="sensor">
             {{sensor.name}}
           </label>
         </div>
         <div class="btn-group-vertical" id="modalTimeframe">
-        <label ng-repeat="time in timeFrames"
+        <label ng-repeat="time in params.timeFrames"
                class="btn btn-black"
-               ng-model="timeFrame"
-               btn-radio="time"
-               uncheckable>
+               ng-model="params.timeFrame"
+               btn-radio="time.text">
           {{time.text}}
         </label>
         </div>

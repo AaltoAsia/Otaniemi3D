@@ -13,7 +13,7 @@ angular.module('otaniemi3dApp')
     var self = this;
 
     self.navbarCollapse = true;
-    //states are defined in app.js
+    //states are defined in app/app.js
     self.navigation = [
       {
         state: 'sensor-list',

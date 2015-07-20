@@ -22,11 +22,9 @@ angular.module('otaniemi3dApp')
     $scope.rooms = Rooms;
     $scope.searchString = '';
     $scope.highlightedRoom = null;
-    $scope.roomValueType = 'Temperature';
     $scope.floors = floorplanService.floors.length;
     $scope.selectedRoom = null;
     $scope.room = null;   //Room in which panoramic button was clicked.
-    $scope.timeFrame = 'Latest';
     $scope.resetView = null;
     $scope.planNumber = floorNum - 1;
     $scope.svgSupport = Modernizr.svg;
@@ -82,6 +80,7 @@ angular.module('otaniemi3dApp')
         params: { begin: null, end: null } }
     ];
 
+    $scope.sensorType = $scope.sensorTypes[0];
     $scope.timeFrame = $scope.timeFrames[0];
 
     $scope.$on('sensordata-update', function(_, data) {
@@ -93,8 +92,8 @@ angular.module('otaniemi3dApp')
     };
 
     $scope.showGradient = function() {
-      return $scope.roomValueType.toLowerCase() !== 'pir' &&
-             $scope.roomValueType.toLowerCase() !== 'occupancy';
+      return $scope.sensorType.name.toLowerCase() !== 'pir' &&
+             $scope.sensorType.name.toLowerCase() !== 'occupancy';
     };
 
     /*
@@ -168,16 +167,18 @@ angular.module('otaniemi3dApp')
     };
 
     /*
-    / Refresh the room colours according to sensor that is chosen.
-    / For example if the user changes from temperature heatmap to co2 heatmap
-    / this function will colour the floorplanService according to values measured by
-    / co2 sensors.
-    */
-    $scope.refreshRoomColor = function(type) {
+     * Refresh the room colours according to sensor that is chosen.
+     * For example if the user changes from temperature heatmap to co2 heatmap
+     * this function will colour the floorplanService according to values
+     * measured by co2 sensors.
+     */
+    $scope.refreshRoomColor = function(sensorType) {
+      var sensorName = sensorType.name.toLowerCase();
+
       var keys = Object.keys(Rooms.dict);
       for (var i = 0; i < keys.length; i++) {
         var room = Rooms.dict[keys[i]];
-        //Colour the room white, in case the room doesn't have any values for
+        //Color the room white, in case the room doesn't have any values for
         //that particular sensor.
         d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
 
@@ -186,9 +187,13 @@ angular.module('otaniemi3dApp')
         for (var j = 0; j < room.sensors.length; j++) {
           var sensor = room.sensors[j];
 
-          if (sensor.type.toLowerCase() === type.toLowerCase() ||
-             (sensor.type.toLowerCase() === 'pir' && type.toLowerCase() === 'occupancy')) {
-            var color = heatmapService.getColor(sensor.type, sensor.values[0].value);
+          if (sensor.type.toLowerCase() === sensorName ||
+             (sensor.type.toLowerCase() === 'pir' &&
+                sensorName === 'occupancy')) {
+
+            var color = heatmapService
+              .getColor(sensorName, sensor.values[0].value);
+
             d3.select(room.node)
               .style('fill', color.rgb)
               .style('fill-opacity', color.opacity);
@@ -197,18 +202,16 @@ angular.module('otaniemi3dApp')
       }
     };
 
-    $scope.changeColour = function(type) {
-      $scope.roomValueType = type;
-      $scope.refreshRoomColor(type);
+    $scope.changeColour = function(sensorType) {
+      $scope.sensorType = sensorType;
+      $scope.refreshRoomColor(sensorType);
     };
 
     $scope.selectTimeFrame = function(timeFrame) {
-
       $scope.timeFrame = timeFrame;
-
     };
 
-     /*Create a new modal pass timeframe and roomValueType variables into it
+     /*Create a new modal pass timeFrame and sensorType variables into it
         Also parse the return values to aforementioned variables*/
     $scope.open = function () {
 
@@ -220,22 +223,18 @@ angular.module('otaniemi3dApp')
           params: function () {
             return {
               sensorTypes: $scope.sensorTypes,
-              timeFrames: $scope.timeFrames
+              sensorType: $scope.sensorType,
+              timeFrames: $scope.timeFrames,
+              timeFrame: $scope.timeFrame
             };
           }
         }
       });
 
-      modalInstance.result.then(function () {
-        if (arguments[0][1] !== $scope.timeFrame) {
-          $scope.timeFrame = arguments[0][1];
-          $scope.roomValueType = arguments[0][0];
-          $scope.selectTimeFrame($scope.timeFrame);
-        }
-        else if (arguments[0][0] !== $scope.roomValueType) {
-          $scope.roomValueType = arguments[0][0];
-          $scope.refreshRoomColor($scope.roomValueType);
-        }
+      modalInstance.result.then(function (params) {
+        $scope.timeFrame = params.timeFrame;
+        $scope.sensorType = params.sensorType;
+        $scope.refreshRoomColor($scope.sensorType);
       });
     };
 
