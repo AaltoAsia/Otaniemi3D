@@ -1,6 +1,9 @@
 <div id="searchContainer"
      ng-class="App.fullscreen ? 'search-container-full' : 'search-no-fullscreen'">
-  <button class="btn btn-black mobile-button" ng-click="open()">Options</button>
+  <button class="btn btn-black mobile-button"
+          ng-click="open()">
+    Options
+  </button>
   <!-- Sensor Type  -->
   <div class="btn-group desktop-dropdown" dropdown>
     <button id="sensorTypeButton"
@@ -43,40 +46,74 @@
     </ul>
   </div>
 
-  <input id="searchContent2" type="text" ng-model="searchString" placeholder="Search for room..." typeahead="room as room.name for room in rooms.asList() | filter:{name:$viewValue} | limitTo:8" class="form-control" typeahead-on-select="onSelect($item)">
+  <input id="searchContent2"
+         type="text"
+         ng-model="searchString"
+         placeholder="Search for room..."
+         typeahead="room as room.name for room in rooms.asList()
+                    | filter:{name:$viewValue}
+                    | limitTo:8"
+         class="form-control"
+         typeahead-on-select="onSelect($item)">
 
-  <button class="btn btn-default" id="searchDefault" ng-click="onSearch(searchString)">
+  <button class="btn btn-default" id="searchDefault"
+          ng-click="onSearch(searchString)">
     <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
   </button>
   <button class="btn btn-default" id="searchDefault" ng-click="resetZoom()">
     <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
   </button>
-
 </div>
 
 <div class="jumbotron" ng-hide="svgSupport">
   <h1>Your browser doesn't support svg!</h1>
 </div>
 
-<div ng-hide="!svgSupport" ng-class="App.fullscreen ? 'floorplan-fullscreen' : 'floorplan'">
-  <div class="mouse-tooltip">
-  </div>
+<div ng-hide="!svgSupport"
+     ng-class="App.fullscreen ? 'floorplan-fullscreen' : 'floorplan'">'
 
-  <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1" spinner-start-active="true"></span>
+  <div class="mouse-tooltip"></div>
+
   <!-- Spinner that shows up during loading -->
-  <i ng-click="toggleFullscreen()" class="btn fullscreen-button" ng-class="App.fullscreen ? 'glyphicon glyphicon-resize-small' : 'glyphicon glyphicon-resize-full'"></i>
+  <span us-spinner="{radius:30, width:8, length: 16}"
+        spinner-key="spinner-1"
+        spinner-start-active="true">
+  </span>
+
   <!-- Expand / compress button -->
+  <i ng-click="toggleFullscreen()"
+     class="btn fullscreen-button"
+     ng-class="App.fullscreen ? 'glyphicon glyphicon-resize-small' :
+              'glyphicon glyphicon-resize-full'"></i>
+
   <div ng-cloak class="floorplan-caption">
-    <h4 class="caption-text">{{selectedPlan.name}} ({{planNumber+1}}/{{floors}})</h4>
+    <h4 class="caption-text">
+      {{selectedPlan.name}} ({{planNumber+1}}/{{floors}})
+    </h4>
   </div>
 
-  <i ng-click="selectPlan(-1)" class="btn btn-lg previous-button glyphicon glyphicon-arrow-left" ng-class="App.fullscreen ? 'btn-fullscreen' : ''" ng-disabled="planNumber == '0'"></i>
   <!-- Button that loads up that lower (aka previous) floor -->
-  <i ng-click="selectPlan(1)" class="btn btn-lg next-button glyphicon glyphicon-arrow-right" ng-class="App.fullscreen ? 'btn-fullscreen' : ''" ng-disabled="planNumber == floors-1"></i>
+  <i ng-click="selectPlan(-1)"
+     class="btn btn-lg previous-button glyphicon glyphicon-arrow-left"
+     ng-class="App.fullscreen ? 'btn-fullscreen' : ''"
+     ng-disabled="planNumber == '0'">
+  </i>
+
   <!-- button that loads up higher (aka next) floor -->
+  <i ng-click="selectPlan(1)"
+     class="btn btn-lg next-button glyphicon glyphicon-arrow-right"
+     ng-class="App.fullscreen ? 'btn-fullscreen' : ''"
+     ng-disabled="planNumber == floors-1">
+  </i>
 
   <!-- The actual floorplan -->
-  <floorplan class="fp" data-plan="selectedPlan" data-data="sensorData" data-highlighted-room="highlightedRoom" data-room-value-type="roomValueType" data-reset-view="resetView">
+  <floorplan class="fp"
+             data-plan="selectedPlan"
+             data-data="sensorData"
+             data-highlighted-room="highlightedRoom"
+             data-room-value-type="roomValueType"
+             data-reset-view="resetView">
+
     <div id="legendBar" style="position: absolute">
       <p id="legendMinText" class="legendText"></p>
       <svg id="legendContainingSvg">
@@ -87,15 +124,33 @@
             </lineargradient>
           </defs>
         </g>
-        <rect id="gradientRect" class="legendRect" fill="url(#legendGradient)" rx="10" ry="10" ng-show="showGradient()" ng-cloak></rect>
-        <rect id="binaryRectTop" class="binaryRect legendRect" rx="10" ry="10" ng-hide="showGradient()" ng-cloak></rect>
-        <rect id="binaryRectBottom" class="binaryRect legendRect" rx="10" ry="10" ng-hide="showGradient()" ng-cloak></rect>
+        <rect id="gradientRect"
+              class="legendRect"
+              fill="url(#legendGradient)"
+              rx="10" ry="10"
+              ng-show="showGradient()"
+              ng-cloak>
+        </rect>
+        <rect id="binaryRectTop"
+              class="binaryRect legendRect"
+              rx="10" ry="10"
+              ng-hide="showGradient()"
+              ng-cloak>
+        </rect>
+        <rect id="binaryRectBottom"
+              class="binaryRect legendRect"
+              rx="10" ry="10"
+              ng-hide="showGradient()"
+              ng-cloak>
+        </rect>
         <line id="legendLine"></line>
         <text id="legendLineText"></text>
       </svg>
       <p id="legendMaxText" class="legendText"></p>
     </div>
+
   </floorplan>
+
 </div>
 
 <script type="text/ng-template" id="sensor-options.html">
@@ -106,38 +161,46 @@
     <div class="modal-landscape">
       <p>
         <div class="btn-group" id="modalValue">
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'CO2'" uncheckable>CO2</label>
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Occupancy'" uncheckable>Occupancy</label>
+          <label ng-repeat="sensor in sensorTypes"
+                 class="btn btn-black"
+                 ng-model="roomValueType"
+                 btn-radio="sensor.name"
+                 uncheckable>
+            {{sensor.name}}
+          </label>
         </div>
       </p>
       <p>
         <div class="btn-group" id="modalTimeframe">
-          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Latest'" uncheckable>Latest</label>
-          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Day'" uncheckable>Day</label>
-          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Week'" uncheckable>Week</label>
-          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Month'" uncheckable>Month</label>
-          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Year'" uncheckable>Year</label>
+          <label ng-repeat="time in timeFrames"
+                 class="btn btn-black"
+                 ng-model="timeFrame"
+                 btn-radio="time"
+                 uncheckable>
+            {{time.text}}
+          </label>
         </div>
       </p>
     </div>
     <div class="modal-portrait">
-      <p>
+      <p class="center">
         <div class="btn-group-vertical" id="modalValue">
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'CO2'" uncheckable>CO2</label>
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Temperature'" uncheckable>Temperature</label>
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Humidity'" uncheckable>Humidity</label>
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Light'" uncheckable>Light</label>
-          <label class="btn btn-black" ng-model="roomValueType" btn-radio="'Occupancy'" uncheckable>Occupancy</label>
+          <label ng-repeat="sensor in sensorTypes"
+                 class="btn btn-black"
+                 ng-model="roomValueType"
+                 btn-radio="sensor"
+                 uncheckable>
+            {{sensor.name}}
+          </label>
         </div>
         <div class="btn-group-vertical" id="modalTimeframe">
-          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Latest'" uncheckable>Latest</label>
-          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Day'" uncheckable>Day</label>
-          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Week'" uncheckable>Week</label>
-          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Month'" uncheckable>Month</label>
-          <label class="btn btn-black" ng-model="timeFrame" btn-radio="'Year'" uncheckable>Year</label>
+        <label ng-repeat="time in timeFrames"
+               class="btn btn-black"
+               ng-model="timeFrame"
+               btn-radio="time"
+               uncheckable>
+          {{time.text}}
+        </label>
         </div>
       </p>
     </div>

@@ -25,7 +25,7 @@ angular.module('otaniemi3dApp')
     $scope.roomValueType = 'Temperature';
     $scope.floors = floorplanService.floors.length;
     $scope.selectedRoom = null;
-    $scope.room = null;   //Room which panoramic button was clicked.
+    $scope.room = null;   //Room in which panoramic button was clicked.
     $scope.timeFrame = 'Latest';
     $scope.resetView = null;
     $scope.planNumber = floorNum - 1;
@@ -217,7 +217,12 @@ angular.module('otaniemi3dApp')
         controller: 'ModalCtrl',
         controllerAs: 'modal',
         resolve: {
-          params: {}
+          params: function () {
+            return {
+              sensorTypes: $scope.sensorTypes,
+              timeFrames: $scope.timeFrames
+            };
+          }
         }
       });
 
