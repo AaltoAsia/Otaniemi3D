@@ -19,6 +19,7 @@ angular.module('otaniemi3dApp')
         roomNumber: 'st10',
         roomArea: 'st1',
         svg: null,
+        floor: 1,
         isSelected: true,
         translate: [0,0],
         scale: 1
@@ -29,6 +30,7 @@ angular.module('otaniemi3dApp')
         roomNumber: 'st13',
         roomArea: 'st3',
         svg: null,
+        floor: 2,
         isSelected: false,
         translate: [0,0],
         scale: 1
@@ -39,6 +41,7 @@ angular.module('otaniemi3dApp')
         roomNumber: 'st11',
         roomArea: 'st3',
         svg: null,
+        floor: 3,
         isSelected: false,
         translate: [0,0],
         scale: 1
@@ -49,6 +52,7 @@ angular.module('otaniemi3dApp')
         roomNumber: 'st7',
         roomArea: 'st1',
         svg: null,
+        floor: 4,
         isSelected: false,
         translate: [0,0],
         scale: 1
@@ -59,6 +63,7 @@ angular.module('otaniemi3dApp')
         roomNumber: 'st10',
         roomArea: 'st3',
         svg: null,
+        floor: 5,
         isSelected: false,
         translate: [0,0],
         scale: 1

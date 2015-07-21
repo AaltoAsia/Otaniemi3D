@@ -32,8 +32,15 @@ angular.module('otaniemi3dApp')
     $scope.svgSupport = Modernizr.svg;
 
     //Select current floorplan
-    $scope.floorplans[$scope.planNumber].isSelected = true;
-    $scope.selectedPlan = $scope.floorplans[$scope.planNumber];
+    for (var i = 0; i < $scope.floorplans.length; i++) {
+      if (i === $scope.planNumber) {
+        $scope.floorplans[i].isSelected = true;
+      } else {
+        $scope.floorplans[i].isSelected = false;
+      }
+    }
+    
+    $scope.floorplan = $scope.floorplans[$scope.planNumber];
 
     $scope.sensorTypes = [
       { name: 'Temperature',

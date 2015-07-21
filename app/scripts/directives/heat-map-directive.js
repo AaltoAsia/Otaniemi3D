@@ -8,46 +8,52 @@
  */
 angular.module('otaniemi3dApp')
   .directive('heatMap', function (Rooms, heatmapService,
-    legendbarService, $interval) {
+    legendbarService, $q) {
 
   return {
     restrict: 'E',
     scope: {
       sensorData: '=',
-      floorplans: '=',
+      floorplan: '=',
       selectedRoom: '=',
       sensorType: '='
     },
     link: function (scope, element, attrs) {
 
-      var selectedFloorplan;
-      for (var i = 0; i < scope.floorplans.length; i++) {
-        if (scope.floorplans[i].isSelected) {
-          selectedFloorplan = scope.floorplans[i];
-          break;
-        }
-      }
-
-      getSvg(selectedFloorplan);
-      updateRoomColors();
+      getFloorplan(scope.floorplan)
+        .then(saveFloorplan)
+        .then(appendFloorplan)
+        .then(parseFloorplan)
+        .then(updateRoomColors);
 
       /*
        * Download svg from the server and save it to floorplan.svg
        */
-      function getSvg(floorplan){
-        d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
-          if (xml) {
-            floorplan.svg = xml.documentElement;
-            appendFloorplan(floorplan);
-            parseRooms(floorplan);
+      function getFloorplan(floorplan){
+        var deferred = $q.defer();
 
-            //Remove title elements so that the browser's built-in
-            //tooltip doesn't show
-            d3.select(element[0])
-              .selectAll('title')
-              .remove();
-          }
-        });
+        if (floorplan.svg) {
+          deferred.resolve(floorplan.svg);
+        } else {
+          d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
+            if (xml) {
+              deferred.resolve(xml.documentElement);
+            } else {
+              deferred.reject('Error while fetching a floorplan');
+            }
+          });
+        }
+
+        return deferred.promise;
+      }
+
+      function saveFloorplan(svg) {
+        var deferred = $q.defer();
+
+        scope.floorplan.svg = svg;
+        deferred.resolve(scope.floorplan);
+
+        return deferred.promise;
       }
 
       /*
@@ -56,9 +62,8 @@ angular.module('otaniemi3dApp')
       */
       function setRoomColor(room) {
         if (room.node) {
-          var i;
           var sensorType = scope.sensorType.name.toLowerCase();
-          for (i = 0; i < room.sensors.length; i++) {
+          for (var i = 0; i < room.sensors.length; i++) {
             var sensor = room.sensors[i];
 
             if (sensor.type.toLowerCase() === sensorType ||
@@ -83,6 +88,8 @@ angular.module('otaniemi3dApp')
       * zoom and drag listener.
       */
       function appendFloorplan(floorplan) {
+        var deferred = $q.defer();
+
         var svg = element[0].appendChild(floorplan.svg);
 
         svg = d3.select(svg)
@@ -99,6 +106,10 @@ angular.module('otaniemi3dApp')
 
         svg.selectAll('text').attr('pointer-events', 'none');
 
+        //Remove title elements so that the browser's built-in
+        //tooltip doesn't show
+        svg.selectAll('title').remove();
+
         //Configure dragging and zooming behavior.
         var zoomListener = d3.behavior.zoom()
           .scaleExtent([0.5, 10])
@@ -113,13 +124,19 @@ angular.module('otaniemi3dApp')
           });
 
         svg.call(zoomListener);
+
+        deferred.resolve(floorplan);
+
+        return deferred.promise;
       }
 
       /*
       * Read rooms and their html elements from the floorplan svg
       * and save data to the Rooms service.
       */
-      function parseRooms(floorplan) {
+      function parseFloorplan(floorplan) {
+        var deferred = $q.defer();
+
         d3.select(floorplan.svg)
           .selectAll('.' + floorplan.roomNumber)
           .each(function () {
@@ -149,58 +166,57 @@ angular.module('otaniemi3dApp')
 
             //Check if room name overlaps with room rectangle in svg.
             if (isInside) {
-              for (var i = 0; i < scope.floorplans.length; i++) {
-                if (scope.floorplans[i] === floorplan) {
-                  var roomExists = false;
+              var roomExists = false;
 
-                  var keys = Object.keys(scope.sensorData);
-                  for (var j = 0; j < keys.length; j++) {
-                    var room = scope.sensorData[keys[j]];
-                    var roomNum;
+              var keys = Object.keys(scope.sensorData);
+              for (var j = 0; j < keys.length; j++) {
+                var room = scope.sensorData[keys[j]];
+                var roomNum;
 
-                    //If room.name starts with 'Room' prefix then room
-                    //number is room.name without the 'Room-' prefix.
-                    if (room.name.lastIndexOf('Room', 0) === 0) {
-                      roomNum = room.name.split(/ (.+)/)[1];
-                    //e.g. Cafeteria doesn't have 'Room' prefix.
-                    } else {
-                      roomNum = room.name;
-                    }
-
-                    if (roomNum === roomText.textContent) {
-                      if (!room.node) {
-                        room.node = roomArea;
-                        room.floor = i;
-                      }
-                      roomExists = true;
-                      break;
-                    }
-                  }
-
-                  if (!roomExists) {
-                    var id, name;
-
-                    if (isNaN(Number(roomText.textContent.substring(0, 2)))) {
-                      id = name = roomText.textContent;
-                    } else {
-                      id = 'Room-' + roomText.textContent;
-                      name = 'Room ' + roomText.textContent;
-                    }
-
-                    //Add new room
-                    scope.sensorData[id] = {
-                      id: id,
-                      name: name,
-                      node: roomArea,
-                      floor: i,
-                      sensors: []
-                    };
-                  }
+                //If room.name starts with 'Room' prefix then room
+                //number is room.name without the 'Room-' prefix.
+                if (room.name.lastIndexOf('Room', 0) === 0) {
+                  roomNum = room.name.split(/ (.+)/)[1];
+                //e.g. Cafeteria doesn't have 'Room' prefix.
+                } else {
+                  roomNum = room.name;
                 }
+
+                if (roomNum === roomText.textContent) {
+                  if (!room.node) {
+                    room.node = roomArea;
+                  }
+                  roomExists = true;
+                  break;
+                }
+              }
+
+              if (!roomExists) {
+                var id, name;
+
+                if (isNaN(Number(roomText.textContent.substring(0, 2)))) {
+                  id = name = roomText.textContent;
+                } else {
+                  id = 'Room-' + roomText.textContent;
+                  name = 'Room ' + roomText.textContent;
+                }
+
+                //Add new room
+                scope.sensorData[id] = {
+                  id: id,
+                  name: name,
+                  node: roomArea,
+                  floor: scope.floorplan.floor,
+                  sensors: []
+                };
               }
             }
           });
         });
+
+        deferred.resolve(floorplan);
+
+        return deferred.promise;
       }
 
       /*
@@ -223,12 +239,6 @@ angular.module('otaniemi3dApp')
           if (scope.sensorData) {
             updateRoomColors();
           }
-      });
-
-      scope.$on('$destroy', function () {
-        if (scope.highlightedRoom) {
-          $interval.cancel(scope.highlightedRoom.pulse);
-        }
       });
     }
   };});
