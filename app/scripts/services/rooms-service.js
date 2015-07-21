@@ -8,7 +8,7 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('Rooms', function ($rootScope, $q, SensorData) {
+  .service('Rooms', function ($rootScope, $q, apiService) {
 
     //Can be used inside this service to reference this service's public
     //properties and functions (e.g. self.dict).
@@ -100,7 +100,7 @@ angular.module('otaniemi3dApp')
     /*
      * Watch for new sensor data sent by SensorData service.
      */
-    $rootScope.$on('sensordata-new', function(_, data) {
+    $rootScope.$on('sensordata-new_', function(_, data) {
       self.sensorList = [];
       var keys = Object.keys(data);
       for (var i = 0; i < keys.length; i++) {

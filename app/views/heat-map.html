@@ -72,8 +72,6 @@
 <div ng-hide="!svgSupport"
      ng-class="App.fullscreen ? 'floorplan-fullscreen' : 'floorplan'">'
 
-  <div class="mouse-tooltip"></div>
-
   <!-- Expand / compress button -->
   <i ng-click="toggleFullscreen()"
      class="btn fullscreen-button"
@@ -107,6 +105,11 @@
             sensor-data="sensorData"
             selected-room="selectedRoom"
             sensor-type="sensorType">
+
+    <tooltip ng-if="heatmap.isFloorplanLoaded"
+             node-selector="{{heatmap.roomQuerySelector}}"
+             class="mouse-tooltip">
+    </tooltip>
 
     <div id="legendBar" style="position: absolute">
       <p id="legendMinText" class="legendText"></p>

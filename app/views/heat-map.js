@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name otaniemi3dApp.controller:FloorplanCtrl
+ * @name otaniemi3dApp.controller:HeatMapCtrl
  * @description
- * # FloorplanCtrl
+ * # HeatMapCtrl
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('HeatMapCtrl', function ($scope, floorplanStorage, Rooms,
+  .controller('HeatMapCtrl', function ($scope, floorplanStorage, dataStorage,
     heatmapService, $modal, $interval, $state) {
 
     var self = this;
@@ -20,8 +20,7 @@ angular.module('otaniemi3dApp')
       floorNum = 1;
     }
 
-    $scope.sensorData = Rooms.dict;
-    $scope.rooms = Rooms;
+    $scope.sensorData = dataStorage.sensors;
     $scope.searchString = '';
     $scope.highlightedRoom = null;
     $scope.floorplans = floorplanStorage.list;
@@ -30,6 +29,7 @@ angular.module('otaniemi3dApp')
     $scope.resetView = null;
     $scope.planNumber = floorNum - 1;
     $scope.svgSupport = Modernizr.svg;
+    self.isFloorplanLoaded = false;
 
     //Select current floorplan
     for (var i = 0; i < $scope.floorplans.length; i++) {
@@ -39,8 +39,9 @@ angular.module('otaniemi3dApp')
         $scope.floorplans[i].isSelected = false;
       }
     }
-    
+
     $scope.floorplan = $scope.floorplans[$scope.planNumber];
+    self.roomQuerySelector = '.' + $scope.floorplan.roomArea;
 
     $scope.sensorTypes = [
       { name: 'Temperature',
@@ -246,6 +247,10 @@ angular.module('otaniemi3dApp')
         $scope.refreshRoomColor($scope.sensorType);
       });
     };
+
+    $scope.$on('floorplan-loaded', function () {
+      self.isFloorplanLoaded = true;
+    });
 
     $scope.$on('$destroy', function () {
       if (self.modalInstance) {

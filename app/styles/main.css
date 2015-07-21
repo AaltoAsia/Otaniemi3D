@@ -130,7 +130,6 @@ body {
   background: white;
   z-index: 10;
   position: fixed;
-  visibility: hidden;
   pointer-events: none;
   display: flex;
   flex-flow: column;

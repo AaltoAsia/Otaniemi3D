@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc service
- * @name otaniemi3dApp.SensorData
+ * @name otaniemi3dApp.apiService
  * @description
- * # SensorData
+ * # apiService
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('SensorData', function ($http, $q, $interval, $rootScope) {
+  .service('apiService', function ($http, $q, $interval, $rootScope) {
 
     //Store pending http requests to an object
     var pendingRequests = {},
@@ -163,8 +163,6 @@ angular.module('otaniemi3dApp')
      * Convert the sensor data xml to a javascript object and return it.
      */
     function parseData(xml) {
-      var sensorData = {};
-
       xml = new DOMParser().parseFromString(xml, 'text/xml');
 
       var objects = evaluateXPath(xml, '//*[local-name()="Object"]');
@@ -172,6 +170,8 @@ angular.module('otaniemi3dApp')
       if (objects.length === 0) {
         console.log('Couldn\'t fetch any sensor data from the server.');
       }
+
+      var sensorList = [];
 
       for (var i = 0; i < objects.length; i++) {
         var id = objects[i].getElementsByTagName('id');
@@ -182,15 +182,14 @@ angular.module('otaniemi3dApp')
           continue;
         }
 
-        var sensors = objects[i].children;
-        var sensorList = [];
+        var objectSensors = objects[i].children;
 
-        for (var j = 0; j < sensors.length; j++) {
-          if (sensors[j].tagName !== 'InfoItem') {
+        for (var j = 0; j < objectSensors.length; j++) {
+          if (objectSensors[j].tagName !== 'InfoItem') {
             continue;
           }
-          var name = sensors[j].getAttribute('name');
-          var values = sensors[j].children;
+          var name = objectSensors[j].getAttribute('name');
+          var values = objectSensors[j].children;
           var valueList = [];
 
           for (var k = 0; k < values.length; k++) {
@@ -269,17 +268,8 @@ angular.module('otaniemi3dApp')
             });
           }
         }
-
-        if (sensorList.length > 0) {
-          sensorData[id] = {
-            id: id,
-            name: id.split('-').join(' '),
-            sensors: sensorList,
-            node: null
-          };
-        }
       }
-      return sensorData;
+      return sensorList;
     }
 
     /*

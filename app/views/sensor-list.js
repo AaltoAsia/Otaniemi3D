@@ -8,11 +8,11 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('SensorListCtrl', function ($scope, Rooms) {
+  .controller('SensorListCtrl', function ($scope, dataStorage) {
 
     $scope.gridOptions = {
       enableFiltering: true,
-      data: Rooms.sensorList,
+      data: dataStorage.sensors,
       columnDefs: [
         { field: 'room' },
         { field: 'name', name: 'type' },
@@ -22,7 +22,7 @@ angular.module('otaniemi3dApp')
     };
 
     $scope.$on('sensordata-update', function (_, data) {
-      $scope.gridOptions.data = data.list;
+      $scope.gridOptions.data = data;
     });
 
   });

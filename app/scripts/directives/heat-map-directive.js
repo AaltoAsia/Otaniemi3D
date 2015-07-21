@@ -7,7 +7,7 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('heatMap', function (Rooms, heatmapService,
+  .directive('heatMap', function ($rootScope, heatmapService,
     legendbarService, $q) {
 
   return {
@@ -18,13 +18,7 @@ angular.module('otaniemi3dApp')
       selectedRoom: '=',
       sensorType: '='
     },
-    link: function (scope, element, attrs) {
-
-      getFloorplan(scope.floorplan)
-        .then(saveFloorplan)
-        .then(appendFloorplan)
-        .then(parseFloorplan)
-        .then(updateRoomColors);
+    link: function (scope, element) {
 
       /*
        * Download svg from the server and save it to floorplan.svg
@@ -50,7 +44,10 @@ angular.module('otaniemi3dApp')
       function saveFloorplan(svg) {
         var deferred = $q.defer();
 
-        scope.floorplan.svg = svg;
+        if (!scope.floorplan.svg) {
+          scope.floorplan.svg = svg;
+        }
+
         deferred.resolve(scope.floorplan);
 
         return deferred.promise;
@@ -149,7 +146,7 @@ angular.module('otaniemi3dApp')
           //with the text element
           d3.select(floorplan.svg)
             .selectAll('.' + floorplan.roomArea)
-            .each(function () {
+            .datum(function () {
 
             //roomArea is the d3 selection of the room (path or rect element)
             var roomArea = this;
@@ -166,53 +163,32 @@ angular.module('otaniemi3dApp')
 
             //Check if room name overlaps with room rectangle in svg.
             if (isInside) {
-              var roomExists = false;
+              var roomData = { sensors: [] };
 
-              var keys = Object.keys(scope.sensorData);
-              for (var j = 0; j < keys.length; j++) {
-                var room = scope.sensorData[keys[j]];
+              angular.forEach(scope.sensorData, function (sensor) {
                 var roomNum;
 
                 //If room.name starts with 'Room' prefix then room
                 //number is room.name without the 'Room-' prefix.
-                if (room.name.lastIndexOf('Room', 0) === 0) {
-                  roomNum = room.name.split(/ (.+)/)[1];
+                if (sensor.room.lastIndexOf('Room', 0) === 0) {
+                  roomNum = sensor.room.split(/ (.+)/)[1];
                 //e.g. Cafeteria doesn't have 'Room' prefix.
                 } else {
-                  roomNum = room.name;
+                  roomNum = sensor.room;
                 }
 
                 if (roomNum === roomText.textContent) {
-                  if (!room.node) {
-                    room.node = roomArea;
-                  }
-                  roomExists = true;
-                  break;
+                  roomData.sensors.push(sensor.id);
                 }
-              }
+              });
 
-              if (!roomExists) {
-                var id, name;
-
-                if (isNaN(Number(roomText.textContent.substring(0, 2)))) {
-                  id = name = roomText.textContent;
-                } else {
-                  id = 'Room-' + roomText.textContent;
-                  name = 'Room ' + roomText.textContent;
-                }
-
-                //Add new room
-                scope.sensorData[id] = {
-                  id: id,
-                  name: name,
-                  node: roomArea,
-                  floor: scope.floorplan.floor,
-                  sensors: []
-                };
-              }
+              return roomData;
             }
+            return d3.select(this).datum();
           });
         });
+
+        $rootScope.$broadcast('floorplan-loaded');
 
         deferred.resolve(floorplan);
 
@@ -224,11 +200,18 @@ angular.module('otaniemi3dApp')
       * rooms according to the data.
       */
       function updateRoomColors() {
-        var keys = Object.keys(scope.sensorData);
-        for (var i = 0; i < keys.length; i++) {
-          setRoomColor(scope.sensorData[keys[i]]);
-        }
+        /*
+        angular.forEach(scope.sensorData, function (sensor) {
+          setRoomColor(sensor);
+        });
+        */
       }
+
+      getFloorplan(scope.floorplan)
+        .then(saveFloorplan)
+        .then(appendFloorplan)
+        .then(parseFloorplan)
+        .then(updateRoomColors);
 
       /*
       * Watch for sensor data updates and update every room's
