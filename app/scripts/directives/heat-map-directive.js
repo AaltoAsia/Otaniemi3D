@@ -131,7 +131,7 @@ angular.module('otaniemi3dApp')
       * Read rooms and their html elements from the floorplan svg
       * and save data to the Rooms service.
       */
-      function parseFloorplan(floorplan) {
+      function bindSensors(floorplan) {
         var deferred = $q.defer();
 
         d3.select(floorplan.svg)
@@ -164,6 +164,7 @@ angular.module('otaniemi3dApp')
             //Check if room name overlaps with room rectangle in svg.
             if (isInside) {
               var roomData = { sensors: [] };
+              var roomName = '';
 
               angular.forEach(scope.sensorData, function (sensor) {
                 var roomNum;
@@ -179,8 +180,11 @@ angular.module('otaniemi3dApp')
 
                 if (roomNum === roomText.textContent) {
                   roomData.sensors.push(sensor.id);
+                  roomName = sensor.room;
                 }
               });
+
+              roomData.room = roomName;
 
               return roomData;
             }
@@ -210,7 +214,7 @@ angular.module('otaniemi3dApp')
       getFloorplan(scope.floorplan)
         .then(saveFloorplan)
         .then(appendFloorplan)
-        .then(parseFloorplan)
+        .then(bindSensors)
         .then(updateRoomColors);
 
       /*
