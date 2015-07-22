@@ -1,11 +1,12 @@
 <krpano>
 	<!-- krpano 1.18 default buttons skin -->
 
+	<!-- include sensor adding to all panoramas -->
+	<include url="../plugins/addsensor.xml" />
+
 	<!-- default mouse control mode (moveto or drag2d) -->
 	<control mousetype="moveto" />
 
-	<!-- add hotspot by clicking -->
-	<events name="addHotspot" onclick="js(krpano.addHotspot());" />
 
 	<!-- default autorotate settings (disabled by default) -->
 	<autorotate enabled="false" waittime="1.0" accel="2.0" speed="8.0" horizon="0.0" tofov="90.0" />

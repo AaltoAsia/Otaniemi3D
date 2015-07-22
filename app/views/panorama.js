@@ -14,9 +14,6 @@ angular.module('otaniemi3dApp')
     var self = this;
 
     var roomId = $stateParams.roomId;
-    if (roomId.lastIndexOf('Room', 0) !== 0) {
-      roomId = roomId.split('-').join(' ');
-    }
     var room = Rooms.dict[roomId];
     var sensors = room ? room.sensors : {};
     var roomName;
@@ -26,7 +23,7 @@ angular.module('otaniemi3dApp')
     if (!room) {
       roomName = roomId;
     } else {
-      roomName = room.name;
+      roomName = room.id;
     }
 
     var sensorTable = '[table class="tooltip-table"]' +
@@ -39,7 +36,7 @@ angular.module('otaniemi3dApp')
     }
     sensorTable += '[/table]';
 
-    var xmlPath = 'panorama/' + roomName.split(/ |-/g).join('_') + '.xml';
+    var xmlPath = 'panorama/' + roomName + '.xml';
 
     self.room = {
       sensorTable: sensorTable,
@@ -64,10 +61,29 @@ angular.module('otaniemi3dApp')
       $window.history.back();
     };
 
+    self.sensorTooltip = function (sensors) {
+      var sensorTable = '[table class="tooltip-table"]' +
+        '[tr] [th colspan="2" style="text-align:center"]' + roomName + '[/th] [/tr]';
+
+      for (var i = 0; i < sensors.length; i++) {
+        var sensor = sensors[i];
+        sensorTable += '[tr] [th]' + sensor.text + '[/th] [td]' +
+          sensor.type + '[/td] [/tr]';
+      }
+      sensorTable += '[/table]';
+
+      return sensorTable;
+    };
+
     //Create global namespace for scripts used by krpano.
     $window.krpano = {};
 
-    $window.krpano.addHotspot = function () {
+    $window.krpano.addSensorDialog = function () {
+
+      var krpano = $('#panorama_obj')[0];
+      var x = krpano.get('mouse.x');
+      var y = krpano.get('mouse.y');
+      var pos = krpano.screentosphere(x, y);
 
       self.modalInstance = $modal.open({
         templateUrl: 'hotspot-selection.html',
@@ -86,7 +102,18 @@ angular.module('otaniemi3dApp')
       });
 
       self.modalInstance.result.then(function () {
-        console.log(self.newSensors);
+        if (self.newSensors.length) {
+          console.log(self.newSensors);
+          var id = self.newSensors[0].id;
+
+          console.log([pos.x, pos.y]);
+
+          krpano.call('addsensor(' + [
+            id, pos.x, pos.y, self.sensorTooltip(self.newSensors)
+          ].join(',') + ')');
+
+          self.newSensors = [];
+        }
       });
     };
 

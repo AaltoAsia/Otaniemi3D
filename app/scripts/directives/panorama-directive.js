@@ -20,7 +20,9 @@ angular.module('otaniemi3dApp')
           target: 'room-panorama',
           html5: 'only',
           passQueryParameters: true,
-          vars: {room: scope.room.sensorTable}
+          vars: {room: scope.room.sensorTable},
+          consolelog: true,
+          debugmode: true
         });
 
         scope.$on('$destroy', function () {

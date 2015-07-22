@@ -1,0 +1,27 @@
+<krpano>
+
+  <!-- open dialog when clicking on panorama -->
+	<events name="addSensorDialog"
+          onclick="js(krpano.addSensorDialog());" />
+
+  <!-- add sensor to clicked location -->
+  <action name="addsensor">
+    addhotspot(%1);
+    trace('id: ', %1);
+    set(hotspot[%1].url, panorama/plugins/sensor-128.png);
+    set(hotspot[%1].ath, %2);
+    trace('ath: ', hotspot[%1].ath);
+    set(hotspot[%1].atv, %3);
+    trace('atv: ', hotspot[%1].atv);
+    set(hotspot[%1].sensors, %4);
+    trace('sensors: ', hotspot[%1].sensors);
+    set(hotspot[%1].scale, 0.7);
+    trace('scale: ', hotspot[%1].scale);
+    set(hotspot[%1].alpha, 0.4);
+    set(hotspot[%1].zoom, true);
+    set(hotspot[%1].onhover, set(alpha,1.0);showtext(get(hotspot[%1].sensors)););
+    set(hotspot[%1].onclick, set(alpha,1.0);showtext(get(hotspot[%1].sensors), mobile););
+    set(hotspot[%1].onout, set(alpha,0.4));
+  </action>
+
+</krpano>

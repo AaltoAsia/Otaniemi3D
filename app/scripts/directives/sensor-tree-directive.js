@@ -26,6 +26,16 @@ angular.module('otaniemi3dApp')
             typeof attrs.search === 'string' ? 'search' : '',
             typeof attrs.dragSensor === 'string' ? 'dnd' : ''
           ],
+          search: {
+            show_only_matches: true,
+            show_only_matches_children: true
+          },
+          dnd: {
+            is_draggable: function (nodes) {
+              var node = nodes[0];
+              return node.original.type === 'sensor';
+            }
+          },
           core: {
             check_callback: true,
             worker: false,
@@ -155,16 +165,6 @@ angular.module('otaniemi3dApp')
             themes: {
               responsive: true
             }
-          },
-          search: {
-            show_only_matches: true,
-            show_only_matches_children: true
-          },
-          dnd: {
-            is_draggable: function (nodes) {
-              var node = nodes[0];
-              return node.original.type === 'sensor';
-            }
           }
         });
 
@@ -183,15 +183,14 @@ angular.module('otaniemi3dApp')
             data.node.children = true;
             getNode(data.node.id).state.loaded = false;
           })
-          .on('select_node.jstree', function (_, data) {
+          .on('select_node.jstree', function () {
             var selectedSensors = [];
 
-            for (var i = 0; i < data.selected.length; i++) {
-              var sensor = getNode(data.selected[i], true);
-              if (sensor.type === 'sensor') {
-                selectedSensors.push(sensor);
+            angular.forEach(tree.get_selected(true), function (node) {
+              if (node.original.type === 'sensor') {
+                selectedSensors.push(node.original);
               }
-            }
+            });
 
             scope.selectSensor(selectedSensors);
           });

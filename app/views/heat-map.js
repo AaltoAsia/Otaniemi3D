@@ -90,7 +90,7 @@ angular.module('otaniemi3dApp')
     });
 
     $scope.panoramaViewer = function() {
-      $state.go('panorama', {roomId: $scope.room.split(' ').join('-')});
+      $state.go('panorama', {roomId: $scope.room});
     };
 
     $scope.showGradient = function() {

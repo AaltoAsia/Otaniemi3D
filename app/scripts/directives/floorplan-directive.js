@@ -140,7 +140,7 @@ angular.module('otaniemi3dApp')
           return;
         }
         //Pass the room name to controller function
-        scope.$parent.room = room.name;
+        scope.$parent.room = room.id;
 
         var table = tooltip
           .append('table')

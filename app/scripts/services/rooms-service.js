@@ -89,6 +89,7 @@ angular.module('otaniemi3dApp')
      */
     this.add = function(id, name, node, floor) {
       self.dict[id] = {
+        id: id,
         name: name,
         floor: floor,
         node: node,
