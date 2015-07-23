@@ -50,18 +50,8 @@ angular.module('otaniemi3dApp')
             tooltipCtrl.room = '';
 
             if (d.sensors.length) {
-              var j = 0;
-
-              for (var i = 0; i < tooltipCtrl.sensorData.length; i++) {
-                var sensor = tooltipCtrl.sensorData[i];
-
-                if (d.sensors.indexOf(sensor.id) !== -1) {
-                  tooltipCtrl.sensors.push(sensor);
-                  j++;
-                }
-                if (j === d.sensors.length) {
-                  break;
-                }
+              for (var i = 0; i < d.sensors.length; i++) {
+                tooltipCtrl.sensors.push(d.sensors[i]);
               }
             }
 
@@ -98,8 +88,6 @@ angular.module('otaniemi3dApp')
         }
 
         d3.select(element[0]).style('display', 'none');
-        console.log(d3.select(element.parent()[0])
-          .selectAll('[data-room-id]'));
 
         d3.select(element.parent()[0])
           .selectAll('[data-room-id]')

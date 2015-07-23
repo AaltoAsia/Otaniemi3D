@@ -134,31 +134,30 @@ angular.module('otaniemi3dApp')
 
         var sensorRequest = {
           'Objects': {
-            'Object': [{
+            'Object': {
               'id': {
                 'keyValue': 'K1'
-              }
-            }]
+              },
+              'Object': []
+            }
           }
         };
 
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
           .each(function () {
-            sensorRequest.Objects.Object.push({
-              'Object': {
-                'id': {
-                  'keyValue': d3.select(this).attr('data-room-id')
-                }
+            sensorRequest.Objects.Object.Object.push({
+              'id': {
+                'keyValue': d3.select(this).attr('data-room-id')
               }
             });
           });
 
         apiService.get(sensorRequest, {}, 'sensordata-new', true)
-          .then(function success () {
-            deferred.resolve(floorplan);
-          }, function error () {
-            deferred.resolve(floorplan);
+          .then(function success (data) {
+            deferred.resolve({svg: floorplan.svg, data: data});
+          }, function error (data) {
+            deferred.resolve({svg: floorplan.svg, data: data});
           });
 
         return deferred.promise;
@@ -186,11 +185,11 @@ angular.module('otaniemi3dApp')
             var id = d3.select(this).attr('data-room-id');
             var roomName;
 
-            for (var i = 0; i < scope.sensorData.length; i ++) {
-              var sensor = scope.sensorData[i];
+            for (var i = 0; i < floorplan.data.length; i ++) {
+              var sensor = floorplan.data[i];
 
               if (sensor.roomId === id) {
-                roomData.sensors.push(sensor.id);
+                roomData.sensors.push(sensor);
                 roomName = sensor.room;
               }
             }
