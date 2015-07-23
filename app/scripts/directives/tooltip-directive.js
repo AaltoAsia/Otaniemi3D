@@ -22,7 +22,7 @@ angular.module('otaniemi3dApp')
           '</tr>',
           '<tr>',
             '<td colspan="2">',
-              '<i>Click to lock the tooltip</i>',
+              '<i>{{tooltip.caption}}</i>',
             '</td>',
           '</tr>',
         '</table>'
@@ -33,36 +33,45 @@ angular.module('otaniemi3dApp')
       controller: function () {
         this.sensors = [];
         this.room = '';
+        this.caption = 'Downloading sensor data...';
+        this.isLocked = false;
       },
       controllerAs: 'tooltip',
       bindToController: true,
       link: function postLink(scope, element, attrs, tooltipCtrl) {
 
-        function showTooltip(d) {
+        function showTooltip() {
           d3.select(element[0]).style('display', null);
+        }
 
-          if (!d) {
+        function moveTooltip(d) {
+
+          if (tooltipCtrl.isLocked) {
             return;
           }
 
-          scope.$apply(function () {
-            tooltipCtrl.sensors = [];
-            tooltipCtrl.room = '';
+          showTooltip();
 
-            if (d.sensors.length) {
-              for (var i = 0; i < d.sensors.length; i++) {
-                tooltipCtrl.sensors.push(d.sensors[i]);
+          if (d) {
+            tooltipCtrl.caption = 'Click to lock the tooltip';
+
+            scope.$apply(function () {
+              tooltipCtrl.sensors = [];
+              tooltipCtrl.room = '';
+
+              if (d.sensors.length) {
+                for (var i = 0; i < d.sensors.length; i++) {
+                  tooltipCtrl.sensors.push(d.sensors[i]);
+                }
               }
-            }
 
-            if (d.room) {
-              tooltipCtrl.room = d.room;
-            }
+              if (d.room) {
+                tooltipCtrl.room = d.room;
+              }
 
-          });
-        }
+            });
+          }
 
-        function moveTooltip() {
           if (d3.event.pageY > window.innerHeight /2) {
             d3.select(element[0]).style('bottom',
                 (window.innerHeight - d3.event.pageY) + 'px')
@@ -80,11 +89,24 @@ angular.module('otaniemi3dApp')
         }
 
         function hideTooltip() {
+          if (tooltipCtrl.isLocked) {
+            return;
+          }
           d3.select(element[0]).style('display', 'none');
         }
 
         function lockTooltip() {
-          // body...
+          tooltipCtrl.isLocked = false;
+          moveTooltip();
+          tooltipCtrl.isLocked = true;
+          d3.event.preventDefault();
+        }
+
+        function unlockTooltip() {
+          if (!d3.event.defaultPrevented) {
+            tooltipCtrl.isLocked = false;
+            hideTooltip();
+          }
         }
 
         d3.select(element[0]).style('display', 'none');
@@ -93,14 +115,20 @@ angular.module('otaniemi3dApp')
           .selectAll('[data-room-id]')
             .on('mouseover', showTooltip)
             .on('mousemove', moveTooltip)
-            .on('mouseout', hideTooltip);
+            .on('mouseout', hideTooltip)
+            .on('mouseup', lockTooltip);
+
+        d3.select(element.parent()[0])
+          .on('mousedown', unlockTooltip)
+          .on('dragstart', unlockTooltip);
 
         scope.$on('$destroy', function () {
           d3.select(element.parent()[0])
             .selectAll('[data-room-id]')
-              .on('.mouseover', null)
-              .on('.mousemove', null)
-              .on('.mouseout', null);
+              .on('mouseover', null)
+              .on('mousemove', null)
+              .on('mouseout', null)
+              .on('click', null);
         });
 
       }
