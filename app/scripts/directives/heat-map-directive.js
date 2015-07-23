@@ -195,6 +195,7 @@ angular.module('otaniemi3dApp')
             }
 
             roomData.room = roomName ? roomName : id;
+            roomData.roomId = id;
 
             return roomData;
           });

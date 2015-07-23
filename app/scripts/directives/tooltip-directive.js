@@ -22,10 +22,15 @@ angular.module('otaniemi3dApp')
           '</tr>',
           '<tr>',
             '<td colspan="2">',
-              '<i>{{tooltip.caption}}</i>',
+              '<i ng-hide="tooltip.isLocked">{{tooltip.caption}}</i>',
+              '<a ui-sref="panorama({roomId: tooltip.roomId})"',
+                 'class="btn black-btn panorama-btn">',
+                '360°',
+                '<span class="glyphicon glyphicon glyphicon-camera"></span>',
+              '</a>',
             '</td>',
           '</tr>',
-        '</table>'
+        '</table>',
       ].join(''),
       scope: {
         sensorData: '='
@@ -33,6 +38,7 @@ angular.module('otaniemi3dApp')
       controller: function () {
         this.sensors = [];
         this.room = '';
+        this.roomId = '';
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
       },
@@ -67,6 +73,9 @@ angular.module('otaniemi3dApp')
 
               if (d.room) {
                 tooltipCtrl.room = d.room;
+              }
+              if (d.roomId) {
+                tooltipCtrl.roomId = d.roomId;
               }
 
             });

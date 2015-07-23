@@ -162,6 +162,12 @@
   right: 0px;
 }
 
+.panorama-btn {
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  pointer-events: all;
+}
+
 
 /* CSS-definitions for the caption that is on top of floorplan*/
 .floorplan-caption {
@@ -209,11 +215,6 @@
 /*we want to show room information before panoramabutto in tooltip */
 #infocontent{
   order: 1;
-}
-/* panoramabutton in tooltip */
-#panobtn{
-order: 2;
-display: none;
 }
 
 /* CSS definitions for the sensor type popover (tooltip) */
