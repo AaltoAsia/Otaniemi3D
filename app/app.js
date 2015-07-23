@@ -56,13 +56,41 @@ angular
         url: '/3d-model',
         templateUrl: 'views/model-3d.html',
       })
-      .state('3d-model.x3dom', {
-        url: '/x3dom',
+      .state('x3dom', {
+        url: '/3d-model/x3dom/:roomId',
         templateUrl: 'views/x3dom.html',
-        controller: 'X3DomCtrl as x3dom'
+        controller: 'X3DomCtrl as x3dom',
+        params:  {
+          roomId: {
+            value: null,
+            squash: true
+          }
+        },
+        resolve: {
+          x3dom: function ($q) {
+            var deferred = $q.defer();
+
+            var x3dom = $('script')
+              .find('[src="x3dom.debug.js"]')
+              .length;
+
+            if (!x3dom) {
+              $('<link>')
+                .appendTo('head')
+                .attr({type: 'text/css', rel: 'stylesheet'})
+                .attr('href', 'http://www.x3dom.org/download/x3dom.css');
+
+              $.getScript('x3dom.debug.js', function () {
+                deferred.resolve();
+              });
+            }
+
+            return deferred.promise;
+          }
+        }
       })
-      .state('3d-model.unity', {
-        url: '/unity',
+      .state('unity', {
+        url: '/3d-model/unity',
         templateUrl: 'views/unity.html',
         controller: 'UnityCtrl as unity'
       })
