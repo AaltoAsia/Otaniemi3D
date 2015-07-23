@@ -8,7 +8,7 @@
  */
 angular.module('otaniemi3dApp')
   .directive('heatMap', function ($rootScope, heatmapService,
-    legendbarService, $q) {
+    legendbarService, $q, apiService) {
 
   return {
     restrict: 'E',
@@ -96,7 +96,7 @@ angular.module('otaniemi3dApp')
 
         svg.selectAll('path').each(function() {
           var elem = d3.select(this);
-          if (elem.attr('class') !== floorplan.roomArea) {
+          if (!elem.attr('data-room-id')) {
             elem.attr('pointer-events', 'none');
           }
         });
@@ -122,7 +122,44 @@ angular.module('otaniemi3dApp')
 
         svg.call(zoomListener);
 
+        $rootScope.$broadcast('floorplan-loaded');
+
         deferred.resolve(floorplan);
+
+        return deferred.promise;
+      }
+
+      function fetchSensorData(floorplan) {
+        var deferred = $q.defer();
+
+        var sensorRequest = {
+          'Objects': {
+            'Object': [{
+              'id': {
+                'keyValue': 'K1'
+              }
+            }]
+          }
+        };
+
+        d3.select(floorplan.svg)
+          .selectAll('[data-room-id]')
+          .each(function () {
+            sensorRequest.Objects.Object.push({
+              'Object': {
+                'id': {
+                  'keyValue': d3.select(this).attr('data-room-id')
+                }
+              }
+            });
+          });
+
+        apiService.get(sensorRequest, {}, 'sensordata-new', true)
+          .then(function success () {
+            deferred.resolve(floorplan);
+          }, function error () {
+            deferred.resolve(floorplan);
+          });
 
         return deferred.promise;
       }
@@ -135,64 +172,33 @@ angular.module('otaniemi3dApp')
         var deferred = $q.defer();
 
         d3.select(floorplan.svg)
-          .selectAll('.' + floorplan.roomNumber)
-          .each(function () {
+          .selectAll('[data-room-id]')
+          .datum(function () {
 
-          //roomText is the d3 selection of the text element that
-          //has room number
-          var roomText = this;
+            var datum = d3.select(this).datum();
 
-          //Iterate through room areas to check if they overlap
-          //with the text element
-          d3.select(floorplan.svg)
-            .selectAll('.' + floorplan.roomArea)
-            .datum(function () {
-
-            //roomArea is the d3 selection of the room (path or rect element)
-            var roomArea = this;
-
-            var textCoords = roomText.getBoundingClientRect();
-            var roomCoords = roomArea.getBoundingClientRect();
-            var textHeight = textCoords.bottom - textCoords.top;
-            var textWidth = textCoords.right - textCoords.left;
-            var isInside =
-              textCoords.top + textHeight / 2 > roomCoords.top &&
-              textCoords.top + textHeight / 2 < roomCoords.bottom &&
-              textCoords.left + textWidth / 2 > roomCoords.left &&
-              textCoords.left + textWidth / 2 < roomCoords.right;
-
-            //Check if room name overlaps with room rectangle in svg.
-            if (isInside) {
-              var roomData = { sensors: [] };
-              var roomName = '';
-
-              angular.forEach(scope.sensorData, function (sensor) {
-                var roomNum;
-
-                //If room.name starts with 'Room' prefix then room
-                //number is room.name without the 'Room-' prefix.
-                if (sensor.room.lastIndexOf('Room', 0) === 0) {
-                  roomNum = sensor.room.split(/ (.+)/)[1];
-                //e.g. Cafeteria doesn't have 'Room' prefix.
-                } else {
-                  roomNum = sensor.room;
-                }
-
-                if (roomNum === roomText.textContent) {
-                  roomData.sensors.push(sensor.id);
-                  roomName = sensor.room;
-                }
-              });
-
-              roomData.room = roomName;
-
-              return roomData;
+            if (datum && datum.sensors.length) {
+              return datum;
             }
-            return d3.select(this).datum();
-          });
-        });
 
-        $rootScope.$broadcast('floorplan-loaded');
+            var roomData = { sensors: [] };
+
+            var id = d3.select(this).attr('data-room-id');
+            var roomName;
+
+            for (var i = 0; i < scope.sensorData.length; i ++) {
+              var sensor = scope.sensorData[i];
+
+              if (sensor.roomId === id) {
+                roomData.sensors.push(sensor.id);
+                roomName = sensor.room;
+              }
+            }
+
+            roomData.room = roomName ? roomName : id;
+
+            return roomData;
+          });
 
         deferred.resolve(floorplan);
 
@@ -214,6 +220,7 @@ angular.module('otaniemi3dApp')
       getFloorplan(scope.floorplan)
         .then(saveFloorplan)
         .then(appendFloorplan)
+        .then(fetchSensorData)
         .then(bindSensors)
         .then(updateRoomColors);
 
@@ -223,7 +230,8 @@ angular.module('otaniemi3dApp')
       */
       scope.$watch(function () { return JSON.stringify(scope.sensorData); },
         function () {
-          if (scope.sensorData) {
+          if (scope.sensorData && scope.sensorData.length) {
+            bindSensors(scope.floorplan);
             updateRoomColors();
           }
       });

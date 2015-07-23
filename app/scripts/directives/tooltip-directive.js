@@ -12,29 +12,26 @@ angular.module('otaniemi3dApp')
       restrict: 'E',
       template: [
         '<table id="infocontent" class="tooltip-table">',
-          '<caption>',
-            '<i>Click to lock the tooltip in place</i>',
-          '</caption>',
-          '<p>',
-            '{{sensors}}',
-            '{{heatmap.sensors}}',
-            '{{tooltip.sensors}}',
-          '</p>',
           '<tr>',
-            '<th colspan="2">{{tooltip.room}}</th>',
+            '<th colspan="2" style="text-align:center">{{tooltip.room}}</th>',
           '</tr>',
           '<tr ng-repeat="sensor in tooltip.sensors"',
-              'ng-style="{\'background-color\': tooltip.sensor.color}">',
-            '<th>{{sensor.name}} {{sensor.id}}</th>',
+              'ng-style="{\'background-color\': sensor.color}">',
+            '<th>{{sensor.name}}</th>',
             '<td>{{sensor.values[0].value}} {{sensor.suffix}}</td>',
+          '</tr>',
+          '<tr>',
+            '<td colspan="2">',
+              '<i>Click to lock the tooltip</i>',
+            '</td>',
           '</tr>',
         '</table>'
       ].join(''),
       scope: {
-        nodeSelector: '@'
+        sensorData: '='
       },
-      controller: function ($scope) {
-        $scope.sensors = [];
+      controller: function () {
+        this.sensors = [];
         this.room = '';
       },
       controllerAs: 'tooltip',
@@ -43,11 +40,36 @@ angular.module('otaniemi3dApp')
 
         function showTooltip(d) {
           d3.select(element[0]).style('display', null);
-          console.log(d.sensors);
-          if (d) {
-            tooltipCtrl.sensors = d.sensors;
-            tooltipCtrl.room = d.room;
+
+          if (!d) {
+            return;
           }
+
+          scope.$apply(function () {
+            tooltipCtrl.sensors = [];
+            tooltipCtrl.room = '';
+
+            if (d.sensors.length) {
+              var j = 0;
+
+              for (var i = 0; i < tooltipCtrl.sensorData.length; i++) {
+                var sensor = tooltipCtrl.sensorData[i];
+
+                if (d.sensors.indexOf(sensor.id) !== -1) {
+                  tooltipCtrl.sensors.push(sensor);
+                  j++;
+                }
+                if (j === d.sensors.length) {
+                  break;
+                }
+              }
+            }
+
+            if (d.room) {
+              tooltipCtrl.room = d.room;
+            }
+
+          });
         }
 
         function moveTooltip() {
@@ -61,33 +83,33 @@ angular.module('otaniemi3dApp')
                 (d3.event.pageY - 10) + 'px')
               .style('bottom', 'auto');
           }
-          if (d3.event.pageX > window.innerWidth /2) {
-            d3.select(element[0]).style('right',
-                (window.innerWidth - d3.event.pageX) + 'px')
-              .style('left', 'auto');
-          }
-          else {
-            d3.select(element[0]).style('left',
-                (d3.event.pageX) + 'px')
-              .style('right', 'auto');
-          }
+
+          d3.select(element[0]).style('left',
+              (d3.event.pageX) + 'px')
+            .style('right', 'auto');
         }
 
         function hideTooltip() {
           d3.select(element[0]).style('display', 'none');
         }
 
+        function lockTooltip() {
+          // body...
+        }
+
         d3.select(element[0]).style('display', 'none');
+        console.log(d3.select(element.parent()[0])
+          .selectAll('[data-room-id]'));
 
         d3.select(element.parent()[0])
-          .selectAll(tooltipCtrl.nodeSelector)
+          .selectAll('[data-room-id]')
             .on('mouseover', showTooltip)
             .on('mousemove', moveTooltip)
             .on('mouseout', hideTooltip);
 
         scope.$on('$destroy', function () {
           d3.select(element.parent()[0])
-            .selectAll(tooltipCtrl.nodeSelector)
+            .selectAll('[data-room-id]')
               .on('.mouseover', null)
               .on('.mousemove', null)
               .on('.mouseout', null);

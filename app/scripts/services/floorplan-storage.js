@@ -16,8 +16,6 @@ angular.module('otaniemi3dApp')
       {
         url: 'floorplans/floor1.svg',
         name: 'Floor 1',
-        roomNumber: 'st10',
-        roomArea: 'st1',
         svg: null,
         floor: 1,
         isSelected: true,
@@ -27,8 +25,6 @@ angular.module('otaniemi3dApp')
       {
         url: 'floorplans/floor2.svg',
         name: 'Floor 2',
-        roomNumber: 'st13',
-        roomArea: 'st3',
         svg: null,
         floor: 2,
         isSelected: false,
@@ -38,8 +34,6 @@ angular.module('otaniemi3dApp')
       {
         url: 'floorplans/floor3.svg',
         name: 'Floor 3',
-        roomNumber: 'st11',
-        roomArea: 'st3',
         svg: null,
         floor: 3,
         isSelected: false,
@@ -49,8 +43,6 @@ angular.module('otaniemi3dApp')
       {
         url: 'floorplans/floor4.svg',
         name: 'Floor 4',
-        roomNumber: 'st7',
-        roomArea: 'st1',
         svg: null,
         floor: 4,
         isSelected: false,
@@ -60,8 +52,6 @@ angular.module('otaniemi3dApp')
       {
         url: 'floorplans/floor5.svg',
         name: 'Floor 5',
-        roomNumber: 'st10',
-        roomArea: 'st3',
         svg: null,
         floor: 5,
         isSelected: false,

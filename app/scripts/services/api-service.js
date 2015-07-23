@@ -32,7 +32,7 @@ angular.module('otaniemi3dApp')
      * @param {string} broadcast - Name of the event broadcasted by angular when
      *                             response has arrived.
      */
-    this.get = function (request, params, broadcast, loadingBar) {
+    self.get = function (request, params, broadcast, loadingBar) {
       var deferred = $q.defer(),
           url = 'http://otaniemi3d.cs.hut.fi/omi/node/',
           requestXml = generateXml(request, 'read', params);
@@ -61,7 +61,7 @@ angular.module('otaniemi3dApp')
               $rootScope.$broadcast(broadcast, data);
             })
             .error(function () {
-              console.log('Failed to fetch sensor data. Please try again');
+              console.log('Failed to fetch sensor data. Please try again.');
               deferred.reject();
             })
             .finally(function () {
@@ -81,8 +81,8 @@ angular.module('otaniemi3dApp')
               $rootScope.$broadcast(broadcast, data);
             })
             .error(function () {
-              console.log('Failed to fetch sensor data. Please try again');
-              deferred.reject('Failed to fetch sensor data. Please try again');
+              console.log('Failed to fetch sensor data. Please try again.');
+              deferred.reject('Failed to fetch sensor data. Please try again.');
             })
             .finally(function () {
               pendingRequests[requestXml] = false;
@@ -96,14 +96,14 @@ angular.module('otaniemi3dApp')
       return deferred.promise;
     };
 
-    self.get(requestK1, {newest: 1}, 'sensordata-new', true);
+    //self.get(requestK1, {newest: 1}, 'sensordata-new', true);
     /*
     $interval(function () {
       self.get(requestK1, {newest: 1}, 'sensordata-new');
     }, 10000);
     */
 
-    this.parseInfoItem = function (xml) {
+    self.parseInfoItem = function (xml) {
       xml = new DOMParser().parseFromString(xml, 'text/xml');
 
       var values = [];
@@ -131,7 +131,7 @@ angular.module('otaniemi3dApp')
       return values;
     };
 
-    this.parseObject = function(xml) {
+    self.parseObject = function(xml) {
       xml = new DOMParser().parseFromString(xml, 'text/xml');
 
       var root = $(xml).find(':root'),

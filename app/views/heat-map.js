@@ -41,7 +41,6 @@ angular.module('otaniemi3dApp')
     }
 
     $scope.floorplan = $scope.floorplans[$scope.planNumber];
-    self.roomQuerySelector = '.' + $scope.floorplan.roomArea;
 
     $scope.sensorTypes = [
       { name: 'Temperature',
