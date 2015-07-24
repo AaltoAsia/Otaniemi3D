@@ -101,11 +101,11 @@ angular.module('otaniemi3dApp')
           sensors[k].metaData.ath = -17;
           sensors[k].metaData.atv = -14;
         }
-      }
 
-      return waitForPanorama(sensors)
-        .then(makeSensorGroups)
-        .then(addSensorGroups);
+        return waitForPanorama(sensors)
+          .then(makeSensorGroups)
+          .then(addSensorGroups);
+      }
       ///END DEBUG
 
       for (var j = 0; j < sensors.length; j++) {
