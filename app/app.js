@@ -65,28 +65,6 @@ angular
             value: null,
             squash: true
           }
-        },
-        resolve: {
-          x3dom: function ($q) {
-            var deferred = $q.defer();
-
-            var x3dom = $('script')
-              .find('[src="x3dom.debug.js"]')
-              .length;
-
-            if (!x3dom) {
-              $('<link>')
-                .appendTo('head')
-                .attr({type: 'text/css', rel: 'stylesheet'})
-                .attr('href', 'http://www.x3dom.org/download/x3dom.css');
-
-              $.getScript('x3dom.debug.js', function () {
-                deferred.resolve();
-              });
-            }
-
-            return deferred.promise;
-          }
         }
       })
       .state('unity', {
@@ -113,7 +91,5 @@ angular
       cfpLoadingBarProvider.includeSpinner = false;
   })
   .run(function(SensorData, Rooms) {
-    //Inject SensorData and Room services so that browser can immediately
-    //start to download sensor data from the server.
     FastClick.attach(document.body);
   });

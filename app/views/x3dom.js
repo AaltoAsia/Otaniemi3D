@@ -8,12 +8,30 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('X3DomCtrl', function ($scope, Rooms, $modal, $state) {
+  .controller('X3DomCtrl', function ($scope, Rooms, $modal, $state, $q, $interval, $timeout, $window, $urlRouter) {
 
     $scope.panoramabox = 'images/panoramabox.svg';
     $scope.selected = undefined;
     //Use this boolean to check for webgl support
     $scope.webglSupport = Modernizr.webgl;
+
+    function waitForX3Dom() {
+      var deferred = $q.defer();
+
+      $interval(function () {
+        if ($window.x3domReady) {
+          deferred.resolve(true);
+        }
+      }, 100);
+
+      $timeout(function () {
+        if (!$window.x3domReady) {
+          deferred.reject('Request timed out. Couldn\'t download x3dom files in 8.0 seconds.');
+        }
+      }, 8000);
+
+      return deferred.promise;
+    }
 
     //x3d change viewpoint (camera location)
     $scope.changeView = function(viewpoint){
@@ -30,13 +48,16 @@ angular.module('otaniemi3dApp')
         var x3dElem = document.getElementById('x3dElement');
         x3dElem.runtime.resetView();
 
-        $state.go('x3dom', {roomId: viewpoint}, {notify: false});
+        $state.go('x3dom', {roomId: viewpoint},
+          {location: 'replace', notify: false});
       }
     };
 
-    if ($state.params.roomId) {
-      $scope.changeView($state.params.roomId);
-    }
+    waitForX3Dom().then(function () {
+      if ($state.params.roomId) {
+        $scope.changeView($state.params.roomId);
+      }
+    });
 
     $scope.text = undefined;
     //items in search scope
@@ -65,7 +86,7 @@ angular.module('otaniemi3dApp')
     };
 
     $scope.modalTooltip = function (sensorLabel) {
-    $modal.open({
+      $modal.open({
         templateUrl: 'threedModal.html',
         controller: '3dModalCtrl',
         resolve: {
@@ -77,7 +98,18 @@ angular.module('otaniemi3dApp')
           }
         }
 
-        });
+      });
     };
+    /*
+    $scope.$on('$locationChangeSuccess', function(evt) {
+      //evt.preventDefault();
+
+      if ($state.params.roomId) {
+        $scope.changeView($state.params.roomId);
+      }
+
+      //$urlRouter.sync();
+    });
+    */
   }
 );
