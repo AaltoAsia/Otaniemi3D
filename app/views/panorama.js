@@ -39,15 +39,11 @@ angular.module('otaniemi3dApp')
     var xmlPath = 'panorama/' + roomName + '.xml';
 
     function getMetaData (sensor) {
-      var deferred = $q.defer();
-
-      $http.get(roomUrl + '/' + sensor.name + '/MetaData')
+      return $http.get(roomUrl + '/' + sensor.name + '/MetaData')
         .then(function (data) {
           sensor.metaData = SensorData.parseMetaData(data);
-          deferred.resolve(sensor);
+          return sensor;
         });
-
-      return deferred.promise;
     }
 
     function waitForPanorama (data) {
@@ -63,9 +59,7 @@ angular.module('otaniemi3dApp')
     }
 
     function makeSensorGroups (sensors) {
-      var deferred = $q.defer();
-
-      var sensorGroups = sensors
+      return sensors
         .reduce(function (prev, curr) {
           if (!prev[curr.metaData.ath + ',' + curr.metaData.atv]) {
             prev[curr.metaData.ath + ',' + curr.metaData.atv] = [];
@@ -73,15 +67,9 @@ angular.module('otaniemi3dApp')
           prev[curr.metaData.ath + ',' + curr.metaData.atv].push(curr);
           return prev;
         }, {});
-
-      deferred.resolve(sensorGroups);
-
-      return deferred.promise;
     }
 
     function addSensorGroups (sensorGroups) {
-      var deferred = $q.defer();
-
       var krpano = $('#panorama_obj')[0];
 
       angular.forEach(sensorGroups, function (sensorGroup, key) {
@@ -92,9 +80,7 @@ angular.module('otaniemi3dApp')
         ].join(',') + ')');
       });
 
-      deferred.resolve(sensorGroups);
-
-      return deferred.promise;
+      return sensorGroups;
     }
 
     function displaySensors () {
