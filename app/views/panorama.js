@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function ($scope, $stateParams, $window, Rooms, $modal, $http, SensorData, $q) {
+  function ($scope, $stateParams, $window, Rooms, $modal, $http, SensorData, $q, $interval) {
 
     var self = this;
 
@@ -38,7 +38,7 @@ angular.module('otaniemi3dApp')
 
     var xmlPath = 'panorama/' + roomName + '.xml';
 
-    function getMetaData(sensor) {
+    function getMetaData (sensor) {
       var deferred = $q.defer();
 
       $http.get(roomUrl + '/' + sensor.name + '/MetaData')
@@ -48,6 +48,88 @@ angular.module('otaniemi3dApp')
         });
 
       return deferred.promise;
+    }
+
+    function waitForPanorama (data) {
+      var deferred = $q.defer();
+
+      $interval(function () {
+        if ($('#panorama_obj').length) {
+          deferred.resolve(data);
+        }
+      }, 150);
+
+      return deferred.promise;
+    }
+
+    function makeSensorGroups (sensors) {
+      var deferred = $q.defer();
+
+      var sensorGroups = sensors
+        .reduce(function (prev, curr) {
+          if (!prev[curr.metaData.ath + ',' + curr.metaData.atv]) {
+            prev[curr.metaData.ath + ',' + curr.metaData.atv] = [];
+          }
+          prev[curr.metaData.ath + ',' + curr.metaData.atv].push(curr);
+          return prev;
+        }, {});
+
+      deferred.resolve(sensorGroups);
+
+      return deferred.promise;
+    }
+
+    function addSensorGroups (sensorGroups) {
+      var deferred = $q.defer();
+
+      var krpano = $('#panorama_obj')[0];
+
+      angular.forEach(sensorGroups, function (sensorGroup, key) {
+        var pos = key.split(',');
+
+        krpano.call('addsensor(' + [
+          sensorGroup[0].id, pos[0], pos[1], self.sensorTooltip(sensorGroup)
+        ].join(',') + ')');
+      });
+
+      deferred.resolve(sensorGroups);
+
+      return deferred.promise;
+    }
+
+    function displaySensors () {
+
+      var room = Rooms.dict[roomId];
+
+      if (!room) {
+        return;
+      }
+
+      var sensors = room.sensors,
+          sensorPromises = [];
+
+      ///DEBUG
+      if (roomId === 'Cafeteria') {
+        for (var k = 0; k < sensors.length; k++) {
+          sensors[k].metaData = {};
+          sensors[k].metaData.ath = -17;
+          sensors[k].metaData.atv = -14;
+        }
+      }
+
+      return waitForPanorama(sensors)
+        .then(makeSensorGroups)
+        .then(addSensorGroups);
+      ///END DEBUG
+
+      for (var j = 0; j < sensors.length; j++) {
+        sensorPromises.push(getMetaData(sensors[j]));
+      }
+
+      return $q.all(sensorPromises)
+        .then(waitForPanorama)
+        .then(makeSensorGroups)
+        .then(addSensorGroups);
     }
 
     self.room = {
@@ -100,65 +182,10 @@ angular.module('otaniemi3dApp')
       return sensorTable;
     };
 
-    $scope.$on('sensordata-update', function (_, data) {
+    displaySensors();
 
-      var room = data.dict[roomId],
-          sensors = room.sensors,
-          sensorPromises = [];
-
-      ///DEBUG
-      if (roomId === 'Cafeteria') {
-        for (var k = 0; k < sensors.length; k++) {
-          sensors[k].metaData = [];
-          sensors[k].metaData.ath = -17;
-          sensors[k].metaData.atv = -14;
-        }
-      }
-
-      var sensorGroups = sensors
-        .reduce(function (prev, curr) {
-          if (!prev[curr.metaData.ath + ',' + curr.metaData.atv]) {
-            prev[curr.metaData.ath + ',' + curr.metaData.atv] = [];
-          }
-          prev[curr.metaData.ath + ',' + curr.metaData.atv].push(curr);
-          return prev;
-        }, {});
-
-      var krpano = $('#panorama_obj')[0];
-
-      angular.forEach(sensorGroups, function (sensorGroup, key) {
-        var pos = key.split(',');
-
-        krpano.call('addsensor(' + [
-          sensorGroup[0].id, pos[0], pos[1], self.sensorTooltip(sensorGroup)
-        ].join(',') + ')');
-      });
-      ///END DEBUG
-
-      for (var j = 0; j < sensors.length; j++) {
-        sensorPromises.push(getMetaData(sensors[j]));
-      }
-
-      $q.all(sensorPromises).then(function (sensors) {
-        var sensorGroups = sensors
-          .reduce(function (prev, curr) {
-            if (!prev[curr.metaData.ath + ',' + curr.metaData.atv]) {
-              prev[curr.metaData.ath + curr.metaData.atv] = [];
-            }
-            prev[curr.metaData.ath + curr.metaData.atv].push(curr);
-            return prev;
-          }, {});
-
-        var krpano = $('#panorama_obj')[0];
-
-        angular.forEach(sensorGroups, function (sensorGroup, key) {
-          var pos = key.split(',');
-
-          krpano.call('addsensor(' + [
-            sensorGroup[0].id, pos[0], pos[1], self.sensorTooltip(sensorGroup)
-          ].join(',') + ')');
-        });
-      });
+    $scope.$on('sensordata-update', function () {
+      displaySensors();
     });
 
     //Create global namespace for scripts used by krpano.

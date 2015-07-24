@@ -120,7 +120,7 @@ angular.module('otaniemi3dApp')
                     children.push({
                       id: id + '-' + node.id,
                       room: room.id,
-                      name: id.charAt(0).toUpperCase() + id.slice(1),
+                      name: id,
                       text: id.charAt(0).toUpperCase() + id.slice(1),
                       children: true,
                       icon: 'images/icon-' + id + '.svg',
