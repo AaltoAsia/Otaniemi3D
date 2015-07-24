@@ -131,6 +131,21 @@ angular.module('otaniemi3dApp')
       return values;
     };
 
+    this.parseMetaData = function (xml) {
+      xml = new DOMParser().parseFromString(xml, 'text/xml');
+
+      var root = $(xml).find(':root'),
+          infoItems = [];
+
+      root.children('InfoItem').each(function () {
+        var metaData = {};
+        metaData[$(this).attr('name')] = $(this).find('value').text();
+        infoItems.push(metaData);
+      });
+
+      return infoItems;
+    };
+
     this.parseObject = function(xml) {
       xml = new DOMParser().parseFromString(xml, 'text/xml');
 

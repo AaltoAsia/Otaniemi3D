@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function ($scope, $stateParams, $window, Rooms, $modal) {
+  function ($scope, $stateParams, $window, Rooms, $modal, $http, SensorData, $q) {
 
     var self = this;
 
@@ -37,6 +37,18 @@ angular.module('otaniemi3dApp')
     sensorTable += '[/table]';
 
     var xmlPath = 'panorama/' + roomName + '.xml';
+
+    function getMetaData(sensor) {
+      var deferred = $q.defer();
+
+      $http.get(roomUrl + '/' + sensor.name + '/MetaData')
+        .then(function (data) {
+          sensor.metaData = SensorData.parseMetaData(data);
+          deferred.resolve(sensor);
+        });
+
+      return deferred.promise;
+    }
 
     self.room = {
       sensorTable: sensorTable,
@@ -66,14 +78,88 @@ angular.module('otaniemi3dApp')
         '[tr] [th colspan="2" style="text-align:center"]' + roomName + '[/th] [/tr]';
 
       for (var i = 0; i < sensors.length; i++) {
-        var sensor = sensors[i];
-        sensorTable += '[tr] [th]' + sensor.text + '[/th] [td]' +
-          sensor.type + '[/td] [/tr]';
+        var sensor = sensors[i],
+            sensorValue,
+            room = Rooms.dict[sensor.room],
+            sensorSuffix;
+
+        for (var j = 0; j < room.sensors.length; j++) {
+          if (room.sensors[j].id === sensor.id) {
+            sensorValue = room.sensors[j].values[0].value;
+            sensorSuffix = room.sensors[j].suffix;
+            sensorSuffix = sensorSuffix ? ' ' + sensorSuffix : '';
+            break;
+          }
+        }
+
+        sensorTable += '[tr] [th]' + sensor.name + '[/th] [td]' +
+          sensorValue + sensorSuffix + '[/td] [/tr]';
       }
       sensorTable += '[/table]';
 
       return sensorTable;
     };
+
+    $scope.$on('sensordata-update', function (_, data) {
+
+      var room = data.dict[roomId],
+          sensors = room.sensors,
+          sensorPromises = [];
+
+      ///DEBUG
+      if (roomId === 'Cafeteria') {
+        for (var k = 0; k < sensors.length; k++) {
+          sensors[k].metaData = [];
+          sensors[k].metaData.ath = -17;
+          sensors[k].metaData.atv = -14;
+        }
+      }
+
+      var sensorGroups = sensors
+        .reduce(function (prev, curr) {
+          if (!prev[curr.metaData.ath + ',' + curr.metaData.atv]) {
+            prev[curr.metaData.ath + ',' + curr.metaData.atv] = [];
+          }
+          prev[curr.metaData.ath + ',' + curr.metaData.atv].push(curr);
+          return prev;
+        }, {});
+
+      var krpano = $('#panorama_obj')[0];
+
+      angular.forEach(sensorGroups, function (sensorGroup, key) {
+        var pos = key.split(',');
+
+        krpano.call('addsensor(' + [
+          sensorGroup[0].id, pos[0], pos[1], self.sensorTooltip(sensorGroup)
+        ].join(',') + ')');
+      });
+      ///END DEBUG
+
+      for (var j = 0; j < sensors.length; j++) {
+        sensorPromises.push(getMetaData(sensors[j]));
+      }
+
+      $q.all(sensorPromises).then(function (sensors) {
+        var sensorGroups = sensors
+          .reduce(function (prev, curr) {
+            if (!prev[curr.metaData.ath + ',' + curr.metaData.atv]) {
+              prev[curr.metaData.ath + curr.metaData.atv] = [];
+            }
+            prev[curr.metaData.ath + curr.metaData.atv].push(curr);
+            return prev;
+          }, {});
+
+        var krpano = $('#panorama_obj')[0];
+
+        angular.forEach(sensorGroups, function (sensorGroup, key) {
+          var pos = key.split(',');
+
+          krpano.call('addsensor(' + [
+            sensorGroup[0].id, pos[0], pos[1], self.sensorTooltip(sensorGroup)
+          ].join(',') + ')');
+        });
+      });
+    });
 
     //Create global namespace for scripts used by krpano.
     $window.krpano = {};
@@ -103,10 +189,7 @@ angular.module('otaniemi3dApp')
 
       self.modalInstance.result.then(function () {
         if (self.newSensors.length) {
-          console.log(self.newSensors);
           var id = self.newSensors[0].id;
-
-          console.log([pos.x, pos.y]);
 
           krpano.call('addsensor(' + [
             id, pos.x, pos.y, self.sensorTooltip(self.newSensors)
