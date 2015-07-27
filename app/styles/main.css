@@ -99,6 +99,7 @@ body {
 }
 
 .tooltip-table {
+  min-width: 221px;
   border-collapse: separate;
 }
 
@@ -108,8 +109,8 @@ body {
   padding: 2px;
 }
 
-.tooltip-table caption {
-  padding: 2px;
+.tooltip-caption {
+  padding: 3px;
   text-align: center;
 }
 
@@ -123,7 +124,6 @@ body {
 }
 
 .mouse-tooltip {
-  min-width: 100px;
   margin-top: 22px; /*to put it slightly lower, so the cursor doesn't hide anything*/
   border: 1px solid black;
   border-radius: 5px;

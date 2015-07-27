@@ -7,7 +7,7 @@
  * # tooltip
  */
 angular.module('otaniemi3dApp')
-  .directive('tooltip', function () {
+  .directive('tooltip', function ($state) {
     return {
       restrict: 'E',
       template: [
@@ -22,12 +22,14 @@ angular.module('otaniemi3dApp')
           '</tr>',
           '<tr>',
             '<td colspan="2">',
-              '<i ng-hide="tooltip.isLocked">{{tooltip.caption}}</i>',
-              '<a ui-sref="panorama({roomId: tooltip.roomId})"',
-                 'class="btn black-btn panorama-btn">',
+              '<button ng-click="tooltip.openPanorama(tooltip.roomId)"',
+                      'ng-disabled="!tooltip.hasPanorama"',
+                      'class="btn black-btn panorama-btn">',
                 '360°',
                 '<span class="glyphicon glyphicon glyphicon-camera"></span>',
-              '</a>',
+              '</button>',
+              '<i class="tooltip-caption">{{tooltip.caption}}',
+              '</i>',
             '</td>',
           '</tr>',
         '</table>',
@@ -41,6 +43,21 @@ angular.module('otaniemi3dApp')
         this.roomId = '';
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
+        this.roomsWithPanorama = [
+          'Room-238d','Room-237c','Room-235','Room-232a',
+          '2nd Floor Corridor Start',
+          '2nd Floor Corridor Middle',
+          '2nd Floor Corridor End',
+          'Corridor Cafeteria Side',
+          'Corridor Entrance Side',
+          'Cafeteria',
+          'Entrance'
+        ];
+        this.hasPanorama = false;
+
+        this.openPanorama = function (roomId) {
+          $state.go('panorama', {roomId: roomId});
+        };
       },
       controllerAs: 'tooltip',
       bindToController: true,
@@ -51,7 +68,6 @@ angular.module('otaniemi3dApp')
         }
 
         function moveTooltip(d) {
-
           if (tooltipCtrl.isLocked) {
             return;
           }
@@ -76,6 +92,11 @@ angular.module('otaniemi3dApp')
               }
               if (d.roomId) {
                 tooltipCtrl.roomId = d.roomId;
+                if (tooltipCtrl.roomsWithPanorama.indexOf(d.roomId) > -1) {
+                  tooltipCtrl.hasPanorama = true;
+                } else {
+                  tooltipCtrl.hasPanorama = false;
+                }
               }
 
             });
@@ -127,9 +148,8 @@ angular.module('otaniemi3dApp')
             .on('mouseout', hideTooltip)
             .on('mouseup', lockTooltip);
 
-        d3.select(element.parent()[0])
-          .on('mousedown', unlockTooltip)
-          .on('dragstart', unlockTooltip);
+        d3.select(element.parent()[0]).select('svg')
+          .on('mousedown.tooltip', unlockTooltip);
 
         scope.$on('$destroy', function () {
           d3.select(element.parent()[0])

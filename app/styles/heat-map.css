@@ -163,8 +163,6 @@
 }
 
 .panorama-btn {
-  -webkit-appearance: button;
-  -moz-appearance: button;
   pointer-events: all;
 }
 
