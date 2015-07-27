@@ -165,16 +165,17 @@ angular.module('otaniemi3dApp')
             roomData.room = roomName ? roomName : id;
             roomData.roomId = id;
 
+            floorplan.rooms.push({
+              name: roomData.room,
+              id: roomData.roomId
+            });
+
             return roomData;
           });
 
         return floorplan;
       }
 
-      /*
-      * Update or add new sensor data to rooms, and then color the
-      * rooms according to the data.
-      */
       function updateRoomColors(floorplan) {
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
@@ -193,18 +194,6 @@ angular.module('otaniemi3dApp')
             }
           });
       }
-
-      /*
-      * Watch for sensor data updates and update every room's
-      * info accordingly.
-      */
-      scope.$watch(function () { return JSON.stringify(scope.sensorData); },
-        function () {
-          if (scope.sensorData && scope.sensorData.length) {
-            bindSensors(scope.floorplan);
-            updateRoomColors(scope.floorplan);
-          }
-      });
 
       scope.$watch('sensorType', function () {
         if (isFloorplanLoaded) {

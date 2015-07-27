@@ -35,7 +35,6 @@ angular.module('otaniemi3dApp')
         '</table>',
       ].join(''),
       scope: {
-        sensorData: '=',
         sensorType: '='
       },
       controller: function () {

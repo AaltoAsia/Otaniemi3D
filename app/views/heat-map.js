@@ -20,7 +20,6 @@ angular.module('otaniemi3dApp')
       $scope.floor = 1;
     }
 
-    $scope.sensorData = dataStorage.sensors;
     $scope.searchString = '';
     $scope.floorplans = floorplanStorage.list;
     $scope.selectedRoom = null;
@@ -94,10 +93,6 @@ angular.module('otaniemi3dApp')
     $scope.sensorType = $scope.sensorTypes[0];
     $scope.timeFrame = $scope.timeFrames[0];
 
-    $scope.$on('sensordata-update', function (_, data) {
-      $scope.sensorData = data.dict;
-    });
-
     $scope.selectSensorType = function (sensor) {
       $scope.sensorType = sensor;
     };
@@ -106,11 +101,6 @@ angular.module('otaniemi3dApp')
       $scope.timeFrame = timeFrame;
     };
 
-    /*
-     * Toggle fullscreen button. It broadcasts to parent scope to change the view
-     * to fullscreen which in turn hides the footer and header. Also it changes
-     * the fullscreen button glyphicon.
-     */
     $scope.toggleFullscreen = function (){
       $scope.App.fullscreen = !$scope.App.fullscreen;
     };
@@ -135,7 +125,7 @@ angular.module('otaniemi3dApp')
       }
     };
 
-    $scope.onSelect = function(item) {
+    $scope.onSelect = function(item, model, label) {
       $scope.highlightRoom(item);
     };
 
@@ -161,16 +151,11 @@ angular.module('otaniemi3dApp')
       }
     };
 
-    $scope.resetZoom = function() {
-      if ($scope.resetView === null) {
-        $scope.resetView = false;
-      }
-      $scope.resetView = !$scope.resetView;
+    $scope.resetZoom = function () {
+      $scope.floorplan.translate = [0,0];
+      $scope.floorplan.scale = 1;
     };
 
-
-     /*Create a new modal pass timeFrame and sensorType variables into it
-        Also parse the return values to aforementioned variables*/
     $scope.open = function () {
 
       self.modalInstance = $modal.open({

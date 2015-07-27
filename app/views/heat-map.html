@@ -49,12 +49,13 @@
   <input id="searchContent2"
          type="text"
          ng-model="searchString"
-         placeholder="Search for room..."
-         typeahead="room as room.name for room in rooms.asList()
-                    | filter:{name:$viewValue}
-                    | limitTo:8"
+         placeholder="Search for rooms..."
+         typeahead="room as room.name for room in floorplan.rooms
+                   | filter: {name: $viewValue}
+                   | limitTo: 8"
+         ng-disabled="!floorplan.rooms.length"
          class="form-control"
-         typeahead-on-select="onSelect($item)">
+         typeahead-on-select="onSelect($item, $model, $label)">
 
   <button class="btn btn-default" id="searchDefault"
           ng-click="onSearch(searchString)">
@@ -80,7 +81,7 @@
 
   <div ng-cloak class="floorplan-caption">
     <h4 class="caption-text">
-      {{selectedPlan.name}} ({{planNumber+1}}/{{floorplans.length}})
+      {{selectedPlan.name}} ({{floor}}/{{floorplans.length}})
     </h4>
   </div>
 
@@ -102,12 +103,10 @@
   <heat-map id="heat-map"
             class="fp"
             floorplan="floorplan"
-            sensor-data="sensorData"
             selected-room="selectedRoom"
             sensor-type="sensorType">
 
     <tooltip ng-if="heatmap.isFloorplanLoaded"
-             sensor-data="sensorData"
              sensor-type="sensorType"
              class="mouse-tooltip">
     </tooltip>
