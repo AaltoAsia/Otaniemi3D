@@ -124,6 +124,7 @@ angular.module('otaniemi3dApp')
             floorplan.data = data;
             deferred.resolve(floorplan);
           }, function error () {
+            floorplan.data = floorplan.data || [];
             deferred.resolve(floorplan);
           });
 
@@ -172,39 +173,23 @@ angular.module('otaniemi3dApp')
       * Update or add new sensor data to rooms, and then color the
       * rooms according to the data.
       */
-      function updateRoomColors() {
-        /*
-        angular.forEach(scope.sensorData, function (sensor) {
-          setRoomColor(sensor);
-        });
-        */
-      }
+      function updateRoomColors(floorplan) {
+        d3.select(floorplan.svg)
+          .selectAll('[data-room-id]')
+          .each(function () {
+            var data = d3.select(this).datum();
 
-      /*
-      * Set room color for a room according to its temperature.
-      * Color range is from blue to red
-      */
-      function setRoomColor(room) {
-        if (room.node) {
-          var sensorType = scope.sensorType.name.toLowerCase();
-          for (var i = 0; i < room.sensors.length; i++) {
-            var sensor = room.sensors[i];
-
-            if (sensor.type.toLowerCase() === sensorType ||
-               (sensor.type.toLowerCase() === 'pir' &&
-                  sensorType === 'occupancy')) {
-
-              if (sensor.values.length > 0) {
-                var color = heatmapService.getColor(room.sensors[i].type,
-                  room.sensors[i].values[0].value);
-
-                d3.select(room.node)
+            for (var i = 0; i < data.sensors.length; i++) {
+              if (data.sensors[i].type === scope.sensorType.name) {
+                var sensor = data.sensors[i];
+                var value = sensor.values[0].value;
+                var color = heatmapService.getColor(sensor.type, value);
+                d3.select(this)
                   .style('fill', color.rgb)
                   .style('fill-opacity', color.opacity);
               }
             }
-          }
-        }
+          });
       }
 
       /*
@@ -215,8 +200,12 @@ angular.module('otaniemi3dApp')
         function () {
           if (scope.sensorData && scope.sensorData.length) {
             bindSensors(scope.floorplan);
-            updateRoomColors();
+            updateRoomColors(scope.floorplan);
           }
+      });
+
+      scope.$watch('sensorType', function () {
+        updateRoomColors(scope.floorplan);
       });
     }
   };});

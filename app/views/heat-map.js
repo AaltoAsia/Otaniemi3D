@@ -13,11 +13,11 @@ angular.module('otaniemi3dApp')
 
     var self = this;
 
-    var floorNum = Number($state.params.floorNum);
+    $scope.floor = Number($state.params.floorNum);
 
-    if (!floorNum) {
+    if (!$scope.floor) {
       $state.go('heat-map', {floorNum: 1}, {notify: false});
-      floorNum = 1;
+      $scope.floor = 1;
     }
 
     $scope.sensorData = dataStorage.sensors;
@@ -25,37 +25,40 @@ angular.module('otaniemi3dApp')
     $scope.highlightedRoom = null;
     $scope.floorplans = floorplanStorage.list;
     $scope.selectedRoom = null;
-    $scope.room = null;   //Room in which panoramic button was clicked.
     $scope.resetView = null;
-    $scope.planNumber = floorNum - 1;
     $scope.svgSupport = Modernizr.svg;
     self.isFloorplanLoaded = false;
 
     //Select current floorplan
     for (var i = 0; i < $scope.floorplans.length; i++) {
-      if (i === $scope.planNumber) {
+      if (i === $scope.floor - 1) {
         $scope.floorplans[i].isSelected = true;
       } else {
         $scope.floorplans[i].isSelected = false;
       }
     }
 
-    $scope.floorplan = $scope.floorplans[$scope.planNumber];
+    $scope.floorplan = $scope.floorplans[$scope.floor-1];
 
     $scope.sensorTypes = [
-      { name: 'Temperature',
+      { text: 'Temperature',
+        name: 'temperature',
         icon: 'images/temperature.svg' },
 
-      { name: 'CO2',
+      { text: 'CO2',
+        name: 'co2',
         icon: 'images/co2.svg' },
 
-      { name: 'Humidity',
+      { text: 'Humidity',
+        name: 'humidity',
         icon: 'images/humidity.svg' },
 
-      { name: 'Light',
+      { text: 'Light',
+        name: 'light',
         icon: 'images/light.svg' },
 
-      { name: 'Occupancy',
+      { text: 'Occupancy',
+        name: 'pir',
         icon: 'images/pir.svg' }
     ];
 
@@ -92,15 +95,19 @@ angular.module('otaniemi3dApp')
     $scope.sensorType = $scope.sensorTypes[0];
     $scope.timeFrame = $scope.timeFrames[0];
 
-    $scope.$on('sensordata-update', function(_, data) {
+    $scope.$on('sensordata-update', function (_, data) {
       $scope.sensorData = data.dict;
     });
 
-    $scope.panoramaViewer = function() {
-      $state.go('panorama', {roomId: $scope.room.split(' ').join('-')});
+    $scope.selectSensorType = function (sensor) {
+      $scope.sensorType = sensor;
     };
 
-    $scope.showGradient = function() {
+    $scope.selectTimeFrame = function (timeFrame) {
+      $scope.timeFrame = timeFrame;
+    };
+
+    $scope.showGradient = function () {
       return $scope.sensorType.name.toLowerCase() !== 'pir' &&
              $scope.sensorType.name.toLowerCase() !== 'occupancy';
     };
@@ -110,24 +117,16 @@ angular.module('otaniemi3dApp')
      * to fullscreen which in turn hides the footer and header. Also it changes
      * the fullscreen button glyphicon.
      */
-    $scope.toggleFullscreen = function(){
+    $scope.toggleFullscreen = function (){
       $scope.App.fullscreen = !$scope.App.fullscreen;
     };
 
-    /*
-     * Change current floorplan to the previous of net floorplan
-     * direction is either 1 if the user pressed next button or -1
-     * if the user pressed previous button
-     */
-    $scope.selectPlan = function (direction) {
-      if (direction === 1) {
-        //floorNum indexing starts from 1 while planNumber starts from 0
-        //so we must add 2 to the planNumber to increase floorNum by 1
-        $state.go('heat-map', {floorNum: $scope.planNumber + 2});
-      }
-      if (direction === -1) {
-        $state.go('heat-map', {floorNum: $scope.planNumber});
-      }
+    $scope.nextFloor = function () {
+      $state.go('heat-map', {floorNum: $scope.floor + 1});
+    };
+
+    $scope.prevFloor = function () {
+      $state.go('heat-map', {floorNum: $scope.floor - 1});
     };
 
 
@@ -137,8 +136,8 @@ angular.module('otaniemi3dApp')
       }
       if (typeof item.floor === 'number' && !isNaN(item.floor)) {
         $scope.highlightedRoom = item;
-        $scope.planNumber = item.floor;
-        $state.go('heat-map', {floorNum: $scope.planNumber});
+        $scope.floor = item.floor;
+        $state.go('heat-map', {floorNum: $scope.floor});
       }
     };
 
@@ -175,50 +174,6 @@ angular.module('otaniemi3dApp')
       $scope.resetView = !$scope.resetView;
     };
 
-    /*
-     * Refresh the room colours according to sensor that is chosen.
-     * For example if the user changes from temperature heatmap to co2 heatmap
-     * this function will colour the floorplanStorage according to values
-     * measured by co2 sensors.
-     */
-    $scope.refreshRoomColor = function(sensorType) {
-      var sensorName = sensorType.name.toLowerCase();
-
-      var keys = Object.keys(Rooms.dict);
-      for (var i = 0; i < keys.length; i++) {
-        var room = Rooms.dict[keys[i]];
-        //Color the room white, in case the room doesn't have any values for
-        //that particular sensor.
-        d3.select(room.node).style('fill', 'rgb(255, 255, 255)');
-
-        //Loop through sensors and check the value of the sensor that matches
-        //the parameter given.
-        for (var j = 0; j < room.sensors.length; j++) {
-          var sensor = room.sensors[j];
-
-          if (sensor.type.toLowerCase() === sensorName ||
-             (sensor.type.toLowerCase() === 'pir' &&
-                sensorName === 'occupancy')) {
-
-            var color = heatmapService
-              .getColor(sensorName, sensor.values[0].value);
-
-            d3.select(room.node)
-              .style('fill', color.rgb)
-              .style('fill-opacity', color.opacity);
-          }
-        }
-      }
-    };
-
-    $scope.changeColour = function(sensorType) {
-      $scope.sensorType = sensorType;
-      $scope.refreshRoomColor(sensorType);
-    };
-
-    $scope.selectTimeFrame = function(timeFrame) {
-      $scope.timeFrame = timeFrame;
-    };
 
      /*Create a new modal pass timeFrame and sensorType variables into it
         Also parse the return values to aforementioned variables*/

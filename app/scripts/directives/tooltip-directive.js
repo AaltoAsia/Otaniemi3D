@@ -7,7 +7,7 @@
  * # tooltip
  */
 angular.module('otaniemi3dApp')
-  .directive('tooltip', function ($state) {
+  .directive('tooltip', function ($state, heatmapService) {
     return {
       restrict: 'E',
       template: [
@@ -15,7 +15,7 @@ angular.module('otaniemi3dApp')
           '<tr>',
             '<th colspan="2" style="text-align:center">{{tooltip.room}}</th>',
           '</tr>',
-          '<tr ng-repeat="sensor in tooltip.sensors"',
+          '<tr ng-repeat="sensor in tooltip.sensors | orderBy: \'name\'"',
               'ng-style="{\'background-color\': sensor.color}">',
             '<th>{{sensor.name}}</th>',
             '<td>{{sensor.values[0].value}} {{sensor.suffix}}</td>',
@@ -23,7 +23,7 @@ angular.module('otaniemi3dApp')
           '<tr>',
             '<td colspan="2">',
               '<button ng-click="tooltip.openPanorama(tooltip.roomId)"',
-                      'ng-disabled="!tooltip.hasPanorama"',
+                      'ng-show="tooltip.hasPanorama"',
                       'class="btn black-btn panorama-btn">',
                 '360°',
                 '<span class="glyphicon glyphicon glyphicon-camera"></span>',
@@ -35,7 +35,8 @@ angular.module('otaniemi3dApp')
         '</table>',
       ].join(''),
       scope: {
-        sensorData: '='
+        sensorData: '=',
+        sensorType: '='
       },
       controller: function () {
         this.sensors = [];
@@ -83,7 +84,18 @@ angular.module('otaniemi3dApp')
 
               if (d.sensors.length) {
                 for (var i = 0; i < d.sensors.length; i++) {
-                  tooltipCtrl.sensors.push(d.sensors[i]);
+                  var sensor = d.sensors[i];
+                  var value = sensor.values[0].value;
+                  var color = {};
+
+                  if (sensor.type === tooltipCtrl.sensorType.name) {
+                    color = heatmapService.getColor(sensor.type, value);
+                  } else {
+                    color.rgbaString = '';
+                  }
+
+                  sensor.color = color.rgbaString;
+                  tooltipCtrl.sensors.push(sensor);
                 }
               }
 

@@ -11,15 +11,15 @@
             class="btn btn-black dropdown-toggle"
             dropdown-toggle ng-disabled="disabled"
             data-label-placement>
-      {{sensorType.name}}
+      {{sensorType.text}}
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right typeMenu" role="menu">
       <li class="btn" disabled>Choose sensor type</li>
       <li ng-repeat="sensor in sensorTypes">
         <a ng-disabled="sensorType == sensor"
-           ng-click="changeColour(sensor)">
-          <img class="icons" ng-src="{{sensor.icon}}">{{sensor.name}}
+           ng-click="selectSensorType(sensor)">
+          <img class="icons" ng-src="{{sensor.icon}}">{{sensor.text}}
         </a>
       </li>
     </ul>
@@ -85,17 +85,17 @@
   </div>
 
   <!-- Button that loads up that lower (aka previous) floor -->
-  <i ng-click="selectPlan(-1)"
+  <i ng-click="prevFloor()"
      class="btn btn-lg previous-button glyphicon glyphicon-arrow-left"
      ng-class="App.fullscreen ? 'btn-fullscreen' : ''"
-     ng-disabled="planNumber == '0'">
+     ng-disabled="floor == '1'">
   </i>
 
   <!-- button that loads up higher (aka next) floor -->
-  <i ng-click="selectPlan(1)"
+  <i ng-click="nextFloor()"
      class="btn btn-lg next-button glyphicon glyphicon-arrow-right"
      ng-class="App.fullscreen ? 'btn-fullscreen' : ''"
-     ng-disabled="planNumber == floors-1">
+     ng-disabled="floor == floorplans.length">
   </i>
 
   <!-- The actual floorplan -->
@@ -108,6 +108,7 @@
 
     <tooltip ng-if="heatmap.isFloorplanLoaded"
              sensor-data="sensorData"
+             sensor-type="sensorType"
              class="mouse-tooltip">
     </tooltip>
 

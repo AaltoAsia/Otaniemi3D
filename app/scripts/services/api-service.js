@@ -229,7 +229,7 @@ angular.module('otaniemi3dApp')
                 sensorName = 'CO2';
                 break;
               case 'pir':
-                sensorName = 'PIR';
+                sensorName = 'Occupancy';
                 break;
               default:
                 sensorName = name.charAt(0).toUpperCase() +
