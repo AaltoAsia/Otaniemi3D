@@ -112,43 +112,11 @@
              class="mouse-tooltip">
     </tooltip>
 
-    <!--
+    <legendbar id="legendBar"
+               sensor-type="sensorType"
+               style="position: absolute">
+    </legendbar>
 
-    <div id="legendBar" style="position: absolute">
-      <p id="legendMinText" class="legendText"></p>
-      <svg id="legendContainingSvg">
-        <g>
-          <defs>
-            <lineargradient id="legendGradient" x1="0%" x2="0%" y1="0%" y2="100%">
-              <stop></stop>
-            </lineargradient>
-          </defs>
-        </g>
-        <rect id="gradientRect"
-              class="legendRect"
-              fill="url(#legendGradient)"
-              rx="10" ry="10"
-              ng-show="showGradient()"
-              ng-cloak>
-        </rect>
-        <rect id="binaryRectTop"
-              class="binaryRect legendRect"
-              rx="10" ry="10"
-              ng-hide="showGradient()"
-              ng-cloak>
-        </rect>
-        <rect id="binaryRectBottom"
-              class="binaryRect legendRect"
-              rx="10" ry="10"
-              ng-hide="showGradient()"
-              ng-cloak>
-        </rect>
-        <line id="legendLine"></line>
-        <text id="legendLineText"></text>
-      </svg>
-      <p id="legendMaxText" class="legendText"></p>
-    </div>
-  -->
   </heat-map>
 
 </div>

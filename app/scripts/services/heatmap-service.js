@@ -120,7 +120,7 @@ angular.module('otaniemi3dApp')
     };
 
     this.getValueUnit = function(sensorType){
-      switch(sensorType.toLowerCase()) {
+      switch(sensorType) {
         case 'temperature':
           return '°C';
         case 'co2':

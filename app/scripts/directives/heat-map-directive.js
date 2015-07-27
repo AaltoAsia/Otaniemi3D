@@ -20,6 +20,8 @@ angular.module('otaniemi3dApp')
     },
     link: function (scope, element) {
 
+      var isFloorplanLoaded = false;
+
       getFloorplan(scope.floorplan)
         .then(appendFloorplan)
         .then(fetchSensorData)
@@ -79,8 +81,7 @@ angular.module('otaniemi3dApp')
           .scale(floorplan.scale)
           .translate(floorplan.translate)
           .on('zoom', function() {
-            svg.select('g').attr('transform',
-              [
+            svg.select('g').attr('transform', [
                 'translate(',d3.event.translate,')',
                 'scale(',d3.event.scale,')'
               ].join(''));
@@ -91,6 +92,7 @@ angular.module('otaniemi3dApp')
         svg.call(zoomListener);
 
         $rootScope.$broadcast('floorplan-loaded');
+        isFloorplanLoaded = true;
 
         return floorplan;
       }
@@ -205,7 +207,9 @@ angular.module('otaniemi3dApp')
       });
 
       scope.$watch('sensorType', function () {
-        updateRoomColors(scope.floorplan);
+        if (isFloorplanLoaded) {
+          updateRoomColors(scope.floorplan);
+        }
       });
     }
   };});

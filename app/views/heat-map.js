@@ -22,7 +22,6 @@ angular.module('otaniemi3dApp')
 
     $scope.sensorData = dataStorage.sensors;
     $scope.searchString = '';
-    $scope.highlightedRoom = null;
     $scope.floorplans = floorplanStorage.list;
     $scope.selectedRoom = null;
     $scope.resetView = null;
@@ -105,11 +104,6 @@ angular.module('otaniemi3dApp')
 
     $scope.selectTimeFrame = function (timeFrame) {
       $scope.timeFrame = timeFrame;
-    };
-
-    $scope.showGradient = function () {
-      return $scope.sensorType.name.toLowerCase() !== 'pir' &&
-             $scope.sensorType.name.toLowerCase() !== 'occupancy';
     };
 
     /*
