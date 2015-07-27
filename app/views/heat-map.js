@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
   .controller('HeatMapCtrl', function ($scope, floorplanStorage, dataStorage,
-    heatmapService, $modal, $interval, $state) {
+    $modal, $interval, $state) {
 
     var self = this;
 

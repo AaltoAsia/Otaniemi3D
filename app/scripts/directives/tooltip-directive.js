@@ -160,7 +160,7 @@ angular.module('otaniemi3dApp')
             .on('mouseout', hideTooltip)
             .on('mouseup', lockTooltip);
 
-        d3.select(element.parent()[0]).select('svg')
+        d3.select(element.parent()[0]).select('#floorplan')
           .on('mousedown.tooltip', unlockTooltip);
 
         scope.$on('$destroy', function () {

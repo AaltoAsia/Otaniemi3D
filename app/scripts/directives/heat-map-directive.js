@@ -7,8 +7,7 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('heatMap', function ($rootScope, heatmapService,
-    legendbarService, $q, apiService) {
+  .directive('heatMap', function ($rootScope, heatmapService, $q, apiService) {
 
   return {
     restrict: 'E',
@@ -60,7 +59,8 @@ angular.module('otaniemi3dApp')
         svg = d3.select(svg)
             .attr('width', '100%')
             .attr('height', '100%')
-            .attr('pointer-events', 'all');
+            .attr('pointer-events', 'all')
+            .attr('id', 'floorplan');
 
         svg.selectAll('path').each(function() {
           var elem = d3.select(this);
