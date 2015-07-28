@@ -22,20 +22,10 @@ angular.module('otaniemi3dApp')
 
     $scope.searchString = '';
     $scope.floorplans = floorplanStorage.list;
-    $scope.selectedRoom = null;
+    $scope.room = null;
     $scope.resetView = null;
     $scope.svgSupport = Modernizr.svg;
     self.isFloorplanLoaded = false;
-
-    //Select current floorplan
-    for (var i = 0; i < $scope.floorplans.length; i++) {
-      if (i === $scope.floor - 1) {
-        $scope.floorplans[i].isSelected = true;
-      } else {
-        $scope.floorplans[i].isSelected = false;
-      }
-    }
-
     $scope.floorplan = $scope.floorplans[$scope.floor-1];
 
     $scope.sensorTypes = [
@@ -125,39 +115,26 @@ angular.module('otaniemi3dApp')
       }
     };
 
-    $scope.onSelect = function(item, model, label) {
-      $scope.highlightRoom(item);
+    $scope.selectRoom = function(room) {
+      $scope.room = room;
     };
 
-    $scope.onSearch = function(searchString) {
-      //If the room is once selected from the dropdown(typeahead), the
-      //searchString will actually be the room object.
-      if (searchString.name) {
-        $scope.highlightRoom(searchString);
-      } else {
-        var selected;
-        var keys = Object.keys(Rooms.dict);
-        for (var i = 0; i < keys.length; i++) {
-          var room = Rooms.dict[keys[i]];
+    $scope.searchRoom = function(roomString) {
+      var rooms = $scope.floorplan.rooms;
 
-          if (room.name.toLowerCase() === searchString.toLowerCase()) {
-            selected = room;
-            break;
-          }
-        }
-        if (selected) {
-          $scope.highlightRoom(selected);
+      for (var i = 0; i < rooms.length; i++) {
+        if (rooms[i].name.toLowerCase() === roomString.toLowerCase()) {
+          $scope.selectRoom(rooms[i]);
+          break;
         }
       }
     };
 
     $scope.resetZoom = function () {
-      $scope.floorplan.translate = [0,0];
-      $scope.floorplan.scale = 1;
+      $scope.$broadcast('reset-zoom');
     };
 
     $scope.open = function () {
-
       self.modalInstance = $modal.open({
         templateUrl: 'sensor-options.html',
         controller: 'ModalCtrl',

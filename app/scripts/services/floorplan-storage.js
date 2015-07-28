@@ -20,7 +20,6 @@ angular.module('otaniemi3dApp')
         data: [],
         svg: null,
         floor: 1,
-        isSelected: true,
         translate: [0,0],
         scale: 1
       },
@@ -31,7 +30,6 @@ angular.module('otaniemi3dApp')
         data: [],
         svg: null,
         floor: 2,
-        isSelected: false,
         translate: [0,0],
         scale: 1
       },
@@ -42,7 +40,6 @@ angular.module('otaniemi3dApp')
         data: [],
         svg: null,
         floor: 3,
-        isSelected: false,
         translate: [0,0],
         scale: 1
       },
@@ -53,7 +50,6 @@ angular.module('otaniemi3dApp')
         data: [],
         svg: null,
         floor: 4,
-        isSelected: false,
         translate: [0,0],
         scale: 1
       },
@@ -64,7 +60,6 @@ angular.module('otaniemi3dApp')
         data: [],
         svg: null,
         floor: 5,
-        isSelected: false,
         translate: [0,0],
         scale: 1
       }

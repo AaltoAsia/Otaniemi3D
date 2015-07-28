@@ -20,6 +20,8 @@ angular.module('otaniemi3dApp')
     link: function (scope, element) {
 
       var isFloorplanLoaded = false;
+      //Later we store dragging and zooming behavior to this variable.
+      var zoomListener;
 
       getFloorplan(scope.floorplan)
         .then(appendFloorplan)
@@ -76,7 +78,7 @@ angular.module('otaniemi3dApp')
         svg.selectAll('title').remove();
 
         //Configure dragging and zooming behavior.
-        var zoomListener = d3.behavior.zoom()
+        zoomListener = d3.behavior.zoom()
           .scaleExtent([0.5, 10])
           .scale(floorplan.scale)
           .translate(floorplan.translate)
@@ -194,6 +196,18 @@ angular.module('otaniemi3dApp')
             }
           });
       }
+
+      scope.$on('reset-zoom', function () {
+        if (zoomListener) {
+          scope.floorplan.translate = [0,0];
+          scope.floorplan.scale = 1;
+
+          zoomListener
+            .scale(1)
+            .translate([0,0])
+            .event(d3.select(element[0]).select('#floorplan'));
+        }
+      });
 
       scope.$watch('sensorType', function () {
         if (isFloorplanLoaded) {

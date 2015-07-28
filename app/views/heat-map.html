@@ -55,13 +55,16 @@
                    | limitTo: 8"
          ng-disabled="!floorplan.rooms.length"
          class="form-control"
-         typeahead-on-select="onSelect($item, $model, $label)">
+         typeahead-on-select="selectRoom($item)">
 
   <button class="btn btn-default" id="searchDefault"
-          ng-click="onSearch(searchString)">
+          ng-click="searchRoom(searchString)"
+          title="Search">
     <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
   </button>
-  <button class="btn btn-default" id="searchDefault" ng-click="resetZoom()">
+  <button class="btn btn-default" id="searchDefault"
+          ng-click="resetZoom()"
+          title="Reset zoom">
     <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
   </button>
 </div>
