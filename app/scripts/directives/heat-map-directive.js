@@ -7,7 +7,7 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('heatMap', function ($rootScope, heatmapService, $q, apiService) {
+  .directive('heatMap', function(heatmapService, $q, apiService, $timeout) {
 
   return {
     restrict: 'E',
@@ -17,7 +17,7 @@ angular.module('otaniemi3dApp')
       selectedRoom: '=',
       sensorType: '='
     },
-    link: function (scope, element) {
+    link: function(scope, element) {
 
       var isFloorplanLoaded = false;
       //Later we store dragging and zooming behavior to this variable.
@@ -93,7 +93,7 @@ angular.module('otaniemi3dApp')
 
         svg.call(zoomListener);
 
-        $rootScope.$broadcast('floorplan-loaded');
+        scope.$broadcast('floorplan-loaded');
         isFloorplanLoaded = true;
 
         return floorplan;
@@ -197,16 +197,53 @@ angular.module('otaniemi3dApp')
           });
       }
 
-      scope.$on('reset-zoom', function () {
+      function centerCamera(room) {
+        // body...
+      }
+
+      function zoomAndPan(scale, translate) {
         if (zoomListener) {
-          scope.floorplan.translate = [0,0];
-          scope.floorplan.scale = 1;
+          scope.floorplan.translate = translate;
+          scope.floorplan.scale = scale;
 
           zoomListener
-            .scale(1)
-            .translate([0,0])
+            .scale(scale)
+            .translate(translate)
             .event(d3.select(element[0]).select('#floorplan'));
         }
+      }
+
+      scope.$on('reset-zoom', function () {
+        zoomAndPan(1, [0,0]);
+      });
+
+      scope.$on('room-selected', function (_, roomInfo) {
+        d3.select(scope.floorplan.svg)
+          .selectAll('[data-room-id]')
+          .each(function () {
+            var room = d3.select(this);
+
+            //remove old room selection highlight
+            room
+              .style('stroke-width', null)
+              .style('stroke', null)
+              .style('stroke-opacity', null);
+
+            if (room.datum().roomId === roomInfo.id) {
+              room
+                .style('stroke-width', '15')
+                .style('stroke', '#ffcc00')
+                .style('stroke-opacity', '0')
+                .transition()
+                .ease('cubic-in-out')
+                .style('stroke-opacity', '1');
+
+              //move room to the center of screen if zoomed in
+              if (scope.floorplan.scale > 1.2) {
+                centerCamera(room);
+              }
+            }
+          });
       });
 
       scope.$watch('sensorType', function () {

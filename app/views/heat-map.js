@@ -117,6 +117,7 @@ angular.module('otaniemi3dApp')
 
     $scope.selectRoom = function(room) {
       $scope.room = room;
+      $scope.$broadcast('room-selected', room);
     };
 
     $scope.searchRoom = function(roomString) {
