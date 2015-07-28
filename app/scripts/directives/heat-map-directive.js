@@ -73,10 +73,6 @@ angular.module('otaniemi3dApp')
 
         svg.selectAll('text').attr('pointer-events', 'none');
 
-        //Remove title elements so that the browser's built-in
-        //tooltip doesn't show
-        svg.selectAll('title').remove();
-
         //Configure dragging and zooming behavior.
         zoomListener = d3.behavior.zoom()
           .scaleExtent([0.5, 10])
