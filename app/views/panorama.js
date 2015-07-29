@@ -15,8 +15,7 @@ angular.module('otaniemi3dApp')
 
     var roomId = $stateParams.roomId;
     var room = Rooms.dict[roomId];
-    self.sensors = room ? room.sensors : {};
-    self.hotspots = [];
+    self.sensors = room ? room.sensors : [];
     var roomName;
     var roomUrl =
       'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + roomId;
@@ -68,7 +67,8 @@ angular.module('otaniemi3dApp')
 
       return SensorData.send('read', metaDataRequest)
         .then(function(data) {
-          return data[roomId].sensors;
+          self.sensors = data[roomId].sensors;
+          return self.sensors;
         });
     }
 
@@ -105,8 +105,6 @@ angular.module('otaniemi3dApp')
           sensorGroup[0].id, pos[0], pos[1],
           self.sensorTooltip(sensorGroup),
         ].join(',') + ',"' + JSON.stringify(sensorGroup) +'"' + ')');
-
-        self.hotspots.push(sensorGroup[0].id);
       });
 
       return sensorGroups;
@@ -296,8 +294,6 @@ angular.module('otaniemi3dApp')
 
       self.modalInstance.result.then(function () {
         if (self.newSensors.length) {
-          var id = self.newSensors[0].id;
-
           for (var i = 0; i < self.newSensors.length; i++) {
             self.newSensors[i].metaData = {
               ath: pos.x,
@@ -305,29 +301,29 @@ angular.module('otaniemi3dApp')
             };
           }
 
-          /*
-          for (var i = 0; i < self.hotspots.length; i++) {
-            var hotspot = self.hotspots[i];
+          for (var j = 0; j < self.newSensors.length; j++) {
+            var newSensor = self.newSensors[j];
+            var exists = false;
 
-            var hotspot = krpano.get('hotspot[' + sensors[i].id + ']');
+            for (var k = 0; k < self.sensors.length; k++) {
+              var oldSensor = self.sensors[k];
 
-            if (hotspot) {
+              krpano.call('removehotspot(' + oldSensor.id + ')');
 
+              if (newSensor.id === oldSensor.id) {
+                oldSensor.metaData = newSensor.metaData;
+                exists = true;
+                break;
+              }
+            }
+
+            if (!exists) {
+              self.sensors.push(newSensor);
             }
           }
-          /*
-          var oldSensorsStr = krpano.get('hotspot[' + id + '].sensors');
 
-          var oldSensors = JSON.parse(oldSensorsStr.
-            substring(1, oldSensorsStr.length - 1));
-
-          krpano.call('updatesensors(' + [
-            id, oldSensors[0].id, self.sensorTooltip(oldSensors)
-          ].join(',') + ',"' + JSON.stringify(oldSensors) + '"' + ')');
-          */
-          krpano.call('addsensor(' + [
-            id, pos.x, pos.y, self.sensorTooltip(self.newSensors)
-          ].join(',') + ',"' + JSON.stringify(self.newSensors) + '"' + ')');
+          var sensorGroups = makeSensorGroups(self.sensors);
+          addSensorGroups(sensorGroups);
 
           sendMetaData(self.newSensors);
 
