@@ -9,37 +9,69 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function($scope, $stateParams, $window, Rooms, $modal, SensorData, $q, $interval) {
+  function($scope, $stateParams, $window, $modal, sensorApi, $q, $interval) {
 
     var self = this;
 
-    var roomId = $stateParams.roomId;
-    var room = Rooms.dict[roomId];
-    self.sensors = room ? room.sensors : [];
-    var roomName;
+    self.roomId = $stateParams.roomId;
+    self.sensors = [];
+    self.newSensors = [];
+    self.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
+
     var roomUrl =
-      'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + roomId;
+      'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + self.roomId;
+    var xmlPath = 'panorama/' + self.roomId + '.xml';
 
-    if (!room) {
-      roomName = roomId;
-    } else {
-      roomName = room.id;
+    self.room = {
+      xmlPath: xmlPath,
+      url: roomUrl,
+      sensors: self.sensors
+    };
+
+    self.alert = {
+      show: false,
+      message: ''
+    };
+
+    self.addSensors = function(sensors) {
+      self.newSensors = sensors;
+    };
+
+    self.goBack = function () {
+      $window.history.back();
+    };
+
+    getSensorData()
+      .then(displaySensors);
+
+    function getSensorData() {
+      var dataRequest = {
+        'Objects': {
+          'Object': {
+            'id': {
+              'keyValue': 'K1'
+            },
+            'Object': {
+              'id': {
+                'keyValue': self.roomId
+              }
+            }
+          }
+        }
+      };
+
+      return sensorApi.send('read', dataRequest)
+        .then(function (data) {
+          return data;
+        });
     }
 
-    var sensorTable = '[table class="tooltip-table"]' +
-      '[tr] [th colspan="2"]' + roomName + '[/th] [/tr]';
-
-    for (var i = 0; i < self.sensors.length; i++) {
-      var sensor = room.sensors[i];
-      var sensorValue = sensor.values.length ?
-        sensor.values[0].value : '';
-
-      sensorTable += '[tr] [th]' + sensor.name + '[/th] [td]' +
-        sensorValue + sensor.suffix + '[/td] [/tr]';
+    function displaySensors(sensors) {
+      return getMetaData(sensors)
+        .then(waitForPanorama)
+        .then(makeSensorGroups)
+        .then(addSensorGroups);
     }
-    sensorTable += '[/table]';
-
-    var xmlPath = 'panorama/' + roomName + '.xml';
 
     function getMetaData(sensors) {
       var metaDataRequest = {
@@ -50,7 +82,7 @@ angular.module('otaniemi3dApp')
             },
             'Object': {
               'id': {
-                'keyValue': roomId
+                'keyValue': self.roomId
               },
               'InfoItem': []
             }
@@ -65,9 +97,9 @@ angular.module('otaniemi3dApp')
         });
       }
 
-      return SensorData.send('read', metaDataRequest)
+      return sensorApi.send('read', metaDataRequest)
         .then(function(data) {
-          self.sensors = data[roomId].sensors;
+          self.sensors = data;
           return self.sensors;
         });
     }
@@ -103,7 +135,7 @@ angular.module('otaniemi3dApp')
 
         krpano.call('addsensor(' + [
           sensorGroup[0].id, pos[0], pos[1],
-          self.sensorTooltip(sensorGroup),
+          sensorTooltip(sensorGroup),
         ].join(',') + ',"' + JSON.stringify(sensorGroup) +'"' + ')');
       });
 
@@ -119,7 +151,7 @@ angular.module('otaniemi3dApp')
             },
             'Object': {
               'id': {
-                'keyValue': roomId
+                'keyValue': self.roomId
               },
               'InfoItem': []
             }
@@ -146,125 +178,43 @@ angular.module('otaniemi3dApp')
         });
       }
 
-      return SensorData.send('write', writeRequest);
+      return sensorApi.send('write', writeRequest);
     }
 
-    function displaySensors(data) {
-
-      var room = data[roomId];
-
-      if (!room) {
-        return;
-      }
-
-      var sensors = room.sensors;
-
-      ///DEBUG
-      // if (roomId === 'Cafeteria') {
-      //   for (var k = 0; k < sensors.length; k++) {
-      //     sensors[k].metaData = {};
-      //     sensors[k].metaData.ath = -17;
-      //     sensors[k].metaData.atv = -14;
-      //   }
-      //
-      //   return waitForPanorama(sensors)
-      //     .then(makeSensorGroups)
-      //     .then(addSensorGroups);
-      // }
-      ///END DEBUG
-
-      /*
-      for (var j = 0; j < sensors.length; j++) {
-        sensorPromises.push(getMetaData(sensors[j]));
-      }
-      */
-
-      return getMetaData(sensors)
-        .then(waitForPanorama)
-        .then(makeSensorGroups)
-        .then(addSensorGroups);
-    }
-
-    function getSensorData() {
-      var dataRequest = {
-        'Objects': {
-          'Object': {
-            'id': {
-              'keyValue': 'K1'
-            },
-            'Object': {
-              'id': {
-                'keyValue': roomId
-              }
-            }
-          }
-        }
-      };
-
-      return SensorData.send('read', dataRequest)
-        .then(function (data) {
-          return data;
-        });
-    }
-
-    self.room = {
-      sensorTable: sensorTable,
-      xmlPath: xmlPath,
-      url: roomUrl,
-      sensors: self.sensors
-    };
-
-    self.alert = {
-      show: false,
-      message: ''
-    };
-
-    self.newSensors = [];
-
-    self.addSensors = function(sensors) {
-      self.newSensors = sensors;
-    };
-
-    self.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
-
-    self.goBack = function () {
-      $window.history.back();
-    };
-
-    self.sensorTooltip = function(sensors) {
-      var sensorTable = '[table class="tooltip-table"]' +
-        '[tr] [th colspan="2" style="text-align:center"]' + roomName + '[/th] [/tr]';
+    function sensorTooltip(sensors) {
+      var sensorRows = '';
 
       for (var i = 0; i < sensors.length; i++) {
-        var sensor = sensors[i],
-            sensorValue,
-            room = Rooms.dict[sensor.room],
-            sensorSuffix;
+        var sensorValue = sensors[i].values.length ?
+          sensors[i].values[0].value : '';
+        var sensorSuffix = sensors[i].suffix;
+        sensorSuffix = sensorSuffix ? ' ' + sensorSuffix : '';
 
-        for (var j = 0; j < room.sensors.length; j++) {
-          if (room.sensors[j].id === sensor.id) {
-            sensorValue = room.sensors[j].values.length ?
-              room.sensors[j].values[0].value : '';
-            sensorSuffix = room.sensors[j].suffix;
-            sensorSuffix = sensorSuffix ? ' ' + sensorSuffix : '';
-            break;
-          }
-        }
-
-        sensorTable += '[tr] [th]' + sensor.name + '[/th] [td]' +
-          sensorValue + sensorSuffix + '[/td] [/tr]';
+        sensorRows += [
+          '[tr]',
+            '[th]',
+              sensors[i].name,
+            '[/th]',
+            '[td]',
+              sensorValue, sensorSuffix,
+            '[/td]',
+          '[/tr]'
+        ].join('');
       }
-      sensorTable += '[/table]';
+
+      var sensorTable = [
+        '[table class="tooltip-table"]',
+          '[tr]',
+            '[th colspan="2" style="text-align:center"]',
+              self.roomId,
+            '[/th]',
+          '[/tr]',
+          sensorRows,
+        '[/table]'
+      ].join('');
 
       return sensorTable;
-    };
-
-    getSensorData()
-      .then(displaySensors);
-
-    $scope.$on('sensordata-update', function (_, data) {
-      displaySensors(data.dict);
-    });
+    }
 
     //Create global namespace for scripts used by krpano.
     $window.krpano = {};

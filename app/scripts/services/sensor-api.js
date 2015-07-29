@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc service
- * @name otaniemi3dApp.apiService
+ * @name otaniemi3dApp.sensorApi
  * @description
- * # apiService
+ * # sensorApi
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('apiService', function ($http, $q, $interval, $rootScope) {
+  .service('sensorApi', function ($http, $q, $interval, $rootScope) {
 
     //Store pending http requests to an object
     var pendingRequests = {},
@@ -34,6 +34,8 @@ angular.module('otaniemi3dApp')
           url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
 
       params = params || {};
+      broadcast = broadcast || '';
+      loadingBar = loadingBar || true;
       var requestXml = generateXml(request, method, params);
 
       //If a pending request with the same url exists don't send a new request

@@ -7,7 +7,7 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('heatMap', function(heatmapService, $q, $rootScope, apiService, $timeout) {
+  .directive('heatMap', function(heatmapService, $q, $rootScope, sensorApi, $timeout) {
 
   return {
     restrict: 'E',
@@ -119,7 +119,7 @@ angular.module('otaniemi3dApp')
             });
           });
 
-        apiService.get(sensorRequest, {}, 'sensordata-new', true)
+        sensorApi.send('read', sensorRequest)
           .then(function success (data) {
             floorplan.data = data;
             deferred.resolve(floorplan);
