@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('SensorListCtrl', function ($scope, dataStorage) {
+  .controller('SensorListCtrl', function ($scope, dataStorage, sensorApi) {
 
     $scope.gridOptions = {
       enableFiltering: true,
@@ -21,7 +21,17 @@ angular.module('otaniemi3dApp')
       ]
     };
 
-    $scope.$on('sensordata-update', function (_, data) {
+    var requestK1 = {
+      'Objects': {
+        'Object': {
+          'id': {
+            'keyValue': 'K1'
+          }
+        }
+      }
+    };
+
+    sensorApi.send('read', requestK1).then(function (data) {
       $scope.gridOptions.data = data;
     });
 

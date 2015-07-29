@@ -8,20 +8,11 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('sensorApi', function ($http, $q, $interval, $rootScope) {
+  .service('sensorApi', function ($http, $q, $interval, dataStorage) {
 
     //Store pending http requests to an object
     var pendingRequests = {},
-        self = this,
-        requestK1 = {
-          'Objects': {
-            'Object': {
-              'id': {
-                'keyValue': 'K1'
-              }
-            }
-          }
-        };
+        self = this;
 
     /*
      * @param {string} id - Id of the object whose data should be fetched.
@@ -50,7 +41,7 @@ angular.module('otaniemi3dApp')
           .success(function (data) {
             data = parseData(data);
             deferred.resolve(data);
-            $rootScope.$broadcast(broadcast, data);
+            dataStorage.sensors = data;
           })
           .error(function () {
             console.log('Failed to fetch sensor data. Please try again');

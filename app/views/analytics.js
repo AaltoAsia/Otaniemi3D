@@ -8,13 +8,12 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AnalyticsCtrl', function ($scope, Rooms) {
+  .controller('AnalyticsCtrl', function ($scope, sensorApi) {
 
     $scope.selectedRoom = null;
     $scope.selectedSensor = null;
     $scope.selectedSensors = [];
     $scope.searchStr = '';
-    $scope.sensorData = Rooms.dict;
     $scope.alert = {
       show: false,
       message: ''
@@ -150,21 +149,9 @@ angular.module('otaniemi3dApp')
       var params = $scope.selectedTimeFrame.params;
       $scope.chartConfig.loading = true;
 
-      Rooms.get(request, params).then(function success (data) {
-        var sensorData = [],
-            selectedRoom = data[room.id],
-            selectedSensor;
-
-        if (!selectedRoom || !selectedRoom.sensors) {
-          return;
-        }
-
-        for (var i = 0; i < selectedRoom.sensors.length; i++) {
-          if (selectedRoom.sensors[i].id === sensor.id) {
-            selectedSensor = selectedRoom.sensors[i];
-            break;
-          }
-        }
+      sensorApi.send('read', request, params).then(function success (data) {
+        var selectedSensor = data[0],
+            sensorData = [];
 
         $scope.selectedRoom = room;
         $scope.selectedSensor = sensor;
@@ -177,27 +164,25 @@ angular.module('otaniemi3dApp')
           ]);
         }
 
-        var valueSuffix = Rooms.valueSuffix(selectedSensor.type);
-
         if ($scope.chartConfig.series.length &&
             $scope.chartConfig.series[0].id === 'placeholder-series') {
           $scope.chartConfig.series = [];
         }
 
         $scope.chartConfig.series.push({
-          name: selectedRoom.name + ': ' + selectedSensor.name,
+          name: selectedSensor.room + ': ' + selectedSensor.name,
           data: sensorData,
           tooltip: {
-            valueSuffix: ' ' + valueSuffix
+            valueSuffix: ' ' + selectedSensor.suffix
           },
           id: selectedSensor.id
         });
 
         if ($scope.chartConfig.series.length > 1) {
           $scope.chartConfig.yAxis.title.text = 'Values';
-        } else if (valueSuffix) {
+        } else if (selectedSensor.suffix) {
           $scope.chartConfig.yAxis.title.text = selectedSensor.name +
-            ' (' + valueSuffix + ')';
+            ' (' + selectedSensor.suffix + ')';
         } else {
           $scope.chartConfig.yAxis.title.text = selectedSensor.name;
         }
@@ -213,9 +198,5 @@ angular.module('otaniemi3dApp')
         $scope.chartConfig.loading = false;
       });
     };
-
-    $scope.$on('sensordata-update', function (_, data) {
-      $scope.sensorData = data.dict;
-    });
 
   });

@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('X3DomCtrl', function ($scope, Rooms, $modal, $state, $q, $interval, $timeout, $window, $urlRouter) {
+  .controller('X3DomCtrl', function ($scope, $modal, $state, $q, $interval, $timeout, $window, $urlRouter) {
 
     $scope.panoramabox = 'images/panoramabox.svg';
     $scope.selected = undefined;
@@ -91,7 +91,7 @@ angular.module('otaniemi3dApp')
         controller: '3dModalCtrl',
         resolve: {
           roomInfo: function () {
-            return Rooms.findRoom(sensorLabel);
+            //return Rooms.findRoom(sensorLabel);
           },
           roomName: function () {
           return sensorLabel;
