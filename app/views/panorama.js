@@ -184,6 +184,16 @@ angular.module('otaniemi3dApp')
     function sensorTooltip(sensors) {
       var sensorRows = '';
 
+      sensors.sort(function (a, b) {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+
       for (var i = 0; i < sensors.length; i++) {
         var sensorValue = sensors[i].values.length ?
           sensors[i].values[0].value : '';
