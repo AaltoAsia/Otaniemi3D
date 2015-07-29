@@ -7,7 +7,7 @@
  * # floorplan
  */
 angular.module('otaniemi3dApp')
-  .directive('heatMap', function(heatmapService, $q, apiService, $timeout) {
+  .directive('heatMap', function(heatmapService, $q, $rootScope, apiService, $timeout) {
 
   return {
     restrict: 'E',
@@ -89,7 +89,7 @@ angular.module('otaniemi3dApp')
 
         svg.call(zoomListener);
 
-        scope.$broadcast('floorplan-loaded');
+        $rootScope.$broadcast('floorplan-loaded');
         isFloorplanLoaded = true;
 
         return floorplan;
