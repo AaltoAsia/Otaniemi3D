@@ -173,7 +173,8 @@ angular.module('otaniemi3dApp')
           var name = sensors[j].getAttribute('name');
           var values = sensors[j].children;
           var valueList = [];
-          var metaData;
+          var metaData = {};
+          var metaDataNode;
 
           for (var k = 0; k < values.length; k++) {
             if (values[k].tagName === 'value') {
@@ -201,11 +202,15 @@ angular.module('otaniemi3dApp')
                 });
               }
             } else if (values[k].tagName === 'MetaData') {
-              var container = document.createElement('div');
-              container.appendChild(values[k]);
-
-              metaData = self.parseMetaData(container.innerHTML);
+              metaDataNode = values[k];
             }
+          }
+
+          if (metaDataNode) {
+            var container = document.createElement('div');
+            container.appendChild(metaDataNode);
+
+            metaData = self.parseMetaData(container.innerHTML);
           }
 
           if (name) {

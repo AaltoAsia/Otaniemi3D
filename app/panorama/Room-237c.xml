@@ -1,12 +1,12 @@
 <krpano version="1.17.4">
-	
+
 	<!-- the skin -->
 	<include url="skin/defaultskin.xml" />
     <include url="plugins/showtext.xml" />
-	
+
 	<!-- view settings -->
 	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />
-	
+
 
 	<preview url="Room_237c.tiles/preview.jpg" />
 
@@ -24,8 +24,8 @@
              alpha="0.4"
              scale="0.7"
              zoom="true"
-             onhover="set(alpha,1.0);showtext(get(room));"
-             onclick="set(alpha,1.0);showtext(get(room), mobile);"
+             onhover="set(alpha,1.0);showtext(get(sensorTable));"
+             onclick="set(alpha,1.0);showtext(get(sensorTable), mobile);"
              onout="set(alpha,0.4);"
             />
 
