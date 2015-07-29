@@ -56,13 +56,19 @@ angular
         url: '/3d-model',
         templateUrl: 'views/model-3d.html',
       })
-      .state('3d-model.x3dom', {
-        url: '/x3dom',
+      .state('x3dom', {
+        url: '/3d-model/x3dom/:roomId',
         templateUrl: 'views/x3dom.html',
-        controller: 'X3DomCtrl as x3dom'
+        controller: 'X3DomCtrl as x3dom',
+        params:  {
+          roomId: {
+            value: null,
+            squash: true
+          }
+        }
       })
-      .state('3d-model.unity', {
-        url: '/unity',
+      .state('unity', {
+        url: '/3d-model/unity',
         templateUrl: 'views/unity.html',
         controller: 'UnityCtrl as unity'
       })
@@ -83,9 +89,4 @@ angular
   })
   .config(function(cfpLoadingBarProvider) {
       cfpLoadingBarProvider.includeSpinner = false;
-  })
-  .run(function(apiService, Rooms, dataStorage) {
-    //Inject SensorData and Room services so that browser can immediately
-    //start to download sensor data from the server.
-    FastClick.attach(document.body);
   });
