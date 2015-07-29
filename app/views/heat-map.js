@@ -22,8 +22,7 @@ angular.module('otaniemi3dApp')
 
     $scope.searchString = '';
     $scope.floorplans = floorplanStorage.list;
-    $scope.room = null;
-    $scope.resetView = null;
+    $scope.room = {};
     $scope.svgSupport = Modernizr.svg;
     self.isFloorplanLoaded = false;
     $scope.floorplan = $scope.floorplans[$scope.floor-1];
@@ -129,6 +128,8 @@ angular.module('otaniemi3dApp')
           break;
         }
       }
+
+      $scope.selectRoom({});
     };
 
     $scope.resetZoom = function () {
