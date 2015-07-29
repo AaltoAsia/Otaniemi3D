@@ -8,19 +8,17 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('ModalCtrl', function ($scope, $modalInstance, timeFrame, roomValueType) {
-    
-    //Values that are manipulated by radio buttons.
-    $scope.timeFrame = timeFrame;
-    $scope.roomValueType = roomValueType;
-    
-    //Ok function, passes the variables, into resolve function in twodviewcontroller 
-    $scope.ok = function () {
-      $modalInstance.close([$scope.roomValueType, $scope.timeFrame]);
+  .controller('ModalCtrl', function ($scope, $modalInstance, params) {
+
+    var self = this;
+
+    self.params = params;
+
+    self.ok = function () {
+      $modalInstance.close(self.params);
     };
-    
-    //Shuts down modal without action.
-    $scope.cancel = function () {
+
+    self.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
   });

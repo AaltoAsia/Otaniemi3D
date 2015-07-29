@@ -5,27 +5,63 @@
       type="text"
       placeholder="Search">
     <sensor-tree id="sensor-tree"
-      ng-model="sensorData"
-      select-sensor="selectSensor"
-      add-sensor="addSensor"
-      search="searchStr">
+      root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/'"
+      drag-sensor="addSensor"
+      search="searchStr"
+      error="alert">
     </sensor-tree>
   </div>
 
   <div class="col-sm-9">
     <div class="row">
       <div id="sensor-ctrl" class="col-xs-2">
+
+        <div id="time-frame" class="btn-group" dropdown>
+          <button class="btn btn-black dropdown-toggle"
+                  dropdown-toggle data-label-placement>
+            {{selectedTimeFrame.text}}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu pull-right typeMenu" role="menu">
+            <li class="btn" disabled>
+              Choose time frame
+            </li>
+            <li ng-repeat="timeFrame in timeFrames">
+              <a ng-disabled="selectedTimeFrame == timeFrame"
+                 ng-click="selectTime(timeFrame)">
+                <img class="icons" ng-src="{{timeFrame.icon}}"> {{timeFrame.text}}
+              </a>
+            </li>
+          </ul>
+        </div>
+
         <div id="drop-area"
           title="You can view multiple sensor values at a time by dragging sensors to the drop area.">
           <div id="{{sensor.id}}" class="sensor-legend" ng-repeat="sensor in selectedSensors" draggable="true">
             <img ng-src="images/{{sensor.original.name}}.svg">
             <div>{{sensor.original.room}}: {{sensor.text}}</div>
           </div>
-          <h3 ng-if="!selectedSensors.length">Drop a sensor here</h3>
+          <h3 ng-show="!selectedSensors.length">Drop a sensor here</h3>
         </div>
-        <button id="clear-btn" class="btn btn-default" ng-click="clearSensors()">Clear sensors</button>
+
+        <div id="clear-btn">
+          <button class="btn btn-default" ng-click="clearSensors()">Clear sensors</button>
+        </div>
+
       </div>
-      <highchart id="sensor-chart" class="col-xs-9" config="chartConfig"></highchart>
+
+      <div class="col-xs-9">
+        <div id="alert" class="alert alert-danger alert-dismissible"
+             ng-class="{invisible: !alert.show}">
+          <button type="button" class="close"
+                  ng-click="alert.show = false"
+                  aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {{alert.message}}
+        </div>
+        <highchart id="sensor-chart" config="chartConfig"></highchart>
+      </div>
     </div>
   </div>
 </div>

@@ -1,23 +1,26 @@
 <head>
-    <meta http-equiv='X-UA-Compatible' content='chrome=1/'>
-    <meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
-    <link rel='stylesheet' type='text/css' href='x3dom.css'/>
-    <script type='text/javascript' src='x3dom.js'></script>
+  <meta http-equiv='X-UA-Compatible' content='chrome=1/'>
+  <meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
+  <link rel='stylesheet' type='text/css' href='x3dom.css'/>
+  <script src='x3dom.js'></script>
+  <script>
+    //This signals that x3dom has been downloaded.
+    window.x3domReady = true;
+  </script>
 </head>
 
 <div class="container x3d-container">
 
-<div ng-cloak class="jumbotron" ng-show="!webglSupport"><h1>Your browser doesn't support webGL!</h1></div>
-
-<div ng-cloak id="pano" ng-show="pano" style="width:100%;height:100%;">
-  <button class="panobtn" ng-show="pano" ng-click="stopPanorama()" >
-  <span class="glyphicon glyphicon glyphicon-backward" ></span> BACK </button>
-  <noscript><table style="width:100%;height:100%;"><tr style="vertical-align:middle;"><td><div style="text-align:center;">ERROR:<br/><br/>Javascript not activated<br/><br/></div></td></tr></table></noscript>
-  <script>
-  </script>
+<div ng-cloak class="jumbotron" ng-show="!webglSupport">
+  <h1>Your browser doesn't support webGL!</h1>
 </div>
 
-<x3d ng-hide="pano || !webglSupport" id='x3dElement' keysEnabled='false' showStat='false' showLog='false' style='width:100%; height:100%; border:0; margin:0; padding:0;'>
+<x3d ng-hide="pano || !webglSupport"
+     id='x3dElement'
+     keysEnabled='false'
+     showStat='false'
+     showLog='false'
+     style='width:100%; height:100%; border:0; margin:0; padding:0;'>
 
 <scene DEF='scene'>
 <navigationInfo
@@ -29,23 +32,33 @@
 
 <div ng-show="webglSupport" class="search-container">
 
-    <input
-            id="searchContent"
-            type="text"
-            ng-model="selected"
-            placeholder="Search for room..."
-            typeahead="item for item in items | filter:$viewValue | limitTo:8"
-            class="form-control search-content"
-            typeahead-on-select="onSelect($item)">
+  <input id="searchContent"
+         type="text"
+         ng-model="selected"
+         placeholder="Search for room..."
+         typeahead="showName(room) for room in rooms
+                   | filter: $viewValue
+                   | limitTo: 8"
+         class="form-control search-content"
+         typeahead-on-select="onSelect($item)">
 
-    <button class="btn btn-default" id="searchDefault" ng-click="changeView()">
-        <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
-    </button>
-    <button class="btn btn-default" id="searchDefault" ng-click="changeView('vp0')">
-        <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
-    </button>
+  <button class="btn btn-default"
+          id="searchDefault"
+          ng-click="changeView()">
+    <span class="glyphicon glyphicon-search"
+          style="vertical-align:middle">
+    </span>
+  </button>
+
+  <button class="btn btn-default"
+          id="searchDefault"
+          ng-click="changeView('vp0')">
+      <span class="glyphicon glyphicon-home"
+            style="vertical-align:middle">
+      </span>
+  </button>
+
 </div>
-
 
 <!-- Modal for displaying a sensor values when a sensor is clicked -->
 <script type="text/ng-template" id="threedModal.html">
@@ -58,7 +71,7 @@
         <td>{{roomName}}</td>
       </tr>
       <tr ng-repeat="info in roomInfo">
-        <th>{{info.type}}</th> 
+        <th>{{info.type}}</th>
         <td>{{info.value}}</td>
       </tr>
       <th><button class="btn btn-default" ng-click="ok()">OK</button></th>
@@ -71,7 +84,7 @@
 
 <!-- Default bird-eye view -->
 
-<Viewpoint id='vp0'
+<viewpoint id='vp0'
            position="494.52761544508076 31.38101963745607 -27.95278421074164"
            orientation="-0.99995 0.00979 0.00119 0.24151"
            centerOfRotation='494.2842745226907 6.15012291102131 -130.38945591364092'
@@ -80,9 +93,9 @@
 </Viewpoint>
 
 
-<Viewpoint id='Entrance'
-           position="472.70494 -0.63033 -134.51091" 
-           orientation="0.00000 0.99937 0.03539 3.14159" 
+<viewpoint id='Entrance'
+           position="472.70494 -0.63033 -134.51091"
+           orientation="0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="472.70494 -0.6657 -134.01215"
            description="entrance">
 </Viewpoint>
@@ -97,9 +110,9 @@
   </Shape>
 </Transform>
 
-<Viewpoint id='Cafeteria'
-           position="473.24336 -0.59486 -147.50971" 
-           orientation="0.00000 0.99937 0.03539 3.14159" 
+<viewpoint id='Cafeteria'
+           position="473.24336 -0.59486 -147.50971"
+           orientation="0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="473.24336 -0.664 -146.53470"
            description="cafeteria">
 </Viewpoint>
@@ -116,16 +129,16 @@
 </Transform>
 
 <Transform DEF = 'cafeteria_sensor'
-    translation = "469.9848032883704 -0.68947556924496 -143.49173141471726" 
-    scale = '5 5 5' 
+    translation = "469.9848032883704 -0.68947556924496 -143.49173141471726"
+    scale = '5 5 5'
     rotation='-0 0 -1.57 1.57'>
     <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Cafeteria')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
-<Viewpoint id='Corridor Entrance Side'
-           position="480.48883 1.32834 -115.26504" 
+<viewpoint id='Corridor Entrance Side'
+           position="480.48883 1.32834 -115.26504"
            orientation="-0.44858 0.00000 0.00000 0.10982"
-           centerOfRotation="480.48883 1.30138 -115.50956"  
+           centerOfRotation="480.48883 1.30138 -115.50956"
            description="Corridor Entrance Side">
 </Viewpoint>
 
@@ -140,16 +153,16 @@
 </Transform>
 
 <Transform DEF = 'Corridor_Entrance_Side_sensor'
-    translation = "483.267397 1.75220 -117.68667" 
-    scale = '5 5 5' 
+    translation = "483.267397 1.75220 -117.68667"
+    scale = '5 5 5'
     rotation='-0 0 1.57 1.57'>
     <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Corridor Entrance Side')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
-<Viewpoint id='Corridor Cafeteria Side'
-           position="480.48883 1.32834 -135.26504" 
+<viewpoint id='Corridor Cafeteria Side'
+           position="480.48883 1.32834 -135.26504"
            orientation="-0.44858 0.00000 0.00000 0.10982"
-           centerOfRotation="480.48883 1.30138 -135.50956"  
+           centerOfRotation="480.48883 1.30138 -135.50956"
            description="Corridor Cafeteria Side">
 </Viewpoint>
 
@@ -166,9 +179,9 @@
 
 <!-- Second floor -->
 
-<Viewpoint id='2nd Floor Sundeck'
-           position="478.89333 2.10577 -107.21682" 
-           orientation="-1.00000 0.00000 0.00000 0.08928" 
+<viewpoint id='2nd Floor Sundeck'
+           position="478.89333 2.10577 -107.21682"
+           orientation="-1.00000 0.00000 0.00000 0.08928"
            centerOfRotation="478.89333 2.01647 -108.22783"
            description="2nd Floor Sundeck">
 </Viewpoint>
@@ -183,10 +196,10 @@
   </Shape>
 </Transform>
 
-<Viewpoint id='2nd Floor Corridor Start'
-           position="485.51469 1.49577 -109.40390" 
-           orientation="-0.08515 -0.99303 -0.08151 1.53413" 
-           centerOfRotation=" 486.04597 1.40788 -109.42711" 
+<viewpoint id='2nd Floor Corridor Start'
+           position="485.51469 1.49577 -109.40390"
+           orientation="-0.08515 -0.99303 -0.08151 1.53413"
+           centerOfRotation=" 486.04597 1.40788 -109.42711"
            description="2nd Floor Corridor Start">
 </Viewpoint>
 
@@ -200,10 +213,10 @@
   </Shape>
 </Transform>
 
-<Viewpoint id='2nd Floor Corridor Middle'
-           position="497.51469 1.49577 -109.40390" 
-           orientation="-0.08515 -0.99303 -0.08151 1.53413" 
-           centerOfRotation=" 498.04597 1.40788 -109.42711" 
+<viewpoint id='2nd Floor Corridor Middle'
+           position="497.51469 1.49577 -109.40390"
+           orientation="-0.08515 -0.99303 -0.08151 1.53413"
+           centerOfRotation=" 498.04597 1.40788 -109.42711"
            description="2nd Floor Corridor Middle">
 </Viewpoint>
 
@@ -217,10 +230,10 @@
   </Shape>
 </Transform>
 
-<Viewpoint id='2nd Floor Corridor End'
-           position="511.51469 1.49577 -109.40390" 
-           orientation="-0.08515 -0.99303 -0.08151 1.53413" 
-           centerOfRotation=" 512.04597 1.40788 -109.42711" 
+<viewpoint id='2nd Floor Corridor End'
+           position="511.51469 1.49577 -109.40390"
+           orientation="-0.08515 -0.99303 -0.08151 1.53413"
+           centerOfRotation=" 512.04597 1.40788 -109.42711"
            description="2nd Floor Corridor End">
 </Viewpoint>
 
@@ -235,13 +248,13 @@
 </Transform>
 
 <Transform DEF = 'Corridor_End_sensor'
-    translation = "516.2639057062678 2.05003264707672463 -110.77286572331198" 
-    scale = '5 5 5' 
+    translation = "516.2639057062678 2.05003264707672463 -110.77286572331198"
+    scale = '5 5 5'
     rotation="-0.0 0.785 0.785 3.14"  >
     <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('2nd Floor Corridor End')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
-<Viewpoint id='223'
+<viewpoint id='Room-223'
            position="504.05285 2.10577 -112.37071"
            orientation="-1.00000 0.00000 0.00000 0.08928"
            centerOfRotation="504.05285 2.01648 -113.36820"
@@ -249,63 +262,63 @@
 </Viewpoint>
 
 
-<Viewpoint id='224'
+<viewpoint id='Room-224'
            position="509.05285 2.10577 -112.37071"
            orientation="-1.00000 0.00000 0.00000 0.08928"
            centerOfRotation="509.05285 2.01648 -113.36820"
            description="224">
 </Viewpoint>
 
-<Viewpoint id='225'
+<viewpoint id='Room-225'
            position="512.05285 2.10577 -112.37071"
            orientation="-1.00000 0.00000 0.00000 0.08928"
            centerOfRotation="512.05285 2.01648 -113.36820"
            description="225">
 </Viewpoint>
 
-<Viewpoint id='226'
+<viewpoint id='Room-226'
            position="517.05285 2.10577 -112.37071"
            orientation="-1.00000 0.00000 0.00000 0.08928"
            centerOfRotation="517.05285 2.01648 -113.36820"
            description="226">
 </Viewpoint>
 
-<Viewpoint id='227'
+<viewpoint id='Room-227'
            position="521.05285 2.10577 -112.37071"
            orientation="-1.00000 0.00000 0.00000 0.08928"
            centerOfRotation="521.05285 2.01648 -113.36820"
            description="227">
 </Viewpoint>
 
-<Viewpoint id='228'
+<viewpoint id='Room-228'
            position="526.05285 2.10577 -112.37071"
            orientation="-1.00000 0.00000 0.00000 0.08928"
            centerOfRotation="526.05285 2.01648 -113.36820"
            description="228">
 </Viewpoint>
 
-<Viewpoint id='229'
+<viewpoint id='Room-229'
            position="529.5285 2.10577 -112.37071"
            orientation="-1.00000 0.00000 0.00000 0.08928"
            centerOfRotation="529.5285 2.01648 -113.36820"
            description="229">
 </Viewpoint>
 
-<Viewpoint id='232d'
+<viewpoint id='Room-232d'
            position="540.73045 2.10577 -111.62189"
            orientation="-0.98180 0.18964 0.01069 0.11467"
            centerOfRotation="540.71326 2.01648 -112.41142"
            description="232d">
 </Viewpoint>
 
-<Viewpoint id='232c'
+<viewpoint id='Room-232c'
            position="537.80650 2.19372 -111.62840"
            orientation="-1.00000 0.00000 0.00000 0.07080"
            centerOfRotation="537.80650 2.12297 -112.62604"
            description="232c">
 </Viewpoint>
 
-<Viewpoint id='232a'
+<viewpoint id='Room-232a'
            position="541.04595 1.49867 -109.5522"
            orientation="-0.03537 0.99875 0.03537 1.57205"
            centerOfRotation="540.04846 1.42793 -109.5522"
@@ -313,7 +326,7 @@
 </Viewpoint>
 
 <Transform translation="538.04595 0.89867 -109.5522">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('232a'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room-232a'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -322,14 +335,14 @@
   </Shape>
 </Transform>
 
-<Viewpoint id='239'
+<viewpoint id='Room-239'
            position="535.25828 2.19777 -105.52309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="535.25828 2.16240 -105.02434"
            description="239">
 </Viewpoint>
 
-<Viewpoint id='238d'
+<viewpoint id='Room-238d'
            position="527.25828 2.19777 -105.52309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="527.25828 2.16240 -105.02434"
@@ -337,7 +350,7 @@
 </Viewpoint>
 
 <Transform translation="525.85828 0.91777 -102.52309">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('238d'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room-238d'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -348,19 +361,19 @@
 
 <Transform DEF = '238d_sensor'
     translation = "524.04428 1.6 -101.52309"
-    scale = '5 5 5' 
+    scale = '5 5 5'
     rotation='-0 0 -1.57 1.57'>
     <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('238d')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
-<Viewpoint id='238b'
+<viewpoint id='Room-238b'
            position="522.25828 2.19777 -105.52309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="522.25828 2.16240 -105.02434"
            description="238b">
 </Viewpoint>
 
-<Viewpoint id='237c'
+<viewpoint id='Room-237c'
            position="517.25828 2.19777 -105.52309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="517.25828 2.16240 -105.02434"
@@ -368,7 +381,7 @@
 </Viewpoint>
 
 <Transform translation="516.65828 0.91777 -102.52309">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('237c'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room-237c'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -379,40 +392,40 @@
 
 <Transform DEF = '237c_sensor'
     translation = "519.33828 1.7 -101.52309"
-    scale = '5 5 5' 
+    scale = '5 5 5'
     rotation='-0 0 1.57 1.57'>
     <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('237c')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
-<Viewpoint id='237d'
+<viewpoint id='Room-237d'
            position="513.25828 2.19777 -105.52309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="513.25828 2.16240 -105.02434"
            description="237c">
 </Viewpoint>
 
-<Viewpoint id='236a'
+<viewpoint id='Room-236a'
            position="507.25828 2.19777 -107.22309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="507.25828 2.16240 -106.72434"
            description="237c">
 </Viewpoint>
 
-<Viewpoint id='236b'
+<viewpoint id='Room-236b'
            position="507.25828 2.19777 -103.52309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="507.25828 2.16240 -103.02434"
            description="236b">
 </Viewpoint>
 
-<Viewpoint id='236b2'
+<viewpoint id='Room-236b2'
            position="503.25828 2.19777 -105.52309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="503.25828 2.16240 -105.02434"
            description="236b2">
 </Viewpoint>
 
-<Viewpoint id='235'
+<viewpoint id='Room-235'
            position="498.25828 2.19777 -105.52309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="498.25828 2.16240 -105.02434"
@@ -420,7 +433,7 @@
 </Viewpoint>
 
 <Transform translation="497.65828 0.91777 -102.52309">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('235'); $scope.$apply()">
+  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room-235'); $scope.$apply()">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -431,70 +444,70 @@
 
 <!-- Third floor -->
 
-<Viewpoint id='341c'
+<viewpoint id='Room-341c'
            position="540.67344 5.01579 -112.42232"
            orientation="-0.85856 -0.51240 -0.01815 0.08245"
            centerOfRotation="540.73929 4.90527 -113.97942"
            description="341c">
 </Viewpoint>
 
-<Viewpoint id='341b'
+<viewpoint id='Room-341b'
            position="537.85526 4.87722 -112.17062"
            orientation="-1.00000 0.00000 0.00000 0.07080"
            centerOfRotation="537.85526 4.80648 -113.16811"
            description="341b">
 </Viewpoint>
 
-<Viewpoint id='341a'
+<viewpoint id='Room-341a'
            position="537.20995 5.52361 -109.75590"
            orientation="-0.03537 -0.99875 -0.03537 1.57205"
            centerOfRotation="538.21242 5.45252 -109.75590"
            description="341a">
 </Viewpoint>
 
-<Viewpoint id='337'
+<viewpoint id='Room-337'
            position="526.45838 4.86015 -112.78043"
            orientation="-1.00000 0.00000 0.00000 0.07080"
            centerOfRotation="526.45838 4.78941 -113.77792"
            description="337">
 </Viewpoint>
 
-<Viewpoint id='338'
+<viewpoint id='Room-338'
            position="529.46532 5.41766 -115.56634"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="529.46532 5.34692 -114.56885"
            description="338">
 </Viewpoint>
 
-<Viewpoint id='348'
+<viewpoint id='Room-348'
            position="535.25828 5.19777 -105.52309"
            orientation="-0.00000 0.99937 0.03539 3.14159"
            centerOfRotation="535.25828 5.16240 -105.02434"
            description="348">
 </Viewpoint>
 
-<Viewpoint id='336'
+<viewpoint id='Room-336'
            position="521.73214 5.33379 -110.82007"
            orientation="-1.00000 0.00000 0.00000 0.07080"
            centerOfRotation="521.73214 5.26305 -111.81756"
            description="336">
 </Viewpoint>
 
-<Viewpoint id='335'
+<viewpoint id='Room-335'
            position="517.56277 4.71824 -110.93870"
            orientation="-1.00000 -0.00000 -0.00000 0.07080"
            centerOfRotation="517.56277 4.64750 -111.93619"
            description="335">
 </Viewpoint>
 
-<Viewpoint id='334'
+<viewpoint id='Room-334'
            position="512.47401 4.69214 -111.96067"
            orientation="-1.00000 -0.00000 -0.00000 0.07080"
            centerOfRotation="512.47401 4.62140 -112.95816"
            description="334">
 </Viewpoint>
 
-<Viewpoint id='333'
+<viewpoint id='Room-333'
            position="509.05285 4.91875 -112.37071"
            orientation="-1.00000 0.00000 0.00000 0.07080"
            centerOfRotation="509.05285 4.84801 -113.36820"

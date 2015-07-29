@@ -58,7 +58,7 @@ describe('AnalyticsCtrl:', function () {
     $rootScope = _$rootScope_;
   }));
 
-  describe('Receiving \'sensordata-update\' event', function () {
+  describe('Initialising controller', function () {
     var $scope, controller;
 
     beforeEach(function() {
@@ -66,12 +66,9 @@ describe('AnalyticsCtrl:', function () {
       controller = $controller('AnalyticsCtrl', { $scope: $scope });
     });
 
-    beforeEach(function () {
-      $rootScope.$broadcast('sensordata-update', {'Room-101': room});
-    });
-
-    it('should set data for the $scope.sensorData', function () {
-      expect($scope.sensorData).not.toBe(null);
+    it('should set selected room and sensors null', function () {
+      expect($scope.selectedRoom).toBe(null);
+      expect($scope.selectedSensor).toBe(null);
     });
 
   });

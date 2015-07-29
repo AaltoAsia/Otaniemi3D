@@ -8,73 +8,61 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('floorplanService', function () {
+  .service('floorplanStorage', function () {
 
     var self = this;
 
-    this.floors = [
+    self.list = [
       {
         url: 'floorplans/floor1.svg',
         name: 'Floor 1',
-        roomNumber: 'st10',
-        roomArea: 'st1',
+        rooms: [],
+        data: [],
         svg: null,
-        isSelected: false,
+        floor: 1,
         translate: [0,0],
         scale: 1
       },
       {
         url: 'floorplans/floor2.svg',
         name: 'Floor 2',
-        roomNumber: 'st13',
-        roomArea: 'st3',
+        rooms: [],
+        data: [],
         svg: null,
-        isSelected: false,
+        floor: 2,
         translate: [0,0],
         scale: 1
       },
       {
         url: 'floorplans/floor3.svg',
         name: 'Floor 3',
-        roomNumber: 'st11',
-        roomArea: 'st3',
+        rooms: [],
+        data: [],
         svg: null,
-        isSelected: false,
+        floor: 3,
         translate: [0,0],
         scale: 1
       },
       {
         url: 'floorplans/floor4.svg',
         name: 'Floor 4',
-        roomNumber: 'st7',
-        roomArea: 'st1',
+        rooms: [],
+        data: [],
         svg: null,
-        isSelected: false,
+        floor: 4,
         translate: [0,0],
         scale: 1
       },
       {
         url: 'floorplans/floor5.svg',
         name: 'Floor 5',
-        roomNumber: 'st10',
-        roomArea: 'st3',
+        rooms: [],
+        data: [],
         svg: null,
-        isSelected: false,
+        floor: 5,
         translate: [0,0],
         scale: 1
       }
     ];
-
-    this.allLoaded = function() {
-      //Returns true or false if all floorplans have been loaded
-      for (var i = 0; i < self.floors.length; i++) {
-        if (self.floors[i].svg === null) {
-          return false;
-        } else if (i === self.floors.length - 1) {
-          //Loop continues here only if all the floors have a non-null svg attribute
-          return true;
-        }
-      }
-    };
 
   });

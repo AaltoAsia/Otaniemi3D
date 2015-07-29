@@ -10,53 +10,81 @@
  */
 angular
   .module('otaniemi3dApp', [
-    'ngRoute',
     'ngTouch',
     'ui.bootstrap',
     'ui.grid',
+    'ui.router',
     'angular-loading-bar',
-    'angularSpinner',
     'highcharts-ng'
   ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/home', {
+  .config(function ($stateProvider, $urlRouterProvider,
+      $urlMatcherFactoryProvider) {
+
+    $urlMatcherFactoryProvider.strictMode(false);
+
+    $urlRouterProvider
+      .when('', ['$state', function ($state) {
+        $state.go('home');
+      }])
+      .when('/home', ['$state', function ($state) {
+        $state.go('home');
+      }])
+      .otherwise('not-found', {
+        url: '',
+        templateUrl: 'views/not-found.html'
+      });
+
+    $stateProvider
+      .state('home', {
+        url: '/',
         templateUrl: 'views/home.html',
-        controller: 'HomeCtrl'
+        controller: 'HomeCtrl as home'
       })
-      .when('/sensor-list', {
+      .state('sensor-list', {
+        url: '/sensor-list',
         templateUrl: 'views/sensor-list.html',
-        controller: 'SensorListCtrl'
+        controller: 'SensorListCtrl as sensorlist'
       })
-      .when('/heat-map/:floorNumber', {
-        templateUrl: 'views/floorplan.html',
-        controller: 'FloorplanCtrl'
+      .state('heat-map', {
+        url: '/heat-map/{floorNum:[1-5]}',
+        templateUrl: 'views/heat-map.html',
+        controller: 'HeatMapCtrl as heatmap'
       })
-      .when('/3d-model', {
+      .state('3d-model', {
+        url: '/3d-model',
         templateUrl: 'views/model-3d.html',
-        controller: 'Model3dCtrl'
       })
-      .when('/3d-model/x3dom', {
+      .state('x3dom', {
+        url: '/3d-model/x3dom/:roomId',
         templateUrl: 'views/x3dom.html',
-        controller: 'X3DomCtrl'
+        controller: 'X3DomCtrl as x3dom',
+        params:  {
+          roomId: {
+            value: null,
+            squash: true
+          }
+        }
       })
-      .when('/3d-model/unity', {
+      .state('unity', {
+        url: '/3d-model/unity',
         templateUrl: 'views/unity.html',
-        controller: 'UnityCtrl'
+        controller: 'UnityCtrl as unity'
       })
-      .when('/analytics', {
+      .state('analytics', {
+        url: '/analytics',
         templateUrl: 'views/analytics.html',
-        controller: 'AnalyticsCtrl'
+        controller: 'AnalyticsCtrl as analytics'
       })
-      .otherwise({
-        redirectTo: '/home'
+      .state('panorama', {
+        url: '/panorama/:roomId',
+        templateUrl: 'views/panorama.html',
+        controller: 'PanoramaCtrl as panorama'
+      })
+      .state('not-found', {
+        url: '{path:.*}',
+        templateUrl: 'views/not-found.html'
       });
   })
   .config(function(cfpLoadingBarProvider) {
       cfpLoadingBarProvider.includeSpinner = false;
-  })
-  .run(function(SensorData) {
-    //Inject SensorData so that it can immediately start downloading data
-    //from the server
-    FastClick.attach(document.body);
   });

@@ -8,12 +8,12 @@
 	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />
 
 
-	<preview url="Cafeteria.tiles/preview.jpg" />
+	<preview url="2th_Floor_-_Corridor_End.tiles/preview.jpg" />
 
 	<image>
-		<cube url="Cafeteria.tiles/pano_%s.jpg" />
+		<cube url="2th_Floor_-_Corridor_End.tiles/pano_%s.jpg" />
 		<mobile>
-			<cube url="Cafeteria.tiles/mobile_%s.jpg" />
+			<cube url="2th_Floor_-_Corridor_End.tiles/mobile_%s.jpg" />
 		</mobile>
 	</image>
 

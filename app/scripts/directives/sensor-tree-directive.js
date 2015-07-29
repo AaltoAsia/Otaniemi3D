@@ -7,41 +7,88 @@
  * # sensorTree
  */
 angular.module('otaniemi3dApp')
-  .directive('sensorTree', function ($document, $http, SensorData) {
+  .directive('sensorTree', function ($document, $http, sensorApi) {
     return {
       template: '<div></div>',
       restrict: 'E',
-      require: 'ngModel',
       scope: {
         selectSensor: '=',
-        addSensor: '=',
-        search: '='
+        dragSensor: '=',
+        search: '=',
+        rootUrl: '=',
+        error: '='
       },
-      link: function postLink (scope, element, attrs, ngModel) {
-
+      link: function postLink (scope, element, attrs) {
         element.jstree({
-          plugins: ['search', 'sort', 'dnd'],
+          plugins: [
+            'sort',
+            typeof attrs.checkbox === 'string' ? 'checkbox' : '',
+            typeof attrs.search === 'string' ? 'search' : '',
+            typeof attrs.dragSensor === 'string' ? 'dnd' : ''
+          ],
+          search: {
+            show_only_matches: true,
+            show_only_matches_children: true
+          },
+          dnd: {
+            is_draggable: function (nodes) {
+              var node = nodes[0];
+              return node.original.type === 'sensor';
+            }
+          },
           core: {
             check_callback: true,
             worker: false,
             data: function (node, cb) {
-              var baseUrl = 'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/';
+
+              function sendSuccess(self, cb, children) {
+                cb.call(self, children);
+                scope.error.show = false;
+                scope.error.message = '';
+              }
+
+              function sendError(self, cb, error) {
+                cb.call(self, error.errorNode);
+                scope.error.show = true;
+                scope.error.message = error.errorMsg;
+              }
+
               var children = [];
+              var error = {
+                errorNode: [{ text: 'Error' }],
+                errorMsg: 'Error when opening a tree node. Please close and reopen the node to try again.'
+              };
+              var id = scope.rootUrl.split('/');
+              var icon;
+              var type;
+              var url;
 
               if (node.id === '#') {
-                children.push({
-                  id: 'K1',
-                  text: 'K1',
+                id = id[id.length-1].length ? id[id.length-1] : id[id.length-2];
+
+                //IDEA: data from server could have type as a metadata
+                if (id === 'K1') {
+                  icon = 'images/icon-building.svg';
+                  type = 'building';
+                } else {
+                  icon = 'images/icon-room.svg';
+                  type = 'room';
+                }
+
+                children = [{
+                  id: id,
+                  text: id.split('-').join(' '),
                   children: true,
-                  //state: { opened: true },
-                  icon: 'images/icon-building.svg',
-                  type: 'building'
-                });
+                  type: type,
+                  icon: icon,
+                  state: {opened: true}
+                }];
+
                 cb.call(this, children);
 
               } else if (node.original.type === 'sensor') {
                 $http.get(node.original.url).success(function (data) {
-                  var values = SensorData.parseInfoItem(data);
+                  var values = sensorApi.parseInfoItem(data);
 
                   if (values.length) {
                     children = [{
@@ -53,12 +100,19 @@ angular.module('otaniemi3dApp')
                     }];
                   }
 
-                  cb.call(this, children);
+                  sendSuccess(this, cb, children);
+                })
+                .error(function () {
+                  sendError(this, cb, error);
                 });
 
               } else if (node.original.type === 'room') {
-                $http.get(baseUrl + node.id).success(function (data) {
-                  var room = SensorData.parseObject(data);
+                url = scope.rootUrl;
+                if (node.parent !== '#') {
+                  url += node.id;
+                }
+                $http.get(url).success(function (data) {
+                  var room = sensorApi.parseObject(data);
 
                   for (var i = 0; i < room.infoItems.length; i++) {
                     var id = room.infoItems[i];
@@ -71,15 +125,22 @@ angular.module('otaniemi3dApp')
                       children: true,
                       icon: 'images/icon-' + id + '.svg',
                       type: 'sensor',
-                      url: baseUrl + node.id + '/' + id
+                      url: url + '/' + id
                     });
                   }
-                  cb.call(this, children);
+                  sendSuccess(this, cb, children);
+                })
+                .error(function () {
+                  sendError(this, cb, error);
                 });
 
               } else if (node.original.type === 'building') {
-                $http.get(baseUrl).success(function (data) {
-                  var building = SensorData.parseObject(data);
+                url = scope.rootUrl;
+                if (node.parent !== '#') {
+                  url += node.id;
+                }
+                $http.get(url).success(function (data) {
+                  var building = sensorApi.parseObject(data);
 
                   for (var i = 0; i < building.objects.length; i++) {
                     var id = building.objects[i];
@@ -90,25 +151,19 @@ angular.module('otaniemi3dApp')
                       children: true,
                       icon: 'images/icon-room.svg',
                       type: 'room',
-                      url: baseUrl + id
+                      url: scope.rootUrl + id
                     });
                   }
-                  cb.call(this, children);
+                  sendSuccess(this, cb, children);
+                })
+                .error(function () {
+                  sendError(this, cb, error);
+                  node.children = true;
                 });
               }
             },
             themes: {
               responsive: true
-            }
-          },
-          search: {
-            show_only_matches: true,
-            show_only_matches_children: true
-          },
-          dnd: {
-            is_draggable: function (nodes) {
-              var node = nodes[0];
-              return node.original.type === 'sensor';
             }
           }
         });
@@ -124,33 +179,20 @@ angular.module('otaniemi3dApp')
         }
 
         element
-          /*.on('select_node.jstree', function (_, data) {
-            if (data.event) {
-              var node = data.node,
-                  room,
-                  sensor;
-
-              switch (node.original.type) {
-                case 'sensor':
-                  node.state.opened = true;
-                  room = getNode(node.parent);
-                  sensor = node;
-                  break;
-                case 'value':
-                  room = getNode(node.parents[1]);
-                  sensor = getNode(node.parent);
-                  break;
-                default:
-                  return;
-              }
-
-              //Use $apply because jstree works outside of angular's scope
-              scope.$apply(scope.selectSensor(room, sensor));
-            }
-          })*/
           .on('after_close.jstree', function (_, data) {
             data.node.children = true;
             getNode(data.node.id).state.loaded = false;
+          })
+          .on('select_node.jstree', function () {
+            var selectedSensors = [];
+
+            angular.forEach(tree.get_selected(true), function (node) {
+              if (node.original.type === 'sensor') {
+                selectedSensors.push(node.original);
+              }
+            });
+
+            scope.selectSensor(selectedSensors);
           });
 
         $document
@@ -159,7 +201,7 @@ angular.module('otaniemi3dApp')
             if(target.closest('#drop-area').length) {
               var sensor = getNode(data.data.nodes[0]);
               var room = getNode(sensor.parent);
-              scope.addSensor(room, sensor);
+              scope.dragSensor(room, sensor);
             }
           })
           .on('dnd_move.vakata', function (_, data) {
@@ -178,9 +220,11 @@ angular.module('otaniemi3dApp')
             }
           });
 
-        scope.$watch('search', function (str) {
-          tree.search(str);
-        });
+        if (typeof scope.search === 'string') {
+          scope.$watch('search', function (str) {
+            tree.search(str);
+          });
+        }
 
         scope.$on('$destroy', function () {
           $.jstree.destroy();

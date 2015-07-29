@@ -2,29 +2,17 @@
 
 /**
  * @ngdoc service
- * @name otaniemi3dApp.SensorData
+ * @name otaniemi3dApp.sensorApi
  * @description
- * # SensorData
+ * # sensorApi
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('SensorData', function ($http, $q, $interval, $rootScope) {
+  .service('sensorApi', function ($http, $q, $interval, dataStorage) {
 
     //Store pending http requests to an object
     var pendingRequests = {},
-        debugFile = 'odf-requests/response',
-        self = this,
-        debugNum = 1,
-        debug = false,
-        requestK1 = {
-          'Objects': {
-            'Object': {
-              'id': {
-                'keyValue': 'K1'
-              }
-            }
-          }
-        };
+        self = this;
 
     /*
      * @param {string} id - Id of the object whose data should be fetched.
@@ -32,58 +20,36 @@ angular.module('otaniemi3dApp')
      * @param {string} broadcast - Name of the event broadcasted by angular when
      *                             response has arrived.
      */
-    this.get = function (request, params, broadcast) {
+    this.send = function (method, request, params, broadcast, loadingBar) {
       var deferred = $q.defer(),
-          url = 'http://otaniemi3d.cs.hut.fi/omi/node/',
-          requestXml = generateXml(request, 'read', params);
+          url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
+
+      params = params || {};
+      broadcast = broadcast || '';
+      loadingBar = loadingBar || true;
+      var requestXml = generateXml(request, method, params);
 
       //If a pending request with the same url exists don't send a new request
       if (!pendingRequests[requestXml]) {
         pendingRequests[requestXml] = true;
 
-        if (debugNum >= 3) {
-          debugNum = 1;
-        } else {
-          debugNum++;
-        }
-
-        if (debug) {
-          var file;
-          if (id === 'Room-101') {
-            file = 'odf-requests/response-room101.xml';
-          } else {
-            file = debugFile + debugNum + '.xml';
-          }
-          $http.get(file)
-            .success(function (data) {
-              data = parseData(data);
-              deferred.resolve(data);
-              $rootScope.$broadcast(broadcast, data);
-            })
-            .error(function () {
-              console.log('Failed to fetch sensor data.');
-              deferred.reject();
-            })
-            .finally(function () {
-              pendingRequests[requestXml] = false;
-            });
-
-        } else {
-
-          $http.post(url, requestXml, {headers: {'Content-Type': 'application/xml'}})
-            .success(function (data) {
-              data = parseData(data);
-              deferred.resolve(data);
-              $rootScope.$broadcast(broadcast, data);
-            })
-            .error(function () {
-              console.log('Failed to fetch sensor data.');
-              deferred.reject('Failed to fetch sensor data.');
-            })
-            .finally(function () {
-              pendingRequests[requestXml] = false;
-            });
-        }
+        $http.post(url, requestXml,
+          {
+            headers: {'Content-Type': 'application/xml'},
+            ignoreLoadingBar: !loadingBar
+          })
+          .success(function (data) {
+            data = parseData(data);
+            deferred.resolve(data);
+            dataStorage.sensors = data;
+          })
+          .error(function () {
+            console.log('Failed to fetch sensor data. Please try again');
+            deferred.reject('Failed to fetch sensor data. Please try again');
+          })
+          .finally(function () {
+            pendingRequests[requestXml] = false;
+          });
 
       } else {
         deferred.reject();
@@ -92,14 +58,14 @@ angular.module('otaniemi3dApp')
       return deferred.promise;
     };
 
-    self.get(requestK1, {}, 'sensordata-new');
+    //self.send('read', requestK1, {newest: 1}, 'sensordata-new', true);
     /*
     $interval(function () {
-      self.get(requestK1, {}, 'sensordata-new');
+      self.get(requestK1, {newest: 1}, 'sensordata-new');
     }, 10000);
     */
 
-    this.parseInfoItem = function (xml) {
+    self.parseInfoItem = function (xml) {
       xml = new DOMParser().parseFromString(xml, 'text/xml');
 
       var values = [];
@@ -125,6 +91,18 @@ angular.module('otaniemi3dApp')
       });
 
       return values;
+    };
+
+    this.parseMetaData = function (xml) {
+      xml = new DOMParser().parseFromString(xml, 'text/xml');
+
+      var metaData = {};
+
+      $(xml).find('InfoItem').each(function () {
+        metaData[$(this).attr('name')] = $(this).find('value').text();
+      });
+
+      return metaData;
     };
 
     this.parseObject = function(xml) {
@@ -159,8 +137,6 @@ angular.module('otaniemi3dApp')
      * Convert the sensor data xml to a javascript object and return it.
      */
     function parseData(xml) {
-      var sensorData = {};
-
       xml = new DOMParser().parseFromString(xml, 'text/xml');
 
       var objects = evaluateXPath(xml, '//*[local-name()="Object"]');
@@ -168,6 +144,8 @@ angular.module('otaniemi3dApp')
       if (objects.length === 0) {
         console.log('Couldn\'t fetch any sensor data from the server.');
       }
+
+      var sensorList = [];
 
       for (var i = 0; i < objects.length; i++) {
         var id = objects[i].getElementsByTagName('id');
@@ -178,16 +156,17 @@ angular.module('otaniemi3dApp')
           continue;
         }
 
-        var sensors = objects[i].children;
-        var sensorList = [];
+        var objectSensors = objects[i].children;
 
-        for (var j = 0; j < sensors.length; j++) {
-          if (sensors[j].tagName !== 'InfoItem') {
+        for (var j = 0; j < objectSensors.length; j++) {
+          if (objectSensors[j].tagName !== 'InfoItem') {
             continue;
           }
-          var name = sensors[j].getAttribute('name');
-          var values = sensors[j].children;
+          var name = objectSensors[j].getAttribute('name');
+          var values = objectSensors[j].children;
           var valueList = [];
+          var metaData = {};
+          var metaDataNode;
 
           for (var k = 0; k < values.length; k++) {
             if (values[k].tagName === 'value') {
@@ -214,10 +193,19 @@ angular.module('otaniemi3dApp')
                   time: time
                 });
               }
+            } else if (values[k].tagName === 'MetaData') {
+              metaDataNode = values[k];
             }
           }
 
-          if (name && valueList.length > 0) {
+          if (metaDataNode) {
+            var container = document.createElement('div');
+            container.appendChild(metaDataNode);
+
+            metaData = self.parseMetaData(container.innerHTML);
+          }
+
+          if (name) {
             sortDates(valueList);
 
             var sensorName;
@@ -226,11 +214,32 @@ angular.module('otaniemi3dApp')
                 sensorName = 'CO2';
                 break;
               case 'pir':
-                sensorName = 'PIR';
+                sensorName = 'Occupancy';
                 break;
               default:
                 sensorName = name.charAt(0).toUpperCase() +
                   name.slice(1);
+            }
+
+            var suffix;
+            switch (name.toLowerCase()) {
+              case 'temperature':
+                suffix = '°C';
+                break;
+              case 'co2':
+                suffix = 'ppm';
+                break;
+              case 'light':
+                suffix = 'lux';
+                break;
+              case 'humidity':
+                suffix = '%';
+                break;
+              case 'pir':
+                suffix = '';
+                break;
+              default:
+                suffix = '';
             }
 
             sensorList.push({
@@ -239,21 +248,14 @@ angular.module('otaniemi3dApp')
               room: id.split('-').join(' '),
               roomId: id,
               name: sensorName,
-              values: valueList
+              values: valueList,
+              suffix: suffix,
+              metaData: metaData
             });
           }
         }
-
-        if (sensorList.length > 0) {
-          sensorData[id] = {
-            id: id,
-            name: id.split('-').join(' '),
-            sensors: sensorList,
-            node: null
-          };
-        }
       }
-      return sensorData;
+      return sensorList;
     }
 
     /*
@@ -283,21 +285,6 @@ angular.module('otaniemi3dApp')
       msg.appendChild(requestBody);
       methodElem.appendChild(msg);
       xml.appendChild(methodElem);
-
-      /*
-      var objects = document.createElementNS(null, 'Objects'),
-          object = document.createElementNS(null, 'Object');
-
-      var idElem = document.createElementNS(null, 'id'),
-      idText = document.createTextNode(id);
-
-      idElem.appendChild(idText);
-      object.appendChild(idElem);
-      objects.appendChild(object);
-      msg.appendChild(objects);
-      methodElem.appendChild(msg);
-      xml.appendChild(methodElem);
-      */
 
       return new XMLSerializer().serializeToString(xml);
     }

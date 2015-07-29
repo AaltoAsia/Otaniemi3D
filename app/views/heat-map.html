@@ -1,0 +1,178 @@
+<div id="searchContainer"
+     ng-class="App.fullscreen ? 'search-container-full' : 'search-no-fullscreen'">
+  <button class="btn btn-black mobile-button"
+          ng-click="open()">
+    Options
+  </button>
+  <!-- Sensor Type  -->
+  <div class="btn-group desktop-dropdown" dropdown>
+    <button id="sensorTypeButton"
+            ng-cloak
+            class="btn btn-black dropdown-toggle"
+            dropdown-toggle ng-disabled="disabled"
+            data-label-placement>
+      {{sensorType.text}}
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu pull-right typeMenu" role="menu">
+      <li class="btn" disabled>Choose sensor type</li>
+      <li ng-repeat="sensor in sensorTypes">
+        <a ng-disabled="sensorType == sensor"
+           ng-click="selectSensorType(sensor)">
+          <img class="icons" ng-src="{{sensor.icon}}">{{sensor.text}}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <!-- Sensor timeframe  -->
+  <div class="btn-group desktop-dropdown" dropdown>
+    <button id="sensorTimeButton"
+            ng-cloak
+            class="btn btn-black dropdown-toggle"
+            dropdown-toggle
+            ng-disabled="disabled"
+            data-label-placement>
+      {{timeFrame.text}}
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu pull-right timeMenu" role="menu">
+      <li class="btn" disabled>Choose time frame</li>
+      <li ng-repeat="time in timeFrames">
+        <a ng-disabled="timeFrame == time"
+           ng-click="selectTimeFrame(time)" uncheckable>
+          <img ng-src="{{time.icon}}" class="icons">{{time.text}}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <input id="searchContent2"
+         type="text"
+         ng-model="searchString"
+         placeholder="Search for rooms..."
+         typeahead="room as room.name for room in floorplan.rooms
+                   | filter: {name: $viewValue}
+                   | limitTo: 8"
+         ng-disabled="!floorplan.rooms.length"
+         class="form-control"
+         typeahead-on-select="selectRoom($item)">
+
+  <button class="btn btn-default" id="searchDefault"
+          ng-click="searchRoom(searchString)"
+          title="Search">
+    <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
+  </button>
+  <button class="btn btn-default" id="searchDefault"
+          ng-click="resetZoom()"
+          title="Reset zoom">
+    <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
+  </button>
+</div>
+
+<div class="jumbotron" ng-hide="svgSupport">
+  <h1>Your browser doesn't support svg!</h1>
+</div>
+
+<div ng-hide="!svgSupport"
+     ng-class="App.fullscreen ? 'floorplan-fullscreen' : 'floorplan'">'
+
+  <!-- Expand / compress button -->
+  <i ng-click="toggleFullscreen()"
+     class="btn fullscreen-button"
+     ng-class="App.fullscreen ? 'glyphicon glyphicon-resize-small' :
+              'glyphicon glyphicon-resize-full'"></i>
+
+  <div ng-cloak class="floorplan-caption">
+    <h4 class="caption-text">
+      {{selectedPlan.name}} ({{floor}}/{{floorplans.length}})
+    </h4>
+  </div>
+
+  <!-- Button that loads up that lower (aka previous) floor -->
+  <i ng-click="prevFloor()"
+     class="btn btn-lg previous-button glyphicon glyphicon-arrow-left"
+     ng-class="App.fullscreen ? 'btn-fullscreen' : ''"
+     ng-disabled="floor == '1'">
+  </i>
+
+  <!-- button that loads up higher (aka next) floor -->
+  <i ng-click="nextFloor()"
+     class="btn btn-lg next-button glyphicon glyphicon-arrow-right"
+     ng-class="App.fullscreen ? 'btn-fullscreen' : ''"
+     ng-disabled="floor == floorplans.length">
+  </i>
+
+  <!-- The actual floorplan -->
+  <heat-map id="heat-map"
+            class="fp"
+            floorplan="floorplan"
+            selected-room="selectedRoom"
+            sensor-type="sensorType">
+
+    <tooltip ng-if="heatmap.isFloorplanLoaded"
+             sensor-type="sensorType"
+             class="mouse-tooltip">
+    </tooltip>
+
+    <legendbar id="legendBar"
+               sensor-type="sensorType"
+               style="position: absolute">
+    </legendbar>
+
+  </heat-map>
+
+</div>
+
+<script type="text/ng-template" id="sensor-options.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Sensor type and timeframe</h3>
+  </div>
+  <div class="modal-body">
+    <div class="modal-landscape">
+      <p>
+        <div class="btn-group" id="modalValue">
+          <label ng-repeat="sensor in modal.params.sensorTypes"
+                 class="btn btn-black"
+                 ng-model="modal.params.sensorType"
+                 btn-radio="sensor">
+            {{sensor.name}}
+          </label>
+        </div>
+      </p>
+      <p>
+        <div class="btn-group" id="modalTimeframe">
+          <label ng-repeat="time in modal.params.timeFrames"
+                 class="btn btn-black"
+                 ng-model="modal.params.timeFrame"
+                 btn-radio="time">
+            {{time.text}}
+          </label>
+        </div>
+      </p>
+    </div>
+    <div class="modal-portrait">
+      <p class="center">
+        <div class="btn-group-vertical" id="modalValue">
+          <label ng-repeat="sensor in modal.params.sensorTypes"
+                 class="btn btn-black"
+                 ng-model="modal.params.sensorType"
+                 btn-radio="sensor">
+            {{sensor.name}}
+          </label>
+        </div>
+        <div class="btn-group-vertical" id="modalTimeframe">
+        <label ng-repeat="time in modal.params.timeFrames"
+               class="btn btn-black"
+               ng-model="modal.params.timeFrame"
+               btn-radio="time.text">
+          {{time.text}}
+        </label>
+        </div>
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" ng-click="modal.ok()">OK</button>
+    <button class="btn btn-default" ng-click="modal.cancel()">Cancel</button>
+  </div>
+</script>

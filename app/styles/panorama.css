@@ -1,0 +1,27 @@
+.panobtn {
+  position: fixed;
+  z-index: 2;
+  width: 10em;
+  height: 3em;
+  border: none;
+  background-color: #333;
+  color: #9D9D9D;
+}
+
+.panorama {
+  height: calc(100% - 100px);
+  width: 100%;
+  z-index: 1;
+  margin-top: -15px;
+}
+
+.panorama-fullscreen {
+  height: calc(100%);
+  margin-top: 0px;
+}
+
+@media only screen and (max-width : 769px) {
+	.panorama {
+    height: calc(100% - 45px);
+	}
+}
