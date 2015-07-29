@@ -10,13 +10,11 @@
  */
 angular
   .module('otaniemi3dApp', [
-    'ngRoute',
     'ngTouch',
     'ui.bootstrap',
     'ui.grid',
     'ui.router',
     'angular-loading-bar',
-    'angularSpinner',
     'highcharts-ng'
   ])
   .config(function ($stateProvider, $urlRouterProvider,
