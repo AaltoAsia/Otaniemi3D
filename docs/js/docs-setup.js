@@ -45,8 +45,8 @@ NG_DOCS={
       "shortName": "HeatMapCtrl",
       "type": "function",
       "moduleName": "otaniemi3dApp",
-      "shortDescription": "HeatMapCtrl",
-      "keywords": "api controller function heatmapctrl otaniemi3dapp"
+      "shortDescription": "Controls Heat Map view.",
+      "keywords": "api average colored controller controls current display displayed frame function heat icon iso map object otaniemi3dapp params properties select selector selectsensortype selecttimeframe sensor string text time timeframe type url values view"
     },
     {
       "section": "api",

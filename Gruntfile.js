@@ -41,7 +41,7 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js',
                 '<%= yeoman.app %>/views/*.js',
                 '<%= yeoman.app %>/app.js'],
-        tasks: ['newer:jshint:all'],
+        tasks: ['ngdocs', 'newer:jshint:all'],
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
@@ -86,6 +86,10 @@ module.exports = function (grunt) {
               connect().use(
                 '/bower_components',
                 connect.static('./bower_components')
+              ),
+              connect().use(
+                '/docs',
+                connect.static('./docs')
               ),
               connect.static(appConfig.app)
             ];
@@ -150,7 +154,8 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      server: '.tmp'
+      server: '.tmp',
+      docs: 'docs'
     },
 
     // Add vendor prefixed styles
@@ -385,10 +390,12 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'clean:docs',
       'wiredep',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
+      'ngdocs',
       'watch'
     ]);
   });
