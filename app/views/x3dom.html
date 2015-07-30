@@ -67,14 +67,13 @@
   <div class="panel panel-default">
     <table class="table table-bordered">
       <tr>
-        <th>Room</th>
-        <td>{{roomName}}</td>
+        <th colspan="2">{{modal.params[0].room}}</th>
       </tr>
-      <tr ng-repeat="info in roomInfo">
-        <th>{{info.type}}</th>
-        <td>{{info.value}}</td>
+      <tr ng-repeat="sensor in modal.params">
+        <th>{{sensor.name}}</th>
+        <td>{{sensor.values[0].value}} {{sensor.suffix}}</td>
       </tr>
-      <th><button class="btn btn-default" ng-click="ok()">OK</button></th>
+      <th><button class="btn btn-default" ng-click="modal.ok()">OK</button></th>
     </table>
   </div>
   </div>
@@ -363,7 +362,7 @@
     translation = "524.04428 1.6 -101.52309"
     scale = '5 5 5'
     rotation='-0 0 -1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('238d')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Room-238d')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <viewpoint id='Room-238b'
@@ -394,7 +393,7 @@
     translation = "519.33828 1.7 -101.52309"
     scale = '5 5 5'
     rotation='-0 0 1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('237c')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Room-237c')" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <viewpoint id='Room-237d'

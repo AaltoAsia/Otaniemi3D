@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('X3DomCtrl', function ($scope, $modal, $state, $q, $interval, $timeout, $window, $urlRouter) {
+  .controller('X3DomCtrl', function ($scope, $modal, $state, $q, $interval, $timeout, $window, sensorApi) {
 
     $scope.panoramabox = 'images/panoramabox.svg';
     $scope.selected = undefined;
@@ -85,31 +85,39 @@ angular.module('otaniemi3dApp')
       $state.go('panorama', {roomId: roomId});
     };
 
-    $scope.modalTooltip = function (sensorLabel) {
+    $scope.modalTooltip = function (roomId) {
       $modal.open({
         templateUrl: 'threedModal.html',
-        controller: '3dModalCtrl',
+        controller: 'ModalCtrl',
+        controllerAs: 'modal',
         resolve: {
-          roomInfo: function () {
-            //return Rooms.findRoom(sensorLabel);
-          },
-          roomName: function () {
-          return sensorLabel;
+          params: function () {
+            return getSensorData(roomId);
           }
         }
 
       });
     };
-    /*
-    $scope.$on('$locationChangeSuccess', function(evt) {
-      //evt.preventDefault();
 
-      if ($state.params.roomId) {
-        $scope.changeView($state.params.roomId);
-      }
+    function getSensorData(roomId) {
+      var request = {
+        'Objects': {
+          'Object': {
+            'id': {
+              'keyValue': 'K1'
+            },
+            'Object': {
+              'id': {
+                'keyValue': roomId
+              }
+            }
+          }
+        }
+      };
 
-      //$urlRouter.sync();
-    });
-    */
+      return sensorApi.send('read', request).then(function (data) {
+        return data;
+      });
+    }
   }
 );
