@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AnalyticsCtrl', function ($scope, sensorApi) {
+  .controller('AnalyticsCtrl', function ($scope, sensorApi, $modal) {
 
     $scope.room = null;
     $scope.sensor = null;
@@ -92,7 +92,31 @@ angular.module('otaniemi3dApp')
     $scope.timeFrame = $scope.timeFrames[0];
 
     $scope.selectTime = function (timeFrame) {
-      $scope.timeFrame = timeFrame;
+      if (timeFrame.text === 'Select range') {
+        $scope.modalInstance = $modal.open({
+          templateUrl: 'select-range.html',
+          controller: 'ModalCtrl',
+          controllerAs: 'modal',
+          resolve: {
+            params: function () {
+              return {
+                timeFrame: timeFrame
+              };
+            }
+          }
+        });
+
+        $scope.modalInstance.result.then(function (params) {
+          $scope.timeFrame = params.timeFrame;
+
+          $scope.timeFrame.params.begin =
+            params.timeFrame.params.begin.toISOString();
+          $scope.timeFrame.params.end =
+            params.timeFrame.params.end.toISOString();
+        });
+      } else {
+        $scope.timeFrame = timeFrame;
+      }
     };
 
     $scope.clearSensors = function () {

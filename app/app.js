@@ -14,6 +14,7 @@ angular
     'ui.bootstrap',
     'ui.grid',
     'ui.router',
+    'ui.date',
     'angular-loading-bar',
     'highcharts-ng'
   ])
