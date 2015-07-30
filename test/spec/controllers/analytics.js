@@ -5,72 +5,91 @@ describe('AnalyticsCtrl:', function () {
   // load the controller's module
   beforeEach(module('otaniemi3dApp'));
 
-  var $controller, $rootScope,
+  var $controller, $rootScope, $scope,
+      controller, $httpBackend, sensorRequest, roomRequest;
 
-      name = 'Room 101',
-      sensorId1 = 'temperature-Room-101',
-      sensorId2 = 'co2-Room-101',
-      type1= 'temperature',
-      type2= 'co2',
-      values1 = [
-        {
-          value: 23,
-          time: 1435754223000
-        },
-        {
-          value: 24,
-          time: 1435754228000
-        }
-      ],
-      values2 = [
-        {
-          value: 501,
-          time: 1435754255000
-        },
-        {
-          value: 434,
-          time: 1435754261000
-        }
-      ],
-      node = null,
+  var sensors = [
+    {
+      id: 'temperature-Room-101',
+      type: 'temperature',
+      room: 'Room 101',
+      roomId: 'Room-101',
+      name: 'Temperature',
+      values: [],
+      suffix: 'C',
+      metaData: {}
+    },
+    {
+      id: 'pir-Room-101',
+      type: 'pir',
+      room: 'Room 101',
+      roomId: 'Room-101',
+      name: 'Occupancy',
+      values: [],
+      suffix: '',
+      metaData: {}
+    },
+  ];
 
-      room = {
-        name: name,
-        sensors: [
-          {
-            sensorId: sensorId1,
-            type: type1,
-            values: values1
+
+
+  function requestRoom(roomId) {
+    return {
+      'Objects': {
+        'Object': {
+          'id': {
+            'keyValue': 'K1'
           },
-          {
-            sensorId: sensorId2,
-            type: type2,
-            values: values2
+          'Object': {
+            'id': {
+              'keyValue': roomId
+            }
           }
-        ],
-        node: node
-      };
+        }
+      }
+    };
+  }
 
-  beforeEach(inject(function(_$controller_, _$rootScope_){
-    //The injector unwraps the underscores (_) from around
-    //the parameter names when matching
+  function requestSensor(sensor) {
+    var sensorRequest = requestRoom(sensor.roomId).Objects.Object.Object;
+    sensorRequest.InfoItem = { '@name': sensor.type };
+
+    return sensorRequest;
+  }
+
+
+
+  beforeEach(inject(function(_$controller_, _$rootScope_, _$httpBackend_) {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
+    $httpBackend = _$httpBackend_;
+    $scope = $rootScope.$new();
+    controller = $controller('AnalyticsCtrl', { $scope: $scope });
+
+    sensorRequest = $httpBackend
+      .when('POST',
+            'http://otaniemi3d.cs.hut.fi/omi/node/',
+            requestSensor(sensors[0]))
+      .respond([sensors[0]]);
+
+    roomRequest = $httpBackend
+      .when('POST',
+            'http://otaniemi3d.cs.hut.fi/omi/node/',
+            requestRoom(sensors[0].roomId))
+      .respond(sensors);
   }));
 
-  describe('Initialising controller', function () {
-    var $scope, controller;
+  afterEach(function() {
+     $httpBackend.verifyNoOutstandingExpectation();
+     $httpBackend.verifyNoOutstandingRequest();
+   });
 
-    beforeEach(function() {
-      $scope = $rootScope.$new();
-      controller = $controller('AnalyticsCtrl', { $scope: $scope });
-    });
+  it('Initialised controller should have some time frames', function () {
+      expect($scope.timeFrames).not.toBe(null);
+  });
 
-    it('should set selected room and sensors null', function () {
-      expect($scope.selectedRoom).toBe(null);
-      expect($scope.selectedSensor).toBe(null);
-    });
-
+  it('Adding sensor should', function () {
+      expect($scope.timeFrames).not.toBe(null);
   });
 
 });

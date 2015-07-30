@@ -10,9 +10,9 @@
 angular.module('otaniemi3dApp')
   .controller('AnalyticsCtrl', function ($scope, sensorApi) {
 
-    $scope.selectedRoom = null;
-    $scope.selectedSensor = null;
-    $scope.selectedSensors = [];
+    $scope.room = null;
+    $scope.sensor = null;
+    $scope.sensors = [];
     $scope.searchStr = '';
     $scope.alert = {
       show: false,
@@ -89,16 +89,16 @@ angular.module('otaniemi3dApp')
       },
     ];
 
-    $scope.selectedTimeFrame = $scope.timeFrames[0];
+    $scope.timeFrame = $scope.timeFrames[0];
 
     $scope.selectTime = function (timeFrame) {
-      $scope.selectedTimeFrame = timeFrame;
+      $scope.timeFrame = timeFrame;
     };
 
     $scope.clearSensors = function () {
-      $scope.selectedSensors = [];
-      $scope.selectedSensor = null;
-      $scope.selectedRoom = null;
+      $scope.sensors = [];
+      $scope.sensor = null;
+      $scope.room = null;
       $scope.chartConfig.series = [{
         name: ' ',
         data : [],
@@ -146,16 +146,16 @@ angular.module('otaniemi3dApp')
         }
       };
 
-      var params = $scope.selectedTimeFrame.params;
+      var params = $scope.timeFrame.params;
       $scope.chartConfig.loading = true;
 
       sensorApi.send('read', request, params).then(function success (data) {
         var selectedSensor = data[0],
             sensorData = [];
 
-        $scope.selectedRoom = room;
-        $scope.selectedSensor = sensor;
-        $scope.selectedSensors.push(sensor);
+        $scope.room = room;
+        $scope.sensor = sensor;
+        $scope.sensors.push(sensor);
 
         for (var j = 0; j < selectedSensor.values.length; j++) {
           sensorData.push([
