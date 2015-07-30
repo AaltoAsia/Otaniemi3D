@@ -41,7 +41,7 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js',
                 '<%= yeoman.app %>/views/*.js',
                 '<%= yeoman.app %>/app.js'],
-        tasks: ['clean:docs', 'ngdocs', 'newer:jshint:all'],
+        tasks: ['clean:docs', 'ngdocs'],
         options: {
           livereload: '<%= connect.options.livereload %>'
         }

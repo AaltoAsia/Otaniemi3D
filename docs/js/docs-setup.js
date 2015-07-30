@@ -126,8 +126,8 @@ NG_DOCS={
       "shortName": "heat-map",
       "type": "directive",
       "moduleName": "otaniemi3dApp",
-      "shortDescription": "Display heat map of a provided floor plan.",
-      "keywords": "api coloring directive display floor floorplan heat highlighted map otaniemi3dapp plan provided room selectedroom sensor sensortype type values viewed"
+      "shortDescription": "Display heat map of the provided floor plan.",
+      "keywords": "$q $rootscope api coloring directive display floor floorplan floorplanstorage heat heatmapservice highlighted map otaniemi3dapp plan provided room selectedroom sensor sensorapi sensortype type values viewed"
     },
     {
       "section": "api",
@@ -167,12 +167,12 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "otaniemi3dApp.floorplanService",
-      "shortName": "otaniemi3dApp.floorplanService",
+      "id": "otaniemi3dApp.floorplanStorage",
+      "shortName": "otaniemi3dApp.floorplanStorage",
       "type": "service",
       "moduleName": "otaniemi3dApp",
-      "shortDescription": "floorplanService",
-      "keywords": "api floorplanservice otaniemi3dapp service"
+      "shortDescription": "floorplanStorage",
+      "keywords": "api floorplanstorage otaniemi3dapp service"
     },
     {
       "section": "api",

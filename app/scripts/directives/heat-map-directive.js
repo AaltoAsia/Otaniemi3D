@@ -4,12 +4,16 @@
  * @ngdoc directive
  * @name otaniemi3dApp.directive:heat-map
  * @description
- * Display heat map of a provided floor plan.
+ * Display heat map of the provided floor plan.
  * @restrict E
- * @param {Object} floorplan Floorplan that is viewed in the heat map.
+ * @param {Object} floorplan {@link otaniemi3dApp.floorplanStorage Floor plan} that is viewed in the heat map.
  * @param {Object} selectedRoom Room that is highlighted.
  * @param {Object} sensorType Sensor type whose values are used in
- *                            coloring the heat map
+ *                            coloring the heat map.
+ * @requires $q
+ * @requires $rootScope
+ * @requires otaniemi3dApp.heatmapService
+ * @requires otaniemi3dApp.sensorApi
  */
 angular.module('otaniemi3dApp')
   .directive('heatMap', function(heatmapService, $q, $rootScope, sensorApi) {
@@ -33,8 +37,11 @@ angular.module('otaniemi3dApp')
         .then(bindSensors)
         .then(updateRoomColors);
 
-      /*
+      /**
        * Download svg from the server and save it to floorplan.svg
+       *
+       * @param {Object} floorplan - Floor plan that should be downloaded.
+       * @return {Promise} Returns a promise of floorplan.
        */
       function getFloorplan(floorplan){
         var deferred = $q.defer();
@@ -55,9 +62,12 @@ angular.module('otaniemi3dApp')
         return deferred.promise;
       }
 
-     /*
-      * Append floorplan to the html element and register
+     /**
+      * Append floorplan to the parent element and register
       * zoom and drag listener.
+      *
+      * @param {Object} floorplan - Floor plan that will be appended to the page.
+      * @return {Object} Same floor plan object that was given as a parameter.
       */
       function appendFloorplan(floorplan) {
         var svg = element[0].appendChild(floorplan.svg);
@@ -99,9 +109,14 @@ angular.module('otaniemi3dApp')
         return floorplan;
       }
 
+      /**
+       * Fetch sensor data of rooms in the floor plan from the server.
+       *
+       * @param {Object} floorplan - Floor plan object where the data
+       *                             will be stored.
+       * @return {Promise} Promise of a floor plan object with the sensor data.
+       */
       function fetchSensorData(floorplan) {
-        var deferred = $q.defer();
-
         var sensorRequest = {
           'Objects': {
             'Object': {
@@ -123,22 +138,23 @@ angular.module('otaniemi3dApp')
             });
           });
 
-        sensorApi.send('read', sensorRequest)
+        return sensorApi.send('read', sensorRequest)
           .then(function success (data) {
             floorplan.data = data;
-            deferred.resolve(floorplan);
+            return floorplan;
           }, function error () {
             floorplan.data = floorplan.data || [];
-            deferred.resolve(floorplan);
+            return floorplan;
           });
-
-        return deferred.promise;
       }
 
-      /*
-      * Read rooms and their html elements from the floorplan svg
-      * and save data to the Rooms service.
-      */
+      /**
+       * Bind svg path elements of rooms with corresponding sensor data.
+       *
+       * @param {Object} floorplan - Floor plan whose path elements will
+       *                             be mapped to sensor data.
+       * @return {Object} Same floor plan object that was given as a parameter.
+       */
       function bindSensors(floorplan) {
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
@@ -178,6 +194,12 @@ angular.module('otaniemi3dApp')
         return floorplan;
       }
 
+      /**
+       * Color rooms in heat map according to sensor values that are same
+       * type as scope.sensorType.
+       *
+       * @param {Object} floorplan - Floor plan whose rooms will be colored.
+       */
       function updateRoomColors(floorplan) {
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
@@ -197,10 +219,21 @@ angular.module('otaniemi3dApp')
           });
       }
 
+      /**
+       * Center camera to the room that was selected
+       *
+       * @param {Object} room - Room where we want to center the camera.
+       */
       function centerCamera(room) {
         // body...
       }
 
+      /**
+       * Set floor plan svg's scale and translation.
+       *
+       * @param {number} scale - New scale for the floor plan.
+       * @param {number[]} translate - New translation for the floor plan.
+       */
       function zoomAndPan(scale, translate) {
         if (zoomListener) {
           scope.floorplan.translate = translate;

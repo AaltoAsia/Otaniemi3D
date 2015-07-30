@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc service
- * @name otaniemi3dApp.floorplanService
+ * @name otaniemi3dApp.floorplanStorage
  * @description
- * # floorplanService
+ * # floorplanStorage
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
