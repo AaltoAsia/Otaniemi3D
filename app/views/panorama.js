@@ -5,7 +5,7 @@
  * @name otaniemi3dApp.controller:PanoramaCtrl
  * @description
  * # PanoramaCtrl
- * Controller of the otaniemi3dApp
+ * Controller of the Otaniemi3D
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',

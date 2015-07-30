@@ -82,7 +82,7 @@ NG_DOCS={
       "type": "function",
       "moduleName": "otaniemi3dApp",
       "shortDescription": "PanoramaCtrl",
-      "keywords": "api controller function otaniemi3dapp panoramactrl"
+      "keywords": "api controller function otaniemi3d otaniemi3dapp panoramactrl"
     },
     {
       "section": "api",
@@ -122,12 +122,12 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "otaniemi3dApp.directive:floorplan",
-      "shortName": "floorplan",
+      "id": "otaniemi3dApp.directive:heat-map",
+      "shortName": "heat-map",
       "type": "directive",
       "moduleName": "otaniemi3dApp",
-      "shortDescription": "floorplan",
-      "keywords": "api directive floorplan otaniemi3dapp"
+      "shortDescription": "Display heat map of a provided floor plan.",
+      "keywords": "api coloring directive display floor floorplan heat highlighted map otaniemi3dapp plan provided room selectedroom sensor sensortype type values viewed"
     },
     {
       "section": "api",

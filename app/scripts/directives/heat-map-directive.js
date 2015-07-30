@@ -2,9 +2,14 @@
 
 /**
  * @ngdoc directive
- * @name otaniemi3dApp.directive:floorplan
+ * @name otaniemi3dApp.directive:heat-map
  * @description
- * # floorplan
+ * Display heat map of a provided floor plan.
+ * @restrict E
+ * @param {Object} floorplan Floorplan that is viewed in the heat map.
+ * @param {Object} selectedRoom Room that is highlighted.
+ * @param {Object} sensorType Sensor type whose values are used in
+ *                            coloring the heat map
  */
 angular.module('otaniemi3dApp')
   .directive('heatMap', function(heatmapService, $q, $rootScope, sensorApi) {
@@ -12,7 +17,6 @@ angular.module('otaniemi3dApp')
   return {
     restrict: 'E',
     scope: {
-      sensorData: '=',
       floorplan: '=',
       selectedRoom: '=',
       sensorType: '='
