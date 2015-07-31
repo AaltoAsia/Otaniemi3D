@@ -1,6 +1,8 @@
 Otaniemi3D
 ==============
 
+[![Build Status](https://travis-ci.org/AaltoAsia/Otaniemi3D.svg?branch=master)](https://travis-ci.org/AaltoAsia/Otaniemi3D)
+
 This project aims to provide an intuitive user interface for reading and subscribing to realtime sensors data installed in Otaniemi - K1 Building - Otakaari 4
 
 
