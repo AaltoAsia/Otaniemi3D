@@ -18,8 +18,21 @@
 
         <div id="time-frame" class="btn-group" dropdown>
           <button class="btn btn-black dropdown-toggle"
-                  dropdown-toggle data-label-placement>
-            {{timeFrame.text}}
+                  dropdown-toggle
+                  data-label-placement
+                  style="white-space: normal">
+            <span ng-if="timeFrame.params.end">
+              <span style="white-space: nowrap">
+                {{timeFrame.params.begin.split('T')[0]}}
+              </span>
+              to
+              <span style="white-space: nowrap">
+                {{timeFrame.params.end.split('T')[0]}}
+              </span>
+            </span>
+            <span ng-if="!timeFrame.params.end">
+              {{timeFrame.text}}
+            </span>
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu pull-right typeMenu" role="menu">
