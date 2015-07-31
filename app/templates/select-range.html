@@ -2,12 +2,7 @@
   <h3 class="modal-title">Select start and end dates</h3>
 </div>
 <div class="modal-body">
-  <input ui-date="modal.params.datePickerOpts"
-         ng-model="modal.params.timeFrame.params.begin"
-         placeholder="Start date">
-  <input ui-date="modal.params.datePickerOpts"
-         ng-model="modal.params.timeFrame.params.end"
-         placeholder="End date">
+  <date-range ng-model="modal.params.timeFrame.params">
 </div>
 <div class="modal-footer">
   <button class="btn btn-default" ng-click="modal.ok()">OK</button>

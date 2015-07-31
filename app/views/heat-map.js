@@ -95,56 +95,20 @@ angular.module('otaniemi3dApp')
           resolve: {
             params: function () {
               return {
-                timeFrame: timeFrame,
-                datePickerOpts: {
-                  dateFormat: 'yy-mm-dd',
-                  maxDate: new Date()
-                },
-                validate: function (params) {
-                  var time = params.timeFrame.params,
-                      validBegin = false,
-                      validEnd = false;
-
-                  if (time.begin) {
-                    if (typeof new Date(time.begin).toISOString === 'function') {
-                      validBegin = true;
-                    }
-                  } else {
-                    validBegin = true;
-                  }
-                  if (time.end) {
-                    if (typeof new Date(time.end).toISOString === 'function') {
-                      validEnd = true;
-                    }
-                  } else {
-                    if (time.begin) {
-                      validEnd = true;
-                    }
-                  }
-
-                  return validBegin && validEnd;
-                }
+                timeFrame: timeFrame
               };
             }
           }
         });
 
         $scope.modalInstance.result.then(function (params) {
-          $scope.timeFrame = params.timeFrame;
+          var time = params.timeFrame.params;
 
-          var time = params.timeFrame.params,
-              begin = null,
-              end = null;
-
-          if (time.begin) {
-            begin = new Date(time.begin).toISOString();
+          if (time.begin && time.end) {
+            $scope.timeFrame = params.timeFrame;
+            $scope.timeFrame.params.begin = time.begin.toISOString();
+            $scope.timeFrame.params.end = time.end.toISOString();
           }
-          if (time.end) {
-            end = new Date(time.end).toISOString();
-          }
-
-          $scope.timeFrame.params.begin = begin;
-          $scope.timeFrame.params.end = end;
         });
       } else {
         $scope.timeFrame = timeFrame;

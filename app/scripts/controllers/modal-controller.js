@@ -19,7 +19,7 @@ angular.module('otaniemi3dApp')
         if (self.params.validate(self.params)) {
           $modalInstance.close(self.params);
         } else {
-          displayError();
+          displayError(self.params.errorMsg);
         }
       } else {
         $modalInstance.close(self.params);
@@ -31,7 +31,7 @@ angular.module('otaniemi3dApp')
     };
 
     function displayError(msg) {
-      // body...
+      console.log(msg);
     }
 
   });
