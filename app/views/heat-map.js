@@ -87,7 +87,32 @@ angular.module('otaniemi3dApp')
     };
 
     $scope.selectTimeFrame = function (timeFrame) {
-      $scope.timeFrame = timeFrame;
+      if (timeFrame.text === 'Select range') {
+        $scope.modalInstance = $modal.open({
+          templateUrl: 'templates/select-range.html',
+          controller: 'ModalCtrl',
+          controllerAs: 'modal',
+          resolve: {
+            params: function () {
+              return {
+                timeFrame: timeFrame
+              };
+            }
+          }
+        });
+
+        $scope.modalInstance.result.then(function (params) {
+          var time = params.timeFrame.params;
+
+          if (time.begin && time.end) {
+            $scope.timeFrame = params.timeFrame;
+            $scope.timeFrame.params.begin = time.begin.toISOString();
+            $scope.timeFrame.params.end = time.end.toISOString();
+          }
+        });
+      } else {
+        $scope.timeFrame = timeFrame;
+      }
     };
 
     $scope.toggleFullscreen = function (){
@@ -138,7 +163,7 @@ angular.module('otaniemi3dApp')
 
     $scope.open = function () {
       self.modalInstance = $modal.open({
-        templateUrl: 'sensor-options.html',
+        templateUrl: 'templates/sensor-options.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
         resolve: {

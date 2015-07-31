@@ -15,10 +15,23 @@ angular.module('otaniemi3dApp')
     self.params = params;
 
     self.ok = function () {
-      $modalInstance.close(self.params);
+      if (typeof self.params.validate === 'function') {
+        if (self.params.validate(self.params)) {
+          $modalInstance.close(self.params);
+        } else {
+          displayError(self.params.errorMsg);
+        }
+      } else {
+        $modalInstance.close(self.params);
+      }
     };
 
     self.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
+
+    function displayError(msg) {
+      console.log(msg);
+    }
+
   });

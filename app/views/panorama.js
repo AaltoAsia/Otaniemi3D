@@ -237,7 +237,7 @@ angular.module('otaniemi3dApp')
       var pos = krpano.screentosphere(x, y);
 
       self.modalInstance = $modal.open({
-        templateUrl: 'hotspot-selection.html',
+        templateUrl: 'templates/hotspot-selection.html',
         scope: $scope,
         controller: 'ModalCtrl',
         controllerAs: 'modal',

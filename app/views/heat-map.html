@@ -31,8 +31,20 @@
             class="btn btn-black dropdown-toggle"
             dropdown-toggle
             ng-disabled="disabled"
-            data-label-placement>
-      {{timeFrame.text}}
+            data-label-placement
+            style="white-space: normal">
+      <span ng-if="timeFrame.params.end">
+        <span style="white-space: nowrap">
+          {{timeFrame.params.begin.split('T')[0]}}
+        </span>
+        to
+        <span style="white-space: nowrap">
+          {{timeFrame.params.end.split('T')[0]}}
+        </span>
+      </span>
+      <span ng-if="!timeFrame.params.end">
+        {{timeFrame.text}}
+      </span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right timeMenu" role="menu">
@@ -122,57 +134,3 @@
   </heat-map>
 
 </div>
-
-<script type="text/ng-template" id="sensor-options.html">
-  <div class="modal-header">
-    <h3 class="modal-title">Sensor type and timeframe</h3>
-  </div>
-  <div class="modal-body">
-    <div class="modal-landscape">
-      <p>
-        <div class="btn-group" id="modalValue">
-          <label ng-repeat="sensor in modal.params.sensorTypes"
-                 class="btn btn-black"
-                 ng-model="modal.params.sensorType"
-                 btn-radio="sensor">
-            {{sensor.name}}
-          </label>
-        </div>
-      </p>
-      <p>
-        <div class="btn-group" id="modalTimeframe">
-          <label ng-repeat="time in modal.params.timeFrames"
-                 class="btn btn-black"
-                 ng-model="modal.params.timeFrame"
-                 btn-radio="time">
-            {{time.text}}
-          </label>
-        </div>
-      </p>
-    </div>
-    <div class="modal-portrait">
-      <p class="center">
-        <div class="btn-group-vertical" id="modalValue">
-          <label ng-repeat="sensor in modal.params.sensorTypes"
-                 class="btn btn-black"
-                 ng-model="modal.params.sensorType"
-                 btn-radio="sensor">
-            {{sensor.name}}
-          </label>
-        </div>
-        <div class="btn-group-vertical" id="modalTimeframe">
-        <label ng-repeat="time in modal.params.timeFrames"
-               class="btn btn-black"
-               ng-model="modal.params.timeFrame"
-               btn-radio="time.text">
-          {{time.text}}
-        </label>
-        </div>
-      </p>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-default" ng-click="modal.ok()">OK</button>
-    <button class="btn btn-default" ng-click="modal.cancel()">Cancel</button>
-  </div>
-</script>

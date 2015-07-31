@@ -43,9 +43,17 @@ angular.module('otaniemi3dApp')
             deferred.resolve(data);
             dataStorage.sensors = data;
           })
-          .error(function () {
-            console.log('Failed to fetch sensor data. Please try again');
-            deferred.reject('Failed to fetch sensor data. Please try again');
+          .error(function (reason, status) {
+            var msg;
+            if (status === 404) {
+              msg = 'Couldn\'t find such sensors or values.';
+              console.log(msg);
+              deferred.reject(msg);
+            } else {
+              msg = 'Failed to fetch sensor data. Please try again';
+              console.log(msg);
+              deferred.reject(msg);
+            }
           })
           .finally(function () {
             pendingRequests[requestXml] = false;
