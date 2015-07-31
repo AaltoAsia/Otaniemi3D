@@ -100,7 +100,35 @@ angular.module('otaniemi3dApp')
           resolve: {
             params: function () {
               return {
-                timeFrame: timeFrame
+                timeFrame: timeFrame,
+                datePickerOpts: {
+                  dateFormat: 'yy-mm-dd',
+                  maxDate: new Date()
+                },
+                validate: function (params) {
+                  var time = params.timeFrame.params,
+                      validBegin = false,
+                      validEnd = false;
+
+                  if (time.begin) {
+                    if (typeof new Date(time.begin).toISOString === 'function') {
+                      validBegin = true;
+                    }
+                  } else {
+                    validBegin = true;
+                  }
+                  if (time.end) {
+                    if (typeof new Date(time.end).toISOString === 'function') {
+                      validEnd = true;
+                    }
+                  } else {
+                    if (time.begin) {
+                      validEnd = true;
+                    }
+                  }
+
+                  return validBegin && validEnd;
+                }
               };
             }
           }
@@ -109,10 +137,19 @@ angular.module('otaniemi3dApp')
         $scope.modalInstance.result.then(function (params) {
           $scope.timeFrame = params.timeFrame;
 
-          $scope.timeFrame.params.begin =
-            params.timeFrame.params.begin.toISOString();
-          $scope.timeFrame.params.end =
-            params.timeFrame.params.end.toISOString();
+          var time = params.timeFrame.params,
+              begin = null,
+              end = null;
+
+          if (time.begin) {
+            begin = time.begin.toISOString();
+          }
+          if (time.end) {
+            end = time.end.toISOString();
+          }
+
+          $scope.timeFrame.params.begin = begin;
+          $scope.timeFrame.params.end = end;
         });
       } else {
         $scope.timeFrame = timeFrame;

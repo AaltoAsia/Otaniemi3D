@@ -15,7 +15,6 @@
     "highcharts-ng": "~0.0.8",
     "angular-ui-router": "~0.2.15",
     "angular-ui-event": "~1.0.0",
-    "jqueryui": "~1.11.4",
     "angular-ui-date": "~0.0.8"
   },
   "devDependencies": {

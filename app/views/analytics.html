@@ -71,10 +71,10 @@
     <h3 class="modal-title">Select start and end dates</h3>
   </div>
   <div class="modal-body">
-    <input ui-date
+    <input ui-date="modal.params.datePickerOpts"
            ng-model="modal.params.timeFrame.params.begin"
            placeholder="Start date">
-    <input ui-date
+    <input ui-date="modal.params.datePickerOpts"
            ng-model="modal.params.timeFrame.params.end"
            placeholder="End date">
   </div>
