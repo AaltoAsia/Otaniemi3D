@@ -51,42 +51,21 @@ angular.module('otaniemi3dApp')
     year.setYear(year.getYear() - 1);
 
     $scope.timeFrames = [
-      {
-        text: 'Current',
+      { text: 'Current',
         icon: 'images/latest.svg',
-        params: {
-          newest: 20
-        },
-      },
-      {
-        text: 'Last Week',
+        params: { newest: 20 } },
+      { text: 'Last Week',
         icon: 'images/week.svg',
-        params: {
-          begin: week.toISOString()
-        }
-      },
-      {
-        text: 'Last Month',
+        params: { begin: week.toISOString() } },
+      { text: 'Last Month',
         icon: 'images/month.svg',
-        params: {
-          begin: month.toISOString()
-        }
-      },
-      {
-        text: 'Last Year',
+        params: { begin: month.toISOString() } },
+      { text: 'Last Year',
         icon: 'images/year.svg',
-        params: {
-          begin: year.toISOString()
-        }
-      },
-      {
-        text: 'Select range',
-        icon: 'images/time-range.svg',
-        params: {
-          begin: null,
-          end: null
-        }
-      },
+        params: { begin: year.toISOString() } },
+      { text: 'Select range',
+        //icon: 'images/time-range.svg',
+        params: { begin: null, end: null } },
     ];
 
     $scope.timeFrame = $scope.timeFrames[0];
@@ -94,7 +73,7 @@ angular.module('otaniemi3dApp')
     $scope.selectTime = function (timeFrame) {
       if (timeFrame.text === 'Select range') {
         $scope.modalInstance = $modal.open({
-          templateUrl: 'select-range.html',
+          templateUrl: 'templates/select-range.html',
           controller: 'ModalCtrl',
           controllerAs: 'modal',
           resolve: {
@@ -142,10 +121,10 @@ angular.module('otaniemi3dApp')
               end = null;
 
           if (time.begin) {
-            begin = time.begin.toISOString();
+            begin = new Date(time.begin).toISOString();
           }
           if (time.end) {
-            end = time.end.toISOString();
+            end = new Date(time.end).toISOString();
           }
 
           $scope.timeFrame.params.begin = begin;

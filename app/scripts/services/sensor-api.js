@@ -46,7 +46,7 @@ angular.module('otaniemi3dApp')
           .error(function (reason, status) {
             var msg;
             if (status === 404) {
-              msg = 'Such sensors or values not found.';
+              msg = 'Couldn\'t find such sensors or values.';
               console.log(msg);
               deferred.reject(msg);
             } else {

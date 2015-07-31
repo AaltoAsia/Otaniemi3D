@@ -5,22 +5,3 @@
   </button>
   <panorama id="room-panorama" room="panorama.room"></panorama>
 </div>
-
-
-<script type="text/ng-template" id="hotspot-selection.html">
-  <div class="modal-header">
-    <h3 class="modal-title">Select the sensor to add</h3>
-  </div>
-  <div class="modal-body">
-    <sensor-tree id="sensor-tree"
-      root-url="modal.params.room.url"
-      select-sensor="modal.params.addSensors"
-      error="modal.params.alert"
-      checkbox>
-    </sensor-tree>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="modal.ok()">OK</button>
-    <button class="btn btn-warning" ng-click="modal.cancel()">Cancel</button>
-  </div>
-</script>
