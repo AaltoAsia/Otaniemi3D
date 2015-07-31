@@ -127,30 +127,24 @@ angular.module('otaniemi3dApp')
       $state.go('heat-map', {floorNum: $scope.floor - 1});
     };
 
-
-    $scope.highlightRoom = function(item) {
-      if ($scope.highlightedRoom) {
-        $interval.cancel($scope.highlightedRoom.pulse);
-      }
-      if (typeof item.floor === 'number' && !isNaN(item.floor)) {
-        $scope.highlightedRoom = item;
-        $scope.floor = item.floor;
-        $state.go('heat-map', {floorNum: $scope.floor});
-      }
-    };
-
     $scope.selectRoom = function(room) {
       $scope.room = room;
       $scope.$broadcast('room-selected', room);
     };
 
-    $scope.searchRoom = function(roomString) {
+    $scope.searchRoom = function(searchString) {
       var rooms = $scope.floorplan.rooms;
+      var roomString;
+
+      if (searchString.name) {
+        roomString = searchString.name;
+      } else {
+        roomString = searchString;
+      }
 
       for (var i = 0; i < rooms.length; i++) {
         if (rooms[i].name.toLowerCase() === roomString.toLowerCase()) {
-          $scope.selectRoom(rooms[i]);
-          break;
+          return $scope.selectRoom(rooms[i]);
         }
       }
 
