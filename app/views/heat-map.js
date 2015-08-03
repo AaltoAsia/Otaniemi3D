@@ -4,12 +4,11 @@
  * @ngdoc function
  * @name otaniemi3dApp.controller:HeatMapCtrl
  * @description
- * # HeatMapCtrl
- * Controller of the otaniemi3dApp
+ * Controls Heat Map view.
  */
 angular.module('otaniemi3dApp')
-  .controller('HeatMapCtrl', function ($scope, floorplanStorage, dataStorage,
-    $modal, $interval, $state) {
+  .controller('HeatMapCtrl', function ($scope, floorplanStorage,
+    $modal, $state) {
 
     var self = this;
 
@@ -82,10 +81,37 @@ angular.module('otaniemi3dApp')
     $scope.sensorType = $scope.sensorTypes[0];
     $scope.timeFrame = $scope.timeFrames[0];
 
+    /**
+    * @ngdoc function
+    * @name selectSensorType
+    * @methodOf otaniemi3dApp.controller:HeatMapCtrl
+    * @description
+    * Select current sensor type. Heat map is then colored by that
+    * sensor's values.
+    *
+    * @param {Object} sensor Sensor object with following properties:
+    *   - ** text ** - `{string}` - Text that is displayed on sensor selector.
+    *   - ** name ** - `{string}` - Sensor's name.
+    *   - ** icon ** - `{string}` - Url to sensor's icon.
+    */
     $scope.selectSensorType = function (sensor) {
       $scope.sensorType = sensor;
     };
 
+    /**
+    * @ngdoc function
+    * @name selectTimeFrame
+    * @methodOf otaniemi3dApp.controller:HeatMapCtrl
+    * @description
+    * Display average sensor values in that time frame.
+    *
+    * @param {Object} timeFrame Time frame object with following properties:
+    *   - ** text ** - `{string}` - Text that is displayed on time frame selector.
+    *   - ** params ** - `{Object}` - Object with properties:
+    *     - `begin` - `{string}` [optional] - Begin date as an ISO string.
+    *     - `end` - `{string}` [optional] - End date as an ISO string.
+    *   - ** icon ** - `{string}` - Url to time frame's icon.
+    */
     $scope.selectTimeFrame = function (timeFrame) {
       if (timeFrame.text === 'Select range') {
         $scope.modalInstance = $modal.open({
