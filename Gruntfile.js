@@ -24,6 +24,17 @@ module.exports = function (grunt) {
   // Define the configuration for all the tasks
   grunt.initConfig({
 
+    sass: {
+      options: {
+        sourceMap: true
+      },
+      dist: {
+        files: {
+          'main.css': 'main.scss'
+        }
+      }
+    },
+
     ngdocs: {
       all: ['app/**/*.js']
     },
