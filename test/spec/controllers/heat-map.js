@@ -39,4 +39,30 @@ describe('HeatMapCtrl:', function () {
     expect($scope.sensorType).toBe($scope.sensorTypes[2]);
   });
 
+  it('Selecting room should send a broadcast', function () {
+    var room = {
+      name: 'Room 101',
+      id: 'Room-101'
+    };
+    spyOn($rootScope, '$broadcast');
+
+    $scope.selectRoom(room);
+    expect($rootScope.$broadcast)
+      .toHaveBeenCalledWith('room-selected', room);
+  });
+
+  it('Resetting zoom should send a broadcast', function () {
+    spyOn($rootScope, '$broadcast');
+
+    $scope.resetZoom();
+    expect($rootScope.$broadcast)
+      .toHaveBeenCalledWith('reset-zoom');
+  });
+
+  it('When receiving "floorplan-loaded" event "isFloorplanLoaded"' +
+     'should be set to true', function () {
+    $rootScope.$broadcast('floorplan-loaded');
+    expect(controller.isFloorplanLoaded).toBe(true);
+  });
+
 });
