@@ -184,6 +184,9 @@ angular.module('otaniemi3dApp')
             getNode(data.node.id).state.loaded = false;
           })
           .on('select_node.jstree', function () {
+            if (typeof attrs.selectSensor !== 'string') {
+              return;
+            }
             var selectedSensors = [];
 
             angular.forEach(tree.get_selected(true), function (node) {
@@ -199,9 +202,8 @@ angular.module('otaniemi3dApp')
           .on('dnd_stop.vakata', function (_, data) {
             var target = $(data.event.target);
             if(target.closest('#drop-area').length) {
-              var sensor = getNode(data.data.nodes[0]);
-              var room = getNode(sensor.parent);
-              scope.dragSensor(room, sensor);
+              var sensor = getNode(data.data.nodes[0], true);
+              scope.dragSensor(sensor);
             }
           })
           .on('dnd_move.vakata', function (_, data) {

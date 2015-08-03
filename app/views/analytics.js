@@ -8,12 +8,19 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AnalyticsCtrl', function ($scope, sensorApi, $modal) {
+  .controller('AnalyticsCtrl', function ($scope, $window, sensorApi, $modal) {
 
-    $scope.room = null;
     $scope.sensor = null;
     $scope.sensors = [];
     $scope.searchStr = '';
+    $scope.App.scrollable = true;
+    //Bootstrap small size < 992px
+    $scope.mobileDevice = $window.innerWidth < 992;
+
+    angular.element($window).resize(function () {
+      $scope.mobileDevice = $window.innerWidth < 992;
+    });
+
     $scope.alert = {
       show: false,
       message: ''
@@ -102,7 +109,6 @@ angular.module('otaniemi3dApp')
     $scope.clearSensors = function () {
       $scope.sensors = [];
       $scope.sensor = null;
-      $scope.room = null;
       $scope.chartConfig.series = [{
         name: ' ',
         data : [],
@@ -123,7 +129,16 @@ angular.module('otaniemi3dApp')
       };
     };
 
-    $scope.addSensor = function (room, sensor) {
+    $scope.addSensor = function (sensor) {
+      if (angular.isArray(sensor)) {
+        if (!sensor.length) {
+          return;
+        }
+        angular.forEach(sensor, function (value) {
+          $scope.addSensor(value);
+        });
+      }
+
       for (var k = 0; k < $scope.chartConfig.series.length; k++) {
         if ($scope.chartConfig.series[k].id === sensor.id) {
           return;
@@ -140,10 +155,10 @@ angular.module('otaniemi3dApp')
             },
             'Object': {
               'id': {
-                'keyValue': room.id
+                'keyValue': sensor.room
               },
               'InfoItem': {
-                '@name': sensor.original.name
+                '@name': sensor.name
               }
             }
           }
@@ -157,7 +172,6 @@ angular.module('otaniemi3dApp')
         var selectedSensor = data[0],
             sensorData = [];
 
-        $scope.room = room;
         $scope.sensor = sensor;
         $scope.sensors.push(sensor);
 
@@ -202,5 +216,9 @@ angular.module('otaniemi3dApp')
         $scope.chartConfig.loading = false;
       });
     };
+
+    $scope.$on('destroy', function () {
+      $scope.App.scrollable = false;
+    });
 
   });

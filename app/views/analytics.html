@@ -1,20 +1,7 @@
 <div id="analytics" class="row">
-  <div class="col-sm-3">
-    <input id="sensor-tree-search" class="form-control"
-      ng-model="searchStr"
-      type="text"
-      placeholder="Search">
-    <sensor-tree id="sensor-tree"
-      root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/'"
-      drag-sensor="addSensor"
-      search="searchStr"
-      error="alert">
-    </sensor-tree>
-  </div>
-
-  <div class="col-sm-9">
+  <div class="col-md-9 col-md-push-3">
     <div class="row">
-      <div id="sensor-ctrl" class="col-xs-2">
+      <div id="sensor-ctrl" class="col-sm-2 hidden-xs hidden-sm">
 
         <div id="time-frame" class="btn-group" dropdown>
           <button class="btn btn-black dropdown-toggle"
@@ -49,10 +36,10 @@
         </div>
 
         <div id="drop-area"
-          title="You can view multiple sensor values at a time by dragging sensors to the drop area.">
+             title="You can view multiple sensor values at a time by dragging sensors to the drop area.">
           <div id="{{sensor.id}}" class="sensor-legend" ng-repeat="sensor in sensors" draggable="true">
-            <img ng-src="images/{{sensor.original.name}}.svg">
-            <div>{{sensor.original.room}}: {{sensor.text}}</div>
+            <img ng-src="images/{{sensor.name}}.svg">
+            <div>{{sensor.room}}: {{sensor.text}}</div>
           </div>
           <h3 ng-show="!sensors.length">Drop a sensor here</h3>
         </div>
@@ -63,7 +50,7 @@
 
       </div>
 
-      <div class="col-xs-9">
+      <div class="col-md-10 col-sm-12">
         <div id="alert" class="alert alert-danger alert-dismissible"
              ng-class="{invisible: !alert.show}">
           <button type="button" class="close"
@@ -75,6 +62,30 @@
         </div>
         <highchart id="sensor-chart" config="chartConfig"></highchart>
       </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 col-md-pull-9">
+    <input id="sensor-tree-search" class="form-control"
+      ng-model="searchStr"
+      type="text"
+      placeholder="Search">
+    <div>
+      <sensor-tree id="sensor-tree"
+        ng-if="mobileDevice"
+        root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/'"
+        select-sensor="addSensor"
+        checkbox
+        search="searchStr"
+        error="alert">
+      </sensor-tree>
+      <sensor-tree id="sensor-tree"
+        ng-if="!mobileDevice"
+        root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/'"
+        drag-sensor="addSensor"
+        search="searchStr"
+        error="alert">
+      </sensor-tree>
     </div>
   </div>
 </div>

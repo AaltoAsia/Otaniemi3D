@@ -33,6 +33,7 @@ angular.module('otaniemi3dApp')
       }
     ];
 
+    $scope.scrollable = false;
     $scope.fullscreen = false;
 
     //helper function (can be used in child controllers)

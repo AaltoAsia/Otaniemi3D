@@ -68,7 +68,10 @@
 
   <div class="container-fluid">
 
-    <div ui-view id="content"></div>
+    <div ui-view
+         id="content"
+         ng-class="App.scrollable ? 'content-scrollable' : ''">
+    </div>
 
     <footer class="footer hidden-xs" ng-hide="App.fullscreen">
       <div class="container">
