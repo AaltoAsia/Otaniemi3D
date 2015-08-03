@@ -14,15 +14,6 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "otaniemi3dApp.controller:3dModalCtrl",
-      "shortName": "3dModalCtrl",
-      "type": "function",
-      "moduleName": "otaniemi3dApp",
-      "shortDescription": "3dModalCtrl",
-      "keywords": "api controller function otaniemi3dapp"
-    },
-    {
-      "section": "api",
       "id": "otaniemi3dApp.controller:AnalyticsCtrl",
       "shortName": "AnalyticsCtrl",
       "type": "function",
@@ -119,6 +110,15 @@ NG_DOCS={
       "moduleName": "otaniemi3dApp",
       "shortDescription": "dataStorage",
       "keywords": "api datastorage otaniemi3dapp service"
+    },
+    {
+      "section": "api",
+      "id": "otaniemi3dApp.directive:date-range",
+      "shortName": "date-range",
+      "type": "directive",
+      "moduleName": "otaniemi3dApp",
+      "shortDescription": "date-range",
+      "keywords": "api date-range directive otaniemi3dapp"
     },
     {
       "section": "api",
