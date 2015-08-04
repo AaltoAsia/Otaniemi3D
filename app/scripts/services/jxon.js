@@ -20,6 +20,7 @@ angular.module('otaniemi3dApp')
     function loadObjTree (oXMLDoc, oParentEl, oParentObj) {
 
       var vValue, oChild;
+      var ns = oParentEl.namespaceURI;
 
       if (oParentObj.constructor === String || oParentObj.constructor === Number || oParentObj.constructor === Boolean) {
         oParentEl.appendChild(oXMLDoc.createTextNode(oParentObj.toString())); /* verbosity level is 0 or 1 */
@@ -39,12 +40,20 @@ angular.module('otaniemi3dApp')
           oParentEl.setAttribute(sName.slice(1), vValue);
         } else if (vValue.constructor === Array) {
           for (var nItem = 0; nItem < vValue.length; nItem++) {
-            oChild = oXMLDoc.createElement(sName);
+            if (ns) {
+              oChild = oXMLDoc.createElementNS(ns, sName);
+            } else {
+              oChild = oXMLDoc.createElement(sName);
+            }
             loadObjTree(oXMLDoc, oChild, vValue[nItem]);
             oParentEl.appendChild(oChild);
           }
         } else {
-          oChild = oXMLDoc.createElement(sName);
+          if (ns) {
+            oChild = oXMLDoc.createElementNS(ns, sName);
+          } else {
+            oChild = oXMLDoc.createElement(sName);
+          }
           if (vValue instanceof Object) {
             loadObjTree(oXMLDoc, oChild, vValue);
           } else if (vValue !== null && vValue !== true) {
@@ -57,14 +66,27 @@ angular.module('otaniemi3dApp')
     }
 
     Element.prototype.appendJXON = function (oObjTree) {
-      loadObjTree(document, this, oObjTree);
-      return this;
+      var oParentEl = document
+        .createElementNS(this.namespaceURI, this.nodeName);
+      loadObjTree(document, oParentEl, oObjTree);
+      if (this.parentNode) {
+        this.parentNode.replaceChild(oParentEl, this);
+      }
+      return oParentEl;
     };
 
     this.createXML = function (oObjTree, sNamespaceURI,
         sQualifiedName, oDocumentType) {
-      var oNewDoc = document.implementation.createDocument(sNamespaceURI || null, sQualifiedName || '', oDocumentType || null);
-      loadObjTree(oNewDoc, oNewDoc, oObjTree);
+      var oNewDoc = document.implementation
+        .createDocument(
+          sNamespaceURI || null,
+          sQualifiedName || '',
+          oDocumentType || null);
+      if (sQualifiedName) {
+        loadObjTree(oNewDoc, oNewDoc.documentElement, oObjTree);
+      } else {
+        loadObjTree(oNewDoc, oNewDoc, oObjTree);
+      }
       return oNewDoc;
     };
 

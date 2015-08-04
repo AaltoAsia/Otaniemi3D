@@ -263,35 +263,30 @@ angular.module('otaniemi3dApp')
      * Generate request xml to get data from one object with id.
      */
     function generateXml (request, method, params) {
-      var xsi = 'http://www.w3.org/2001/XMLSchema-instance',
-          omi = 'omi.xsd',
-          xmlString = '<?xml version="1.0" encoding="UTF-8" ?><omi:omiEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" xsi:schemaLocation="omi.xsd omi.xsd" version="1.0" ttl="0"></omi:omiEnvelope>',
-          xml = new window.DOMParser()
-            .parseFromString(xmlString, 'text/xml').documentElement;
+      var preamble = {
+        'omi:omiEnvelope': {
+          '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+          '@xmlns:omi': 'omi.xsd',
+          '@version': '1.0',
+          '@ttl': '0'
+        }
+      };
+      preamble['omi:omiEnvelope']['omi:'+method] = {
+        '@msgformat': 'odf',
+        'omi:msg': true
+      };
 
-      var methodElem = document.createElementNS(omi, 'omi:' + method);
-      methodElem.setAttribute('msgformat', 'odf');
+      var xmlDoc = JXON.createXML(preamble);
 
-      var keys = Object.keys(params);
-      for (var i = 0; i < keys.length; i++) {
-        methodElem.setAttribute(keys[i], params[keys[i]].toString());
-      }
+      var objects = document.createElementNS('odf.xsd', 'Objects');
+      objects = objects.appendJXON(request);
 
-      var msg = document.createElementNS(omi, 'omi:msg');
-      msg.setAttribute('xmlns', 'odf.xsd');
-      msg.setAttributeNS(xsi, 'xsi:schemaLocation', 'odf.xsd odf.xsd');
+      $(xmlDoc.documentElement).find('omi\\:msg').append(objects);
 
-      //request.Objects['@xmlns'] = 'odf.xsd';
-      var requestBody = JXON.createXML(request).documentElement;
-      //console.log(JXON.createXML(request));
-      console.log(requestBody);
-      console.log(new XMLSerializer().serializeToString(requestBody));
-      msg.appendJXON(requestBody);
-      console.log(new XMLSerializer().serializeToString(msg));
-      methodElem.appendChild(msg);
-      xml.appendChild(methodElem);
+      var processingInstructions = xmlDoc.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-8"');
+      xmlDoc.insertBefore(processingInstructions, xmlDoc.firstChild);
 
-      return new XMLSerializer().serializeToString(xml);
+      return new XMLSerializer().serializeToString(xmlDoc);
     }
 
     /*

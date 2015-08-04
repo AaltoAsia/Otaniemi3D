@@ -118,20 +118,18 @@ angular.module('otaniemi3dApp')
        */
       function fetchSensorData(floorplan) {
         var sensorRequest = {
-          'Objects': {
-            'Object': {
-              'id': {
-                'keyValue': 'K1'
-              },
-              'Object': []
-            }
+          'Object': {
+            'id': {
+              'keyValue': 'K1'
+            },
+            'Object': []
           }
         };
 
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
           .each(function () {
-            sensorRequest.Objects.Object.Object.push({
+            sensorRequest.Object.Object.push({
               'id': {
                 'keyValue': d3.select(this).attr('data-room-id')
               }
