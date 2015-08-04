@@ -101,15 +101,13 @@ angular.module('otaniemi3dApp')
 
     function getSensorData(roomId) {
       var request = {
-        'Objects': {
+        'Object': {
+          'id': {
+            'keyValue': 'K1'
+          },
           'Object': {
             'id': {
-              'keyValue': 'K1'
-            },
-            'Object': {
-              'id': {
-                'keyValue': roomId
-              }
+              'keyValue': roomId
             }
           }
         }

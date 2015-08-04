@@ -8,7 +8,7 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('sensorApi', function ($http, $q, $interval, dataStorage) {
+  .service('sensorApi', function ($http, $q, $interval, dataStorage, JXON) {
 
     //Store pending http requests to an object
     var pendingRequests = {},
@@ -263,31 +263,30 @@ angular.module('otaniemi3dApp')
      * Generate request xml to get data from one object with id.
      */
     function generateXml (request, method, params) {
-      var xsi = 'http://www.w3.org/2001/XMLSchema-instance',
-          omi = 'omi.xsd',
-          xmlString = '<?xml version="1.0" encoding="UTF-8" ?><omi:omiEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" xsi:schemaLocation="omi.xsd omi.xsd" version="1.0" ttl="0"></omi:omiEnvelope>',
-          xml = new window.DOMParser()
-            .parseFromString(xmlString, 'text/xml').documentElement;
+      var preamble = {
+        'omi:omiEnvelope': {
+          '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+          '@xmlns:omi': 'omi.xsd',
+          '@version': '1.0',
+          '@ttl': '0'
+        }
+      };
+      preamble['omi:omiEnvelope']['omi:'+method] = {
+        '@msgformat': 'odf',
+        'omi:msg': true
+      };
 
-      var methodElem = document.createElementNS(omi, 'omi:' + method);
-      methodElem.setAttribute('msgformat', 'odf');
+      var xmlDoc = JXON.createXML(preamble);
 
-      var keys = Object.keys(params);
-      for (var i = 0; i < keys.length; i++) {
-        methodElem.setAttribute(keys[i], params[keys[i]].toString());
-      }
+      var objects = document.createElementNS('odf.xsd', 'Objects');
+      objects = objects.appendJXON(request);
 
-      var msg = document.createElementNS(omi, 'omi:msg');
-      msg.setAttribute('xmlns', 'odf.xsd');
-      msg.setAttributeNS(xsi, 'xsi:schemaLocation', 'odf.xsd odf.xsd');
+      $(xmlDoc.documentElement).find('omi\\:msg').append(objects);
 
-      var requestBody = createXML(request).documentElement;
+      var processingInstructions = xmlDoc.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-8"');
+      xmlDoc.insertBefore(processingInstructions, xmlDoc.firstChild);
 
-      msg.appendChild(requestBody);
-      methodElem.appendChild(msg);
-      xml.appendChild(methodElem);
-
-      return new XMLSerializer().serializeToString(xml);
+      return new XMLSerializer().serializeToString(xmlDoc);
     }
 
     /*
@@ -318,50 +317,6 @@ angular.module('otaniemi3dApp')
       }
 
       return found;
-    }
-
-    /*
-     * JXON Snippet #5 - Mozilla Developer Network
-     * https://developer.mozilla.org/en-US/docs/JXON
-     */
-    function createXML (oObjTree) {
-      function loadObjTree (oParentEl, oParentObj) {
-        var vValue, oChild;
-        if (oParentObj.constructor === String || oParentObj.constructor === Number || oParentObj.constructor === Boolean) {
-          oParentEl.appendChild(oNewDoc.createTextNode(oParentObj.toString())); /* verbosity level is 0 or 1 */
-          if (oParentObj === oParentObj.valueOf()) { return; }
-        } else if (oParentObj.constructor === Date) {
-          oParentEl.appendChild(oNewDoc.createTextNode(oParentObj.toGMTString()));
-        }
-        for (var sName in oParentObj) {
-          if (isFinite(sName)) { continue; } /* verbosity level is 0 */
-          vValue = oParentObj[sName];
-          if (sName === 'keyValue') {
-            if (vValue !== null && vValue !== true) { oParentEl.appendChild(oNewDoc.createTextNode(vValue.constructor === Date ? vValue.toGMTString() : String(vValue))); }
-          } else if (sName === 'keyAttributes') { /* verbosity level is 3 */
-            for (var sAttrib in vValue) { oParentEl.setAttribute(sAttrib, vValue[sAttrib]); }
-          } else if (sName.charAt(0) === '@') {
-            oParentEl.setAttribute(sName.slice(1), vValue);
-          } else if (vValue.constructor === Array) {
-            for (var nItem = 0; nItem < vValue.length; nItem++) {
-              oChild = oNewDoc.createElement(sName);
-              loadObjTree(oChild, vValue[nItem]);
-              oParentEl.appendChild(oChild);
-            }
-          } else {
-            oChild = oNewDoc.createElement(sName);
-            if (vValue instanceof Object) {
-              loadObjTree(oChild, vValue);
-            } else if (vValue !== null && vValue !== true) {
-              oChild.appendChild(oNewDoc.createTextNode(vValue.toString()));
-            }
-            oParentEl.appendChild(oChild);
-          }
-        }
-      }
-      var oNewDoc = document.implementation.createDocument('', '', null);
-      loadObjTree(oNewDoc, oObjTree);
-      return oNewDoc;
     }
 
   });

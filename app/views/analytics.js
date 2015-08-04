@@ -133,18 +133,16 @@ angular.module('otaniemi3dApp')
       // Request must follow JXON notation and comply with ODF.
       // https://developer.mozilla.org/en-US/docs/JXON
       var request = {
-        'Objects': {
+        'Object': {
+          'id': {
+            'keyValue': 'K1'
+          },
           'Object': {
             'id': {
-              'keyValue': 'K1'
+              'keyValue': room.id
             },
-            'Object': {
-              'id': {
-                'keyValue': room.id
-              },
-              'InfoItem': {
-                '@name': sensor.original.name
-              }
+            'InfoItem': {
+              '@name': sensor.original.name
             }
           }
         }

@@ -185,6 +185,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "otaniemi3dApp.JXON",
+      "shortName": "otaniemi3dApp.JXON",
+      "type": "service",
+      "moduleName": "otaniemi3dApp",
+      "shortDescription": "JXON framework - Copyleft 2011 by Mozilla Developer Network",
+      "keywords": "api copyleft developer framework gnu html http https jxon license mozilla network org otaniemi3dapp public released revision september service version"
+    },
+    {
+      "section": "api",
       "id": "otaniemi3dApp.sensorApi",
       "shortName": "otaniemi3dApp.sensorApi",
       "type": "service",

@@ -46,15 +46,13 @@ angular.module('otaniemi3dApp')
 
     function getSensorData() {
       var dataRequest = {
-        'Objects': {
+        'Object': {
+          'id': {
+            'keyValue': 'K1'
+          },
           'Object': {
             'id': {
-              'keyValue': 'K1'
-            },
-            'Object': {
-              'id': {
-                'keyValue': self.roomId
-              }
+              'keyValue': self.roomId
             }
           }
         }
@@ -75,23 +73,21 @@ angular.module('otaniemi3dApp')
 
     function getMetaData(sensors) {
       var metaDataRequest = {
-        'Objects': {
+        'Object': {
+          'id': {
+            'keyValue': 'K1'
+          },
           'Object': {
             'id': {
-              'keyValue': 'K1'
+              'keyValue': self.roomId
             },
-            'Object': {
-              'id': {
-                'keyValue': self.roomId
-              },
-              'InfoItem': []
-            }
+            'InfoItem': []
           }
         }
       };
 
       for (var i = 0; i < sensors.length; i++) {
-        metaDataRequest.Objects.Object.Object.InfoItem.push({
+        metaDataRequest.Object.Object.InfoItem.push({
           'MetaData': {},
           '@name': sensors[i].type
         });
@@ -144,23 +140,21 @@ angular.module('otaniemi3dApp')
 
     function sendMetaData(sensors) {
       var writeRequest = {
-        'Objects': {
+        'Object': {
+          'id': {
+            'keyValue': 'K1'
+          },
           'Object': {
             'id': {
-              'keyValue': 'K1'
+              'keyValue': self.roomId
             },
-            'Object': {
-              'id': {
-                'keyValue': self.roomId
-              },
-              'InfoItem': []
-            }
+            'InfoItem': []
           }
         }
       };
 
       for (var i = 0; i < sensors.length; i++) {
-        writeRequest.Objects.Object.Object.InfoItem.push({
+        writeRequest.Object.Object.InfoItem.push({
           'MetaData': {
             'InfoItem': []
           },

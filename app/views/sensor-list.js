@@ -22,11 +22,9 @@ angular.module('otaniemi3dApp')
     };
 
     var requestK1 = {
-      'Objects': {
-        'Object': {
-          'id': {
-            'keyValue': 'K1'
-          }
+      'Object': {
+        'id': {
+          'keyValue': 'K1'
         }
       }
     };
