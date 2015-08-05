@@ -1,0 +1,31 @@
+#main-view {
+  height: $view-height;
+  position: relative;
+}
+
+.navbar {
+  margin: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 0px;
+}
+
+.footer {
+  background-color: #f5f5f5;
+  bottom: 0;
+  padding-top: 10px;
+  height: $footer-height;
+  position: fixed;
+  width: 100%;
+  border-top: 1px solid #e5e5e5;
+}
+
+.container-fluid {
+  padding: 0px;
+}
+
+@media only screen and (max-width : 769px) {
+  #main-view {
+    height: $view-height-mobile;
+  }
+}

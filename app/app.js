@@ -11,6 +11,7 @@
 angular
   .module('otaniemi3dApp', [
     'ngTouch',
+    'ngAnimate',
     'ui.bootstrap',
     'ui.grid',
     'ui.router',

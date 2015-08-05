@@ -15,7 +15,8 @@
     "highcharts-ng": "~0.0.8",
     "angular-ui-router": "~0.2.15",
     "angular-ui-event": "~1.0.0",
-    "jquery-date-range-picker": "~0.0.7"
+    "jquery-date-range-picker": "~0.0.7",
+    "angular-animate": "~1.4.3"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0",
