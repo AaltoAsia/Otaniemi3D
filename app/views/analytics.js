@@ -13,7 +13,6 @@ angular.module('otaniemi3dApp')
     $scope.sensor = null;
     $scope.sensors = [];
     $scope.searchStr = '';
-    $scope.App.scrollable = true;
     //Bootstrap small size < 992px
     $scope.mobileDevice = $window.innerWidth < 992;
 
@@ -216,9 +215,5 @@ angular.module('otaniemi3dApp')
         $scope.chartConfig.loading = false;
       });
     };
-
-    $scope.$on('destroy', function () {
-      $scope.App.scrollable = false;
-    });
 
   });
