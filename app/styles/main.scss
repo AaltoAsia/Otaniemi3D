@@ -16,6 +16,11 @@ body {
   'utilities/angular';
 
 @import
+  'partials/buttons',
+  'partials/tooltip',
+  'partials/typography';
+
+@import
   'components/index',
   'components/home',
   'components/sensor-list',

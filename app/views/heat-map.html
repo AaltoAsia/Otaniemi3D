@@ -1,4 +1,4 @@
-<div id="searchContainer"
+<div class="search-container"
      ng-class="App.fullscreen ? 'search-container-full' : 'search-no-fullscreen'">
   <button class="btn btn-black mobile-button"
           ng-click="open()">
@@ -6,15 +6,14 @@
   </button>
   <!-- Sensor Type  -->
   <div class="btn-group desktop-dropdown" dropdown>
-    <button id="sensorTypeButton"
-            ng-cloak
-            class="btn btn-black dropdown-toggle"
+    <button ng-cloak
+            class="btn btn-black dropdown-toggle sensor-type-btn"
             dropdown-toggle ng-disabled="disabled"
             data-label-placement>
       {{sensorType.text}}
       <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu pull-right typeMenu" role="menu">
+    <ul class="dropdown-menu pull-right" role="menu">
       <li class="btn" disabled>Choose sensor type</li>
       <li ng-repeat="sensor in sensorTypes">
         <a ng-disabled="sensorType == sensor"
@@ -26,9 +25,8 @@
   </div>
   <!-- Sensor timeframe  -->
   <div class="btn-group desktop-dropdown" dropdown>
-    <button id="sensorTimeButton"
-            ng-cloak
-            class="btn btn-black dropdown-toggle"
+    <button ng-cloak
+            class="btn btn-black dropdown-toggle time-frame-btn"
             dropdown-toggle
             ng-disabled="disabled"
             data-label-placement
@@ -47,7 +45,7 @@
       </span>
       <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu pull-right timeMenu" role="menu">
+    <ul class="dropdown-menu pull-right" role="menu">
       <li class="btn" disabled>Choose time frame</li>
       <li ng-repeat="time in timeFrames">
         <a ng-disabled="timeFrame == time"
@@ -58,15 +56,14 @@
     </ul>
   </div>
 
-  <input id="searchContent2"
-         type="text"
+  <input type="text"
          ng-model="searchString"
          placeholder="Search for rooms..."
          typeahead="room as room.name for room in floorplan.rooms
                    | filter: {name: $viewValue}
                    | limitTo: 8"
          ng-disabled="!floorplan.rooms.length"
-         class="form-control"
+         class="form-control search-input"
          typeahead-on-select="selectRoom($item)">
 
   <button class="btn btn-default" id="searchDefault"
