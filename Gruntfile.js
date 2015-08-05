@@ -405,12 +405,12 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'clean:docs',
+      'ngdocs',
       'wiredep',
       'sass',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
-      'ngdocs',
       'watch'
     ]);
   });

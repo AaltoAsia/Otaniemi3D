@@ -62,9 +62,11 @@
 
   <div class="container-fluid">
 
-    <div ui-view id="main-view"></div>
+    <div ui-view
+         ng-class="App.fullscreen ? 'main-view-fullscreen' : 'main-view'"
+    ></div>
 
-    <footer class="footer hidden-xs" ng-hide="App.fullscreen">
+    <footer class="footer hidden-xs hidden-sm" ng-hide="App.fullscreen">
       <div class="container">
         <div class="row">
           <div class="col-sm-12">

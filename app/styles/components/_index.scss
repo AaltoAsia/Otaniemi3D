@@ -1,6 +1,10 @@
-#main-view {
+.main-view {
   height: $view-height;
   position: relative;
+
+  &-fullscreen {
+    height: 100vh;
+  }
 }
 
 .navbar {
@@ -24,8 +28,8 @@
   padding: 0px;
 }
 
-@media only screen and (max-width : 769px) {
-  #main-view {
+@media only screen and (max-width : 991px) {
+  .main-view {
     height: $view-height-mobile;
   }
 }

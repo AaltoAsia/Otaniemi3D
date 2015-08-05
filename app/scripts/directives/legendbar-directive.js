@@ -21,21 +21,21 @@ angular.module('otaniemi3dApp')
                 '</lineargradient>',
               '</defs>',
             '</g>',
-            '<rect id="gradientRect"',
-                  'class="legendRect"',
+            '<rect id="gradient-rect"',
+                  'class="legend-rect"',
                   'fill="url(#legendGradient)"',
                   'rx="10" ry="10"',
                   'ng-show="legendbar.sensorType.name !== \'pir\'"',
                   'ng-cloak>',
             '</rect>',
-            '<rect id="binaryRectTop"',
-                  'class="binaryRect legendRect"',
+            '<rect id="binary-rectTop"',
+                  'class="binary-rect legend-rect"',
                   'rx="10" ry="10"',
                   'ng-hide="legendbar.sensorType.name !== \'pir\'"',
                   'ng-cloak>',
             '</rect>',
-            '<rect id="binaryRectBottom"',
-                  'class="binaryRect legendRect"',
+            '<rect id="binary-rect-bottom"',
+                  'class="binary-rect legend-rect"',
                   'rx="10" ry="10"',
                   'ng-hide="legendbar.sensorType.name !== \'pir\'"',
                   'ng-cloak>',
@@ -74,7 +74,7 @@ angular.module('otaniemi3dApp')
         function gradientMouseMove() {
           var coordinates = [0, 0];
 
-          var rectElem = d3.select('#gradientRect').node();
+          var rectElem = d3.select('#gradient-rect').node();
 
           coordinates = d3.mouse(rectElem);
 
@@ -114,7 +114,7 @@ angular.module('otaniemi3dApp')
 
           //create the bar for the legend to go into
           // the "fill" attribute hooks the gradient up to this rect
-          d3.select('#gradientRect')
+          d3.select('#gradient-rect')
             .attr('x',x1)
             .attr('y',y1)
             .attr('width',barWidth)
@@ -136,7 +136,7 @@ angular.module('otaniemi3dApp')
             .style('visibility', 'hidden')
             .text('');
 
-          d3.select('#gradientRect')
+          d3.select('#gradient-rect')
             .on('mouseover', gradientMouseOver)
             .on('mousemove', gradientMouseMove)
             .on('mouseout', gradientMouseOut);
@@ -186,7 +186,7 @@ angular.module('otaniemi3dApp')
           var lowColor = heatmapService.getColor('occupancy', 0);
           var highColor = heatmapService.getColor('occupancy', 1);
 
-          d3.select('#binaryRectTop')
+          d3.select('#binary-rectTop')
             .attr('x',x1)
             .attr('y',y1)
             .attr('width',barWidth)
@@ -194,7 +194,7 @@ angular.module('otaniemi3dApp')
             .attr('fill',lowColor.rgb)
             .attr('fill-opacity',lowColor.opacity);
 
-          d3.select('#binaryRectBottom')
+          d3.select('#binary-rect-bottom')
             .attr('x',x1)
             .attr('y','50%')
             .attr('width',barWidth)

@@ -7,7 +7,7 @@
   &:focus,
   &:active,
   &.active,
-  .open .dropdown-toggle.& {
+  &.open &.dropdown-toggle {
     color: #FFFFFF;
     background-color: #A8A8A8;
     border-color: #000000;
@@ -15,7 +15,7 @@
 
   &:active,
   &.active,
-  .open .dropdown-toggle.& {
+  &.open &.dropdown-toggle {
     background-image: none;
   }
 

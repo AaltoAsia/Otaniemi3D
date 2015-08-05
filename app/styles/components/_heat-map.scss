@@ -1,9 +1,11 @@
+$search-bar-height: 47px; //includes margin
+
 .floorplan {
-  height: 100%
+  height: 100%;
 }
 
 .floorplan-fullscreen {
-  height: calc(100% + #{$navbar-height});
+  height: 100%;
 }
 
 /*
@@ -15,9 +17,8 @@ viewbox on Chrome.
 .previous-button, .next-button {
   font-size: 48px; //Increase the size of arrow a little
   position: absolute;
-  bottom: 5%; //Fallbacks for browsers that don't support vh measurements
-  margin-bottom: 75px;
-  bottom: 5vh;
+  bottom: 0px;
+  top: auto;
 }
 
 .btn-fullscreen {
@@ -33,30 +34,18 @@ viewbox on Chrome.
   right: 5vh;
 }
 
-.sensor-class {
-  left: 20%;
-  right: 20%;
-  bottom: 50px;
-  position: fixed;
+.search-bar {
+  padding: 5px;
   text-align: center;
 }
 
-.search-container-full {
-  padding-top: 20px;
-}
-
 .search-input {
-  width: 50%;
+  width: 40%;
   display: inline;
 }
 
-.mobile-button {
+.options-btn {
 	display: none;
-}
-
-#searchContainer {
-  margin-left: 10%;
-  margin-right: 10%;
 }
 
 .modal-portrait {
@@ -65,7 +54,7 @@ viewbox on Chrome.
 
 .fullscreen-button {
   position:absolute;
-  margin-top:1%;
+  margin-top: 1%;
   margin-right: 1%; //Fallbacks for older browsers
   margin-top: 1vh;
   margin-right: 1vh;
@@ -82,28 +71,21 @@ viewbox on Chrome.
   right: 30%;
   position: absolute;
 }
+
 .caption-text {
   text-align: center;
   color: #333;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-.search-container {
-  text-align: center;
-  margin-top: -10px;
-  margin-bottom: 5px;
-}
-
 .sensor-type-btn {
   text-align: right;
   width: 118px;
-  margin-bottom:3px;
 }
 
 .time-frame-btn {
-  text-align:right;
+  text-align: right;
   width: 116px;
-  margin-bottom:3px;
 }
 
 .caret {
@@ -141,23 +123,23 @@ viewbox on Chrome.
   }
 }
 
-#legendBar {
+#legendbar {
   pointer-events: none;
-  height: 30%;
+  height: 35%;
   margin-left: 8px;
   margin-top: 5px;
 }
 
-#gradientRect {
+#gradient-rect {
   pointer-events: all;
 }
 
-.legendRect {
+.legend-rect {
   stroke-width: 1px;
   stroke: black;
 }
 
-.binaryRect {
+.binary-rect {
   pointer-events: none;
 }
 
@@ -195,32 +177,23 @@ viewbox on Chrome.
   .previous-button, .next-button {
     font-size: 36px; //Increase the size of arrow a little
     position: fixed;
-    bottom: 5%; //fallback for browsers that don't support vh
-    bottom: 5vh;
   }
 
   .next-button {
     right: 0px;
   }
 
-  .search-no-fullscreen {
-    margin-top: 5px !important;
+  .previous-button {
+    left: 0px;
   }
 
   .search-container-full {
     padding-top: 20px;
   }
 
-  .search-input {
-    width: 70%;
-    max-width: 160px;
-    display: inline;
-  }
-
-  .mobile-button {
+  .options-btn {
   	display: inline;
-  	width: 20%;
-    margin-bottom: 3px;
+  	width: 100px;
   }
   .desktop-dropdown {
   	display: none;
