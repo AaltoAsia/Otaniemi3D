@@ -181,6 +181,29 @@ angular.module('otaniemi3dApp')
       $scope.$broadcast('reset-zoom');
     };
 
+    $scope.mobileModal = function () {
+      self.modalInstance = $modal.open({
+        templateUrl: 'templates/sensor-options.html',
+        controller: 'ModalCtrl',
+        controllerAs: 'modal',
+        resolve: {
+          params: function () {
+            return {
+              sensorTypes: $scope.sensorTypes,
+              sensorType: $scope.sensorType,
+              timeFrames: $scope.timeFrames,
+              timeFrame: $scope.timeFrame
+            };
+          }
+        }
+      });
+
+      self.modalInstance.result.then(function (params) {
+        $scope.timeFrame = params.timeFrame;
+        $scope.sensorType = params.sensorType;
+      });
+    };
+
     $scope.$on('floorplan-loaded', function () {
       self.isFloorplanLoaded = true;
     });

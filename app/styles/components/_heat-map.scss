@@ -38,10 +38,6 @@ viewbox on Chrome.
 	display: none;
 }
 
-.modal-portrait {
-  display: none;
-}
-
 .panorama-btn {
   pointer-events: all;
 }
@@ -124,37 +120,21 @@ viewbox on Chrome.
   pointer-events: none;
 }
 
-@media only screen and (max-width : 768px) and (orientation : landscape) {
-  .modal-portrait {
-    display: none;
+.modal-body {
+  &.modal-vertical {
+    display: inline-flex;
   }
 
-  .modal-landscape {
-    display: inline;
+  & .btn-group {
+    margin: 5px;
   }
 
-  .modal-value {
-    margin-bottom: 0px;
-  }
-}
-
-@media only screen and (max-width : 768px) and (orientation : portrait) {
-  .modal-portrait {
-    display: inline;
-  }
-
-  .modal-landscape {
-    display: none;
-  }
-
-  .modal-value {
-    margin-bottom: 0px;
-    margin-left: 10px;
-    margin-right: 30px;
+  & .btn-group-vertical {
+    margin: 5px;
   }
 }
 
-@media only screen and (max-width : 769px) {
+@media only screen and (max-width : 768px) {
   .previous-button, .next-button {
     font-size: 36px; //Increase the size of arrow a little
     position: fixed;
