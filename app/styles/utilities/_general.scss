@@ -1,0 +1,18 @@
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+//Bootstrap workaround
+.nav, .pagination, .carousel, .panel-title a {
+  cursor: pointer;
+}
+
+//these override x3dom fonts
+ul.nav {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.navbar-header {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}

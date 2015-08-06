@@ -1,4 +1,4 @@
-<div id="analytics" class="row">
+<div id="analytics">
   <div class="col-md-9 col-md-push-3">
     <div class="row">
       <div id="sensor-ctrl" class="col-sm-2 hidden-xs hidden-sm">
@@ -65,27 +65,17 @@
     </div>
   </div>
 
-  <div class="col-md-3 col-md-pull-9">
+  <div class="col-md-3 col-md-pull-9 sensor-tree">
     <input id="sensor-tree-search" class="form-control"
       ng-model="searchStr"
       type="text"
       placeholder="Search">
-    <div>
-      <sensor-tree id="sensor-tree"
-        ng-if="mobileDevice"
-        root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/'"
-        select-sensor="addSensor"
-        checkbox
-        search="searchStr"
-        error="alert">
-      </sensor-tree>
-      <sensor-tree id="sensor-tree"
-        ng-if="!mobileDevice"
-        root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/'"
-        drag-sensor="addSensor"
-        search="searchStr"
-        error="alert">
-      </sensor-tree>
-    </div>
+    <sensor-tree id="sensor-tree"
+      root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/'"
+      select-sensor="addSensor"
+      checkbox="mobileDevice"
+      search="searchStr"
+      error="alert">
+    </sensor-tree>
   </div>
 </div>

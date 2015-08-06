@@ -87,13 +87,13 @@
      ng-class="App.fullscreen ? 'floorplan-fullscreen' : 'floorplan'">
   <!-- Expand / compress button -->
   <i ng-click="toggleFullscreen()"
-     class="btn fullscreen-button"
-     ng-class="App.fullscreen ? 'glyphicon glyphicon-resize-small' :
-              'glyphicon glyphicon-resize-full'"></i>
+     class="btn fullscreen-button glyphicon"
+     ng-class="App.fullscreen ? 'glyphicon-resize-small' :
+              'glyphicon-resize-full'"></i>
 
   <div ng-cloak class="floorplan-caption">
     <h4 class="caption-text">
-      {{selectedPlan.name}} ({{floor}}/{{floorplans.length}})
+      {{floorplan.name}} ({{floor}}/{{floorplans.length}})
     </h4>
   </div>
 

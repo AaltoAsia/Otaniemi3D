@@ -87,7 +87,7 @@ angular.module('otaniemi3dApp')
 
     $scope.modalTooltip = function (roomId) {
       $modal.open({
-        templateUrl: 'threedModal.html',
+        templateUrl: 'templates/sensor-info.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
         resolve: {

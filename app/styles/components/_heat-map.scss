@@ -34,32 +34,12 @@ viewbox on Chrome.
   right: 5vh;
 }
 
-.search-bar {
-  padding: 5px;
-  text-align: center;
-}
-
-.search-input {
-  width: 40%;
-  display: inline;
-}
-
 .options-btn {
 	display: none;
 }
 
 .modal-portrait {
   display: none;
-}
-
-.fullscreen-button {
-  position:absolute;
-  margin-top: 1%;
-  margin-right: 1%; //Fallbacks for older browsers
-  margin-top: 1vh;
-  margin-right: 1vh;
-  float: right;
-  right: 0px;
 }
 
 .panorama-btn {
@@ -70,6 +50,7 @@ viewbox on Chrome.
   left: 30%;
   right: 30%;
   position: absolute;
+  margin-top: 50px;
 }
 
 .caption-text {
@@ -187,14 +168,11 @@ viewbox on Chrome.
     left: 0px;
   }
 
-  .search-container-full {
-    padding-top: 20px;
-  }
-
   .options-btn {
   	display: inline;
   	width: 100px;
   }
+
   .desktop-dropdown {
   	display: none;
   }

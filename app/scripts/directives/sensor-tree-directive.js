@@ -15,6 +15,7 @@ angular.module('otaniemi3dApp')
         selectSensor: '=',
         dragSensor: '=',
         search: '=',
+        checkbox: '=',
         rootUrl: '=',
         error: '='
       },
@@ -22,7 +23,7 @@ angular.module('otaniemi3dApp')
         element.jstree({
           plugins: [
             'sort',
-            typeof attrs.checkbox === 'string' ? 'checkbox' : '',
+            scope.checkbox ? 'checkbox' : '',
             typeof attrs.search === 'string' ? 'search' : '',
             typeof attrs.dragSensor === 'string' ? 'dnd' : ''
           ],
@@ -163,7 +164,7 @@ angular.module('otaniemi3dApp')
               }
             },
             themes: {
-              responsive: true
+              responsive: false
             }
           }
         });
@@ -224,7 +225,11 @@ angular.module('otaniemi3dApp')
 
         if (typeof scope.search === 'string') {
           scope.$watch('search', function (str) {
-            tree.search(str);
+            if (str) {
+              tree.search(str);
+            } else {
+              tree.clear_search();
+            }
           });
         }
 

@@ -44,3 +44,14 @@
     border-color: #000000;
   }
 }
+
+.fullscreen-button {
+  position:absolute;
+  margin-top: 1%;
+  margin-right: 1%; //Fallbacks for older browsers
+  margin-top: 1vh;
+  margin-right: 1vh;
+  float: right;
+  right: 0px;
+  z-index: 2;
+}

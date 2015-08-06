@@ -9,7 +9,7 @@
   </script>
 </head>
 
-<div class="container x3d-container">
+<div class="x3d-container">
 
 <div ng-cloak class="jumbotron" ng-show="!webglSupport">
   <h1>Your browser doesn't support webGL!</h1>
@@ -30,54 +30,32 @@
         typeParams= '0.0 0.0 0.1 1.5' >
 </navigationInfo>
 
-<div ng-show="webglSupport" class="search-container">
+<div ng-show="webglSupport" class="search-bar">
+  <div>
+    <input type="text"
+           ng-model="selected"
+           placeholder="Search for room..."
+           typeahead="showName(room) for room in rooms
+                     | filter: $viewValue
+                     | limitTo: 8"
+           class="form-control search-input"
+           typeahead-on-select="onSelect($item)">
 
-  <input id="searchContent"
-         type="text"
-         ng-model="selected"
-         placeholder="Search for room..."
-         typeahead="showName(room) for room in rooms
-                   | filter: $viewValue
-                   | limitTo: 8"
-         class="form-control search-content"
-         typeahead-on-select="onSelect($item)">
-
-  <button class="btn btn-default"
-          id="searchDefault"
-          ng-click="changeView()">
-    <span class="glyphicon glyphicon-search"
-          style="vertical-align:middle">
-    </span>
-  </button>
-
-  <button class="btn btn-default"
-          id="searchDefault"
-          ng-click="changeView('vp0')">
-      <span class="glyphicon glyphicon-home"
+    <button class="btn btn-default"
+            ng-click="changeView()">
+      <span class="glyphicon glyphicon-search"
             style="vertical-align:middle">
       </span>
-  </button>
+    </button>
 
+    <button class="btn btn-default"
+            ng-click="changeView('vp0')">
+        <span class="glyphicon glyphicon-home"
+              style="vertical-align:middle">
+        </span>
+    </button>
+  </div>
 </div>
-
-<!-- Modal for displaying a sensor values when a sensor is clicked -->
-<script type="text/ng-template" id="threedModal.html">
-  <div class="sensor-modal">
-    <!-- room data here, but do not show the room number again -->
-  <div class="panel panel-default">
-    <table class="table table-bordered">
-      <tr>
-        <th colspan="2">{{modal.params[0].room}}</th>
-      </tr>
-      <tr ng-repeat="sensor in modal.params">
-        <th>{{sensor.name}}</th>
-        <td>{{sensor.values[0].value}} {{sensor.suffix}}</td>
-      </tr>
-      <th><button class="btn btn-default" ng-click="modal.ok()">OK</button></th>
-    </table>
-  </div>
-  </div>
-</script>
 
 <!-- Viewpoint definitions for each room -->
 

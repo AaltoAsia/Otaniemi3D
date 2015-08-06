@@ -13,15 +13,20 @@ body {
 
 @import
   'utilities/variables',
-  'utilities/angular';
+  'utilities/general';
 
 @import
   'partials/buttons',
   'partials/tooltip',
-  'partials/typography';
+  'partials/typography',
+  'partials/search-bar',
+  'partials/jumbotron';
 
 @import
   'components/index',
   'components/home',
   'components/sensor-list',
-  'components/heat-map';
+  'components/heat-map',
+  'components/panorama',
+  'components/x3dom',
+  'components/analytics';
