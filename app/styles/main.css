@@ -71,6 +71,10 @@ ul.nav {
   right: 0px;
   z-index: 2; }
 
+@media only screen and (max-width: 768px) {
+  .fullscreen-button {
+    margin-top: 50px; } }
+
 .tooltip-table {
   min-width: 221px;
   border-collapse: separate; }
@@ -275,7 +279,7 @@ viewbox on Chrome.
   pointer-events: none;
   height: 35%;
   margin-left: 8px;
-  margin-top: 5px; }
+  margin-top: 50px; }
 
 #gradient-rect {
   pointer-events: all; }

@@ -32,7 +32,6 @@ module.exports = function(config) {
             'bower_components/highcharts-ng/dist/highcharts-ng.js',
             'bower_components/jstree/dist/jstree.js',
             'bower_components/angular-ui-router/release/angular-ui-router.js',
-            'bower_components/angular-animate/angular-animate.js',
             'app/app.js',
             'app/panorama/embedpano.js',
             'app/panorama/HTMLviewer.js',

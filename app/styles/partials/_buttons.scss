@@ -55,3 +55,9 @@
   right: 0px;
   z-index: 2;
 }
+
+@media only screen and (max-width : 768px) {
+  .fullscreen-button {
+    margin-top: 50px;
+  }
+}

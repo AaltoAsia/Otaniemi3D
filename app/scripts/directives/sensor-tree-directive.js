@@ -164,7 +164,7 @@ angular.module('otaniemi3dApp')
               }
             },
             themes: {
-              responsive: false
+              responsive: true
             }
           }
         });
