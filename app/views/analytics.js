@@ -136,6 +136,7 @@ angular.module('otaniemi3dApp')
         angular.forEach(sensor, function (value) {
           $scope.addSensor(value);
         });
+        return;
       }
 
       for (var k = 0; k < $scope.chartConfig.series.length; k++) {

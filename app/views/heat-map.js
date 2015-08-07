@@ -48,13 +48,15 @@ angular.module('otaniemi3dApp')
         icon: 'images/pir.svg' }
     ];
 
-    var day, week, month, year;
-    day = week = month = year = new Date();
+    var day = new Date(),
+        week = new Date(),
+        month = new Date(),
+        year = new Date();
 
     day.setDate(day.getDate() - 1);
     week.setDate(week.getDate() - 7);
     month.setMonth(month.getMonth() - 1);
-    year.setYear(year.getYear() - 1);
+    year.setFullYear(year.getFullYear() - 1);
 
     $scope.timeFrames = [
       { text: 'Current',
@@ -121,19 +123,19 @@ angular.module('otaniemi3dApp')
           resolve: {
             params: function () {
               return {
-                timeFrame: timeFrame
+                timeRange: {begin: null, end: null}
               };
             }
           }
         });
 
         $scope.modalInstance.result.then(function (params) {
-          var time = params.timeFrame.params;
+          var time = params.timeRange;
 
           if (time.begin && time.end) {
-            $scope.timeFrame = params.timeFrame;
-            $scope.timeFrame.params.begin = time.begin.toISOString();
-            $scope.timeFrame.params.end = time.end.toISOString();
+            timeFrame.params.begin = time.begin.toISOString();
+            timeFrame.params.end = time.end.toISOString();
+            $scope.timeFrame = timeFrame;
           }
         });
       } else {
@@ -192,14 +194,25 @@ angular.module('otaniemi3dApp')
               sensorTypes: $scope.sensorTypes,
               sensorType: $scope.sensorType,
               timeFrames: $scope.timeFrames,
-              timeFrame: $scope.timeFrame
+              timeFrame: $scope.timeFrame,
+              timeRange: {begin: null, end: null}
             };
           }
         }
       });
 
       self.modalInstance.result.then(function (params) {
-        $scope.timeFrame = params.timeFrame;
+        var time = params.timeRange;
+
+        if (time.begin && time.end) {
+          var length = $scope.timeFrames.length;
+          var timeFrame = $scope.timeFrames[length-1];
+          timeFrame.params.begin = time.begin.toISOString();
+          timeFrame.params.end = time.end.toISOString();
+          $scope.timeFrame = timeFrame;
+        } else {
+          $scope.timeFrame = params.timeFrame;
+        }
         $scope.sensorType = params.sensorType;
       });
     };
