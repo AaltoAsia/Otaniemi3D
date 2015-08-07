@@ -10,8 +10,8 @@ $sensor-tree-height: calc(100% - 44px);
 
 #drop-area {
   border: 2px dashed black;
-  height: 400px;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   justify-content: center;
   padding: 7px;
@@ -22,7 +22,6 @@ $sensor-tree-height: calc(100% - 44px);
 }
 
 #sensor-ctrl {
-  max-width: 180px;
   padding: 0px;
   cursor: default;
 }
@@ -69,6 +68,13 @@ $sensor-tree-height: calc(100% - 44px);
       }
     }
   }
+
+  #sensor-ctrl {
+    max-width: 180px;
+    height: $view-height;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 @media only screen and (max-width : 991px) {
@@ -78,5 +84,16 @@ $sensor-tree-height: calc(100% - 44px);
 
   #analytics {
     overflow-y: auto;
+  }
+
+  #sensor-ctrl {
+    display: inline-flex;
+    width: 100%;
+    justify-content: center;
+
+    div {
+      max-width: 180px;
+      width: 90%;
+    }
   }
 }

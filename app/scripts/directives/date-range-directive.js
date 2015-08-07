@@ -40,15 +40,17 @@ angular.module('otaniemi3dApp')
         element.find('.footer').remove();
 
         scope.$watch('current', function (newDate) {
-          var begin = newDate.begin || new Date().toISOString();
-          var end = newDate.end || new Date().toISOString();
-          begin = begin.split('T')[0];
-          end = end.split('T')[0];
-          console.log(newDate.begin);
-          console.log(end);
+          if (newDate) {
+            var begin = newDate.begin || new Date().toISOString();
+            var end = newDate.end || new Date().toISOString();
+            begin = begin.split('T')[0];
+            end = end.split('T')[0];
+            console.log(newDate.begin);
+            console.log(end);
 
-          element.data('dateRangePicker')
-            .setDateRange(begin, end);
+            element.data('dateRangePicker')
+              .setDateRange(begin, end);
+          }
         });
 
         scope.$on('destroy', function () {
