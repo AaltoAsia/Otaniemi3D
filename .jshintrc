@@ -26,6 +26,7 @@
     "FastClick": false,
     "Modernizr": false,
     "embedpano": false,
-    "removepano": false
+    "removepano": false,
+    "google": false
   }
 }
