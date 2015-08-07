@@ -17,12 +17,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
   <!-- build:css(.tmp) styles/main.css -->
   <link rel="stylesheet" href="styles/main.css"/>
-  <link rel="stylesheet" href="styles/home.css"/>
-  <link rel="stylesheet" href="styles/heat-map.css"/>
-  <link rel="stylesheet" href="styles/model-3d.css"/>
-  <link rel="stylesheet" href="styles/analytics.css"/>
-  <link rel="stylesheet" href="styles/panorama.css"/>
-  <link rel="stylesheet" href="styles/jquery-bootstrap-datepicker.css"/>
   <!-- endbuild -->
 
 </head>
@@ -31,46 +25,48 @@
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
 
-<div id="app" ng-controller="AppCtrl as App">
+<div id="app-container" ng-controller="AppCtrl as App">
 
-  <header ng-hide="App.fullscreen">
-    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-      <div class="container-fluid" >
+  <nav class="navbar navbar-inverse navbar-static-top"
+       ng-hide="App.fullscreen"
+       role="navigation">
+    <div class="container-fluid" >
 
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle"
-                  ng-click="App.navbarCollapse = !App.navbarCollapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" id="home-view"
-             ng-click="App.navbarCollapse = true"
-             ui-sref="home">Otaniemi3D</a>
-        </div>
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle"
+                ng-click="App.navbarCollapse = !App.navbarCollapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" id="home-view"
+           ng-click="App.navbarCollapse = true"
+           ui-sref="home">Otaniemi3D</a>
+      </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div collapse="App.navbarCollapse"
-             class="nav-collapse collapse navbar-responsive-collapse">
-          <ul ng-cloak class="nav navbar-nav">
-            <li ng-repeat="nav in App.navigation" ui-sref-active="active">
-              <a ng-cloak ng-click="App.navbarCollapse = true" ui-sref="{{nav.state}}">
-                {{nav.name}}
-              </a>
-            </li>
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
-  </header>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div collapse="App.navbarCollapse"
+           class="navbar-collapse collapse navbar-responsive-collapse">
+        <ul ng-cloak class="nav navbar-nav">
+          <li ng-repeat="nav in App.navigation" ui-sref-active="active">
+            <a ng-cloak ng-click="App.navbarCollapse = true" ui-sref="{{nav.state}}">
+              {{nav.name}}
+            </a>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
 
   <div class="container-fluid">
 
-    <div ui-view id="content"></div>
+    <div ui-view
+         ng-class="App.fullscreen ? 'main-view-fullscreen' : 'main-view'"
+    ></div>
 
-    <footer class="footer hidden-xs" ng-hide="App.fullscreen">
+    <footer class="footer hidden-xs hidden-sm" ng-hide="App.fullscreen">
       <div class="container">
         <div class="row">
           <div class="col-sm-12">

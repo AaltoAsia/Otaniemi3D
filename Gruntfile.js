@@ -24,6 +24,18 @@ module.exports = function (grunt) {
   // Define the configuration for all the tasks
   grunt.initConfig({
 
+    sass: {
+      options: {
+        sourceMap: true
+      },
+      dist: {
+        files: {
+          '<%= yeoman.app %>/styles/main.css':
+          '<%= yeoman.app %>/styles/main.scss'
+        }
+      }
+    },
+
     ngdocs: {
       all: ['app/**/*.js']
     },
@@ -51,8 +63,8 @@ module.exports = function (grunt) {
         tasks: ['newer:jshint:test', 'karma']
       },
       styles: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
-        tasks: ['newer:copy:styles', 'autoprefixer']
+        files: ['<%= yeoman.app %>/styles/{,*/}*.scss'],
+        tasks: ['sass', 'newer:copy:styles', 'autoprefixer']
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -161,7 +173,9 @@ module.exports = function (grunt) {
     // Add vendor prefixed styles
     autoprefixer: {
       options: {
-        browsers: ['last 1 version']
+        browsers: ['last 1 version'],
+        map: true,
+        annotation: false
       },
       dist: {
         files: [{
@@ -391,11 +405,12 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'clean:docs',
+      'ngdocs',
       'wiredep',
+      'sass',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
-      'ngdocs',
       'watch'
     ]);
   });
@@ -416,6 +431,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
+    'sass',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',

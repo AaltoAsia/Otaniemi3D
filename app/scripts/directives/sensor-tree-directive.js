@@ -15,6 +15,7 @@ angular.module('otaniemi3dApp')
         selectSensor: '=',
         dragSensor: '=',
         search: '=',
+        checkbox: '=',
         rootUrl: '=',
         error: '='
       },
@@ -22,7 +23,7 @@ angular.module('otaniemi3dApp')
         element.jstree({
           plugins: [
             'sort',
-            typeof attrs.checkbox === 'string' ? 'checkbox' : '',
+            scope.checkbox ? 'checkbox' : '',
             typeof attrs.search === 'string' ? 'search' : '',
             typeof attrs.dragSensor === 'string' ? 'dnd' : ''
           ],
@@ -184,6 +185,9 @@ angular.module('otaniemi3dApp')
             getNode(data.node.id).state.loaded = false;
           })
           .on('select_node.jstree', function () {
+            if (typeof attrs.selectSensor !== 'string') {
+              return;
+            }
             var selectedSensors = [];
 
             angular.forEach(tree.get_selected(true), function (node) {
@@ -199,9 +203,8 @@ angular.module('otaniemi3dApp')
           .on('dnd_stop.vakata', function (_, data) {
             var target = $(data.event.target);
             if(target.closest('#drop-area').length) {
-              var sensor = getNode(data.data.nodes[0]);
-              var room = getNode(sensor.parent);
-              scope.dragSensor(room, sensor);
+              var sensor = getNode(data.data.nodes[0], true);
+              scope.dragSensor(sensor);
             }
           })
           .on('dnd_move.vakata', function (_, data) {
@@ -222,7 +225,11 @@ angular.module('otaniemi3dApp')
 
         if (typeof scope.search === 'string') {
           scope.$watch('search', function (str) {
-            tree.search(str);
+            if (str) {
+              tree.search(str);
+            } else {
+              tree.clear_search();
+            }
           });
         }
 

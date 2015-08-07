@@ -11,7 +11,7 @@ angular.module('otaniemi3dApp')
     return {
       restrict: 'E',
       template: [
-        '<table id="infocontent" class="tooltip-table">',
+        '<table class="tooltip-table">',
           '<tr>',
             '<th colspan="2" style="text-align:center">{{tooltip.room}}</th>',
           '</tr>',

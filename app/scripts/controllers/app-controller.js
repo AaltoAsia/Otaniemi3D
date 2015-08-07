@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AppCtrl', function ($scope, $location) {
+  .controller('AppCtrl', function ($scope, $state) {
 
     var self = this;
 
@@ -33,15 +33,15 @@ angular.module('otaniemi3dApp')
       }
     ];
 
-    $scope.fullscreen = false;
+    self.fullscreen = false;
 
     //helper function (can be used in child controllers)
-    $scope.startsWith = function (str, substr) {
+    self.startsWith = function (str, substr) {
       return str.lastIndexOf(substr, 0) === 0;
     };
 
-    $scope.$on('$routeChangeSuccess', function () {
-      if (!self.startsWith($location.path(), '/heat-map')) {
+    $scope.$on('$stateChangeSuccess', function () {
+      if ($state.current.name !== 'heat-map') {
         self.fullscreen = false;
       }
     });

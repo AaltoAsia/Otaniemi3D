@@ -1,21 +1,21 @@
-<div id="analytics" class="row">
-  <div class="col-sm-3">
-    <input id="sensor-tree-search" class="form-control"
-      ng-model="searchStr"
-      type="text"
-      placeholder="Search">
-    <sensor-tree id="sensor-tree"
-      root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/'"
-      drag-sensor="addSensor"
-      search="searchStr"
-      error="alert">
-    </sensor-tree>
-  </div>
-
-  <div class="col-sm-9">
+<div id="analytics">
+  <div class="col-md-9 col-md-push-3">
     <div class="row">
-      <div id="sensor-ctrl" class="col-xs-2">
 
+      <div class="col-md-10 col-sm-12 col-md-push-2">
+        <div id="alert" class="alert alert-danger alert-dismissible"
+             ng-class="{invisible: !alert.show}">
+          <button type="button" class="close"
+                  ng-click="alert.show = false"
+                  aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {{alert.message}}
+        </div>
+        <highchart id="sensor-chart" config="chartConfig"></highchart>
+      </div>
+
+      <div id="sensor-ctrl" class="col-md-2 col-md-pull-10">
         <div id="time-frame" class="btn-group" dropdown>
           <button class="btn btn-black dropdown-toggle"
                   dropdown-toggle
@@ -49,10 +49,11 @@
         </div>
 
         <div id="drop-area"
-          title="You can view multiple sensor values at a time by dragging sensors to the drop area.">
+             class="hidden-xs hidden-sm"
+             title="You can view multiple sensor values at a time by dragging sensors to the drop area.">
           <div id="{{sensor.id}}" class="sensor-legend" ng-repeat="sensor in sensors" draggable="true">
-            <img ng-src="images/{{sensor.original.name}}.svg">
-            <div>{{sensor.original.room}}: {{sensor.text}}</div>
+            <img ng-src="images/{{sensor.name}}.svg">
+            <div>{{sensor.room}}: {{sensor.text}}</div>
           </div>
           <h3 ng-show="!sensors.length">Drop a sensor here</h3>
         </div>
@@ -60,21 +61,23 @@
         <div id="clear-btn">
           <button class="btn btn-default" ng-click="clearSensors()">Clear sensors</button>
         </div>
-
       </div>
 
-      <div class="col-xs-9">
-        <div id="alert" class="alert alert-danger alert-dismissible"
-             ng-class="{invisible: !alert.show}">
-          <button type="button" class="close"
-                  ng-click="alert.show = false"
-                  aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          {{alert.message}}
-        </div>
-        <highchart id="sensor-chart" config="chartConfig"></highchart>
-      </div>
     </div>
+  </div>
+
+  <div class="col-md-3 col-md-pull-9 sensor-tree">
+    <input id="sensor-tree-search" class="form-control"
+      ng-model="searchStr"
+      type="text"
+      placeholder="Search">
+    <sensor-tree id="sensor-tree"
+      root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/'"
+      select-sensor="addSensor"
+      drag-sensor="addSensor"
+      checkbox="mobileDevice"
+      search="searchStr"
+      error="alert">
+    </sensor-tree>
   </div>
 </div>

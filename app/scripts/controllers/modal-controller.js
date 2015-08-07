@@ -8,11 +8,12 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('ModalCtrl', function ($scope, $modalInstance, params) {
+  .controller('ModalCtrl', function ($scope, $window, $modalInstance, params) {
 
     var self = this;
 
     self.params = params;
+    self.smallDevice = $window.innerWidth < 769;
 
     self.ok = function () {
       if (typeof self.params.validate === 'function') {

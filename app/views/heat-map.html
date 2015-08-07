@@ -1,84 +1,82 @@
-<div id="searchContainer"
-     ng-class="App.fullscreen ? 'search-container-full' : 'search-no-fullscreen'">
-  <button class="btn btn-black mobile-button"
-          ng-click="open()">
-    Options
-  </button>
-  <!-- Sensor Type  -->
-  <div class="btn-group desktop-dropdown" dropdown>
-    <button id="sensorTypeButton"
-            ng-cloak
-            class="btn btn-black dropdown-toggle"
-            dropdown-toggle ng-disabled="disabled"
-            data-label-placement>
-      {{sensorType.text}}
-      <span class="caret"></span>
+<div class="search-bar">
+  <div>
+    <button class="btn btn-black options-btn"
+            ng-click="mobileModal()">
+      Options
     </button>
-    <ul class="dropdown-menu pull-right typeMenu" role="menu">
-      <li class="btn" disabled>Choose sensor type</li>
-      <li ng-repeat="sensor in sensorTypes">
-        <a ng-disabled="sensorType == sensor"
-           ng-click="selectSensorType(sensor)">
-          <img class="icons" ng-src="{{sensor.icon}}">{{sensor.text}}
-        </a>
-      </li>
-    </ul>
-  </div>
-  <!-- Sensor timeframe  -->
-  <div class="btn-group desktop-dropdown" dropdown>
-    <button id="sensorTimeButton"
-            ng-cloak
-            class="btn btn-black dropdown-toggle"
-            dropdown-toggle
-            ng-disabled="disabled"
-            data-label-placement
-            style="white-space: normal">
-      <span ng-if="timeFrame.params.end">
-        <span style="white-space: nowrap">
-          {{timeFrame.params.begin.split('T')[0]}}
+    <!-- Sensor Type  -->
+    <div class="btn-group desktop-dropdown" dropdown>
+      <button ng-cloak
+              class="btn btn-black dropdown-toggle sensor-type-btn"
+              dropdown-toggle ng-disabled="disabled"
+              data-label-placement>
+        {{sensorType.text}}
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu pull-right" role="menu">
+        <li class="btn" disabled>Choose sensor type</li>
+        <li ng-repeat="sensor in sensorTypes">
+          <a ng-disabled="sensorType == sensor"
+             ng-click="selectSensorType(sensor)">
+            <img class="icons" ng-src="{{sensor.icon}}">{{sensor.text}}
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- Sensor timeframe  -->
+    <div class="btn-group desktop-dropdown" dropdown>
+      <button ng-cloak
+              class="btn btn-black dropdown-toggle time-frame-btn"
+              dropdown-toggle
+              ng-disabled="disabled"
+              data-label-placement
+              style="white-space: normal">
+        <span ng-if="timeFrame.params.end">
+          <span style="white-space: nowrap">
+            {{timeFrame.params.begin.split('T')[0]}}
+          </span>
+          to
+          <span style="white-space: nowrap">
+            {{timeFrame.params.end.split('T')[0]}}
+          </span>
         </span>
-        to
-        <span style="white-space: nowrap">
-          {{timeFrame.params.end.split('T')[0]}}
+        <span ng-if="!timeFrame.params.end">
+          {{timeFrame.text}}
         </span>
-      </span>
-      <span ng-if="!timeFrame.params.end">
-        {{timeFrame.text}}
-      </span>
-      <span class="caret"></span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu pull-right" role="menu">
+        <li class="btn" disabled>Choose time frame</li>
+        <li ng-repeat="time in timeFrames">
+          <a ng-disabled="timeFrame == time"
+             ng-click="selectTimeFrame(time)" uncheckable>
+            <img ng-src="{{time.icon}}" class="icons">{{time.text}}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <input type="text"
+           ng-model="searchString"
+           placeholder="Search for rooms..."
+           typeahead="room as room.name for room in floorplan.rooms
+                     | filter: {name: $viewValue}
+                     | limitTo: 8"
+           ng-disabled="!floorplan.rooms.length"
+           class="form-control search-input"
+           typeahead-on-select="selectRoom($item)">
+
+    <button class="btn btn-default"
+            ng-click="searchRoom(searchString)"
+            title="Search">
+      <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
     </button>
-    <ul class="dropdown-menu pull-right timeMenu" role="menu">
-      <li class="btn" disabled>Choose time frame</li>
-      <li ng-repeat="time in timeFrames">
-        <a ng-disabled="timeFrame == time"
-           ng-click="selectTimeFrame(time)" uncheckable>
-          <img ng-src="{{time.icon}}" class="icons">{{time.text}}
-        </a>
-      </li>
-    </ul>
+    <button class="btn btn-default"
+            ng-click="resetZoom()"
+            title="Reset zoom">
+      <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
+    </button>
   </div>
-
-  <input id="searchContent2"
-         type="text"
-         ng-model="searchString"
-         placeholder="Search for rooms..."
-         typeahead="room as room.name for room in floorplan.rooms
-                   | filter: {name: $viewValue}
-                   | limitTo: 8"
-         ng-disabled="!floorplan.rooms.length"
-         class="form-control"
-         typeahead-on-select="selectRoom($item)">
-
-  <button class="btn btn-default" id="searchDefault"
-          ng-click="searchRoom(searchString)"
-          title="Search">
-    <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
-  </button>
-  <button class="btn btn-default" id="searchDefault"
-          ng-click="resetZoom()"
-          title="Reset zoom">
-    <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
-  </button>
 </div>
 
 <div class="jumbotron" ng-hide="svgSupport">
@@ -86,17 +84,16 @@
 </div>
 
 <div ng-hide="!svgSupport"
-     ng-class="App.fullscreen ? 'floorplan-fullscreen' : 'floorplan'">'
-
+     ng-class="App.fullscreen ? 'floorplan-fullscreen' : 'floorplan'">
   <!-- Expand / compress button -->
   <i ng-click="toggleFullscreen()"
-     class="btn fullscreen-button"
-     ng-class="App.fullscreen ? 'glyphicon glyphicon-resize-small' :
-              'glyphicon glyphicon-resize-full'"></i>
+     class="btn fullscreen-button glyphicon"
+     ng-class="App.fullscreen ? 'glyphicon-resize-small' :
+              'glyphicon-resize-full'"></i>
 
   <div ng-cloak class="floorplan-caption">
     <h4 class="caption-text">
-      {{selectedPlan.name}} ({{floor}}/{{floorplans.length}})
+      {{floorplan.name}} ({{floor}}/{{floorplans.length}})
     </h4>
   </div>
 
@@ -120,17 +117,13 @@
             floorplan="floorplan"
             selected-room="selectedRoom"
             sensor-type="sensorType">
-
     <tooltip ng-if="heatmap.isFloorplanLoaded"
              sensor-type="sensorType"
              class="mouse-tooltip">
     </tooltip>
-
-    <legendbar id="legendBar"
+    <legendbar id="legendbar"
                sensor-type="sensorType"
                style="position: absolute">
     </legendbar>
-
   </heat-map>
-
 </div>

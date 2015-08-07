@@ -10,9 +10,13 @@ angular.module('otaniemi3dApp')
   .directive('dateRange', function () {
     return {
       restrict: 'EA',
-      link: function postLink(scope, element, attrs) {
+      scope: {
+        ngModel: '=',
+        current: '='
+      },
+      link: function postLink(scope, element) {
 
-        var params = scope.$eval(attrs.ngModel);
+        var params = scope.ngModel;
         if (params) {
           params.begin = null;
           params.end = null;
@@ -34,6 +38,20 @@ angular.module('otaniemi3dApp')
         });
 
         element.find('.footer').remove();
+
+        scope.$watch('current', function (newDate) {
+          if (newDate) {
+            var begin = newDate.begin || new Date().toISOString();
+            var end = newDate.end || new Date().toISOString();
+            begin = begin.split('T')[0];
+            end = end.split('T')[0];
+            console.log(newDate.begin);
+            console.log(end);
+
+            element.data('dateRangePicker')
+              .setDateRange(begin, end);
+          }
+        });
 
         scope.$on('destroy', function () {
           element.data('dateRangePicker').destroy();
