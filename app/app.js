@@ -10,7 +10,6 @@
  */
 angular
   .module('otaniemi3dApp', [
-    'ngTouch',
     'ui.bootstrap',
     'ui.grid',
     'ui.router',
@@ -87,4 +86,7 @@ angular
   })
   .config(function(cfpLoadingBarProvider) {
       cfpLoadingBarProvider.includeSpinner = false;
+  })
+  .run(function() {
+    FastClick.attach(document.body);
   });
