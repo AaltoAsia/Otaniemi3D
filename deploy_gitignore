@@ -1,0 +1,8 @@
+node_modules
+dist
+.tmp
+.idea/*
+*.log
+Thumbs.db
+*~
+test/coverage

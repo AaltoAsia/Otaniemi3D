@@ -24,6 +24,21 @@ module.exports = function (grunt) {
   // Define the configuration for all the tasks
   grunt.initConfig({
 
+    buildcontrol: {
+      options: {
+        dir: 'dist',
+        commit: true,
+        push: true,
+        message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
+      },
+      pages: {
+        options: {
+          remote: 'git@github.com:AaltoAsia/Otaniemi3D.git',
+          branch: 'gh-pages'
+        }
+      }
+    },
+
     sass: {
       options: {
         sourceMap: true
@@ -361,6 +376,9 @@ module.exports = function (grunt) {
           cwd: 'bower_components/jstree/dist/themes/default',
           src: '*.*',
           dest: '<%= yeoman.dist %>/styles'
+        }, {
+          src: 'deploy_gitignore',
+          dest: '<%= yeoman.dist %>/.gitignore'
         }]
       },
       styles: {
@@ -450,5 +468,9 @@ module.exports = function (grunt) {
     'newer:jshint',
     'test',
     'build'
+  ]);
+
+  grunt.registerTask('deploy', [
+    'buildcontrol:pages'
   ]);
 };
