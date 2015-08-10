@@ -14,6 +14,7 @@ angular.module('otaniemi3dApp')
 
     self.navbarCollapse = true;
     //states are defined in app/app.js
+    /*
     self.navigation = [
       {
         state: 'sensor-list',
@@ -32,6 +33,7 @@ angular.module('otaniemi3dApp')
         name: 'Analytics'
       }
     ];
+    */
 
     self.fullscreen = false;
 

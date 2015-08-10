@@ -1,33 +1,3 @@
-.carousel-inner {
+#google-map {
   height: 100%;
-}
-
-.frontpage-carousel {
-  height: 100%;
-}
-
-.carousel-caption{
-  color: black;
-  text-shadow: 2px 2px 5px  #808080;
-}
-
-.carousel-indicators{
-  & li {
-    background-color: black;
-    border: 1px solid gray;
-  }
-
-  & .active{
-    background-color: gray;
-  }
-}
-
-.carousel-control{
-  color: black;
-  cursor: pointer;
-}
-
-.carousel-image {
-  height: $view-height !important;
-  margin: auto;
 }
