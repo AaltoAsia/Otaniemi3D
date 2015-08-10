@@ -2,12 +2,12 @@
   "name": "otaniemi3d",
   "version": "0.2.0",
   "dependencies": {
-    "angular": "~1.4.0",
-    "angular-touch": "~1.4.0",
+    "angular": "~1.4.x",
+    "angular-touch": "~1.4.x",
     "jquery": "~2.1.0",
     "angular-ui-grid": "~3.0.0",
     "d3": "~3.5.5",
-    "angular-bootstrap": "~0.13.0",
+    "angular-bootstrap": "~0.13.x",
     "angular-loading-bar": "~0.6.0",
     "modernizr": "~2.8.3",
     "jstree": "~3.1.1",
@@ -15,7 +15,8 @@
     "highcharts-ng": "~0.0.8",
     "angular-ui-router": "~0.2.15",
     "angular-ui-event": "~1.0.0",
-    "jquery-date-range-picker": "~0.0.7"
+    "jquery-date-range-picker": "~0.0.7",
+    "fastclick": "~1.0.6"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0",
@@ -24,6 +25,7 @@
   },
   "appPath": "app",
   "resolutions": {
-    "angular": "~1.4.0"
+    "angular": "~1.4.x",
+    "jquery": "~2.1.0"
   }
 }
