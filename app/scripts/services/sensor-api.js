@@ -271,10 +271,14 @@ angular.module('otaniemi3dApp')
           '@ttl': '0'
         }
       };
-      preamble['omi:omiEnvelope']['omi:'+method] = {
+      var methodElement = preamble['omi:omiEnvelope']['omi:'+method] = {
         '@msgformat': 'odf',
         'omi:msg': true
       };
+
+      angular.forEach(params, function (value, key) {
+        methodElement['@'+key] = value;
+      });
 
       var xmlDoc = JXON.createXML(preamble);
 
