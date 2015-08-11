@@ -16,7 +16,7 @@ angular.module('otaniemi3dApp')
     //Bootstrap small size < 992px
     $scope.mobileDevice = $window.innerWidth < 992;
 
-    angular.element($window).resize(function () {
+    angular.element($window).resize(() => {
       $scope.mobileDevice = $window.innerWidth < 992;
     });
 

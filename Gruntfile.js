@@ -24,6 +24,21 @@ module.exports = function (grunt) {
   // Define the configuration for all the tasks
   grunt.initConfig({
 
+    babel: {
+      options: {
+        sourceMap: 'inline'
+      },
+      build: {
+        files: [{
+          expand: true,
+          src: ['<%= yeoman.app %>/scripts/{,*/}*.js',
+                '<%= yeoman.app %>/views/*.js',
+                '<%= yeoman.app %>/app.js'],
+          ext: '.es5.js'
+        }]
+      }
+    },
+
     buildcontrol: {
       options: {
         dir: 'dist',
@@ -68,7 +83,7 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js',
                 '<%= yeoman.app %>/views/*.js',
                 '<%= yeoman.app %>/app.js'],
-        tasks: ['clean:docs', 'ngdocs'],
+        tasks: ['newer:babel', 'clean:docs', 'ngdocs'],
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
@@ -422,6 +437,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'babel',
       'clean:docs',
       'ngdocs',
       'wiredep',
@@ -440,6 +456,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'clean:server',
+    'babel',
     'concurrent:test',
     'autoprefixer',
     'connect:test',
@@ -448,6 +465,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'babel',
     'wiredep',
     'sass',
     'useminPrepare',
