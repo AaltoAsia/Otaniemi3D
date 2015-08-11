@@ -76,7 +76,7 @@ angular.module('otaniemi3dApp')
         params: { begin: year.toISOString() } },
 
       { text: 'Select range',
-        //icon: 'images/time-range.svg',
+        icon: 'images/time-range.svg',
         params: { begin: null, end: null } }
     ];
 
