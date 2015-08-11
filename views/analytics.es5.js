@@ -13,7 +13,7 @@ angular.module('otaniemi3dApp').controller('AnalyticsCtrl', function ($window, s
   this.sensor = null;
   this.sensors = [];
   this.searchStr = '';
-  //Bootstrap small size < 992px
+  //Bootstrap small size < 992
   this.mobileDevice = $window.innerWidth < 992;
 
   angular.element($window).resize(function () {

@@ -7,9 +7,11 @@
  * # dataStorage
  * Service in the otaniemi3dApp.
  */
-angular.module('otaniemi3dApp').service('dataStorage', function () {
+angular.module('otaniemi3dApp')
+  .service('dataStorage', function () {
 
-  var self = this;
+    var self = this;
 
-  self.sensors = [];
-});
+    self.sensors = [];
+
+  });

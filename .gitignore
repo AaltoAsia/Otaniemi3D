@@ -7,4 +7,6 @@ bower_components
 Thumbs.db
 *~
 test/coverage
-*.es5.js
+app/scripts/*.js
+app/views/*.js
+app/app.js

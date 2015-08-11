@@ -7,4 +7,7 @@
  * # UnityCtrl
  * Controller of the otaniemi3dApp
  */
-angular.module('otaniemi3dApp').controller('UnityCtrl', function ($scope) {});
+angular.module('otaniemi3dApp')
+  .controller('UnityCtrl', function ($scope) {
+
+  });

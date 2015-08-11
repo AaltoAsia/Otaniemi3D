@@ -4,15 +4,15 @@
 
       <div class="col-md-10 col-sm-12 col-md-push-2">
         <div id="alert" class="alert alert-danger alert-dismissible"
-             ng-class="{invisible: !alert.show}">
+             ng-class="{invisible: !analytics.alert.show}">
           <button type="button" class="close"
-                  ng-click="alert.show = false"
+                  ng-click="analytics.alert.show = false"
                   aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           {{alert.message}}
         </div>
-        <highchart id="sensor-chart" config="chartConfig"></highchart>
+        <highchart id="sensor-chart" config="analytics.chartConfig"></highchart>
       </div>
 
       <div id="sensor-ctrl" class="col-md-2 col-md-pull-10">
@@ -21,17 +21,17 @@
                   dropdown-toggle
                   data-label-placement
                   style="white-space: normal">
-            <span ng-if="timeFrame.params.end">
+            <span ng-if="analytics.timeFrame.params.end">
               <span style="white-space: nowrap">
-                {{timeFrame.params.begin.split('T')[0]}}
+                {{analytics.timeFrame.params.begin.split('T')[0]}}
               </span>
               to
               <span style="white-space: nowrap">
-                {{timeFrame.params.end.split('T')[0]}}
+                {{analytics.timeFrame.params.end.split('T')[0]}}
               </span>
             </span>
-            <span ng-if="!timeFrame.params.end">
-              {{timeFrame.text}}
+            <span ng-if="!analytics.timeFrame.params.end">
+              {{analytics.timeFrame.text}}
             </span>
             <span class="caret"></span>
           </button>
@@ -39,9 +39,9 @@
             <li class="btn" disabled>
               Choose time frame
             </li>
-            <li ng-repeat="timeFrame in timeFrames">
-              <a ng-disabled="timeFrame == timeFrame"
-                 ng-click="selectTime(timeFrame)">
+            <li ng-repeat="timeFrame in analytics.timeFrames">
+              <a ng-disabled="timeFrame == analytics.timeFrame"
+                 ng-click="analytics.selectTime(timeFrame)">
                 <img class="icons" ng-src="{{timeFrame.icon}}"> {{timeFrame.text}}
               </a>
             </li>
@@ -51,15 +51,15 @@
         <div id="drop-area"
              class="hidden-xs hidden-sm"
              title="You can view multiple sensor values at a time by dragging sensors to the drop area.">
-          <div id="{{sensor.id}}" class="sensor-legend" ng-repeat="sensor in sensors" draggable="true">
+          <div id="{{analytics.sensor.id}}" class="sensor-legend" ng-repeat="sensor in analytics.sensors" draggable="true">
             <img ng-src="images/{{sensor.name}}.svg">
             <div>{{sensor.room}}: {{sensor.text}}</div>
           </div>
-          <h3 ng-show="!sensors.length">Drop a sensor here</h3>
+          <h3 ng-show="!analytics.sensors.length">Drop a sensor here</h3>
         </div>
 
         <div id="clear-btn">
-          <button class="btn btn-default" ng-click="clearSensors()">Clear sensors</button>
+          <button class="btn btn-default" ng-click="analytics.clearSensors()">Clear sensors</button>
         </div>
       </div>
 
@@ -73,11 +73,11 @@
       placeholder="Search">
     <sensor-tree id="sensor-tree"
       root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/'"
-      select-sensor="addSensor"
-      drag-sensor="addSensor"
-      checkbox="mobileDevice"
-      search="searchStr"
-      error="alert">
+      select-sensor="analytics.addSensor"
+      drag-sensor="analytics.addSensor"
+      checkbox="analytics.mobileDevice"
+      search="analytics.searchStr"
+      error="analytics.alert">
     </sensor-tree>
   </div>
 </div>

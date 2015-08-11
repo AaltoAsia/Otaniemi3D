@@ -26,15 +26,15 @@ module.exports = function (grunt) {
 
     babel: {
       options: {
-        sourceMap: 'inline'
+        sourceMap: false
       },
       build: {
         files: [{
           expand: true,
-          src: ['<%= yeoman.app %>/scripts/{,*/}*.js',
-                '<%= yeoman.app %>/views/*.js',
-                '<%= yeoman.app %>/app.js'],
-          ext: '.es5.js'
+          src: ['<%= yeoman.app %>/scripts/{,*/}*.es6',
+                '<%= yeoman.app %>/views/*.es6',
+                '<%= yeoman.app %>/app.es6'],
+          ext: '.js'
         }]
       }
     },
@@ -80,10 +80,10 @@ module.exports = function (grunt) {
         tasks: ['wiredep']
       },
       js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js',
-                '<%= yeoman.app %>/views/*.js',
-                '<%= yeoman.app %>/app.js'],
-        tasks: ['newer:babel', 'clean:docs', 'ngdocs'],
+        files: ['<%= yeoman.app %>/scripts/{,*/}*.es6',
+                '<%= yeoman.app %>/views/*.es6',
+                '<%= yeoman.app %>/app.es6'],
+        tasks: ['babel', 'clean:docs', 'ngdocs'],
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
@@ -197,7 +197,15 @@ module.exports = function (grunt) {
         }]
       },
       server: '.tmp',
-      docs: 'docs'
+      docs: 'docs',
+      es6: {
+        files: [{
+          expand: true,
+          src: ['<%= yeoman.app %>/scripts/{,*/}*.es5.js',
+                '<%= yeoman.app %>/views/*.es5.js',
+                '<%= yeoman.app %>/app.es5.js']
+        }]
+      }
     },
 
     // Add vendor prefixed styles

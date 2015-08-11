@@ -1,21 +1,21 @@
 <div class="search-bar">
   <div>
     <button class="btn btn-black options-btn"
-            ng-click="mobileModal()">
+            ng-click="heatmap.mobileModal()">
       Options
     </button>
     <!-- Sensor Type  -->
     <div class="btn-group desktop-dropdown" dropdown>
       <button ng-cloak
               class="btn btn-black dropdown-toggle sensor-type-btn"
-              dropdown-toggle ng-disabled="disabled"
+              dropdown-toggle
               data-label-placement>
-        {{sensorType.text}}
+        {{heatmap.sensorType.text}}
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right" role="menu">
         <li class="btn" disabled>Choose sensor type</li>
-        <li ng-repeat="sensor in sensorTypes">
+        <li ng-repeat="sensor in heatmap.sensorTypes">
           <a ng-disabled="sensorType == sensor"
              ng-click="selectSensorType(sensor)">
             <img class="icons" ng-src="{{sensor.icon}}">{{sensor.text}}
@@ -28,28 +28,27 @@
       <button ng-cloak
               class="btn btn-black dropdown-toggle time-frame-btn"
               dropdown-toggle
-              ng-disabled="disabled"
               data-label-placement
               style="white-space: normal">
-        <span ng-if="timeFrame.params.end">
+        <span ng-if="heatmap.timeFrame.params.end">
           <span style="white-space: nowrap">
-            {{timeFrame.params.begin.split('T')[0]}}
+            {{heatmap.timeFrame.params.begin.split('T')[0]}}
           </span>
           to
           <span style="white-space: nowrap">
-            {{timeFrame.params.end.split('T')[0]}}
+            {{heatmap.timeFrame.params.end.split('T')[0]}}
           </span>
         </span>
-        <span ng-if="!timeFrame.params.end">
-          {{timeFrame.text}}
+        <span ng-if="!heatmap.timeFrame.params.end">
+          {{heatmap.timeFrame.text}}
         </span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right" role="menu">
         <li class="btn" disabled>Choose time frame</li>
-        <li ng-repeat="time in timeFrames">
-          <a ng-disabled="timeFrame == time"
-             ng-click="selectTimeFrame(time)" uncheckable>
+        <li ng-repeat="time in heatmap.timeFrames">
+          <a ng-disabled="time == heatmap.timeFrame"
+             ng-click="heatmap.selectTimeFrame(time)" uncheckable>
             <img ng-src="{{time.icon}}" class="icons">{{time.text}}
           </a>
         </li>
@@ -57,72 +56,73 @@
     </div>
 
     <input type="text"
-           ng-model="searchString"
+           ng-model="heatmap.searchString"
            placeholder="Search for rooms..."
-           typeahead="room as room.name for room in floorplan.rooms
+           typeahead="room as room.name for room in heatmap.floorplan.rooms
                      | filter: {name: $viewValue}
                      | limitTo: 8"
-           ng-disabled="!floorplan.rooms.length"
+           ng-disabled="!heatmap.floorplan.rooms.length"
            class="form-control search-input"
-           typeahead-on-select="selectRoom($item)">
+           typeahead-on-select="heatmap.selectRoom($item)">
 
     <button class="btn btn-default"
-            ng-click="searchRoom(searchString)"
+            ng-click="heatmap.searchRoom(searchString)"
             title="Search">
       <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
     </button>
     <button class="btn btn-default"
-            ng-click="resetZoom()"
+            ng-click="heatmap.resetZoom()"
             title="Reset zoom">
       <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
     </button>
   </div>
 </div>
 
-<div class="jumbotron" ng-hide="svgSupport">
+<div class="jumbotron" ng-hide="heatmap.svgSupport">
   <h1>Your browser doesn't support svg!</h1>
 </div>
 
 <div ng-hide="!svgSupport"
      ng-class="App.fullscreen ? 'floorplan-fullscreen' : 'floorplan'">
   <!-- Expand / compress button -->
-  <i ng-click="toggleFullscreen()"
+  <i ng-click="heatmap.toggleFullscreen()"
      class="btn fullscreen-button glyphicon"
      ng-class="App.fullscreen ? 'glyphicon-resize-small' :
               'glyphicon-resize-full'"></i>
 
   <div ng-cloak class="floorplan-caption">
     <h4 class="caption-text">
-      {{floorplan.name}} ({{floor}}/{{floorplans.length}})
+      {{heatmap.floorplan.name}}
+      ({{heatmap.floor}}/{{heatmap.floorplans.length}})
     </h4>
   </div>
 
   <!-- Button that loads up that lower (aka previous) floor -->
-  <i ng-click="prevFloor()"
+  <i ng-click="heatmap.prevFloor()"
      class="btn btn-lg previous-button glyphicon glyphicon-arrow-left"
      ng-class="App.fullscreen ? 'btn-fullscreen' : ''"
-     ng-disabled="floor == '1'">
+     ng-disabled="heatmap.floor == '1'">
   </i>
 
   <!-- button that loads up higher (aka next) floor -->
-  <i ng-click="nextFloor()"
+  <i ng-click="heatmap.nextFloor()"
      class="btn btn-lg next-button glyphicon glyphicon-arrow-right"
      ng-class="App.fullscreen ? 'btn-fullscreen' : ''"
-     ng-disabled="floor == floorplans.length">
+     ng-disabled="heatmap.floor == heatmap.floorplans.length">
   </i>
 
   <!-- The actual floorplan -->
   <heat-map id="heat-map"
             class="fp"
-            floorplan="floorplan"
-            selected-room="selectedRoom"
-            sensor-type="sensorType">
+            floorplan="heatmap.floorplan"
+            selected-room="heatmap.selectedRoom"
+            sensor-type="heatmap.sensorType">
     <tooltip ng-if="heatmap.isFloorplanLoaded"
-             sensor-type="sensorType"
+             sensor-type="heatmap.sensorType"
              class="mouse-tooltip">
     </tooltip>
     <legendbar id="legendbar"
-               sensor-type="sensorType"
+               sensor-type="heatmap.sensorType"
                style="position: absolute">
     </legendbar>
   </heat-map>

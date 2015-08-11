@@ -7,23 +7,24 @@
  * Controls Heat Map view.
  */
 angular.module('otaniemi3dApp').controller('HeatMapCtrl', function ($scope, floorplanStorage, $modal, $state) {
-  var _this = this;
 
-  this.floor = Number($state.params.floorNum);
+  var self = this;
 
-  if (!this.floor) {
+  $scope.floor = Number($state.params.floorNum);
+
+  if (!$scope.floor) {
     $state.go('heat-map', { floorNum: 1 }, { notify: false });
-    this.floor = 1;
+    $scope.floor = 1;
   }
 
-  this.searchString = '';
-  this.floorplans = floorplanStorage.list;
-  this.room = {};
-  this.svgSupport = Modernizr.svg;
-  this.isFloorplanLoaded = false;
-  this.floorplan = this.floorplans[this.floor - 1];
+  $scope.searchString = '';
+  $scope.floorplans = floorplanStorage.list;
+  $scope.room = {};
+  $scope.svgSupport = Modernizr.svg;
+  self.isFloorplanLoaded = false;
+  $scope.floorplan = $scope.floorplans[$scope.floor - 1];
 
-  this.sensorTypes = [{ text: 'Temperature',
+  $scope.sensorTypes = [{ text: 'Temperature',
     name: 'temperature',
     icon: 'images/temperature.svg' }, { text: 'CO2',
     name: 'co2',
@@ -45,7 +46,7 @@ angular.module('otaniemi3dApp').controller('HeatMapCtrl', function ($scope, floo
   month.setMonth(month.getMonth() - 1);
   year.setFullYear(year.getFullYear() - 1);
 
-  this.timeFrames = [{ text: 'Current',
+  $scope.timeFrames = [{ text: 'Current',
     icon: 'images/latest.svg',
     params: {} }, { text: 'Last Week',
     icon: 'images/week.svg',
@@ -57,8 +58,8 @@ angular.module('otaniemi3dApp').controller('HeatMapCtrl', function ($scope, floo
     //icon: 'images/time-range.svg',
     params: { begin: null, end: null } }];
 
-  this.sensorType = this.sensorTypes[0];
-  this.timeFrame = this.timeFrames[0];
+  $scope.sensorType = $scope.sensorTypes[0];
+  $scope.timeFrame = $scope.timeFrames[0];
 
   /**
   * @ngdoc function
@@ -73,8 +74,8 @@ angular.module('otaniemi3dApp').controller('HeatMapCtrl', function ($scope, floo
   *   - ** name ** - `{string}` - Sensor's name.
   *   - ** icon ** - `{string}` - Url to sensor's icon.
   */
-  this.selectSensorType = function (sensor) {
-    _this.sensorType = sensor;
+  $scope.selectSensorType = function (sensor) {
+    $scope.sensorType = sensor;
   };
 
   /**
@@ -91,9 +92,9 @@ angular.module('otaniemi3dApp').controller('HeatMapCtrl', function ($scope, floo
   *     - `end` - `{string}` [optional] - End date as an ISO string.
   *   - ** icon ** - `{string}` - Url to time frame's icon.
   */
-  this.selectTimeFrame = function (timeFrame) {
+  $scope.selectTimeFrame = function (timeFrame) {
     if (timeFrame.text === 'Select range') {
-      _this.modalInstance = $modal.open({
+      $scope.modalInstance = $modal.open({
         templateUrl: 'templates/select-range.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
@@ -106,39 +107,39 @@ angular.module('otaniemi3dApp').controller('HeatMapCtrl', function ($scope, floo
         }
       });
 
-      _this.modalInstance.result.then(function (params) {
+      $scope.modalInstance.result.then(function (params) {
         var time = params.timeRange;
 
         if (time.begin && time.end) {
           timeFrame.params.begin = time.begin.toISOString();
           timeFrame.params.end = time.end.toISOString();
-          _this.timeFrame = timeFrame;
+          $scope.timeFrame = timeFrame;
         }
       });
     } else {
-      _this.timeFrame = timeFrame;
+      $scope.timeFrame = timeFrame;
     }
   };
 
-  this.toggleFullscreen = function () {
+  $scope.toggleFullscreen = function () {
     $scope.App.fullscreen = !$scope.App.fullscreen;
   };
 
-  this.nextFloor = function () {
-    $state.go('heat-map', { floorNum: _this.floor + 1 });
+  $scope.nextFloor = function () {
+    $state.go('heat-map', { floorNum: $scope.floor + 1 });
   };
 
-  this.prevFloor = function () {
-    $state.go('heat-map', { floorNum: _this.floor - 1 });
+  $scope.prevFloor = function () {
+    $state.go('heat-map', { floorNum: $scope.floor - 1 });
   };
 
-  this.selectRoom = function (room) {
-    _this.room = room;
+  $scope.selectRoom = function (room) {
+    $scope.room = room;
     $scope.$broadcast('room-selected', room);
   };
 
-  this.searchRoom = function (searchString) {
-    var rooms = _this.floorplan.rooms;
+  $scope.searchRoom = function (searchString) {
+    var rooms = $scope.floorplan.rooms;
     var roomString;
 
     if (searchString.name) {
@@ -149,58 +150,58 @@ angular.module('otaniemi3dApp').controller('HeatMapCtrl', function ($scope, floo
 
     for (var i = 0; i < rooms.length; i++) {
       if (rooms[i].name.toLowerCase() === roomString.toLowerCase()) {
-        return _this.selectRoom(rooms[i]);
+        return $scope.selectRoom(rooms[i]);
       }
     }
 
-    _this.selectRoom({});
+    $scope.selectRoom({});
   };
 
-  this.resetZoom = function () {
+  $scope.resetZoom = function () {
     $scope.$broadcast('reset-zoom');
   };
 
-  this.mobileModal = function () {
-    _this.modalInstance = $modal.open({
+  $scope.mobileModal = function () {
+    self.modalInstance = $modal.open({
       templateUrl: 'templates/sensor-options.html',
       controller: 'ModalCtrl',
       controllerAs: 'modal',
       resolve: {
         params: function params() {
           return {
-            sensorTypes: this.sensorTypes,
-            sensorType: this.sensorType,
-            timeFrames: this.timeFrames,
-            timeFrame: this.timeFrame,
+            sensorTypes: $scope.sensorTypes,
+            sensorType: $scope.sensorType,
+            timeFrames: $scope.timeFrames,
+            timeFrame: $scope.timeFrame,
             timeRange: { begin: null, end: null }
           };
         }
       }
     });
 
-    _this.modalInstance.result.then(function (params) {
+    self.modalInstance.result.then(function (params) {
       var time = params.timeRange;
 
       if (time.begin && time.end) {
-        var length = _this.timeFrames.length;
-        var timeFrame = _this.timeFrames[length - 1];
+        var length = $scope.timeFrames.length;
+        var timeFrame = $scope.timeFrames[length - 1];
         timeFrame.params.begin = time.begin.toISOString();
         timeFrame.params.end = time.end.toISOString();
-        _this.timeFrame = timeFrame;
+        $scope.timeFrame = timeFrame;
       } else {
-        _this.timeFrame = params.timeFrame;
+        $scope.timeFrame = params.timeFrame;
       }
-      _this.sensorType = params.sensorType;
+      $scope.sensorType = params.sensorType;
     });
   };
 
   $scope.$on('floorplan-loaded', function () {
-    _this.isFloorplanLoaded = true;
+    self.isFloorplanLoaded = true;
   });
 
   $scope.$on('$destroy', function () {
-    if (_this.modalInstance) {
-      _this.modalInstance.dismiss();
+    if (self.modalInstance) {
+      self.modalInstance.dismiss();
     }
   });
 });
