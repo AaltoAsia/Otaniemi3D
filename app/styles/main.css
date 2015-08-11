@@ -337,6 +337,9 @@ viewbox on Chrome.
   height: 100%;
   position: relative; }
 
+#unity-player {
+  height: 100%; }
+
 #analytics {
   height: 100%; }
 
