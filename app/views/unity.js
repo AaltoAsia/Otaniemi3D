@@ -12,7 +12,6 @@ angular.module('otaniemi3dApp')
     var self = this;
 
     self.missing = true;
-    self.message = '';
 
     var config = {
 			params: { debugLevel: 1 }
@@ -23,31 +22,18 @@ angular.module('otaniemi3dApp')
       self.unity = initUnity(config);
     });
 
-    self.installPlugin = function () {
-      if (self.unity) {
-        self.unity.installPlugin();
-      }
-    };
-
     function initUnity(config) {
       var unity = new UnityObject2(config);
 
   		unity.observeProgress(function (progress) {
   			switch(progress.pluginStatus) {
   				case 'broken':
-            self.message = 'You will need to restart your browser after installing Unity Web Player.';
-            self.missing = true;
-            break;
   				case 'missing':
-            self.message = 'You need to install Unity Web Player.';
-  					self.missing = true;
   				  break;
           case 'installed':
-            self.message = '';
             self.missing = false;
             break;
   				default:
-            self.message = '';
             break;
   			}
   		});
