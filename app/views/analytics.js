@@ -215,4 +215,8 @@ angular.module('otaniemi3dApp')
       });
     };
 
+    $scope.dropSensor = function (event) {
+      // body...
+    };
+
   });
