@@ -16,8 +16,8 @@
       <ul class="dropdown-menu pull-right" role="menu">
         <li class="btn" disabled>Choose sensor type</li>
         <li ng-repeat="sensor in heatmap.sensorTypes">
-          <a ng-disabled="sensorType == sensor"
-             ng-click="selectSensorType(sensor)">
+          <a ng-disabled="heatmap.sensorType == sensor"
+             ng-click="heatmap.selectSensorType(sensor)">
             <img class="icons" ng-src="{{sensor.icon}}">{{sensor.text}}
           </a>
         </li>
@@ -66,7 +66,7 @@
            typeahead-on-select="heatmap.selectRoom($item)">
 
     <button class="btn btn-default"
-            ng-click="heatmap.searchRoom(searchString)"
+            ng-click="heatmap.searchRoom(heatmap.searchString)"
             title="Search">
       <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
     </button>
@@ -82,7 +82,7 @@
   <h1>Your browser doesn't support svg!</h1>
 </div>
 
-<div ng-hide="!svgSupport"
+<div ng-hide="!heatmap.svgSupport"
      ng-class="App.fullscreen ? 'floorplan-fullscreen' : 'floorplan'">
   <!-- Expand / compress button -->
   <i ng-click="heatmap.toggleFullscreen()"
@@ -116,7 +116,8 @@
             class="fp"
             floorplan="heatmap.floorplan"
             selected-room="heatmap.selectedRoom"
-            sensor-type="heatmap.sensorType">
+            sensor-type="heatmap.sensorType"
+            time-frame="heatmap.timeFrame">
     <tooltip ng-if="heatmap.isFloorplanLoaded"
              sensor-type="heatmap.sensorType"
              class="mouse-tooltip">

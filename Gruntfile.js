@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 
     babel: {
       options: {
-        sourceMap: false
+        sourceMap: 'inline'
       },
       build: {
         files: [{

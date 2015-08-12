@@ -16,17 +16,15 @@
  * @requires otaniemi3dApp.sensorApi
  */
 angular.module('otaniemi3dApp')
-  .directive('heatMap', function(heatmapService, $q, $rootScope, sensorApi) {
-
-  return {
+  .directive('heatMap', (heatmapService, $q, $rootScope, sensorApi) => ({
     restrict: 'E',
     scope: {
       floorplan: '=',
       selectedRoom: '=',
-      sensorType: '='
+      sensorType: '=',
+      timeFrame: '='
     },
-    link: function(scope, element) {
-
+    link(scope, element) {
       var isFloorplanLoaded = false;
       //Later we store dragging and zooming behavior to this variable.
       var zoomListener;
@@ -49,7 +47,7 @@ angular.module('otaniemi3dApp')
         if (floorplan.svg) {
           deferred.resolve(floorplan);
         } else {
-          d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
+          d3.xml(floorplan.url, 'image/svg+xml', (xml) => {
             if (xml) {
               floorplan.svg = xml.documentElement;
               deferred.resolve(floorplan);
@@ -136,7 +134,7 @@ angular.module('otaniemi3dApp')
             });
           });
 
-        return sensorApi.send('read', sensorRequest)
+        return sensorApi.send('read', sensorRequest, scope.timeFrame.params)
           .then(function success (data) {
             floorplan.data = data;
             return floorplan;
@@ -202,13 +200,19 @@ angular.module('otaniemi3dApp')
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
           .each(function () {
-            var data = d3.select(this).datum();
+            let data = d3.select(this).datum();
 
-            for (var i = 0; i < data.sensors.length; i++) {
+            for (let i = 0; i < data.sensors.length; i++) {
               if (data.sensors[i].type === scope.sensorType.name) {
-                var sensor = data.sensors[i];
-                var value = sensor.values[0].value;
-                var color = heatmapService.getColor(sensor.type, value);
+                let sensor = data.sensors[i];
+                let values = sensor.values;
+                let value;
+                if (scope.timeFrame.params.begin) {
+                  value = values[values.length-1].value;
+                } else {
+                  value = sensor.values[0].value;
+                }
+                let color = heatmapService.getColor(sensor.type, value);
                 d3.select(this)
                   .style('fill', color.rgb)
                   .style('fill-opacity', color.opacity);
@@ -244,11 +248,11 @@ angular.module('otaniemi3dApp')
         }
       }
 
-      scope.$on('reset-zoom', function () {
+      scope.$on('reset-zoom', () => {
         zoomAndPan(1, [0,0]);
       });
 
-      scope.$on('room-selected', function (_, roomInfo) {
+      scope.$on('room-selected', (_, roomInfo) => {
         d3.select(scope.floorplan.svg)
           .selectAll('[data-room-id]')
           .each(function () {
@@ -277,10 +281,18 @@ angular.module('otaniemi3dApp')
           });
       });
 
-      scope.$watch('sensorType', function () {
+      scope.$watch('sensorType', () => {
         if (isFloorplanLoaded) {
           updateRoomColors(scope.floorplan);
         }
       });
+
+      scope.$watch('timeFrame', () => {
+        if (isFloorplanLoaded) {
+          fetchSensorData(scope.floorplan)
+            .then(bindSensors)
+            .then(updateRoomColors);
+        }
+      });
     }
-  };});
+  }));
