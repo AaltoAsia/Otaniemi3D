@@ -35,11 +35,6 @@ angular.module('otaniemi3dApp')
 
     self.fullscreen = false;
 
-    //helper function (can be used in child controllers)
-    self.startsWith = function (str, substr) {
-      return str.lastIndexOf(substr, 0) === 0;
-    };
-
     $scope.$on('$stateChangeSuccess', function () {
       if ($state.current.name !== 'heat-map') {
         self.fullscreen = false;

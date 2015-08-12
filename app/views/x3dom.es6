@@ -8,23 +8,23 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('X3DomCtrl', function ($scope, $modal, $state, $q, $interval, $timeout, $window, sensorApi) {
+  .controller('X3DomCtrl', function ($modal, $state, $q, $interval, $timeout, $window, sensorApi) {
 
-    $scope.panoramabox = 'images/panoramabox.svg';
-    $scope.selected = undefined;
+    this.panoramabox = 'images/panoramabox.svg';
+    this.roomId = $state.params.roomId;
     //Use this boolean to check for webgl support
-    $scope.webglSupport = Modernizr.webgl;
+    this.webglSupport = Modernizr.webgl;
 
     function waitForX3Dom() {
       var deferred = $q.defer();
 
-      $interval(function () {
+      $interval(() => {
         if ($window.x3domReady) {
           deferred.resolve(true);
         }
       }, 100);
 
-      $timeout(function () {
+      $timeout(() => {
         if (!$window.x3domReady) {
           deferred.reject('Request timed out. Couldn\'t download x3dom files in 8.0 seconds.');
         }
@@ -34,18 +34,17 @@ angular.module('otaniemi3dApp')
     }
 
     //x3d change viewpoint (camera location)
-    $scope.changeView = function(viewpoint){
-      if(viewpoint === undefined) {
-        var textField = document.getElementById('searchContent');
-        viewpoint = textField.value;
+    this.changeView = (viewpoint) => {
+      if (typeof viewpoint !== 'string') {
+        return;
       }
 
-      var elem = document.getElementById(viewpoint);
+      var elem = $('#'+viewpoint)[0];
 
       if(elem !== null) {
         elem.setAttribute('set_bind','true');
 
-        var x3dElem = document.getElementById('x3dElement');
+        var x3dElem = $('#x3dElement')[0];
         x3dElem.runtime.resetView();
 
         $state.go('x3dom', {roomId: viewpoint},
@@ -53,15 +52,14 @@ angular.module('otaniemi3dApp')
       }
     };
 
-    waitForX3Dom().then(function () {
-      if ($state.params.roomId) {
-        $scope.changeView($state.params.roomId);
+    waitForX3Dom().then(() => {
+      if (this.roomId) {
+        this.changeView(this.roomId);
       }
     });
 
-    $scope.text = undefined;
     //items in search scope
-    $scope.rooms = ['Entrance','Cafeteria','Corridor Entrance Side',
+    this.rooms = ['Entrance','Cafeteria','Corridor Entrance Side',
       'Corridor Cafeteria Side','2nd Floor Sundeck','2nd Floor Corridor Start',
       '2nd Floor Corridor Middle','2nd Floor Corridor End','Room-223',
       'Room-224','Room-225','Room-226','Room-227','Room-228','Room-229',
@@ -70,28 +68,23 @@ angular.module('otaniemi3dApp')
       'Room-333','Room-334','Room-335','Room-336','Room-337','Room-338',
       'Room-341a','Room-341b','Room-341c','Room-348'];
 
-    //search item selected, change view
-    $scope.onSelect = function($item) {
-      $scope.changeView($item);
-    };
-
-    $scope.showName = function (roomId) {
+    this.showName = (roomId) => {
       if (roomId) {
         return roomId.split('-').join(' ');
       }
     };
 
-    $scope.panoramaViewer = function(roomId) {
+    this.panoramaViewer = (roomId) => {
       $state.go('panorama', {roomId: roomId});
     };
 
-    $scope.modalTooltip = function (roomId) {
+    this.modalTooltip = (roomId) => {
       $modal.open({
         templateUrl: 'templates/sensor-info.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
         resolve: {
-          params: function () {
+          params() {
             return getSensorData(roomId);
           }
         }
@@ -113,9 +106,30 @@ angular.module('otaniemi3dApp')
         }
       };
 
-      return sensorApi.send('read', request).then(function (data) {
+      return sensorApi.send('read', request).then((data) => {
         return data;
       });
     }
+
+    $window.panoramaBoxEvent = (event) => {
+      let id = event.target.id;
+
+      if (typeof id === 'string' &&
+          id.startsWith('panoramabox')) {
+        let roomId = id.replace('panoramabox_', '');
+        this.panoramaViewer(roomId);
+      }
+    };
+
+    $window.sensorBoxEvent = (event) => {
+      console.log(event);
+      let id = event.target.id;
+
+      if (typeof id === 'string' &&
+          id.startsWith('sensorbox')) {
+        let roomId = id.replace('sensorbox_', '');
+        this.modalTooltip(roomId);
+      }
+    };
   }
 );

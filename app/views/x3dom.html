@@ -11,11 +11,11 @@
 
 <div class="x3d-container">
 
-<div ng-cloak class="jumbotron" ng-show="!webglSupport">
+<div ng-cloak class="jumbotron" ng-show="!x3dom.webglSupport">
   <h1>Your browser doesn't support webGL!</h1>
 </div>
 
-<x3d ng-hide="pano || !webglSupport"
+<x3d ng-hide="!x3dom.webglSupport"
      id='x3dElement'
      keysEnabled='false'
      showStat='false'
@@ -30,26 +30,26 @@
         typeParams= '0.0 0.0 0.1 1.5' >
 </navigationInfo>
 
-<div ng-show="webglSupport" class="search-bar">
+<div ng-show="x3dom.webglSupport" class="search-bar">
   <div>
     <input type="text"
-           ng-model="selected"
+           ng-model="x3dom.room"
            placeholder="Search for room..."
-           typeahead="showName(room) for room in rooms
+           typeahead="x3dom.showName(room) for room in x3dom.rooms
                      | filter: $viewValue
                      | limitTo: 8"
            class="form-control search-input"
-           typeahead-on-select="onSelect($item)">
+           typeahead-on-select="x3dom.changeView($item)">
 
     <button class="btn btn-default"
-            ng-click="changeView()">
+            ng-click="x3dom.changeView(x3dom.room)">
       <span class="glyphicon glyphicon-search"
             style="vertical-align:middle">
       </span>
     </button>
 
     <button class="btn btn-default"
-            ng-click="changeView('vp0')">
+            ng-click="x3dom.changeView('vp0')">
         <span class="glyphicon glyphicon-home"
               style="vertical-align:middle">
         </span>
@@ -78,7 +78,7 @@
 </Viewpoint>
 
 <Transform translation='472.70494 -2.06601 -130.52585'>
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Entrance'); $scope.$apply()">
+  <Shape id="panoramabox_Entrance" onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -96,7 +96,7 @@
 
 
 <Transform translation='472.70494 -2.066581 -144.51216'>
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Cafeteria'); $scope.$apply()">
+  <Shape id="panoramabox_Cafeteria" onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -108,8 +108,9 @@
 <Transform DEF = 'cafeteria_sensor'
     translation = "469.9848032883704 -0.68947556924496 -143.49173141471726"
     scale = '5 5 5'
-    rotation='-0 0 -1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Cafeteria')" mapDEFToID="true" url="sensor.x3d" />
+    rotation='-0 0 -1.57 1.57'
+    onclick="sensorBoxEvent(event)">
+    <Inline nameSpaceName="sensor" id="sensorbox_Cafeteria" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <viewpoint id='Corridor Entrance Side'
@@ -120,7 +121,8 @@
 </Viewpoint>
 
 <Transform translation="480.48883 0.90577 -120.26504">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Corridor Entrance Side'); $scope.$apply()">
+  <Shape id="panoramabox_Corridor Entrance Side"
+         onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -133,7 +135,7 @@
     translation = "483.267397 1.75220 -117.68667"
     scale = '5 5 5'
     rotation='-0 0 1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Corridor Entrance Side')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" id="sensorbox_Corridor Entrance Side" onclick="sensorBoxEvent(event)" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <viewpoint id='Corridor Cafeteria Side'
@@ -144,7 +146,8 @@
 </Viewpoint>
 
 <Transform translation="480.48883 0.90577 -145.26504">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Corridor Cafeteria Side'); $scope.$apply()">
+  <Shape id="panoramabox_Corridor Cafeteria Side"
+         onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -164,7 +167,7 @@
 </Viewpoint>
 
 <Transform translation="477.61162 0.905068 -109.80603">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd Floor Sundeck'); $scope.$apply()">
+  <Shape id="panoramabox_2nd Floor Sundeck" onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -181,7 +184,7 @@
 </Viewpoint>
 
 <Transform translation="490.51469 0.90577 -109.40390">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd Floor Corridor Start'); $scope.$apply()">
+  <Shape id="panoramabox_2nd Floor Corridor Start" onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -198,7 +201,7 @@
 </Viewpoint>
 
 <Transform translation="503.51469 0.90577 -109.40390">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd Floor Corridor Middle'); $scope.$apply()">
+  <Shape id="panoramabox_2nd Floor Corridor Middle" onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -215,7 +218,7 @@
 </Viewpoint>
 
 <Transform translation="516.51469 0.90577 -109.40390">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('2nd Floor Corridor End'); $scope.$apply()">
+  <Shape id="panoramabox_2nd Floor Corridor End" onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -228,7 +231,7 @@
     translation = "516.2639057062678 2.05003264707672463 -110.77286572331198"
     scale = '5 5 5'
     rotation="-0.0 0.785 0.785 3.14"  >
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('2nd Floor Corridor End')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" id="sensorbox_2nd Floor Corridor End" onclick="sensorBoxEvent(event)" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <viewpoint id='Room-223'
@@ -303,7 +306,7 @@
 </Viewpoint>
 
 <Transform translation="538.04595 0.89867 -109.5522">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room-232a'); $scope.$apply()">
+  <Shape id="panoramabox_Room-232a" onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -327,7 +330,7 @@
 </Viewpoint>
 
 <Transform translation="525.85828 0.91777 -102.52309">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room-238d'); $scope.$apply()">
+  <Shape id="panoramabox_Room-238d" onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -340,7 +343,7 @@
     translation = "524.04428 1.6 -101.52309"
     scale = '5 5 5'
     rotation='-0 0 -1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Room-238d')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" id="sensorbox_Room-238d" onclick="sensorBoxEvent(event)" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <viewpoint id='Room-238b'
@@ -358,7 +361,7 @@
 </Viewpoint>
 
 <Transform translation="516.65828 0.91777 -102.52309">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room-237c'); $scope.$apply()">
+  <Shape id="panoramabox_Room-237c" onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
@@ -371,7 +374,7 @@
     translation = "519.33828 1.7 -101.52309"
     scale = '5 5 5'
     rotation='-0 0 1.57 1.57'>
-    <Inline nameSpaceName="sensor" onclick="var $scope = angular.element(event.target).scope(); $scope.modalTooltip('Room-237c')" mapDEFToID="true" url="sensor.x3d" />
+    <Inline nameSpaceName="sensor" id="sensorbox_Room-237c" onclick="sensorBoxEvent(event)" mapDEFToID="true" url="sensor.x3d" />
 </Transform>
 
 <viewpoint id='Room-237d'
@@ -410,7 +413,7 @@
 </Viewpoint>
 
 <Transform translation="497.65828 0.91777 -102.52309">
-  <Shape onclick="var $scope = angular.element(event.target).scope(); $scope.panoramaViewer('Room-235'); $scope.$apply()">
+  <Shape id="panoramabox_Room-235" onclick="panoramaBoxEvent(event)">
     <Appearance>
       <ImageTexture url="images/panoramabox.svg"></ImageTexture>
       <Material diffuseColor="0.5 0 1.0"/>
