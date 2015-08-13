@@ -7,7 +7,7 @@
  * Controls Heat Map view.
  */
 angular.module('otaniemi3dApp')
-  .controller('HeatMapCtrl', function ($scope, floorplanStorage,
+  .controller('HeatMapCtrl', function ($scope, buildingData,
     $modal, $state) {
 
     var self = this;
@@ -20,7 +20,7 @@ angular.module('otaniemi3dApp')
     }
 
     $scope.searchString = '';
-    $scope.floorplans = floorplanStorage.list;
+    $scope.floorplans = buildingData.floorplans;
     $scope.room = {};
     $scope.svgSupport = Modernizr.svg;
     self.isFloorplanLoaded = false;

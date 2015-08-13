@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function($scope, $stateParams, $window, $modal, sensorApi, $q, $interval) {
+  function($scope, $stateParams, $window, $modal, sensorApi, $q, $interval, buildingData) {
 
     var self = this;
 
@@ -20,7 +20,7 @@ angular.module('otaniemi3dApp')
 
     var roomUrl =
       'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + self.roomId;
-    var xmlPath = 'panorama/' + self.roomId + '.xml';
+    var xmlPath = buildingData.url + 'panorama/' + self.roomId + '.xml';
 
     self.room = {
       xmlPath: xmlPath,

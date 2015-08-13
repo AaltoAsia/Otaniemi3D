@@ -1,0 +1,21 @@
+<krpano version="1.17.4">
+
+	<!-- the skin -->
+	<include url="%SWFPATH%/skin/defaultskin.xml" />
+  <include url="%SWFPATH%/plugins/showtext.xml" />
+	<include url="%SWFPATH%/plugins/addsensor.xml" />
+
+	<!-- view settings -->
+	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />
+
+
+	<preview url="Room_238d.tiles/preview.jpg" />
+
+	<image>
+		<cube url="Room_238d.tiles/pano_%s.jpg" />
+		<mobile>
+			<cube url="Room_238d.tiles/mobile_%s.jpg" />
+		</mobile>
+	</image>
+
+</krpano>
