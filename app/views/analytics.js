@@ -43,7 +43,7 @@ angular.module('otaniemi3dApp')
         id: 'placeholder-series'
       }],
       title: {
-        text: 'Historical data'
+        text: 'Data history'
       },
       noData: 'Add sensors to drop area to see data chart'
     };
