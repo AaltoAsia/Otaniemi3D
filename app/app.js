@@ -42,7 +42,23 @@ angular
       .state('building', {
         abstract: true,
         url: '/:building',
-        template: '<ui-view/>'
+        template: '<ui-view/>',
+        resolve: {
+          currentBuilding: function ($stateParams, buildingData, $q) {
+            var deferred = $q.defer();
+            var building = buildingData.buildings[$stateParams.building];
+            if (building) {
+              buildingData.url = building.url;
+              buildingData.name = $stateParams.building;
+              buildingData.coords = building.coords;
+              buildingData.floorplans = building.floorplans;
+              deferred.resolve(building);
+            } else {
+              deferred.reject('Selected building is not in database');
+            }
+            return deferred.promise;
+          }
+        }
       })
       .state('sensor-list', {
         url: '/sensor-list',
@@ -51,10 +67,33 @@ angular
         parent: 'building'
       })
       .state('heat-map', {
-        url: '/heat-map/{floorNum:[1-5]}',
+        url: '/heat-map/:floorNum',
         templateUrl: 'views/heat-map.html',
         controller: 'HeatMapCtrl as heatmap',
-        parent: 'building'
+        parent: 'building',
+        resolve: {
+          floor: function ($stateParams, buildingData, $q) {
+            var deferred = $q.defer();
+            var floor = Number($stateParams.floorNum);
+            var floorExists = false;
+
+            for (var i = 0; i < buildingData.floorplans.length; i++) {
+              var floorplan = buildingData.floorplans[i];
+
+              if (floorplan.floor === floor) {
+                floorExists = true;
+                break;
+              }
+            }
+
+            if (!floorExists) {
+              deferred.reject('Selected building is not in database');
+            } else {
+              deferred.resolve(floor);
+            }
+            return deferred.promise;
+          }
+        }
       })
       .state('3d-model', {
         url: '/3d-model',
@@ -92,29 +131,28 @@ angular
         parent: 'building'
       })
       .state('not-found', {
-        url: '{path:.*}',
+        //url: '{path:.*}',
         templateUrl: 'views/not-found.html'
       });
   })
   .config(function(cfpLoadingBarProvider) {
       cfpLoadingBarProvider.includeSpinner = false;
   })
-  .run(function($rootScope, $state, buildingData, $timeout) {
+  .run(function($rootScope, $state) {
     FastClick.attach(document.body);
 
-    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-      var building = buildingData[toParams.building];
-      if (building) {
-        buildingData.url = building.url;
-        buildingData.name = toParams.building;
-        buildingData.coords = building.coords;
-        buildingData.floorplans = building.floorplans;
-      } else {
-        $state.go('not-found', null, {location: false, notify: false});
-      }
+    $rootScope.$on('$stateChangeError', function (event) {
+      console.log('change error');
+      $state.go('not-found');
+      event.preventDefault();
     });
 
-    $rootScope.$on('$stateChangeError', function (event, toState, toParams) {
+    $rootScope.$on('$stateChangeStart', function (event, toState) {
+      console.log('change started');
       console.log(toState);
+    });
+
+    $rootScope.$on('$stateChangeSuccess', function () {
+      console.log('change success');
     });
   });

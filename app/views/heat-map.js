@@ -14,9 +14,20 @@ angular.module('otaniemi3dApp')
 
     $scope.floor = Number($state.params.floorNum);
 
-    if (!$scope.floor) {
-      $state.go('heat-map', {floorNum: 1}, {notify: false});
+    var floorExists = false;
+    for (var i = 0; i < buildingData.floorplans.length; i++) {
+      var floorplan = buildingData.floorplans[i];
+
+      if (floorplan.floor === $scope.floor) {
+        floorExists = true;
+        break;
+      }
+    }
+
+    if (!floorExists) {
+      $state.go('not-found');
       $scope.floor = 1;
+      return;
     }
 
     $scope.searchString = '';
