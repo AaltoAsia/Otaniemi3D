@@ -8,9 +8,21 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('HomeCtrl', function ($scope, $timeout, buildingData) {
+  .controller('HomeCtrl', function ($scope, $timeout, buildingData, $state) {
 
     var self = this;
+
+    var buildingParam = $state.params.building;
+    if (buildingParam && buildingParam.length) {
+      var current = buildingData.buildings[buildingParam];
+      if (current) {
+        buildingData.currentBuilding = current;
+      } else {
+        buildingData.currentBuilding = null;
+        $state.go('not-found');
+        return;
+      }
+    }
 
     var mapOptions = {
       zoom: 16,
@@ -46,6 +58,7 @@ angular.module('otaniemi3dApp')
               aaltoBuilding.setOptions({fillColor:  '#FF0000'});
 
               buildingData.currentBuilding = building;
+              $state.go('home', {building: building.name}, {notify: false});
 
               angular.forEach(buildings, function (_building) {
                 if (aaltoBuilding !== _building.polygon) {
@@ -78,6 +91,7 @@ angular.module('otaniemi3dApp')
             });
 
             buildingData.currentBuilding = null;
+            $state.go('home', {building: ''}, {notify: false});
 
           });
         });

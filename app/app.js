@@ -19,6 +19,18 @@ angular
   .config(function ($stateProvider, $urlRouterProvider,
       $urlMatcherFactoryProvider) {
 
+    function resolveBuilding ($stateParams, buildingData, $q) {
+      var deferred = $q.defer();
+      var building = buildingData.buildings[$stateParams.building];
+      if (building) {
+        buildingData.currentBuilding = building;
+        deferred.resolve(building);
+      } else {
+        deferred.reject('Selected building is not in database');
+      }
+      return deferred.promise;
+    }
+
     $urlMatcherFactoryProvider.strictMode(false);
 
     $urlRouterProvider
@@ -32,7 +44,7 @@ angular
 
     $stateProvider
       .state('home', {
-        url: '/',
+        url: '/:building',
         templateUrl: 'views/home.html',
         controller: 'HomeCtrl as home'
       })
@@ -41,17 +53,7 @@ angular
         url: '/:building',
         template: '<ui-view/>',
         resolve: {
-          currentBuilding: function ($stateParams, buildingData, $q) {
-            var deferred = $q.defer();
-            var building = buildingData.buildings[$stateParams.building];
-            if (building) {
-              buildingData.currentBuilding = building;
-              deferred.resolve(building);
-            } else {
-              deferred.reject('Selected building is not in database');
-            }
-            return deferred.promise;
-          }
+          currentBuilding: resolveBuilding
         }
       })
       .state('sensor-list', {
@@ -152,7 +154,6 @@ angular
     var notFound = false;
 
     $rootScope.$on('$stateChangeError', function (event) {
-      console.log('change error');
       $state.go('not-found');
       notFound = true;
       event.preventDefault();
