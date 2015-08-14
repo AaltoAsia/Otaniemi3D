@@ -52,7 +52,7 @@ module.exports = function (grunt) {
     },
 
     ngdocs: {
-      all: ['app/**/*.js']
+      all: ['<%= yeoman.app %>/**/*.js']
     },
 
     // Project settings

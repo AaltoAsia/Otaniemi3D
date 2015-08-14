@@ -23,7 +23,7 @@
     "jasmine-jquery": "~2.0.5",
     "jasmine": "~2.1.0"
   },
-  "appPath": "app",
+  "appPath": "src",
   "resolutions": {
     "angular": "~1.4.x",
     "jquery": "~2.1.0"

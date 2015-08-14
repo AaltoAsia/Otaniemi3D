@@ -91,13 +91,8 @@ angular
           }
         }
       })
-      .state('3d-model', {
-        url: '/3d-model',
-        templateUrl: 'views/model-3d.html',
-        parent: 'building'
-      })
       .state('x3dom', {
-        url: '/3d-model/x3dom/:roomId',
+        url: '/x3dom/:roomId',
         templateUrl: 'views/x3dom.html',
         controller: 'X3DomCtrl as x3dom',
         parent: 'building',
@@ -107,12 +102,6 @@ angular
             squash: true
           }
         }
-      })
-      .state('unity', {
-        url: '/3d-model/unity',
-        templateUrl: 'views/unity.html',
-        controller: 'UnityCtrl as unity',
-        parent: 'building'
       })
       .state('analytics', {
         url: '/analytics',
