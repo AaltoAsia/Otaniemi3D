@@ -260,6 +260,27 @@ angular.module('otaniemi3dApp')
           $scope.chartConfig.series = [];
         }
 
+        var color;
+        switch (selectedSensor.type) {
+          case 'temperature':
+            color = temperatureColor;
+            break;
+          case 'light':
+            color = lightColor;
+            break;
+          case 'pir':
+            color = pirColor;
+            break;
+          case 'humidity':
+            color = humidityColor;
+            break;
+          case 'co2':
+            color = co2Color;
+            break;
+          default:
+            color = '#707070';
+        }
+
         $scope.chartConfig.series.push({
           name: selectedSensor.room + ': ' + selectedSensor.name,
           data: sensorData,
@@ -267,7 +288,8 @@ angular.module('otaniemi3dApp')
             valueSuffix: ' ' + selectedSensor.suffix
           },
           id: selectedSensor.id,
-          yAxis: selectedSensor.type
+          yAxis: selectedSensor.type,
+          color: color
         });
 
         $scope.alert.show = false;
