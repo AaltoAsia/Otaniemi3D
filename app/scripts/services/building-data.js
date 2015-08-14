@@ -11,13 +11,12 @@ angular.module('otaniemi3dApp')
   .service('buildingData', function () {
     var self = this;
 
-    self.url = '';
-    self.coords = [];
-    self.name = '';
-    self.floorplans = [];
+    self.currentBuilding = null;
 
     self.buildings = {
       'CS-building': {
+        name: 'CS-building',
+        url: 'assets/CS-building/',
         coords: [
           new google.maps.LatLng(60.18736197682253, 24.82065011298586),
           new google.maps.LatLng(60.18696423810977, 24.82050094242607),
@@ -31,61 +30,11 @@ angular.module('otaniemi3dApp')
           new google.maps.LatLng(60.18723788021443, 24.82096696817736),
           new google.maps.LatLng(60.18730008895606, 24.82100627000599),
           new google.maps.LatLng(60.18736197682253, 24.82065011298586)
-        ],
-        floorplans: [
-          {
-            url: 'assets/CS-building/floorplans/floor1.svg',
-            name: 'Floor 1',
-            rooms: [],
-            data: [],
-            svg: null,
-            floor: 1,
-            translate: [0,0],
-            scale: 1
-          },
-          {
-            url: 'assets/CS-building/floorplans/floor2.svg',
-            name: 'Floor 2',
-            rooms: [],
-            data: [],
-            svg: null,
-            floor: 2,
-            translate: [0,0],
-            scale: 1
-          },
-          {
-            url: 'assets/CS-building/floorplans/floor3.svg',
-            name: 'Floor 3',
-            rooms: [],
-            data: [],
-            svg: null,
-            floor: 3,
-            translate: [0,0],
-            scale: 1
-          },
-          {
-            url: 'assets/CS-building/floorplans/floor4.svg',
-            name: 'Floor 4',
-            rooms: [],
-            data: [],
-            svg: null,
-            floor: 4,
-            translate: [0,0],
-            scale: 1
-          },
-          {
-            url: 'assets/CS-building/floorplans/floor5.svg',
-            name: 'Floor 5',
-            rooms: [],
-            data: [],
-            svg: null,
-            floor: 5,
-            translate: [0,0],
-            scale: 1
-          }
         ]
       },
       'K1-building': {
+        name: 'K1-building',
+        url: 'assets/K1-building/',
         coords: [
           new google.maps.LatLng(60.18761720005726, 24.827497601509094),
           new google.maps.LatLng(60.18756252687934, 24.827677309513092),
@@ -106,59 +55,113 @@ angular.module('otaniemi3dApp')
           new google.maps.LatLng(60.187385171797395, 24.82663929462433),
           new google.maps.LatLng(60.18726248952598, 24.827049672603604),
           new google.maps.LatLng(60.18761720005726, 24.827497601509094)
-        ],
-        floorplans: [
-          {
-            url: 'assets/K1-building/floorplans/floor1.svg',
-            name: 'Floor 1',
-            rooms: [],
-            data: [],
-            svg: null,
-            floor: 1,
-            translate: [0,0],
-            scale: 1
-          },
-          {
-            url: 'assets/K1-building/floorplans/floor2.svg',
-            name: 'Floor 2',
-            rooms: [],
-            data: [],
-            svg: null,
-            floor: 2,
-            translate: [0,0],
-            scale: 1
-          },
-          {
-            url: 'assets/K1-building/floorplans/floor3.svg',
-            name: 'Floor 3',
-            rooms: [],
-            data: [],
-            svg: null,
-            floor: 3,
-            translate: [0,0],
-            scale: 1
-          },
-          {
-            url: 'assets/K1-building/floorplans/floor4.svg',
-            name: 'Floor 4',
-            rooms: [],
-            data: [],
-            svg: null,
-            floor: 4,
-            translate: [0,0],
-            scale: 1
-          },
-          {
-            url: 'assets/K1-building/floorplans/floor5.svg',
-            name: 'Floor 5',
-            rooms: [],
-            data: [],
-            svg: null,
-            floor: 5,
-            translate: [0,0],
-            scale: 1
-          }
         ]
       }
     };
+
+    self.buildings['CS-building'].floorplans = [
+      {
+        url: self.buildings['CS-building'].url + 'floorplans/floor1.svg',
+        name: 'Floor 1',
+        rooms: [],
+        data: [],
+        svg: null,
+        floor: 1,
+        translate: [0,0],
+        scale: 1
+      },
+      {
+        url: self.buildings['CS-building'].url + 'floorplans/floor2.svg',
+        name: 'Floor 2',
+        rooms: [],
+        data: [],
+        svg: null,
+        floor: 2,
+        translate: [0,0],
+        scale: 1
+      },
+      {
+        url: self.buildings['CS-building'].url + 'floorplans/floor3.svg',
+        name: 'Floor 3',
+        rooms: [],
+        data: [],
+        svg: null,
+        floor: 3,
+        translate: [0,0],
+        scale: 1
+      },
+      {
+        url: self.buildings['CS-building'].url + 'floorplans/floor4.svg',
+        name: 'Floor 4',
+        rooms: [],
+        data: [],
+        svg: null,
+        floor: 4,
+        translate: [0,0],
+        scale: 1
+      },
+      {
+        url: self.buildings['CS-building'].url + 'floorplans/floor5.svg',
+        name: 'Floor 5',
+        rooms: [],
+        data: [],
+        svg: null,
+        floor: 5,
+        translate: [0,0],
+        scale: 1
+      }
+    ];
+
+    self.buildings['K1-building'].floorplans = [
+      {
+        url: self.buildings['K1-building'].url + 'floorplans/floor1.svg',
+        name: 'Floor 1',
+        rooms: [],
+        data: [],
+        svg: null,
+        floor: 1,
+        translate: [0,0],
+        scale: 1
+      },
+      {
+        url: self.buildings['K1-building'].url + 'floorplans/floor2.svg',
+        name: 'Floor 2',
+        rooms: [],
+        data: [],
+        svg: null,
+        floor: 2,
+        translate: [0,0],
+        scale: 1
+      },
+      {
+        url: self.buildings['K1-building'].url + 'floorplans/floor3.svg',
+        name: 'Floor 3',
+        rooms: [],
+        data: [],
+        svg: null,
+        floor: 3,
+        translate: [0,0],
+        scale: 1
+      },
+      {
+        url: self.buildings['K1-building'].url + 'floorplans/floor4.svg',
+        name: 'Floor 4',
+        rooms: [],
+        data: [],
+        svg: null,
+        floor: 4,
+        translate: [0,0],
+        scale: 1
+      },
+      {
+        url: self.buildings['K1-building'].url + 'floorplans/floor5.svg',
+        name: 'Floor 5',
+        rooms: [],
+        data: [],
+        svg: null,
+        floor: 5,
+        translate: [0,0],
+        scale: 1
+      }
+    ];
   });

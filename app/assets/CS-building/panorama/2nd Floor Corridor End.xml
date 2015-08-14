@@ -1,8 +1,9 @@
 <krpano version="1.17.4">
 
 	<!-- the skin -->
-	<include url="skin/defaultskin.xml" />
-  <include url="plugins/showtext.xml" />
+	<include url="%$krpanodir%/skin/defaultskin.xml" />
+  <include url="%$krpanodir%/plugins/showtext.xml" />
+	<include url="%$krpanodir%/plugins/addsensor.xml" />
 
 	<!-- view settings -->
 	<view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto" />

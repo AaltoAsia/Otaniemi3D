@@ -22,7 +22,7 @@ angular.module('otaniemi3dApp')
       .Map($('#google-map')[0], mapOptions);
 
     function initializeMap(map, buildings) {
-      angular.forEach(buildings, function (building, name) {
+      angular.forEach(buildings, function (building) {
         var aaltoBuilding = new google.maps.Polygon({
           paths: building.coords,
           strokeColor: '#FF0000',
@@ -35,15 +35,17 @@ angular.module('otaniemi3dApp')
         aaltoBuilding.setMap(map);
         building.polygon = aaltoBuilding;
 
+        if (buildingData.currentBuilding &&
+            buildingData.currentBuilding.name === building.name) {
+          aaltoBuilding.setOptions({fillColor:  '#FF0000'});
+        }
+
         google.maps.event
           .addListener(aaltoBuilding, 'click', function () {
             $scope.$apply(function () {
               aaltoBuilding.setOptions({fillColor:  '#FF0000'});
 
-              buildingData.url = building.url;
-              buildingData.name = name;
-              buildingData.floorplans = building.floorplans;
-              buildingData.coords = building.coords;
+              buildingData.currentBuilding = building;
 
               angular.forEach(buildings, function (_building) {
                 if (aaltoBuilding !== _building.polygon) {
@@ -75,10 +77,7 @@ angular.module('otaniemi3dApp')
               building.polygon.setOptions({fillColor:  '#808080'});
             });
 
-            buildingData.url = '';
-            buildingData.name = '';
-            buildingData.floorplans = [];
-            buildingData.coords = [];
+            buildingData.currentBuilding = null;
 
           });
         });

@@ -45,10 +45,7 @@ angular
             var deferred = $q.defer();
             var building = buildingData.buildings[$stateParams.building];
             if (building) {
-              buildingData.url = building.url;
-              buildingData.name = $stateParams.building;
-              buildingData.coords = building.coords;
-              buildingData.floorplans = building.floorplans;
+              buildingData.currentBuilding = building;
               deferred.resolve(building);
             } else {
               deferred.reject('Selected building is not in database');
@@ -64,20 +61,19 @@ angular
         parent: 'building'
       })
       .state('heat-map', {
-        url: '/heat-map/:floorNum',
+        url: '/heat-map/:floor',
         templateUrl: 'views/heat-map.html',
         controller: 'HeatMapCtrl as heatmap',
         parent: 'building',
         resolve: {
           floor: function ($stateParams, buildingData, $q) {
             var deferred = $q.defer();
-            var floor = Number($stateParams.floorNum);
+            var floor = Number($stateParams.floor);
             var floorExists = false;
+            var floorplans = buildingData.currentBuilding.floorplans;
 
-            for (var i = 0; i < buildingData.floorplans.length; i++) {
-              var floorplan = buildingData.floorplans[i];
-
-              if (floorplan.floor === floor) {
+            for (var i = 0; i < floorplans.length; i++) {
+              if (floorplans[i].floor === floor) {
                 floorExists = true;
                 break;
               }

@@ -20,7 +20,8 @@ angular.module('otaniemi3dApp')
 
     var roomUrl =
       'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + self.roomId;
-    var xmlPath = buildingData.url + 'panorama/' + self.roomId + '.xml';
+    var xmlPath = buildingData.currentBuilding.url + 'panorama/' + self.roomId + '.xml';
+    console.log(buildingData.currentBuilding);
 
     self.room = {
       xmlPath: xmlPath,

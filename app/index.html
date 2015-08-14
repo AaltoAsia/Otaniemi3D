@@ -50,8 +50,8 @@
       <div collapse="App.navbarCollapse"
            class="navbar-collapse collapse navbar-responsive-collapse">
         <ul ng-cloak class="nav navbar-nav">
-          <li ng-repeat="nav in App.navigation" ui-sref-active="active">
-            <a ng-cloak ng-click="App.navbarCollapse = true" ui-sref="{{nav.state}}">
+          <li ng-if="App.building" ng-repeat="nav in App.navigation" ui-sref-active="active">
+            <a ng-cloak ng-click="App.navbarCollapse = true" ui-sref="{{nav.state}}({building: App.building.name, floor: App.building.floorplans[0].floor})">
               {{nav.name}}
             </a>
           </li>
