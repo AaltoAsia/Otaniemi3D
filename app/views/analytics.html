@@ -51,7 +51,11 @@
         <div id="drop-area"
              class="hidden-xs hidden-sm"
              title="You can view multiple sensor values at a time by dragging sensors to the drop area.">
-          <div id="{{sensor.id}}" class="sensor-legend" ng-repeat="sensor in sensors" draggable="true">
+          <div id="{{sensor.id}}"
+               class="sensor-legend"
+               ng-repeat="sensor in sensors"
+               draggable="true"
+               ui-event="{dragend: 'dropSensor($event)'}">
             <img ng-src="images/{{sensor.name}}.svg">
             <div>{{sensor.room}}: {{sensor.text}}</div>
           </div>
@@ -59,7 +63,7 @@
         </div>
 
         <div id="clear-btn">
-          <button class="btn btn-default" ng-click="clearSensors()">Clear sensors</button>
+          <button class="btn btn-default" ng-click="clearSensors()">Clear all sensors</button>
         </div>
       </div>
 

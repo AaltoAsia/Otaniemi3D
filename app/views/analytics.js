@@ -20,6 +20,12 @@ angular.module('otaniemi3dApp')
       $scope.mobileDevice = $window.innerWidth < 992;
     });
 
+    var temperatureColor = '#f15c80';
+    var pirColor = '#90ed7d';
+    var lightColor = '#f7a35c';
+    var co2Color = '#7e09e8';
+    var humidityColor = '#2150ff';
+
     $scope.alert = {
       show: false,
       message: ''
@@ -28,22 +34,101 @@ angular.module('otaniemi3dApp')
       xAxis: {
         type: 'datetime'
       },
-      yAxis: {
-        title: {
-          text: 'Values (unit)',
-          rotation: 0,
-          offset: 0,
-          align: 'high',
-          y: -20
+      yAxis: [
+        {
+          labels: {
+            format: '{value}°C',
+            style: {
+              color: temperatureColor,
+              fontWeight: 'bold'
+            }
+          },
+          title: {
+            text: 'Temperature',
+            style: {
+              color: temperatureColor,
+              fontWeight: 'bold'
+            }
+          },
+          id: 'temperature'
         },
-        id: 'placeholder-y-axis'
-      },
+        {
+          labels: {
+            format: '{value} lux',
+            style: {
+              color: lightColor,
+              fontWeight: 'bold'
+            }
+          },
+          title: {
+            text: 'Light',
+            style: {
+              color: lightColor,
+              fontWeight: 'bold'
+            }
+          },
+          id: 'light'
+        },
+        {
+          labels: {
+            format: '{value}',
+            style: {
+              color: pirColor,
+              fontWeight: 'bold'
+            }
+          },
+          title: {
+            text: 'Pir',
+            style: {
+              color: pirColor,
+              fontWeight: 'bold'
+            }
+          },
+          id: 'pir'
+        },
+        {
+          labels: {
+            format: '{value}%',
+            style: {
+              color: humidityColor,
+              fontWeight: 'bold'
+            }
+          },
+          title: {
+            text: 'Humidity',
+            style: {
+              color: humidityColor,
+              fontWeight: 'bold'
+            }
+          },
+          id: 'humidity',
+          opposite: true
+        },
+        {
+          labels: {
+            format: '{value} ppm',
+            style: {
+              color: co2Color,
+              fontWeight: 'bold'
+            }
+          },
+          title: {
+            text: 'CO2',
+            style: {
+              color: co2Color,
+              fontWeight: 'bold'
+            }
+          },
+          id: 'co2',
+          opposite: true
+        }
+      ],
       series: [{
         name: ' ',
         id: 'placeholder-series'
       }],
       title: {
-        text: 'Historical data'
+        text: 'Data history'
       },
       noData: 'Add sensors to drop area to see data chart'
     };
@@ -70,7 +155,7 @@ angular.module('otaniemi3dApp')
         icon: 'images/year.svg',
         params: { begin: year.toISOString() } },
       { text: 'Select range',
-        //icon: 'images/time-range.svg',
+        icon: 'images/time-range.svg',
         params: { begin: null, end: null } },
     ];
 
@@ -116,16 +201,6 @@ angular.module('otaniemi3dApp')
         },
         id: 'placeholder-series'
       }];
-      $scope.chartConfig.yAxis = {
-        title: {
-          text: 'Values (unit)',
-          rotation: 0,
-          offset: 0,
-          align: 'high',
-          y: -20
-        },
-        id: 'placeholder-y-axis'
-      };
     };
 
     $scope.addSensor = function (sensor) {
@@ -185,23 +260,37 @@ angular.module('otaniemi3dApp')
           $scope.chartConfig.series = [];
         }
 
+        var color;
+        switch (selectedSensor.type) {
+          case 'temperature':
+            color = temperatureColor;
+            break;
+          case 'light':
+            color = lightColor;
+            break;
+          case 'pir':
+            color = pirColor;
+            break;
+          case 'humidity':
+            color = humidityColor;
+            break;
+          case 'co2':
+            color = co2Color;
+            break;
+          default:
+            color = '#707070';
+        }
+
         $scope.chartConfig.series.push({
           name: selectedSensor.room + ': ' + selectedSensor.name,
           data: sensorData,
           tooltip: {
             valueSuffix: ' ' + selectedSensor.suffix
           },
-          id: selectedSensor.id
+          id: selectedSensor.id,
+          yAxis: selectedSensor.type,
+          color: color
         });
-
-        if ($scope.chartConfig.series.length > 1) {
-          $scope.chartConfig.yAxis.title.text = 'Values';
-        } else if (selectedSensor.suffix) {
-          $scope.chartConfig.yAxis.title.text = selectedSensor.name +
-            ' (' + selectedSensor.suffix + ')';
-        } else {
-          $scope.chartConfig.yAxis.title.text = selectedSensor.name;
-        }
 
         $scope.alert.show = false;
         $scope.alert.message = '';
@@ -213,6 +302,10 @@ angular.module('otaniemi3dApp')
       .finally(function () {
         $scope.chartConfig.loading = false;
       });
+    };
+
+    $scope.dropSensor = function (event) {
+      // body...
     };
 
   });

@@ -13,6 +13,7 @@ angular
     'ui.bootstrap',
     'ui.grid',
     'ui.router',
+    'ui.event',
     'angular-loading-bar',
     'highcharts-ng'
   ])
