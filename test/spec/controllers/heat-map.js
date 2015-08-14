@@ -4,13 +4,15 @@ describe('HeatMapCtrl:', function () {
 
   beforeEach(module('otaniemi3dApp'));
 
-  var $controller, $rootScope, $scope, controller;
+  var $controller, $rootScope, $scope, controller, buildingData;
 
-  beforeEach(inject(function(_$controller_, _$rootScope_) {
+  beforeEach(inject(function(_$controller_, _$rootScope_, _buildingData_) {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
+    buildingData = _buildingData_;
+    buildingData.currentBuilding = buildingData.buildings['K1-building'];
     $scope = $rootScope.$new();
-    controller = $controller('HeatMapCtrl', { $scope: $scope });
+    controller = $controller('HeatMapCtrl', { $scope: $scope, $state: {params: {building: 'K1-building', floor: 1}} });
   }));
 
   it('Initialised controller should have some time frames' +
