@@ -28,10 +28,7 @@ angular
       .when('/home', ['$state', function ($state) {
         $state.go('home');
       }])
-      .otherwise('not-found', {
-        url: '',
-        templateUrl: 'views/not-found.html'
-      });
+      .otherwise('not-found');
 
     $stateProvider
       .state('home', {
@@ -131,7 +128,7 @@ angular
         parent: 'building'
       })
       .state('not-found', {
-        //url: '{path:.*}',
+        url: '{path:.*}',
         templateUrl: 'views/not-found.html'
       });
   })
@@ -139,20 +136,36 @@ angular
       cfpLoadingBarProvider.includeSpinner = false;
   })
   .run(function($rootScope, $state) {
+    //Polyfill endsWith()
+    if (!String.prototype.endsWith) {
+      String.prototype.endsWith = function(searchString, position) {
+        var subjectString = this.toString();
+        if (position === undefined || position > subjectString.length) {
+          position = subjectString.length;
+        }
+        position -= searchString.length;
+        var lastIndex = subjectString.indexOf(searchString, position);
+        return lastIndex !== -1 && lastIndex === position;
+      };
+    }
+
     FastClick.attach(document.body);
+
+    //Hacky way to prevent app from navigating immediately to
+    //home page after displaying 404 page.
+    var notFound = false;
 
     $rootScope.$on('$stateChangeError', function (event) {
       console.log('change error');
       $state.go('not-found');
+      notFound = true;
       event.preventDefault();
     });
 
-    $rootScope.$on('$stateChangeStart', function (event, toState) {
-      console.log('change started');
-      console.log(toState);
-    });
-
-    $rootScope.$on('$stateChangeSuccess', function () {
-      console.log('change success');
+    $rootScope.$on('$locationChangeStart', function (event, newUrl) {
+      if (notFound && newUrl.endsWith('/#/')) {
+        notFound = false;
+        event.preventDefault();
+      }
     });
   });
