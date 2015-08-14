@@ -43,15 +43,15 @@
         </button>
         <a class="navbar-brand" id="home-view"
            ng-click="App.navbarCollapse = true"
-           ui-sref="home">Otaniemi3D</a>
+           ui-sref="home({building: App.building.name})">Otaniemi3D</a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div collapse="App.navbarCollapse"
            class="navbar-collapse collapse navbar-responsive-collapse">
         <ul ng-cloak class="nav navbar-nav">
-          <li ng-repeat="nav in App.navigation" ui-sref-active="active">
-            <a ng-cloak ng-click="App.navbarCollapse = true" ui-sref="{{nav.state}}">
+          <li ng-if="App.building" ng-repeat="nav in App.navigation" ui-sref-active="active">
+            <a ng-cloak ng-click="App.navbarCollapse = true" ui-sref="{{nav.state}}({building: App.building.name, floor: App.building.floorplans[0].floor})">
               {{nav.name}}
             </a>
           </li>
@@ -90,6 +90,7 @@
   ga('create', 'UA-XXXXX-X');
   ga('send', 'pageview');
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
 
 <!-- build:js(.) scripts/oldieshim.js -->
 <!--[if lte IE 9]>
@@ -126,8 +127,8 @@
 <!-- endbuild -->
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
-<script src="panorama/embedpano.js"></script>
-<script src="panorama/HTMLviewer.js"></script>
+<script src="krpano/embedpano.js"></script>
+<script src="krpano/HTMLviewer.js"></script>
 <script src="app.js"></script>
 <script src="views/home.js"></script>
 <script src="views/heat-map.js"></script>
@@ -145,11 +146,11 @@
 <script src="scripts/directives/panorama-directive.js"></script>
 <script src="scripts/directives/legendbar-directive.js"></script>
 <script src="scripts/directives/date-range-directive.js"></script>
-<script src="scripts/services/floorplan-storage.js"></script>
 <script src="scripts/services/heatmap-service.js"></script>
 <script src="scripts/services/sensor-api.js"></script>
 <script src="scripts/services/data-storage.js"></script>
 <script src="scripts/services/jxon.js"></script>
+<script src="scripts/services/building-data.js"></script>
 <!-- endbuild -->
 </body>
 </html>

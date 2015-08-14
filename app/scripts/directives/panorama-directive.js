@@ -21,7 +21,8 @@ angular.module('otaniemi3dApp')
           html5: 'only',
           passQueryParameters: true,
           consolelog: true,
-          debugmode: true
+          debugmode: true,
+          initvars: {krpanodir: '../../../krpano'}
         });
 
         scope.$on('$destroy', function () {

@@ -7,20 +7,32 @@
  * Controls Heat Map view.
  */
 angular.module('otaniemi3dApp')
-  .controller('HeatMapCtrl', function ($scope, floorplanStorage,
+  .controller('HeatMapCtrl', function ($scope, buildingData,
     $modal, $state) {
 
     var self = this;
 
-    $scope.floor = Number($state.params.floorNum);
+    $scope.floor = Number($state.params.floor);
+    var currentBuilding = buildingData.currentBuilding;
 
-    if (!$scope.floor) {
-      $state.go('heat-map', {floorNum: 1}, {notify: false});
+    var floorExists = false;
+    for (var i = 0; i < currentBuilding.floorplans.length; i++) {
+      var floorplan = currentBuilding.floorplans[i];
+
+      if (floorplan.floor === $scope.floor) {
+        floorExists = true;
+        break;
+      }
+    }
+
+    if (!floorExists) {
+      $state.go('not-found');
       $scope.floor = 1;
+      return;
     }
 
     $scope.searchString = '';
-    $scope.floorplans = floorplanStorage.list;
+    $scope.floorplans = currentBuilding.floorplans;
     $scope.room = {};
     $scope.svgSupport = Modernizr.svg;
     self.isFloorplanLoaded = false;
@@ -148,11 +160,11 @@ angular.module('otaniemi3dApp')
     };
 
     $scope.nextFloor = function () {
-      $state.go('heat-map', {floorNum: $scope.floor + 1});
+      $state.go('heat-map', {floor: $scope.floor + 1});
     };
 
     $scope.prevFloor = function () {
-      $state.go('heat-map', {floorNum: $scope.floor - 1});
+      $state.go('heat-map', {floor: $scope.floor - 1});
     };
 
     $scope.selectRoom = function(room) {

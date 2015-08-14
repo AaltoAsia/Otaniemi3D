@@ -27,6 +27,7 @@
     "Modernizr": false,
     "embedpano": false,
     "removepano": false,
-    "UnityObject2": false
+    "UnityObject2": false,
+    "google": false
   }
 }

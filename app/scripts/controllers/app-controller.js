@@ -8,11 +8,12 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AppCtrl', function ($scope, $state) {
+  .controller('AppCtrl', function ($scope, $state, buildingData) {
 
     var self = this;
 
     self.navbarCollapse = true;
+    self.building = buildingData.currentBuilding;
     //states are defined in app/app.js
     self.navigation = [
       {
@@ -44,6 +45,12 @@ angular.module('otaniemi3dApp')
       if ($state.current.name !== 'heat-map') {
         self.fullscreen = false;
       }
+    });
+
+    $scope.$watch(function () {
+      return buildingData.currentBuilding;
+    }, function (building) {
+      self.building = building;
     });
 
   });

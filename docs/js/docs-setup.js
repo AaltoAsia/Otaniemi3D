@@ -14,6 +14,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "otaniemi3dApp.buildingData",
+      "shortName": "otaniemi3dApp.buildingData",
+      "type": "service",
+      "moduleName": "otaniemi3dApp",
+      "shortDescription": "buildingData",
+      "keywords": "api buildingdata otaniemi3dapp service"
+    },
+    {
+      "section": "api",
       "id": "otaniemi3dApp.controller:AnalyticsCtrl",
       "shortName": "AnalyticsCtrl",
       "type": "function",
@@ -164,15 +173,6 @@ NG_DOCS={
       "moduleName": "otaniemi3dApp",
       "shortDescription": "tooltip",
       "keywords": "api directive otaniemi3dapp tooltip"
-    },
-    {
-      "section": "api",
-      "id": "otaniemi3dApp.floorplanStorage",
-      "shortName": "otaniemi3dApp.floorplanStorage",
-      "type": "service",
-      "moduleName": "otaniemi3dApp",
-      "shortDescription": "floorplanStorage",
-      "keywords": "api floorplanstorage otaniemi3dapp service"
     },
     {
       "section": "api",
