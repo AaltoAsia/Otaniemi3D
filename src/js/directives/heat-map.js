@@ -12,11 +12,11 @@
  *                            coloring the heat map.
  * @requires $q
  * @requires $rootScope
- * @requires otaniemi3dApp.heatmapService
- * @requires otaniemi3dApp.sensorApi
+ * @requires otaniemi3dApp.valueConverter
+ * @requires otaniemi3dApp.omiMessage
  */
 angular.module('otaniemi3dApp')
-  .directive('heatMap', function(heatmapService, $q, $rootScope, sensorApi) {
+  .directive('heatMap', function(valueConverter, $q, $rootScope, omiMessage) {
 
   return {
     restrict: 'E',
@@ -136,7 +136,7 @@ angular.module('otaniemi3dApp')
             });
           });
 
-        return sensorApi.send('read', sensorRequest)
+        return omiMessage.send('read', sensorRequest)
           .then(function success (data) {
             floorplan.data = data;
             return floorplan;
@@ -208,7 +208,7 @@ angular.module('otaniemi3dApp')
               if (data.sensors[i].type === scope.sensorType.name) {
                 var sensor = data.sensors[i];
                 var value = sensor.values[0].value;
-                var color = heatmapService.getColor(sensor.type, value);
+                var color = valueConverter.getColor(sensor.type, value);
                 d3.select(this)
                   .style('fill', color.rgb)
                   .style('fill-opacity', color.opacity);

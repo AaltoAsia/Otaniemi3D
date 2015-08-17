@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AnalyticsCtrl', function ($scope, $window, sensorApi, $modal) {
+  .controller('AnalyticsCtrl', function ($scope, $window, omiMessage, $modal) {
 
     $scope.sensor = null;
     $scope.sensors = [];
@@ -164,7 +164,7 @@ angular.module('otaniemi3dApp')
     $scope.selectTime = function (timeFrame) {
       if (timeFrame.text === 'Select range') {
         $scope.modalInstance = $modal.open({
-          templateUrl: 'templates/select-range.html',
+          templateUrl: 'html/templates/select-range.html',
           controller: 'ModalCtrl',
           controllerAs: 'modal',
           resolve: {
@@ -241,7 +241,7 @@ angular.module('otaniemi3dApp')
       var params = $scope.timeFrame.params;
       $scope.chartConfig.loading = true;
 
-      sensorApi.send('read', request, params).then(function success (data) {
+      omiMessage.send('read', request, params).then(function success (data) {
         var selectedSensor = data[0],
             sensorData = [];
 

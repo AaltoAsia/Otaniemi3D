@@ -7,7 +7,7 @@
  * # legendbar
  */
 angular.module('otaniemi3dApp')
-  .directive('legendbar', function (heatmapService) {
+  .directive('legendbar', function (valueConverter) {
     return {
       restrict: 'E',
       template: [
@@ -82,9 +82,9 @@ angular.module('otaniemi3dApp')
 
           //e.g. 60% if it's just below half way.
           var positionOnLegend = ((coordinates[1] - y1) / bBoxHeight);
-          var valueText = heatmapService
+          var valueText = valueConverter
             .valueAtPercent(scope.sensorType.name, positionOnLegend) +
-              heatmapService.getValueUnit(scope.sensorType.name);
+              valueConverter.getValueUnit(scope.sensorType.name);
 
           //The line shouldn't go all the way to top or bottom because
           //text would not fit completely inside the svg. Always
@@ -101,16 +101,16 @@ angular.module('otaniemi3dApp')
 
           d3.select('#legendMinText')
             .style('margin', '0px')
-            .text(heatmapService.temperatureMin +
-              heatmapService.getValueUnit(scope.sensorType.name));
+            .text(valueConverter.temperatureMin +
+              valueConverter.getValueUnit(scope.sensorType.name));
 
           d3.select('#legendContainingSvg')
             .attr('width', svgWidth)
             .attr('height', '100%');
 
           d3.select('#legendMaxText')
-            .text(heatmapService.temperatureMax +
-              heatmapService.getValueUnit(scope.sensorType.name));
+            .text(valueConverter.temperatureMax +
+              valueConverter.getValueUnit(scope.sensorType.name));
 
           //create the bar for the legend to go into
           // the "fill" attribute hooks the gradient up to this rect
@@ -183,8 +183,8 @@ angular.module('otaniemi3dApp')
             });
 
           //And for binary rectangles, that is, for occupancy legend:
-          var lowColor = heatmapService.getColor('occupancy', 0);
-          var highColor = heatmapService.getColor('occupancy', 1);
+          var lowColor = valueConverter.getColor('occupancy', 0);
+          var highColor = valueConverter.getColor('occupancy', 1);
 
           d3.select('#binary-rectTop')
             .attr('x',x1)
@@ -207,32 +207,32 @@ angular.module('otaniemi3dApp')
           var minText, maxText;
           switch (sensorType) {
             case 'temperature':
-              minText = heatmapService.temperatureMin;
-              maxText = heatmapService.temperatureMax;
+              minText = valueConverter.temperatureMin;
+              maxText = valueConverter.temperatureMax;
               break;
             case 'humidity':
-              minText = heatmapService.humidityMin;
-              maxText = heatmapService.humidityMax;
+              minText = valueConverter.humidityMin;
+              maxText = valueConverter.humidityMax;
               break;
             case 'co2':
-              minText = heatmapService.co2Min;
-              maxText = heatmapService.co2Max;
+              minText = valueConverter.co2Min;
+              maxText = valueConverter.co2Max;
               break;
             case 'pir': //We treat pir as occupancy
-              minText = heatmapService.occupancyMin;
-              maxText = heatmapService.occupancyMax;
+              minText = valueConverter.occupancyMin;
+              maxText = valueConverter.occupancyMax;
               break;
             case 'light':
-              minText = heatmapService.lightMin;
-              maxText = heatmapService.lightMax;
+              minText = valueConverter.lightMin;
+              maxText = valueConverter.lightMax;
               break;
             case 'pir':
-              minText = heatmapService.occupancyMin;
-              maxText = heatmapService.occupancyMax;
+              minText = valueConverter.occupancyMin;
+              maxText = valueConverter.occupancyMax;
               break;
           }
-          minText = minText + heatmapService.getValueUnit(sensorType);
-          maxText = maxText + heatmapService.getValueUnit(sensorType);
+          minText = minText + valueConverter.getValueUnit(sensorType);
+          maxText = maxText + valueConverter.getValueUnit(sensorType);
           d3.select('#legendMinText').text(minText);
           d3.select('#legendMaxText').text(maxText);
         }

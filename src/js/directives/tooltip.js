@@ -7,7 +7,7 @@
  * # tooltip
  */
 angular.module('otaniemi3dApp')
-  .directive('tooltip', function ($state, heatmapService) {
+  .directive('tooltip', function ($state, valueConverter) {
     return {
       restrict: 'E',
       template: [
@@ -88,7 +88,7 @@ angular.module('otaniemi3dApp')
                   var color = {};
 
                   if (sensor.type === tooltipCtrl.sensorType.name) {
-                    color = heatmapService.getColor(sensor.type, value);
+                    color = valueConverter.getColor(sensor.type, value);
                   } else {
                     color.rgbaString = '';
                   }

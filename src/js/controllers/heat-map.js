@@ -129,7 +129,7 @@ angular.module('otaniemi3dApp')
     $scope.selectTimeFrame = function (timeFrame) {
       if (timeFrame.text === 'Select range') {
         $scope.modalInstance = $modal.open({
-          templateUrl: 'templates/select-range.html',
+          templateUrl: 'html/templates/select-range.html',
           controller: 'ModalCtrl',
           controllerAs: 'modal',
           resolve: {
@@ -197,7 +197,7 @@ angular.module('otaniemi3dApp')
 
     $scope.mobileModal = function () {
       self.modalInstance = $modal.open({
-        templateUrl: 'templates/sensor-options.html',
+        templateUrl: 'html/templates/sensor-options.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
         resolve: {

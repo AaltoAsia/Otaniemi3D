@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc service
- * @name otaniemi3dApp.heatmapService
+ * @name otaniemi3dApp.valueConverter
  * @description
- * # heatmapService
+ * # valueConverter
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('heatmapService', function () {
+  .service('valueConverter', function () {
 
     var self = this;
 

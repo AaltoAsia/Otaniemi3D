@@ -46,7 +46,7 @@ angular
     $stateProvider
       .state('home', {
         url: '/:building',
-        templateUrl: 'views/home.html',
+        templateUrl: 'html/views/home.html',
         controller: 'HomeCtrl as home'
       })
       .state('building', {
@@ -59,13 +59,13 @@ angular
       })
       .state('sensor-list', {
         url: '/sensor-list',
-        templateUrl: 'views/sensor-list.html',
+        templateUrl: 'html/views/sensor-list.html',
         controller: 'SensorListCtrl as sensorlist',
         parent: 'building'
       })
       .state('heat-map', {
         url: '/heat-map/:floor',
-        templateUrl: 'views/heat-map.html',
+        templateUrl: 'html/views/heat-map.html',
         controller: 'HeatMapCtrl as heatmap',
         parent: 'building',
         resolve: {
@@ -93,7 +93,7 @@ angular
       })
       .state('x3dom', {
         url: '/x3dom/:roomId',
-        templateUrl: 'views/x3dom.html',
+        templateUrl: 'html/views/x3dom.html',
         controller: 'X3DomCtrl as x3dom',
         parent: 'building',
         params:  {
@@ -105,19 +105,19 @@ angular
       })
       .state('analytics', {
         url: '/analytics',
-        templateUrl: 'views/analytics.html',
+        templateUrl: 'html/views/analytics.html',
         controller: 'AnalyticsCtrl as analytics',
         parent: 'building'
       })
       .state('panorama', {
         url: '/panorama/:roomId',
-        templateUrl: 'views/panorama.html',
+        templateUrl: 'html/views/panorama.html',
         controller: 'PanoramaCtrl as panorama',
         parent: 'building'
       })
       .state('not-found', {
         url: '{path:.*}',
-        templateUrl: 'views/not-found.html'
+        templateUrl: 'html/views/not-found.html'
       });
   })
   .config(function(cfpLoadingBarProvider) {

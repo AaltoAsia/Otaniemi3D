@@ -7,7 +7,7 @@
  * # sensorTree
  */
 angular.module('otaniemi3dApp')
-  .directive('sensorTree', function ($document, $http, sensorApi) {
+  .directive('sensorTree', function ($document, $http, omiMessage) {
     return {
       template: '<div></div>',
       restrict: 'E',
@@ -89,7 +89,7 @@ angular.module('otaniemi3dApp')
 
               } else if (node.original.type === 'sensor') {
                 $http.get(node.original.url).success(function (data) {
-                  var values = sensorApi.parseInfoItem(data);
+                  var values = omiMessage.parseInfoItem(data);
 
                   if (values.length) {
                     children = [{
@@ -113,7 +113,7 @@ angular.module('otaniemi3dApp')
                   url += node.id;
                 }
                 $http.get(url).success(function (data) {
-                  var room = sensorApi.parseObject(data);
+                  var room = omiMessage.parseObject(data);
 
                   for (var i = 0; i < room.infoItems.length; i++) {
                     var id = room.infoItems[i];
@@ -141,7 +141,7 @@ angular.module('otaniemi3dApp')
                   url += node.id;
                 }
                 $http.get(url).success(function (data) {
-                  var building = sensorApi.parseObject(data);
+                  var building = omiMessage.parseObject(data);
 
                   for (var i = 0; i < building.objects.length; i++) {
                     var id = building.objects[i];

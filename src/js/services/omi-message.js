@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc service
- * @name otaniemi3dApp.sensorApi
+ * @name otaniemi3dApp.omiMessage
  * @description
- * # sensorApi
+ * # omiMessage
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('sensorApi', function ($http, $q, $interval, dataStorage, JXON) {
+  .service('omiMessage', function ($http, $q, $interval, dataStorage, JXON) {
 
     //Store pending http requests to an object
     var pendingRequests = {},

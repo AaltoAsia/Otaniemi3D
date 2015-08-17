@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function($scope, $stateParams, $window, $modal, sensorApi, $q, $interval, buildingData) {
+  function($scope, $stateParams, $window, $modal, omiMessage, $q, $interval, buildingData) {
 
     var self = this;
 
@@ -59,7 +59,7 @@ angular.module('otaniemi3dApp')
         }
       };
 
-      return sensorApi.send('read', dataRequest)
+      return omiMessage.send('read', dataRequest)
         .then(function (data) {
           return data;
         });
@@ -94,7 +94,7 @@ angular.module('otaniemi3dApp')
         });
       }
 
-      return sensorApi.send('read', metaDataRequest)
+      return omiMessage.send('read', metaDataRequest)
         .then(function(data) {
           self.sensors = data;
           return self.sensors;
@@ -173,7 +173,7 @@ angular.module('otaniemi3dApp')
         });
       }
 
-      return sensorApi.send('write', writeRequest);
+      return omiMessage.send('write', writeRequest);
     }
 
     function sensorTooltip(sensors) {
@@ -232,7 +232,7 @@ angular.module('otaniemi3dApp')
       var pos = krpano.screentosphere(x, y);
 
       self.modalInstance = $modal.open({
-        templateUrl: 'templates/hotspot-selection.html',
+        templateUrl: 'html/templates/hotspot-selection.html',
         scope: $scope,
         controller: 'ModalCtrl',
         controllerAs: 'modal',

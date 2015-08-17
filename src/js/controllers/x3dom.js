@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('X3DomCtrl', function ($scope, $modal, $state, $q, $interval, $timeout, $window, sensorApi) {
+  .controller('X3DomCtrl', function ($scope, $modal, $state, $q, $interval, $timeout, $window, omiMessage) {
 
     $scope.panoramabox = 'images/panoramabox.svg';
     $scope.selected = undefined;
@@ -86,8 +86,8 @@ angular.module('otaniemi3dApp')
     };
 
     $scope.modalTooltip = function (roomId) {
-      $modal.open({
-        templateUrl: 'templates/sensor-info.html',
+      $scope.modalInstance = $modal.open({
+        templateUrl: 'html/templates/sensor-info.html',
         controller: 'ModalCtrl',
         controllerAs: 'modal',
         resolve: {
@@ -113,9 +113,15 @@ angular.module('otaniemi3dApp')
         }
       };
 
-      return sensorApi.send('read', request).then(function (data) {
+      return omiMessage.send('read', request).then(function (data) {
         return data;
       });
     }
+
+    $scope.$on('$destroy', function () {
+      if ($scope.modalInstance) {
+        $scope.modalInstance.dismiss();
+      }
+    });
   }
 );

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
   <meta charset="utf-8">
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-  <!-- build:css(.) styles/vendor.css -->
+  <!-- build:css styles/vendor.css -->
   <!-- bower:css -->
   <link rel="stylesheet" href="libs/bower/angular-ui-grid/ui-grid.css" />
   <link rel="stylesheet" href="libs/bower/angular-loading-bar/build/loading-bar.css" />
@@ -105,7 +105,7 @@
   <![endif]-->
   <!-- endbuild -->
 
-  <!-- build:js(.) js/vendor.js -->
+  <!-- build:js js/vendor.js -->
   <!-- bower:js -->
   <script src="libs/bower/modernizr/modernizr.js"></script>
   <script src="libs/bower/jquery/dist/jquery.js"></script>
@@ -128,29 +128,24 @@
   <!-- endbower -->
   <!-- endbuild -->
 
-  <script src="libs/krpano/embedpano.js"></script>
-  <script src="libs/krpano/HTMLviewer.js"></script>
-
-  <!-- build:js({.tmp,src}) js/js.js -->
+  <!-- build:js js/main.js -->
   <script src="js/app.js"></script>
   <script src="js/controllers/home.js"></script>
   <script src="js/controllers/heat-map.js"></script>
   <script src="js/controllers/sensor-list.js"></script>
-  <script src="js/controllers/model-3d.js"></script>
   <script src="js/controllers/x3dom.js"></script>
   <script src="js/controllers/analytics.js"></script>
-  <script src="js/controllers/unity.js"></script>
   <script src="js/controllers/panorama.js"></script>
-  <script src="js/controllers/other/app-controller.js"></script>
-  <script src="js/controllers/other/modal-controller.js"></script>
-  <script src="js/directives/heat-map-directive.js"></script>
-  <script src="js/directives/tooltip-directive.js"></script>
-  <script src="js/directives/sensor-tree-directive.js"></script>
-  <script src="js/directives/panorama-directive.js"></script>
-  <script src="js/directives/legendbar-directive.js"></script>
-  <script src="js/directives/date-range-directive.js"></script>
-  <script src="js/services/heatmap-service.js"></script>
-  <script src="js/services/sensor-api.js"></script>
+  <script src="js/controllers/other/app.js"></script>
+  <script src="js/controllers/other/modal.js"></script>
+  <script src="js/directives/heat-map.js"></script>
+  <script src="js/directives/tooltip.js"></script>
+  <script src="js/directives/sensor-tree.js"></script>
+  <script src="js/directives/panorama.js"></script>
+  <script src="js/directives/legendbar.js"></script>
+  <script src="js/directives/date-range.js"></script>
+  <script src="js/services/value-converter.js"></script>
+  <script src="js/services/omi-message.js"></script>
   <script src="js/services/data-storage.js"></script>
   <script src="js/services/jxon.js"></script>
   <script src="js/services/building-data.js"></script>
