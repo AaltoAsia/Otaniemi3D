@@ -11,10 +11,15 @@ var revReplace = require('gulp-rev-replace');
 var useref = require('gulp-useref');
 var uglify = require('gulp-uglify');
 var minifyCss = require('gulp-minify-css');
+var minifyHtml = require('gulp-minify-html');
 var gulpif = require('gulp-if');
 var ngAnnotate = require('gulp-ng-annotate');
 var imagemin = require('gulp-imagemin');
 var autoprefixer = require('gulp-autoprefixer');
+var gutil = require('gulp-util');
+var debug = require('gulp-debug');
+var filter = require('gulp-filter');
+var eventStream = require('event-stream');
 
 var app = {
   dist: 'dist',
@@ -36,28 +41,48 @@ var src =  {
   assets: app.src + '/assets/**/*.*'
 };
 
-// copies changed html, css and asset files to the 'dist' folder
-gulp.task('copy', ['copy:html', 'copy:assets'], function () {
+// copy changed html, css and asset files to the 'dist' folder
+gulp.task('copy', ['copy:html', 'copy:assets', 'copy:custom'], function () {
   return gulp.src([app.src + '/*.*', '!' + src.index])
     .pipe(changed(app.dist))
     .pipe(gulp.dest(app.dist));
 });
 
-// copies changed html files to the 'dist/html' folder
+// copy changed html files to the 'dist/html' folder
 gulp.task('copy:html', ['clean'], function () {
   return gulp.src(src.html)
     .pipe(changed(dist.html))
+    .pipe(minifyHtml())
     .pipe(gulp.dest(dist.html));
 });
 
-// copies changed html files to the 'dist/html' folder
+// copy changed html files to the 'dist/html' folder
 gulp.task('copy:assets', ['clean'], function () {
   return gulp.src(src.assets)
     .pipe(changed(dist.assets))
     .pipe(gulp.dest(dist.assets));
 });
 
-// deletes all files in the dist path
+// copy miscellaneous files to the 'dist/html' folder
+gulp.task('copy:custom', ['clean'], function () {
+  var jstree = gulp.src(
+    app.src + '/libs/bower/jstree/dist/themes/default/*.{png,gif}')
+    .pipe(gulp.dest(dist.css));
+
+  var bootstrap = gulp.src(
+    app.src + '/libs/bower/bootstrap/dist/fonts/*')
+    .pipe(gulp.dest(dist.css));
+
+  var uiGrid = gulp.src([
+    app.src + '/libs/bower/angular-ui-grid/ui-grid.ttf',
+    app.src + '/libs/bower/angular-ui-grid/ui-grid.woff'
+    ])
+    .pipe(gulp.dest(dist.css));
+
+  return eventStream.concat(jstree, bootstrap, uiGrid);
+});
+
+// delete all files in the dist path
 gulp.task('clean', function(cb) {
   del(app.dist, cb);
 });
@@ -66,8 +91,9 @@ gulp.task('clean', function(cb) {
 gulp.task('sass', ['clean'], function () {
   gulp.src(src.sass)
     .pipe(sourcemaps.init())
-      .pipe(sass().on('error', sass.logError))
-    .pipe(sourcemaps.write())
+    .pipe(autoprefixer())
+    .pipe(sass().on('error', sass.logError))
+    .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(src.css));
 });
 
@@ -76,19 +102,75 @@ gulp.task('sass:watch', function () {
   gulp.watch(src.styles, ['sass']);
 });
 
-// handle javascript and css files in index.html
+// handle javascript and css files in the index.html
 gulp.task('useref', ['clean', 'sass'], function () {
   var assets = useref.assets();
+  var jsFilter = filter('**/*.js', {restore: true});
+  var cssFilter = filter('**/*.css', {restore: true});
+  var htmlFilter = filter('*.html', {restore: true});
 
   return gulp.src(src.index)
-    .pipe(assets)                        //concanate with gulp-useref
-    .pipe(gulpif('*.js', uglify()))      //minify javascript
-    .pipe(gulpif('*.js', ngAnnotate()))  //add angular dependency injections
-    .pipe(gulpif('*.css', minifyCss()))  //minify css
-    .pipe(rev())                         //add file revision hash to file names
+    .pipe(assets)             //concatenate with gulp-useref
+
+    .pipe(rev())
+    .on('readable', function() {
+      gutil.log('Updating file names with file revision hash...');
+      })
+    .on('end', function() {
+      gutil.log('File revision renaming completed');
+      })
+
+    .pipe(jsFilter)
+
+    .pipe(ngAnnotate())
+    .on('readable', function() {
+      gutil.log('Adding angular dependency annotations...');
+      })
+    .on('end', function() {
+      gutil.log('Dependency annotation complete');
+      })
+
+    .pipe(uglify())
+    .on('readable', function() {
+      gutil.log('Uglifying javascript...');
+      })
+    .on('end', function() {
+      gutil.log('Uglifying completed');
+      })
+
+    .pipe(jsFilter.restore)
+    .pipe(cssFilter)
+
+    .pipe(minifyCss())
+    .on('readable', function() {
+      gutil.log('Minifying css files...');
+      })
+    .on('end', function() {
+      gutil.log('Css files minified');
+      })
+
+    .pipe(cssFilter.restore)
+
     .pipe(assets.restore())
     .pipe(useref())
-    .pipe(revReplace())                  //replace references to old file names
+
+    .pipe(revReplace())
+    .on('readable', function() {
+      gutil.log('Replacing references to old file names...');
+      })
+    .on('end', function() {
+      gutil.log('References replaced');
+      })
+
+    .pipe(htmlFilter)
+    .pipe(minifyHtml({
+      empty: true,
+      spare: true,
+      conditionals: true,
+      quotes: true
+    }))
+    .pipe(htmlFilter.restore)
+
     .pipe(gulp.dest(app.dist));
 });
 
