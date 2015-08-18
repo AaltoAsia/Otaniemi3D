@@ -13,11 +13,11 @@ angular.module('otaniemi3dApp')
     var self = this;
 
     $scope.floor = Number($state.params.floor);
-    var currentBuilding = buildingData.currentBuilding;
+    $scope.currentBuilding = buildingData.currentBuilding;
 
     var floorExists = false;
-    for (var i = 0; i < currentBuilding.floorplans.length; i++) {
-      var floorplan = currentBuilding.floorplans[i];
+    for (var i = 0; i < $scope.currentBuilding.floorplans.length; i++) {
+      var floorplan = $scope.currentBuilding.floorplans[i];
 
       if (floorplan.floor === $scope.floor) {
         floorExists = true;
@@ -32,7 +32,7 @@ angular.module('otaniemi3dApp')
     }
 
     $scope.searchString = '';
-    $scope.floorplans = currentBuilding.floorplans;
+    $scope.floorplans = $scope.currentBuilding.floorplans;
     $scope.room = {};
     $scope.svgSupport = Modernizr.svg;
     self.isFloorplanLoaded = false;

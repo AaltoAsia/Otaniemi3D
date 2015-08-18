@@ -93,24 +93,29 @@ angular
         controller: 'HeatMapCtrl as heatmap',
         parent: 'building',
         resolve: {
-          floor: function ($stateParams, buildingData, $q) {
+          floor: function ($stateParams, buildingData, $q, $http) {
             var deferred = $q.defer();
             var floor = Number($stateParams.floor);
             var floorExists = false;
-            var floorplans = buildingData.currentBuilding.floorplans;
 
-            for (var i = 0; i < floorplans.length; i++) {
-              if (floorplans[i].floor === floor) {
-                floorExists = true;
-                break;
-              }
-            }
+            initBuildings($http, $q, buildingData)
+              .then(function () {
+                var floorplans = buildingData.currentBuilding.floorplans;
 
-            if (!floorExists) {
-              deferred.reject('Selected building is not in database');
-            } else {
-              deferred.resolve(floor);
-            }
+                for (var i = 0; i < floorplans.length; i++) {
+                  if (floorplans[i].floor === floor) {
+                    floorExists = true;
+                    break;
+                  }
+                }
+
+                if (!floorExists) {
+                  deferred.reject('Selected building is not in database');
+                } else {
+                  deferred.resolve(floor);
+                }
+              });
+
             return deferred.promise;
           }
         }
@@ -179,4 +184,5 @@ angular
         event.preventDefault();
       }
     });
+
   });

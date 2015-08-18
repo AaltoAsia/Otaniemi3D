@@ -23,7 +23,8 @@ angular.module('otaniemi3dApp')
     scope: {
       floorplan: '=',
       selectedRoom: '=',
-      sensorType: '='
+      sensorType: '=',
+      building: '='
     },
     link: function(scope, element) {
 
@@ -49,7 +50,7 @@ angular.module('otaniemi3dApp')
         if (floorplan.svg) {
           deferred.resolve(floorplan);
         } else {
-          d3.xml(floorplan.url, 'image/svg+xml', function (xml) {
+          d3.xml('assets/buildings/' + scope.building.name + '/' + floorplan.url, 'image/svg+xml', function (xml) {
             if (xml) {
               floorplan.svg = xml.documentElement;
               deferred.resolve(floorplan);
