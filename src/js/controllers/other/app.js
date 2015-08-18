@@ -25,7 +25,7 @@ angular.module('otaniemi3dApp')
         name: 'Heat Map'
       },
       {
-        state: '3d-model',
+        state: 'x3dom',
         name: '3D Model'
       },
       {

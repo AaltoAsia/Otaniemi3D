@@ -69,10 +69,10 @@ angular.module('otaniemi3dApp')
 
                 //IDEA: data from server could have type as a metadata
                 if (id === 'K1') {
-                  icon = 'images/icon-building.svg';
+                  icon = 'assets/shared/images/icon-building.svg';
                   type = 'building';
                 } else {
-                  icon = 'images/icon-room.svg';
+                  icon = 'assets/shared/images/icon-room.svg';
                   type = 'room';
                 }
 
@@ -124,7 +124,7 @@ angular.module('otaniemi3dApp')
                       name: id,
                       text: id.charAt(0).toUpperCase() + id.slice(1),
                       children: true,
-                      icon: 'images/icon-' + id + '.svg',
+                      icon: 'assets/shared/images/icon-' + id + '.svg',
                       type: 'sensor',
                       url: url + '/' + id
                     });
@@ -150,7 +150,7 @@ angular.module('otaniemi3dApp')
                       id: id,
                       text: id.split('-').join(' '),
                       children: true,
-                      icon: 'images/icon-room.svg',
+                      icon: 'assets/shared/images/icon-room.svg',
                       type: 'room',
                       url: scope.rootUrl + id
                     });

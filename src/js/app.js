@@ -20,15 +20,36 @@ angular
   .config(function ($stateProvider, $urlRouterProvider,
       $urlMatcherFactoryProvider) {
 
-    function resolveBuilding ($stateParams, buildingData, $q) {
+    function resolveBuilding ($stateParams, $http, buildingData, $q) {
       var deferred = $q.defer();
-      var building = buildingData.buildings[$stateParams.building];
-      if (building) {
-        buildingData.currentBuilding = building;
-        deferred.resolve(building);
+
+      initBuildings($http, $q, buildingData)
+        .then(function (buildings) {
+          var building = buildings[$stateParams.building];
+          if (building) {
+            buildingData.currentBuilding = building;
+            deferred.resolve(building);
+          } else {
+            deferred.reject('Selected building is not in the database');
+          }
+        });
+
+      return deferred.promise;
+    }
+
+    function initBuildings ($http, $q, buildingData) {
+      var deferred = $q.defer();
+
+      if (!buildingData.buildings) {
+        $http.get('assets/buildings/buildings.json')
+          .then(function (buildings) {
+            buildingData.buildings = buildings.data;
+            deferred.resolve(buildings.data);
+          });
       } else {
-        deferred.reject('Selected building is not in database');
+        deferred.resolve(buildingData.buildings);
       }
+
       return deferred.promise;
     }
 
@@ -47,7 +68,10 @@ angular
       .state('home', {
         url: '/:building',
         templateUrl: 'html/views/home.html',
-        controller: 'HomeCtrl as home'
+        controller: 'HomeCtrl as home',
+        resolve: {
+          buildings: initBuildings
+        }
       })
       .state('building', {
         abstract: true,

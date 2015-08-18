@@ -41,23 +41,23 @@ angular.module('otaniemi3dApp')
     $scope.sensorTypes = [
       { text: 'Temperature',
         name: 'temperature',
-        icon: 'images/temperature.svg' },
+        icon: 'assets/shared/images/temperature.svg' },
 
       { text: 'CO2',
         name: 'co2',
-        icon: 'images/co2.svg' },
+        icon: 'assets/shared/images/co2.svg' },
 
       { text: 'Humidity',
         name: 'humidity',
-        icon: 'images/humidity.svg' },
+        icon: 'assets/shared/images/humidity.svg' },
 
       { text: 'Light',
         name: 'light',
-        icon: 'images/light.svg' },
+        icon: 'assets/shared/images/light.svg' },
 
       { text: 'Occupancy',
         name: 'pir',
-        icon: 'images/pir.svg' }
+        icon: 'assets/shared/images/pir.svg' }
     ];
 
     var day = new Date(),
@@ -72,23 +72,23 @@ angular.module('otaniemi3dApp')
 
     $scope.timeFrames = [
       { text: 'Current',
-        icon: 'images/latest.svg',
+        icon: 'assets/shared/images/latest.svg',
         params: {}, },
 
       { text: 'Last Week',
-        icon: 'images/week.svg',
+        icon: 'assets/shared/images/week.svg',
         params: { begin: week.toISOString() } },
 
       { text: 'Last Month',
-        icon: 'images/month.svg',
+        icon: 'assets/shared/images/month.svg',
         params: { begin: month.toISOString() } },
 
       { text: 'Last Year',
-        icon: 'images/year.svg',
+        icon: 'assets/shared/images/year.svg',
         params: { begin: year.toISOString() } },
 
       { text: 'Select range',
-        icon: 'images/time-range.svg',
+        icon: 'assets/shared/images/time-range.svg',
         params: { begin: null, end: null } }
     ];
 

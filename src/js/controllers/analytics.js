@@ -143,19 +143,19 @@ angular.module('otaniemi3dApp')
 
     $scope.timeFrames = [
       { text: 'Current',
-        icon: 'images/latest.svg',
+        icon: 'assets/shared/images/latest.svg',
         params: { newest: 20 } },
       { text: 'Last Week',
-        icon: 'images/week.svg',
+        icon: 'assets/shared/images/week.svg',
         params: { begin: week.toISOString() } },
       { text: 'Last Month',
-        icon: 'images/month.svg',
+        icon: 'assets/shared/images/month.svg',
         params: { begin: month.toISOString() } },
       { text: 'Last Year',
-        icon: 'images/year.svg',
+        icon: 'assets/shared/images/year.svg',
         params: { begin: year.toISOString() } },
       { text: 'Select range',
-        icon: 'images/time-range.svg',
+        icon: 'assets/shared/images/time-range.svg',
         params: { begin: null, end: null } },
     ];
 

@@ -38,12 +38,11 @@ angular.module('otaniemi3dApp')
             headers: {'Content-Type': 'application/xml'},
             ignoreLoadingBar: !loadingBar
           })
-          .success(function (data) {
-            data = parseData(data);
+          .then(function (response) {
+            var data = parseData(response.data);
             deferred.resolve(data);
             dataStorage.sensors = data;
-          })
-          .error(function (reason, status) {
+          }, function (reason, status) {
             var msg;
             if (status === 404) {
               msg = 'Couldn\'t find such sensors or values.';

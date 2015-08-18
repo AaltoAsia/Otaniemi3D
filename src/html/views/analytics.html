@@ -56,7 +56,7 @@
                ng-repeat="sensor in sensors"
                draggable="true"
                ui-event="{dragend: 'dropSensor($event)'}">
-            <img ng-src="images/{{sensor.name}}.svg">
+            <img ng-src="assets/shared/images/{{sensor.name}}.svg">
             <div>{{sensor.room}}: {{sensor.text}}</div>
           </div>
           <h3 ng-show="!sensors.length">Drop a sensor here</h3>

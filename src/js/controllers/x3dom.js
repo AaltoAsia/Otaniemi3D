@@ -10,7 +10,7 @@
 angular.module('otaniemi3dApp')
   .controller('X3DomCtrl', function ($scope, $modal, $state, $q, $interval, $timeout, $window, omiMessage) {
 
-    $scope.panoramabox = 'images/panoramabox.svg';
+    $scope.panoramabox = 'assets/shared/images/panoramabox.svg';
     $scope.selected = undefined;
     //Use this boolean to check for webgl support
     $scope.webglSupport = Modernizr.webgl;

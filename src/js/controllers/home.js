@@ -26,7 +26,7 @@ angular.module('otaniemi3dApp')
 
     var mapOptions = {
       zoom: 16,
-      center: new google.maps.LatLng(60.1866142,24.830513),
+      center: {lat: 60.1866142, lng: 24.830513},
       mapTypeId: google.maps.MapTypeId.TERRAIN
     };
 
