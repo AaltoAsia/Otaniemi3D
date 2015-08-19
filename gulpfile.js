@@ -79,7 +79,17 @@ gulp.task('copy:custom', ['clean'], function () {
     ])
     .pipe(gulp.dest(dist.css));
 
-  return eventStream.concat(jstree, bootstrap, uiGrid);
+  var krpanoPlugins = gulp.src(
+    app.src + '/libs/krpano/plugins/*')
+    .pipe(gulp.dest(app.dist + '/libs/krpano/plugins'));
+
+  var krpanoSkins = gulp.src(
+    app.src + '/libs/krpano/skin/*')
+    .pipe(gulp.dest(app.dist + '/libs/krpano/skin'));
+
+  return eventStream.concat(
+    jstree, bootstrap, uiGrid, krpanoPlugins, krpanoSkins
+  );
 });
 
 // delete all files in the dist path

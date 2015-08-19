@@ -50,7 +50,8 @@ angular.module('otaniemi3dApp')
         if (floorplan.svg) {
           deferred.resolve(floorplan);
         } else {
-          d3.xml('assets/buildings/' + scope.building.name + '/' + floorplan.url, 'image/svg+xml', function (xml) {
+          d3.xml('assets/buildings/' + scope.building.name + '/' + floorplan.url,
+          'image/svg+xml', function (xml) {
             if (xml) {
               floorplan.svg = xml.documentElement;
               deferred.resolve(floorplan);
@@ -71,6 +72,11 @@ angular.module('otaniemi3dApp')
       * @return {Object} Same floor plan object that was given as a parameter.
       */
       function appendFloorplan(floorplan) {
+        floorplan.rooms = [];
+        floorplan.data = [];
+        floorplan.translate = [0,0];
+        floorplan.scale = 1;
+
         var svg = element[0].appendChild(floorplan.svg);
 
         svg = d3.select(svg)

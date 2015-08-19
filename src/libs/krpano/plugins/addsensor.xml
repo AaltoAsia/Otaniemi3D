@@ -8,7 +8,7 @@
   <action name="addsensor">
     addhotspot(%1);
     trace('id: ', %1);
-    set(hotspot[%1].url, %$krpanodir%/plugins/sensor-128.png);
+    set(hotspot[%1].url, /libs/krpano/plugins/sensor-128.png);
     set(hotspot[%1].ath, %2);
     trace('ath: ', hotspot[%1].ath);
     set(hotspot[%1].atv, %3);
