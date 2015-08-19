@@ -22,7 +22,7 @@ angular.module('otaniemi3dApp')
      */
     this.send = function (method, request, params, broadcast, loadingBar) {
       var deferred = $q.defer(),
-          url = 'http://otaniemi3d.cs.hut.fi/omi/node/';
+          url = 'https://otaniemi3d.cs.hut.fi/omi/node/';
 
       params = params || {};
       broadcast = broadcast || '';
@@ -42,9 +42,9 @@ angular.module('otaniemi3dApp')
             var data = parseData(response.data);
             deferred.resolve(data);
             dataStorage.sensors = data;
-          }, function (reason, status) {
+          }, function (reason) {
             var msg;
-            if (status === 404) {
+            if (reason.status === 404) {
               msg = 'Couldn\'t find such sensors or values.';
               console.log(msg);
               deferred.reject(msg);

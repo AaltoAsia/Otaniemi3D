@@ -20,6 +20,8 @@ var gutil = require('gulp-util');
 var debug = require('gulp-debug');
 var filter = require('gulp-filter');
 var eventStream = require('event-stream');
+var bowerFiles = require('main-bower-files');
+var inject = require('gulp-inject');
 
 var app = {
   dist: 'dist',
@@ -113,7 +115,7 @@ gulp.task('sass:watch', function () {
 });
 
 // handle javascript and css files in the index.html
-gulp.task('useref', ['clean', 'sass'], function () {
+gulp.task('useref', ['clean', 'sass', 'inject'], function () {
   var assets = useref.assets();
   var jsFilter = filter('**/*.js', {restore: true});
   var cssFilter = filter('**/*.css', {restore: true});
@@ -185,7 +187,14 @@ gulp.task('useref', ['clean', 'sass'], function () {
 });
 
 // serve the 'src' dir
-gulp.task('serve', ['sass', 'sass:watch'], function () {
+gulp.task('inject', function () {
+  return gulp.src(src.index)
+    .pipe(inject(gulp.src(bowerFiles({debugging:true}), {read: false}), {name: 'bower', relative: true}))
+    .pipe(gulp.dest(app.src));
+});
+
+// serve the 'src' dir
+gulp.task('serve', ['sass', 'sass:watch', 'inject'], function () {
   gulp.src(app.src)
     .pipe(webserver({
       port: 9000,

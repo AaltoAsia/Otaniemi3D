@@ -1,4 +1,6 @@
 .search-bar {
+
+  /*
   padding: 5px;
   text-align: center;
   position: absolute;
@@ -9,9 +11,11 @@
   & button {
     margin-bottom: 3px;
   }
+  */
 }
 
 .search-input {
-  width: 40%;
+  width: 20% !important;
+  min-width: 220px !important;
   display: inline;
 }

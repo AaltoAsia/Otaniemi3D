@@ -17,10 +17,6 @@ angular.module('otaniemi3dApp')
     //states are defined in app/app.js
     self.navigation = [
       {
-        state: 'sensor-list',
-        name: 'Sensor List'
-      },
-      {
         state: 'heat-map',
         name: 'Heat Map'
       },

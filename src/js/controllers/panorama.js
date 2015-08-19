@@ -19,7 +19,7 @@ angular.module('otaniemi3dApp')
     self.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
 
     var roomUrl =
-      'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + self.roomId;
+      'https://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + self.roomId;
     var xmlPath = 'assets/buildings/' + buildingData.currentBuilding.name +
       '/panorama/' + self.roomId + '.xml';
     console.log(buildingData.currentBuilding);

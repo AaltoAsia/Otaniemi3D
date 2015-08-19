@@ -57,18 +57,18 @@ angular
 
     $urlRouterProvider
       .when('', ['$state', function ($state) {
-        $state.go('home');
+        $state.go('google-maps');
       }])
-      .when('/home', ['$state', function ($state) {
-        $state.go('home');
+      .when('/google-maps', ['$state', function ($state) {
+        $state.go('google-maps');
       }])
       .otherwise('not-found');
 
     $stateProvider
-      .state('home', {
+      .state('google-maps', {
         url: '/:building',
-        templateUrl: 'html/views/home.html',
-        controller: 'HomeCtrl as home',
+        templateUrl: 'html/views/google-maps.html',
+        controller: 'GoogleMapsCtrl as googleMaps',
         resolve: {
           buildings: initBuildings
         }
@@ -169,7 +169,7 @@ angular
     FastClick.attach(document.body);
 
     //Hacky way to prevent app from navigating immediately to
-    //home page after displaying 404 page.
+    //google-maps page after displaying 404 page.
     var notFound = false;
 
     $rootScope.$on('$stateChangeError', function (event) {

@@ -9,11 +9,11 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
   <!-- build:css css/vendor.css -->
   <!-- bower:css -->
-  <link rel="stylesheet" href="libs/bower/angular-ui-grid/ui-grid.css" />
-  <link rel="stylesheet" href="libs/bower/angular-loading-bar/build/loading-bar.css" />
-  <link rel="stylesheet" href="libs/bower/jstree/dist/themes/default/style.css" />
-  <link rel="stylesheet" href="libs/bower/jquery-date-range-picker/daterangepicker.css" />
-  <!-- endbower -->
+  <link rel="stylesheet" href="libs/bower/angular-ui-grid/ui-grid.css">
+  <link rel="stylesheet" href="libs/bower/angular-loading-bar/build/loading-bar.css">
+  <link rel="stylesheet" href="libs/bower/jstree/dist/themes/default/style.css">
+  <link rel="stylesheet" href="libs/bower/jquery-date-range-picker/daterangepicker.css">
+  <!-- endinject -->
   <!-- endbuild -->
   <!-- build:css css/main.css -->
   <link rel="stylesheet" href="css/main.css"/>
@@ -26,7 +26,7 @@
 
   <div id="app-container" ng-controller="AppCtrl as App">
 
-    <nav class="navbar navbar-inverse navbar-static-top"
+    <nav class="navbar navbar-static-top"
          ng-hide="App.fullscreen"
          role="navigation">
       <div class="container-fluid" >
@@ -42,21 +42,49 @@
           </button>
           <a class="navbar-brand" id="home-view"
              ng-click="App.navbarCollapse = true"
-             ui-sref="home({building: App.building.name})">Otaniemi3D</a>
+             ui-sref="google-maps({building: App.building.name})">
+            <img src="assets/shared/images/LOGO.png">
+          </a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div collapse="App.navbarCollapse"
              class="navbar-collapse collapse navbar-responsive-collapse">
-          <ul ng-cloak class="nav navbar-nav">
-            <li ng-if="App.building" ng-repeat="nav in App.navigation"
-                ui-sref-active="active">
-              <a ng-cloak ng-click="App.navbarCollapse = true"
-                 ui-sref="{{nav.state}}({building: App.building.name,
-                   floor: App.building.floorplans[0].floor})">
-                {{nav.name}}
-              </a>
-            </li>
+          <ul class="navbar-form">
+            <input type="text"
+                   id="building-search"
+                   ng-model="buildingSearch"
+                   placeholder="Search for buildings..."
+                   typeahead="room as room.name for room in floorplan.rooms
+                             | filter: {name: $viewValue}
+                             | limitTo: 8"
+                   class="form-control search-input"
+                   typeahead-on-select="selectRoom($item)">
+            <input type="text"
+                   id="room-search"
+                   ng-model="roomSearch"
+                   placeholder="Search for rooms..."
+                   typeahead="room as room.name for room in floorplan.rooms
+                              | filter: {name: $viewValue}
+                              | limitTo: 8"
+                   class="form-control search-input"
+                   typeahead-on-select="selectRoom($item)">
+
+            <button class="btn btn-default"
+                    ng-click="searchRoom(searchString)"
+                    title="Search">
+              <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
+            </button>
+            <button class="btn btn-default"
+                    ng-click="resetZoom()"
+                    title="Reset zoom">
+              <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
+            </button>
+            <button class="btn btn-default"
+                    ng-click="resetZoom()"
+                    title="Statistics">
+              <span class="glyphicon glyphicon-stats" style="vertical-align:middle"></span>
+            </button>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
@@ -65,18 +93,8 @@
     <div class="container-fluid">
 
       <div ui-view
-           ng-class="App.fullscreen ? 'main-view-fullscreen' : 'main-view'"
-      ></div>
-
-      <footer class="footer hidden-xs hidden-sm" ng-hide="App.fullscreen">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-12">
-              <p>The Aalto Campus Project, contacts andrea.buda@aalto.fi</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+           ng-class="App.fullscreen ? 'main-view-fullscreen' : 'main-view'">
+      </div>
 
     </div>
 
@@ -107,7 +125,6 @@
 
   <!-- build:js js/vendor.js -->
   <!-- bower:js -->
-  <script src="libs/bower/modernizr/modernizr.js"></script>
   <script src="libs/bower/jquery/dist/jquery.js"></script>
   <script src="libs/bower/angular/angular.js"></script>
   <script src="libs/bower/angular-touch/angular-touch.js"></script>
@@ -123,16 +140,16 @@
   <script src="libs/bower/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="libs/bower/angular-ui-event/dist/event.js"></script>
   <script src="libs/bower/moment/moment.js"></script>
-  <script src="libs/bower/jquery-date-range-picker/jquery.daterangepicker.js"></script>
   <script src="libs/bower/fastclick/lib/fastclick.js"></script>
-  <!-- endbower -->
+  <script src="libs/bower/jquery-date-range-picker/jquery.daterangepicker.js"></script>
+  <!-- endinject -->
   <script src="libs/krpano/embedpano.js"></script>
   <script src="libs/krpano/HTMLviewer.js"></script>
   <!-- endbuild -->
 
   <!-- build:js js/main.js -->
   <script src="js/app.js"></script>
-  <script src="js/controllers/home.js"></script>
+  <script src="js/controllers/google-maps.js"></script>
   <script src="js/controllers/heat-map.js"></script>
   <script src="js/controllers/sensor-list.js"></script>
   <script src="js/controllers/x3dom.js"></script>
