@@ -28,24 +28,23 @@ angular.module('otaniemi3dApp')
     //var infoContent = ;
 
     var buildingParam = $state.params.building;
-    var infoWindow = new google.maps.InfoWindow({
-      content: $compile([
-        '<div class="info-window">',
-          '<h4>',
-            '{{App.building.name}}',
-          '</h4>',
-          '<ul>',
-            '<li ng-repeat="nav in App.navigation">',
-              '<a class="btn btn-default"',
-                  'ui-sref="{{nav.state}}({building: App.building.id,',
-                    'floor: App.building.floorplans[0].floor})">',
-                '{{nav.name}}',
-              '</a>',
-            '</li>',
-          '</ul>',
-        '</div>'
-      ].join(''))($scope)[0]
-    });
+    var infoWindow = new google.maps.InfoWindow();
+    var infoContent = [
+      '<div class="info-window">',
+        '<h4>',
+          '{{::App.building.name}}',
+        '</h4>',
+        '<ul>',
+          '<li ng-repeat="nav in App.navigation">',
+            '<a class="btn btn-default"',
+                'ui-sref="{{nav.state}}({building: App.building.id,',
+                  'floor: App.building.floorplans[0].floor})">',
+              '{{nav.name}}',
+            '</a>',
+          '</li>',
+        '</ul>',
+      '</div>'
+    ].join('');
 
     if (buildingParam && buildingParam.length) {
       var current;
@@ -58,6 +57,7 @@ angular.module('otaniemi3dApp')
       if (current) {
         buildingData.currentBuilding = current;
         infoWindow.setPosition(getCenter(current));
+        infoWindow.setContent($compile(infoContent)($scope)[0]);
         infoWindow.open(map);
       } else {
         buildingData.currentBuilding = null;
@@ -107,7 +107,7 @@ angular.module('otaniemi3dApp')
             $scope.$apply(function () {
               aaltoBuilding.setOptions({fillColor: selected});
               infoWindow.setPosition(event.latLng);
-              //infoWindow.setContent(infoContent);
+              infoWindow.setContent($compile(infoContent)($scope)[0]);
               infoWindow.open(map);
 
               buildingData.currentBuilding = building;
@@ -173,11 +173,15 @@ angular.module('otaniemi3dApp')
     };
 
     //When current building changes update URL
-    $scope.$watch('App.building.id', function (building, oldBuilding) {
+    $scope.$watch('App.building', function (building, oldBuilding) {
       //if it's already transitioning then there's no reason to transition again
       if (!$state.transition && building !== oldBuilding) {
         if (building) {
-          $state.go('google-maps', {building: building}, {notify: false});
+          infoWindow.setPosition(getCenter(building));
+          infoWindow.setContent($compile(infoContent)($scope)[0]);
+          infoWindow.open(map);
+
+          $state.go('google-maps', {building: building.id}, {notify: false});
         } else {
           $state.go('google-maps', {building: ''}, {notify: false});
         }

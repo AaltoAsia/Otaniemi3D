@@ -53,13 +53,14 @@
           <ul class="navbar-form">
             <input type="text"
                    id="building-search"
-                   ng-model="buildingSearch"
+                   ng-model="App.building"
                    placeholder="Search for buildings..."
-                   typeahead="building as building.name for building in App.allBuildings
-                             | filter: {name: $viewValue}
-                             | limitTo: 8"
-                   class="form-control search-input"
-                   typeahead-on-select="selectBuilding($item)">
+                   typeahead-editable="false"
+                   typeahead="building as building.name for building in
+                     App.allBuildings
+                       | filter: {name: $viewValue}
+                       | limitTo: 8"
+                   class="form-control search-input">
             <input type="text"
                    id="room-search"
                    ng-cloak

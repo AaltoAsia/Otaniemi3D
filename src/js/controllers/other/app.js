@@ -15,6 +15,8 @@ angular.module('otaniemi3dApp')
     self.navbarCollapse = true;
     self.building = buildingData.currentBuilding;
     self.allBuildings = buildingData.buildings;
+    self.fullscreen = false;
+
     //states are defined in app/app.js
     self.navigation = [
       {
@@ -31,9 +33,7 @@ angular.module('otaniemi3dApp')
       }
     ];
 
-    self.fullscreen = false;
-
-    //resetPosition() function should be redefined in each controller that needs it
+    //this function should be redefined in each controller that needs it
     self.resetPosition = function () {};
 
     $scope.$on('$stateChangeSuccess', function () {
@@ -45,8 +45,16 @@ angular.module('otaniemi3dApp')
     $scope.$watch(function () {
       return buildingData.currentBuilding;
     }, function (building) {
-      console.log('buildingData: ', buildingData)
       self.building = building;
+    });
+
+    var unbindWatch = $scope.$watch(function () {
+      return buildingData.buildings;
+    }, function (buildings) {
+      if (buildings) {
+        self.allBuildings = buildings;
+        unbindWatch();
+      }
     });
 
   });
