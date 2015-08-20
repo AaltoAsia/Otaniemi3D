@@ -1,0 +1,9 @@
+.sensor-grid {
+  height: $view-height;
+}
+
+@media only screen and (max-width : 991px) {
+  .sensor-grid {
+    height: $view-height-mobile;
+  }
+}
