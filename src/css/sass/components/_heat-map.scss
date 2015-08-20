@@ -79,7 +79,7 @@ viewbox on Chrome.
   &:after {
     position: absolute;
     top: -6px;
-    right: 10px;
+    left: 10px;
     display: inline-block;
     border-right: 6px solid transparent;
     border-bottom: 6px solid #ffffff;
@@ -90,7 +90,7 @@ viewbox on Chrome.
   &:before {
     position: absolute;
     top: -7px;
-    right: 9px;
+    left: 9px;
     display: inline-block;
     border-right: 7px solid transparent;
     border-bottom: 7px solid #ccc;

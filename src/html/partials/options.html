@@ -1,0 +1,9 @@
+<ul class="dropdown-menu pull-left" role="menu">
+  <li class="btn" disabled>Choose sensor type</li>
+  <li ng-repeat="sensor in sensorTypes">
+    <a ng-disabled="sensorType == sensor"
+       ng-click="selectSensorType(sensor)">
+      <img class="icons" ng-src="{{sensor.icon}}">{{sensor.text}}
+    </a>
+  </li>
+</ul>

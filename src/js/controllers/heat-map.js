@@ -14,6 +14,7 @@ angular.module('otaniemi3dApp')
 
     $scope.floor = Number($state.params.floor);
     $scope.currentBuilding = buildingData.currentBuilding;
+    $scope.App.statistics = true;
 
     var floorExists = false;
     for (var i = 0; i < $scope.currentBuilding.floorplans.length; i++) {
@@ -191,8 +192,12 @@ angular.module('otaniemi3dApp')
       $scope.selectRoom({});
     };
 
-    $scope.resetZoom = function () {
+    $scope.App.resetPosition = function () {
       $scope.$broadcast('reset-zoom');
+    };
+
+    $scope.App.showOptions = function () {
+      // body...
     };
 
     $scope.mobileModal = function () {

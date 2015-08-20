@@ -55,13 +55,15 @@
                    id="building-search"
                    ng-model="buildingSearch"
                    placeholder="Search for buildings..."
-                   typeahead="room as room.name for room in floorplan.rooms
+                   typeahead="building as building.name for building in App.allBuildings
                              | filter: {name: $viewValue}
                              | limitTo: 8"
                    class="form-control search-input"
-                   typeahead-on-select="selectRoom($item)">
+                   typeahead-on-select="selectBuilding($item)">
             <input type="text"
                    id="room-search"
+                   ng-cloak
+                   ng-if="App.building"
                    ng-model="roomSearch"
                    placeholder="Search for rooms..."
                    typeahead="room as room.name for room in floorplan.rooms
@@ -76,15 +78,23 @@
               <span class="glyphicon glyphicon-search" style="vertical-align:middle"></span>
             </button>
             <button class="btn btn-default"
-                    ng-click="resetZoom()"
+                    ng-click="App.resetPosition()"
                     title="Reset zoom">
               <span class="glyphicon glyphicon-home" style="vertical-align:middle"></span>
             </button>
-            <button class="btn btn-default"
-                    ng-click="resetZoom()"
-                    title="Statistics">
-              <span class="glyphicon glyphicon-stats" style="vertical-align:middle"></span>
-            </button>
+            <div class="btn-group desktop-dropdown"
+                 dropdown
+                 ng-cloak
+                 ng-if="App.statistics">
+              <button class="btn btn-default"
+                      dropdown-toggle
+                      title="Statistics">
+                <span class="glyphicon glyphicon-stats" style="vertical-align:middle"></span>
+              </button>
+              <ul class="dropdown-menu"
+                  template-url="html/partials/options.html">
+              </ul>
+            </div>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
@@ -126,6 +136,7 @@
   <!-- build:js js/vendor.js -->
   <!-- bower:js -->
   <script src="libs/bower/jquery/dist/jquery.js"></script>
+  <script src="libs/bower/modernizr/modernizr.js"></script>
   <script src="libs/bower/angular/angular.js"></script>
   <script src="libs/bower/angular-touch/angular-touch.js"></script>
   <script src="libs/bower/angular-ui-grid/ui-grid.js"></script>

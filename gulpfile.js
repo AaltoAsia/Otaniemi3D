@@ -22,6 +22,7 @@ var filter = require('gulp-filter');
 var eventStream = require('event-stream');
 var bowerFiles = require('main-bower-files');
 var inject = require('gulp-inject');
+var ghPages = require('gulp-gh-pages');
 
 var app = {
   dist: 'dist',
@@ -218,4 +219,11 @@ gulp.task('build', [
   'copy',
   'sass',
   'useref'
-  ], function () {});
+  ], function () {}
+);
+
+//deploy to gh-pages branch
+gulp.task('deploy', function() {
+  return gulp.src('./dist/**/*')
+    .pipe(ghPages());
+});

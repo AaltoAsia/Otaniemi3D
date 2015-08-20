@@ -1,6 +1,7 @@
-{
-  "CS-building": {
-    "name": "CS-building",
+[
+  {
+    "id": "CS-building",
+    "name": "Computer Science",
     "coords": [
       {"lat": 60.18736197682253, "lng": 24.82065011298586},
       {"lat": 60.18696423810977, "lng": 24.82050094242607},
@@ -43,8 +44,9 @@
       }
     ]
   },
-  "K1-building": {
-    "name": "K1-building",
+  {
+    "id": "K1-building",
+    "name": "Mechanical Engineering",
     "coords": [
       {"lat": 60.18761720005726, "lng": 24.827497601509094},
       {"lat": 60.18756252687934, "lng": 24.827677309513092},
@@ -94,4 +96,4 @@
       }
     ]
   }
-}
+]

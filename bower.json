@@ -29,5 +29,10 @@
   "resolutions": {
     "angular": "~1.4.x",
     "jquery": "~2.1.0"
+  },
+  "overrides": {
+      "modernizr": {
+          "main": "modernizr.js"
+      }
   }
 }

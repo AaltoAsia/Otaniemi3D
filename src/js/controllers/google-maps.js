@@ -12,9 +12,6 @@ angular.module('otaniemi3dApp')
 
     //If code in this controller becomes too big google maps code
     //should be moved into its own directive.
-    var self = this;
-    self.currentBuilding = null;
-
     var mapOptions = {
       zoom: 16,
       center: {lat: 60.1866142, lng: 24.830513},
@@ -35,12 +32,12 @@ angular.module('otaniemi3dApp')
       content: $compile([
         '<div class="info-window">',
           '<h4>',
-            '{{googleMaps.currentBuilding.name}}',
+            '{{App.building.name}}',
           '</h4>',
           '<ul>',
             '<li ng-repeat="nav in App.navigation">',
               '<a class="btn btn-default"',
-                  'ui-sref="{{nav.state}}({building: App.building.name,',
+                  'ui-sref="{{nav.state}}({building: App.building.id,',
                     'floor: App.building.floorplans[0].floor})">',
                 '{{nav.name}}',
               '</a>',
@@ -51,9 +48,15 @@ angular.module('otaniemi3dApp')
     });
 
     if (buildingParam && buildingParam.length) {
-      var current = buildingData.buildings[buildingParam];
+      var current;
+      for (var i = 0; i < buildingData.buildings.length; i++) {
+        if (buildingData.buildings[i].id === buildingParam) {
+          current = buildingData.buildings[i];
+          break;
+        }
+      }
       if (current) {
-        self.currentBuilding = buildingData.currentBuilding = current;
+        buildingData.currentBuilding = current;
         infoWindow.setPosition(getCenter(current));
         infoWindow.open(map);
       } else {
@@ -164,18 +167,20 @@ angular.module('otaniemi3dApp')
       map.setCenter(center);
     });
 
-    //When current buliding changes update URL and self.currentBuilding
-    //
-    //IDEA: maybe moving these to the code location where the currentBuilding
-    //changes can remove flickering
-    $scope.$watch(function () {
-      return buildingData.currentBuilding;
-    }, function (building) {
-      self.currentBuilding = building;
-      if (building) {
-        $state.go('google-maps', {building: building.name}, {notify: false});
-      } else {
-        $state.go('google-maps', {building: ''}, {notify: false});
+    $scope.App.resetPosition = function () {
+      map.setCenter({lat: 60.1866142, lng: 24.830513});
+      map.setZoom(16);
+    };
+
+    //When current building changes update URL
+    $scope.$watch('App.building.id', function (building, oldBuilding) {
+      //if it's already transitioning then there's no reason to transition again
+      if (!$state.transition && building !== oldBuilding) {
+        if (building) {
+          $state.go('google-maps', {building: building}, {notify: false});
+        } else {
+          $state.go('google-maps', {building: ''}, {notify: false});
+        }
       }
     });
 
@@ -185,6 +190,8 @@ angular.module('otaniemi3dApp')
           google.maps.event.removeInstanceListeners(building.polygon);
         });
         google.maps.event.clearListeners(map, 'click');
+        google.maps.event.clearListeners(infoWindow, 'closeclick');
+        infoWindow.close();
       });
     });
 

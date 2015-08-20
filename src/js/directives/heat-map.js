@@ -50,7 +50,7 @@ angular.module('otaniemi3dApp')
         if (floorplan.svg) {
           deferred.resolve(floorplan);
         } else {
-          d3.xml('assets/buildings/' + scope.building.name + '/' + floorplan.url,
+          d3.xml('assets/buildings/' + scope.building.id + '/' + floorplan.url,
           'image/svg+xml', function (xml) {
             if (xml) {
               floorplan.svg = xml.documentElement;

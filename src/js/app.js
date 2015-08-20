@@ -25,7 +25,13 @@ angular
 
       initBuildings($http, $q, buildingData)
         .then(function (buildings) {
-          var building = buildings[$stateParams.building];
+          var building;
+          for (var i = 0; i < buildings.length; i++) {
+            if (buildings[i].id === $stateParams.building) {
+              building = buildings[i];
+              break;
+            }
+          }
           if (building) {
             buildingData.currentBuilding = building;
             deferred.resolve(building);
