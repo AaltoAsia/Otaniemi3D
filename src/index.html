@@ -47,7 +47,6 @@
           </a>
         </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
         <div collapse="App.navbarCollapse"
              class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="navbar-form">
@@ -64,14 +63,14 @@
             <input type="text"
                    id="room-search"
                    ng-cloak
-                   ng-if="App.building"
-                   ng-model="roomSearch"
+                   ng-show="App.building"
+                   ng-model="App.room"
                    placeholder="Search for rooms..."
-                   typeahead="room as room.name for room in floorplan.rooms
-                              | filter: {name: $viewValue}
-                              | limitTo: 8"
-                   class="form-control search-input"
-                   typeahead-on-select="selectRoom($item)">
+                   typeahead-editable="false"
+                   typeahead="room as App.getName(room) for room in App.rooms
+                       | filter: $viewValue
+                       | limitTo: 8"
+                   class="form-control search-input">
 
             <button class="btn btn-default"
                     ng-click="searchRoom(searchString)"
@@ -86,10 +85,11 @@
             <div class="btn-group desktop-dropdown"
                  dropdown
                  ng-cloak
-                 ng-if="App.statistics">
+                 ng-show="App.statistics">
               <button class="btn btn-default"
                       dropdown-toggle
-                      title="Statistics">
+                      ng-click="App.showOptions()"
+                      title="Options">
                 <span class="glyphicon glyphicon-stats" style="vertical-align:middle"></span>
               </button>
               <ul class="dropdown-menu"

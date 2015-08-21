@@ -168,36 +168,21 @@ angular.module('otaniemi3dApp')
       $state.go('heat-map', {floor: $scope.floor - 1});
     };
 
-    $scope.selectRoom = function(room) {
-      $scope.room = room;
-      $scope.$broadcast('room-selected', room);
-    };
-
-    $scope.searchRoom = function(searchString) {
-      var rooms = $scope.floorplan.rooms;
-      var roomString;
-
-      if (searchString.name) {
-        roomString = searchString.name;
-      } else {
-        roomString = searchString;
-      }
-
-      for (var i = 0; i < rooms.length; i++) {
-        if (rooms[i].name.toLowerCase() === roomString.toLowerCase()) {
-          return $scope.selectRoom(rooms[i]);
-        }
-      }
-
-      $scope.selectRoom({});
-    };
-
     $scope.App.resetPosition = function () {
       $scope.$broadcast('reset-zoom');
     };
 
     $scope.App.showOptions = function () {
-      // body...
+      $scope.App.sensorTypes = $scope.sensorTypes;
+      $scope.App.sensorType = $scope.sensorType;
+      $scope.App.timeFrames = $scope.timeFrames;
+      $scope.App.timeFrame = $scope.timeFrame;
+
+      //TODO: Reduce duplication by removing sensorType and timeFrame
+      //from either this controller or App controller
+      $scope.App.selectSensorType = function (sensor) {
+        $scope.sensorType = $scope.App.sensorType = sensor;
+      };
     };
 
     $scope.mobileModal = function () {
@@ -234,6 +219,19 @@ angular.module('otaniemi3dApp')
       });
     };
 
+    $scope.$watch('App.room', function (room) {
+      if (room) {
+        var floorplanRooms = $scope.floorplan.rooms;
+
+        for (var i = 0; i < floorplanRooms.length; i++) {
+          if (floorplanRooms[i].id === room) {
+            $scope.room = floorplanRooms[i];
+            $scope.$broadcast('room-selected', floorplanRooms[i]);
+          }
+        }
+      }
+    });
+
     $scope.$on('floorplan-loaded', function () {
       self.isFloorplanLoaded = true;
     });
@@ -242,6 +240,7 @@ angular.module('otaniemi3dApp')
       if (self.modalInstance) {
         self.modalInstance.dismiss();
       }
+      $scope.App.statistics = false;
     });
 
 });

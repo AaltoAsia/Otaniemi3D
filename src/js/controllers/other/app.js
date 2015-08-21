@@ -8,13 +8,15 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AppCtrl', function ($scope, $state, buildingData) {
+  .controller('AppCtrl', function ($scope, $state, buildingData, $http, omiMessage) {
 
     var self = this;
 
     self.navbarCollapse = true;
     self.building = buildingData.currentBuilding;
     self.allBuildings = buildingData.buildings;
+    self.room = null;
+    self.rooms = [];
     self.fullscreen = false;
 
     //states are defined in app/app.js
@@ -34,7 +36,13 @@ angular.module('otaniemi3dApp')
     ];
 
     //this function should be redefined in each controller that needs it
-    self.resetPosition = function () {};
+    self.resetPosition = function noop () {};
+
+    self.getName = function (roomId) {
+      if (roomId) {
+        return roomId.replace('-', ' ');
+      }
+    };
 
     $scope.$on('$stateChangeSuccess', function () {
       if ($state.current.name !== 'heat-map') {
@@ -44,8 +52,18 @@ angular.module('otaniemi3dApp')
 
     $scope.$watch(function () {
       return buildingData.currentBuilding;
-    }, function (building) {
-      self.building = building;
+    }, function (newBuilding, oldBuilding) {
+      if (newBuilding !== oldBuilding) {
+        self.building = newBuilding;
+        self.rooms = [];
+        if (newBuilding) {
+          $http.get('https://otaniemi3d.cs.hut.fi/omi/node/Objects/' +
+                            newBuilding.id)
+            .then(function (response) {
+              self.rooms = omiMessage.parseObject(response.data).objects;
+            });
+        }
+      }
     });
 
     var unbindWatch = $scope.$watch(function () {

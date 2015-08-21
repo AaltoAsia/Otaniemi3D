@@ -225,5 +225,8 @@ gulp.task('build', [
 //deploy to gh-pages branch
 gulp.task('deploy', function() {
   return gulp.src('./dist/**/*')
-    .pipe(ghPages());
+    .pipe(ghPages())
+    .on('end', function () {
+      del('.publish');
+    });
 });

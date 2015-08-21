@@ -28,23 +28,24 @@ angular.module('otaniemi3dApp')
     //var infoContent = ;
 
     var buildingParam = $state.params.building;
-    var infoWindow = new google.maps.InfoWindow();
-    var infoContent = [
-      '<div class="info-window">',
-        '<h4>',
-          '{{::App.building.name}}',
-        '</h4>',
-        '<ul>',
-          '<li ng-repeat="nav in App.navigation">',
-            '<a class="btn btn-default"',
-                'ui-sref="{{nav.state}}({building: App.building.id,',
-                  'floor: App.building.floorplans[0].floor})">',
-              '{{nav.name}}',
-            '</a>',
-          '</li>',
-        '</ul>',
-      '</div>'
-    ].join('');
+    var infoWindow = new google.maps.InfoWindow({
+      content: $compile([
+        '<div class="info-window">',
+          '<h4>',
+            '{{App.building.name}}',
+          '</h4>',
+          '<ul>',
+            '<li ng-repeat="nav in App.navigation track by nav.state">',
+              '<a class="btn btn-default"',
+                  'ui-sref="{{nav.state}}({building: App.building.id,',
+                    'floor: App.building.floorplans[0].floor})">',
+                '{{nav.name}}',
+              '</a>',
+            '</li>',
+          '</ul>',
+        '</div>'
+      ].join(''))($scope)[0]
+    });
 
     if (buildingParam && buildingParam.length) {
       var current;
@@ -57,7 +58,7 @@ angular.module('otaniemi3dApp')
       if (current) {
         buildingData.currentBuilding = current;
         infoWindow.setPosition(getCenter(current));
-        infoWindow.setContent($compile(infoContent)($scope)[0]);
+        //infoWindow.setContent($compile(infoContent)($scope)[0]);
         infoWindow.open(map);
       } else {
         buildingData.currentBuilding = null;
@@ -106,9 +107,6 @@ angular.module('otaniemi3dApp')
           .addListener(aaltoBuilding, 'click', function (event) {
             $scope.$apply(function () {
               aaltoBuilding.setOptions({fillColor: selected});
-              infoWindow.setPosition(event.latLng);
-              infoWindow.setContent($compile(infoContent)($scope)[0]);
-              infoWindow.open(map);
 
               buildingData.currentBuilding = building;
               angular.forEach(buildings, function (_building) {
@@ -141,6 +139,9 @@ angular.module('otaniemi3dApp')
               building.polygon.setOptions({fillColor: unselected});
             });
 
+            // angular.element('.info-window .ng-scope').each(function () {
+            //   $(this).scope().$destroy();
+            // });
             infoWindow.close();
 
             buildingData.currentBuilding = null;
@@ -178,7 +179,7 @@ angular.module('otaniemi3dApp')
       if (!$state.transition && building !== oldBuilding) {
         if (building) {
           infoWindow.setPosition(getCenter(building));
-          infoWindow.setContent($compile(infoContent)($scope)[0]);
+          //infoWindow.setContent($compile(infoContent)($scope)[0]);
           infoWindow.open(map);
 
           $state.go('google-maps', {building: building.id}, {notify: false});
@@ -195,6 +196,9 @@ angular.module('otaniemi3dApp')
         });
         google.maps.event.clearListeners(map, 'click');
         google.maps.event.clearListeners(infoWindow, 'closeclick');
+        // angular.element('.info-window .ng-scope').each(function () {
+        //   $(this).scope().$destroy();
+        // });
         infoWindow.close();
       });
     });
