@@ -230,8 +230,7 @@ viewbox on Chrome.
 .floorplan-caption {
   left: 30%;
   right: 30%;
-  position: absolute;
-  margin-top: 50px; }
+  position: absolute; }
 
 .caption-text {
   text-align: center;
@@ -250,10 +249,10 @@ viewbox on Chrome.
   text-align: right;
   right: 0; }
 
-.dropdown-menu li {
+.dropdown-root li {
   cursor: pointer; }
 
-.dropdown-menu:after {
+.dropdown-root:after {
   position: absolute;
   top: -6px;
   left: 10px;
@@ -263,7 +262,7 @@ viewbox on Chrome.
   border-left: 6px solid transparent;
   content: ''; }
 
-.dropdown-menu:before {
+.dropdown-root:before {
   position: absolute;
   top: -7px;
   left: 9px;
@@ -273,6 +272,43 @@ viewbox on Chrome.
   border-left: 7px solid transparent;
   border-bottom-color: rgba(0, 0, 0, 0.2);
   content: ''; }
+
+.dropdown-submenu {
+  position: relative; }
+
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px; }
+
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block; }
+
+.dropdown-submenu > a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #ccc;
+  margin-top: 5px;
+  margin-right: -10px; }
+
+.dropdown-submenu:hover > a:after {
+  border-left-color: #fff; }
+
+.dropdown-submenu.pull-left {
+  float: none; }
+
+.dropdown-submenu.pull-left > .dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px; }
 
 #legendbar {
   pointer-events: none;

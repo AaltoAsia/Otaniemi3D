@@ -148,11 +148,11 @@ angular.module('otaniemi3dApp')
           if (time.begin && time.end) {
             timeFrame.params.begin = time.begin.toISOString();
             timeFrame.params.end = time.end.toISOString();
-            $scope.timeFrame = timeFrame;
+            $scope.App.timeFrame = $scope.timeFrame = timeFrame;
           }
         });
       } else {
-        $scope.timeFrame = timeFrame;
+        $scope.App.timeFrame = $scope.timeFrame = timeFrame;
       }
     };
 
@@ -180,8 +180,10 @@ angular.module('otaniemi3dApp')
 
       //TODO: Reduce duplication by removing sensorType and timeFrame
       //from either this controller or App controller
-      $scope.App.selectSensorType = function (sensor) {
+      $scope.App.selectOptions = function (sensor, time) {
         $scope.sensorType = $scope.App.sensorType = sensor;
+
+        $scope.selectTimeFrame(time);
       };
     };
 

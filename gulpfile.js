@@ -190,7 +190,7 @@ gulp.task('useref', ['clean', 'sass', 'inject'], function () {
 // serve the 'src' dir
 gulp.task('inject', function () {
   return gulp.src(src.index)
-    .pipe(inject(gulp.src(bowerFiles({debugging:true}), {read: false}), {name: 'bower', relative: true}))
+    .pipe(inject(gulp.src(bowerFiles(), {read: false}), {name: 'bower', relative: true}))
     .pipe(gulp.dest(app.src));
 });
 

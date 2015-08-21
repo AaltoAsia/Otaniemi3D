@@ -1,9 +1,17 @@
-<ul class="dropdown-menu pull-left" role="menu">
+<ul class="dropdown-menu dropdown-root pull-left" role="menu">
   <li class="btn" disabled>Choose sensor type</li>
   <li class="dropdown-submenu" ng-repeat="sensor in App.sensorTypes">
-    <a ng-disabled="App.sensorType == sensor"
-       ng-click="App.selectSensorType(sensor)">
+    <a ng-disabled="App.sensorType == sensor">
       <img class="icons" ng-src="{{sensor.icon}}">{{sensor.text}}
     </a>
+    <ul class="dropdown-menu">
+      <li class="btn" disabled>Choose time frame</li>
+      <li ng-repeat="time in App.timeFrames">
+        <a ng-disabled="App.timeFrame == time"
+           ng-click="App.selectOptions(sensor, time)">
+          <img class="icons" ng-src="{{time.icon}}">{{time.text}}
+        </a>
+      </li>
+    </ul>
   </li>
 </ul>
