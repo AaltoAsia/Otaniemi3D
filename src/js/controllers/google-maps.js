@@ -12,9 +12,12 @@ angular.module('otaniemi3dApp')
 
     //If code in this controller becomes too big google maps code
     //should be moved into its own directive.
+    var startPos = {lat: 60.1866142, lng: 24.830513};
+    var startZoom = 16;
+
     var mapOptions = {
-      zoom: 16,
-      center: {lat: 60.1866142, lng: 24.830513},
+      zoom: startZoom,
+      center: startPos,
       mapTypeId: google.maps.MapTypeId.TERRAIN,
       mapTypeControl: true,
       mapTypeControlOptions: {
@@ -25,9 +28,8 @@ angular.module('otaniemi3dApp')
     var map = new google.maps
       .Map($('#google-map')[0], mapOptions);
 
-    //var infoContent = ;
-
     var buildingParam = $state.params.building;
+
     var infoWindow = new google.maps.InfoWindow({
       content: $compile([
         '<div class="info-window">',
@@ -58,7 +60,6 @@ angular.module('otaniemi3dApp')
       if (current) {
         buildingData.currentBuilding = current;
         infoWindow.setPosition(getCenter(current));
-        //infoWindow.setContent($compile(infoContent)($scope)[0]);
         infoWindow.open(map);
       } else {
         buildingData.currentBuilding = null;
@@ -99,12 +100,12 @@ angular.module('otaniemi3dApp')
         building.polygon = aaltoBuilding;
 
         if (buildingData.currentBuilding &&
-            buildingData.currentBuilding.name === building.name) {
+            buildingData.currentBuilding.id === building.id) {
           aaltoBuilding.setOptions({fillColor: selected});
         }
 
         google.maps.event
-          .addListener(aaltoBuilding, 'click', function (event) {
+          .addListener(aaltoBuilding, 'click', function () {
             $scope.$apply(function () {
               aaltoBuilding.setOptions({fillColor: selected});
 
@@ -139,9 +140,6 @@ angular.module('otaniemi3dApp')
               building.polygon.setOptions({fillColor: unselected});
             });
 
-            // angular.element('.info-window .ng-scope').each(function () {
-            //   $(this).scope().$destroy();
-            // });
             infoWindow.close();
 
             buildingData.currentBuilding = null;
@@ -159,18 +157,17 @@ angular.module('otaniemi3dApp')
           });
     }
 
-    initializeMap(map, buildingData.buildings);
-
     //Trigger resize event so that map will be fully visible.
     $timeout(function () {
+      initializeMap(map, buildingData.buildings);
       var center = map.getCenter();
       google.maps.event.trigger(map, 'resize');
       map.setCenter(center);
     });
 
     $scope.App.resetPosition = function () {
-      map.setCenter({lat: 60.1866142, lng: 24.830513});
-      map.setZoom(16);
+      map.setCenter(startPos);
+      map.setZoom(startZoom);
     };
 
     //When current building changes update URL
@@ -179,12 +176,13 @@ angular.module('otaniemi3dApp')
       if (!$state.transition && building !== oldBuilding) {
         if (building) {
           infoWindow.setPosition(getCenter(building));
-          //infoWindow.setContent($compile(infoContent)($scope)[0]);
           infoWindow.open(map);
 
-          $state.go('google-maps', {building: building.id}, {notify: false});
+          $state.go('google-maps', {building: building.id},
+            {notify: false, location: 'replace'});
         } else {
-          $state.go('google-maps', {building: ''}, {notify: false});
+          $state.go('google-maps', {building: ''},
+            {notify: false, location: 'replace'});
         }
       }
     });
@@ -196,9 +194,7 @@ angular.module('otaniemi3dApp')
         });
         google.maps.event.clearListeners(map, 'click');
         google.maps.event.clearListeners(infoWindow, 'closeclick');
-        // angular.element('.info-window .ng-scope').each(function () {
-        //   $(this).scope().$destroy();
-        // });
+
         infoWindow.close();
       });
     });

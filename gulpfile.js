@@ -12,9 +12,7 @@ var useref = require('gulp-useref');
 var uglify = require('gulp-uglify');
 var minifyCss = require('gulp-minify-css');
 var minifyHtml = require('gulp-minify-html');
-var gulpif = require('gulp-if');
 var ngAnnotate = require('gulp-ng-annotate');
-var imagemin = require('gulp-imagemin');
 var autoprefixer = require('gulp-autoprefixer');
 var gutil = require('gulp-util');
 var debug = require('gulp-debug');
@@ -102,7 +100,7 @@ gulp.task('clean', function(cb) {
 
 // compile sass files into main.css file
 gulp.task('sass', ['clean'], function () {
-  gulp.src(src.sass)
+  return gulp.src(src.sass)
     .pipe(sourcemaps.init())
     .pipe(autoprefixer())
     .pipe(sass().on('error', sass.logError))
