@@ -10,7 +10,7 @@ Setup development environment
 -----------------------------
 
 1. Install [node.js](http://nodejs.org/)
-2. Install Yeoman toolset:
+2. Install bower and gulp:
 
         npm install --global bower gulp
 
@@ -23,14 +23,6 @@ Setup development environment
 5. To launch app on http://localhost:9000:
 
         gulp serve
-
-
-Test
------------------------------
-
-To execute tests run:
-
-    gulp test
 
 
 Build
