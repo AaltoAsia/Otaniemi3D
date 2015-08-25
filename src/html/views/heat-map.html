@@ -34,16 +34,19 @@
   <heat-map id="heat-map"
             class="fp"
             floorplan="floorplan"
-            selected-room="selectedRoom"
+            selected-room="room"
             sensor-type="sensorType"
             building="currentBuilding">
+
     <tooltip ng-if="heatmap.isFloorplanLoaded"
              sensor-type="sensorType"
              class="mouse-tooltip">
     </tooltip>
+
     <legendbar id="legendbar"
                sensor-type="sensorType"
                style="position: absolute">
     </legendbar>
+
   </heat-map>
 </div>

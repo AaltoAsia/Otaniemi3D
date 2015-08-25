@@ -11,6 +11,6 @@ angular.module('otaniemi3dApp')
   .service('buildingData', function () {
     var self = this;
 
-    self.currentBuilding = null;
     self.buildings = null;
+    self.currentBuilding = null;
   });

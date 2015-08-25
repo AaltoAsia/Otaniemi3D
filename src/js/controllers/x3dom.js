@@ -35,18 +35,13 @@ angular.module('otaniemi3dApp')
 
     //x3d change viewpoint (camera location)
     $scope.changeView = function(viewpoint){
-      if(viewpoint === undefined) {
-        var textField = document.getElementById('searchContent');
-        viewpoint = textField.value;
-      }
+      var elem = $(viewpoint);
 
-      var elem = document.getElementById(viewpoint);
+      if (elem.length) {
+        elem.attr('set_bind', 'true');
 
-      if(elem !== null) {
-        elem.setAttribute('set_bind','true');
-
-        var x3dElem = document.getElementById('x3dElement');
-        x3dElem.runtime.resetView();
+        var x3dElem = $('x3dElement');
+        x3dElem[0].runtime.resetView();
 
         $state.go('x3dom', {roomId: viewpoint},
           {location: 'replace', notify: false});
@@ -98,6 +93,12 @@ angular.module('otaniemi3dApp')
 
       });
     };
+
+    $scope.$watch('App.room', function (room) {
+      if (room) {
+        $scope.changeView(room);
+      }
+    });
 
     function getSensorData(roomId) {
       var request = {

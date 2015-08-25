@@ -94,7 +94,7 @@ angular
         parent: 'building'
       })
       .state('heat-map', {
-        url: '/heat-map/:floor',
+        url: '/heat-map/:floor/:room',
         templateUrl: 'html/views/heat-map.html',
         controller: 'HeatMapCtrl as heatmap',
         parent: 'building',

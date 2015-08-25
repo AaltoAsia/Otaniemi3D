@@ -113,6 +113,8 @@ angular.module('otaniemi3dApp')
         $rootScope.$broadcast('floorplan-loaded');
         isFloorplanLoaded = true;
 
+        highlightRoom(scope.selectedRoom);
+
         return floorplan;
       }
 
@@ -230,7 +232,19 @@ angular.module('otaniemi3dApp')
        * @param {Object} room - Room where we want to center the camera.
        */
       function centerCamera(room) {
-        // body...
+        var svg = d3.select(scope.floorplan.svg);
+
+        var svgBBox = svg.node().getBoundingClientRect();
+        var origin = [svgBBox.width / 2, svgBBox.height / 2];
+
+        var roomElem = room.node();
+        var elemBBox = roomElem.getBBox();
+        var x = elemBBox.x + elemBBox.width / 2;
+        var y = elemBBox.y + elemBBox.height / 2;
+        var scale = 1.6;
+        var translate = [origin[0] - x * scale, origin[1] - y * scale];
+
+        zoomAndPan(scale, translate);
       }
 
       /**
@@ -238,24 +252,27 @@ angular.module('otaniemi3dApp')
        *
        * @param {number} scale - New scale for the floor plan.
        * @param {number[]} translate - New translation for the floor plan.
+       * @param {number=1000} duration - Duration for the translation
        */
-      function zoomAndPan(scale, translate) {
+      function zoomAndPan(scale, translate, duration) {
+        duration = duration || 1000;
+
         if (zoomListener) {
           scope.floorplan.translate = translate;
           scope.floorplan.scale = scale;
 
-          zoomListener
-            .scale(scale)
-            .translate(translate)
-            .event(d3.select(element[0]).select('#floorplan'));
+          d3.select(scope.floorplan.svg)
+            .transition()
+            .duration(duration)
+            .call(zoomListener
+              .translate(translate)
+              .scale(scale)
+              .event
+            );
         }
       }
 
-      scope.$on('reset-zoom', function () {
-        zoomAndPan(1, [0,0]);
-      });
-
-      scope.$on('room-selected', function (_, roomInfo) {
+      function highlightRoom (roomInfo) {
         d3.select(scope.floorplan.svg)
           .selectAll('[data-room-id]')
           .each(function () {
@@ -267,7 +284,7 @@ angular.module('otaniemi3dApp')
               .style('stroke', null)
               .style('stroke-opacity', null);
 
-            if (room.datum().roomId === roomInfo.id) {
+            if (room.attr('data-room-id') === roomInfo.id) {
               room
                 .style('stroke-width', '15')
                 .style('stroke', '#ffcc00')
@@ -276,13 +293,17 @@ angular.module('otaniemi3dApp')
                 .ease('cubic-in-out')
                 .style('stroke-opacity', '1');
 
-              //move room to the center of screen if zoomed in
-              if (scope.floorplan.scale > 1.2) {
-                centerCamera(room);
-              }
+              //center camera to the selected room
+              centerCamera(room);
             }
           });
+      }
+
+      scope.$on('reset-zoom', function () {
+        zoomAndPan(1, [0,0]);
       });
+
+      scope.$watch('selectedRoom', highlightRoom);
 
       scope.$watch('sensorType', function () {
         if (isFloorplanLoaded) {

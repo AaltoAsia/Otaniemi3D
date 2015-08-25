@@ -32,9 +32,15 @@ angular.module('otaniemi3dApp')
       return;
     }
 
+    $scope.room = {};
+
+    if ($state.params.room) {
+      $scope.App.room = findRoom($state.params.room);
+      selectRoom($scope.App.room);
+    }
+
     $scope.searchString = '';
     $scope.floorplans = $scope.currentBuilding.floorplans;
-    $scope.room = {};
     $scope.svgSupport = Modernizr.svg;
     self.isFloorplanLoaded = false;
     $scope.floorplan = $scope.floorplans[$scope.floor-1];
@@ -187,6 +193,19 @@ angular.module('otaniemi3dApp')
       };
     };
 
+    function selectRoom (room) {
+      $scope.room = room;
+    }
+
+    function findRoom (roomId) {
+      var rooms = buildingData.currentBuilding.rooms;
+      for (var i = 0; i < rooms.length; i++) {
+        if (rooms[i].id === roomId) {
+          return rooms[i];
+        }
+      }
+    }
+
     $scope.mobileModal = function () {
       self.modalInstance = $modal.open({
         templateUrl: 'html/templates/sensor-options.html',
@@ -220,19 +239,6 @@ angular.module('otaniemi3dApp')
         $scope.sensorType = params.sensorType;
       });
     };
-
-    $scope.$watch('App.room', function (room) {
-      if (room) {
-        var floorplanRooms = $scope.floorplan.rooms;
-
-        for (var i = 0; i < floorplanRooms.length; i++) {
-          if (floorplanRooms[i].id === room) {
-            $scope.room = floorplanRooms[i];
-            $scope.$broadcast('room-selected', floorplanRooms[i]);
-          }
-        }
-      }
-    });
 
     $scope.$on('floorplan-loaded', function () {
       self.isFloorplanLoaded = true;

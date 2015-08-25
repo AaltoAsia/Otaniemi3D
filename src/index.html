@@ -67,7 +67,7 @@
                    ng-model="App.room"
                    placeholder="Search for rooms..."
                    typeahead-editable="false"
-                   typeahead="room as App.getName(room) for room in App.rooms
+                   typeahead="room as room.name for room in App.rooms
                        | filter: $viewValue
                        | limitTo: 8"
                    class="form-control search-input">

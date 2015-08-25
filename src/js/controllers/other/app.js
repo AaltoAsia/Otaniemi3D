@@ -8,7 +8,7 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AppCtrl', function ($scope, $state, buildingData, $http, omiMessage) {
+  .controller('AppCtrl', function ($scope, $state, buildingData) {
 
     var self = this;
 
@@ -38,12 +38,6 @@ angular.module('otaniemi3dApp')
     //this function should be redefined in each controller that needs it
     self.resetPosition = function noop () {};
 
-    self.getName = function (roomId) {
-      if (roomId) {
-        return roomId.replace('-', ' ');
-      }
-    };
-
     $scope.$on('$stateChangeSuccess', function () {
       if ($state.current.name !== 'heat-map') {
         self.fullscreen = false;
@@ -55,12 +49,34 @@ angular.module('otaniemi3dApp')
     }, function (newBuilding, oldBuilding) {
       if (newBuilding !== oldBuilding) {
         self.building = newBuilding;
-        self.rooms = [];
-        if (newBuilding) {
-          $http.get('https://otaniemi3d.cs.hut.fi/omi/node/Objects/' +
-                            newBuilding.id)
-            .then(function (response) {
-              self.rooms = omiMessage.parseObject(response.data).objects;
+        if (self.building) {
+          self.rooms = self.building.rooms;
+        } else {
+          self.rooms = [];
+        }
+      }
+    });
+
+    $scope.$watch(function () {
+      return self.room;
+    }, function (room, oldRoom) {
+      if (room !== oldRoom) {
+        var floor,
+            roomId = '';
+
+        if ($state.is('heat-map')) {
+          floor = $state.params.floor;
+        }
+        if (room) {
+          floor = room.floor;
+          roomId = room.id;
+        }
+        if (floor) {
+          $state.go('heat-map',
+            {
+              building: self.building.id,
+              floor: floor,
+              room: roomId
             });
         }
       }
