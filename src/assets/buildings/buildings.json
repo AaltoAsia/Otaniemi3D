@@ -1,0 +1,113 @@
+[
+  {
+    "id": "CS", "name": "CS",
+    "name": "Computer Science",
+    "coords": [
+      {"lat": 60.18736197682253, "lng": 24.82065011298586},
+      {"lat": 60.18696423810977, "lng": 24.82050094242607},
+      {"lat": 60.18697377421658, "lng": 24.82040157601166},
+      {"lat": 60.18688474809624, "lng": 24.82036940714926},
+      {"lat": 60.18688925635673, "lng": 24.82033264036958},
+      {"lat": 60.18684533864989, "lng": 24.82032576480652},
+      {"lat": 60.18672032998956, "lng": 24.82172545239757},
+      {"lat": 60.18662791041950, "lng": 24.82230385602049},
+      {"lat": 60.18698280196402, "lng": 24.82254165006489},
+      {"lat": 60.18723788021443, "lng": 24.82096696817736},
+      {"lat": 60.18730008895606, "lng": 24.82100627000599},
+      {"lat": 60.18736197682253, "lng": 24.82065011298586}
+    ],
+    "floorplans": [
+      {
+        "url": "floorplans/floor1.svg",
+        "name": "Floor 1",
+        "floor": 1
+      },
+      {
+        "url": "floorplans/floor2.svg",
+        "name": "Floor 2",
+        "floor": 2
+      },
+      {
+        "url": "floorplans/floor3.svg",
+        "name": "Floor 3",
+        "floor": 3
+      },
+      {
+        "url": "floorplans/floor4.svg",
+        "name": "Floor 4",
+        "floor": 4
+      },
+      {
+        "url": "floorplans/floor5.svg",
+        "name": "Floor 5",
+        "floor": 5
+      }
+    ],
+    "rooms": [
+      {"id": "Room-101", "name": "Room 101", "floor": 1}, {"id": "Room-102b", "name": "Room 102b", "floor": 1}, {"id": "Room-102a", "name": "Room 102a", "floor": 1}, {"id": "Room-103", "name": "Room 103", "floor": 1}, {"id": "Room-104a", "name": "Room 104a", "floor": 1}, {"id": "Room-104b", "name": "Room 104b", "floor": 1}, {"id": "Room-105", "name": "Room 105", "floor": 1}, {"id": "Room-106b", "name": "Room 106b", "floor": 1}, {"id": "Room-109a", "name": "Room 109a", "floor": 1}, {"id": "Room-109b", "name": "Room 109b", "floor": 1}, {"id": "Room-110a", "name": "Room 110a", "floor": 1}, {"id": "Room-110b", "name": "Room 110b", "floor": 1}, {"id": "Room-111", "name": "Room 111", "floor": 1}, {"id": "Room-114", "name": "Room 114", "floor": 1}, {"id": "Room-115", "name": "Room 115", "floor": 1}, {"id": "Room-116", "name": "Room 116", "floor": 1}, {"id": "Room-117", "name": "Room 117", "floor": 1}, {"id": "Room-119", "name": "Room 119", "floor": 1}, {"id": "Room-161", "name": "Room 161", "floor": 1}, {"id": "Room-160a", "name": "Room 160a", "floor": 1}, {"id": "Room-164a", "name": "Room 164a", "floor": 1}, {"id": "Room-162", "name": "Room 162", "floor": 1}, {"id": "Room-163", "name": "Room 163", "floor": 1}, {"id": "Room-168", "name": "Room 168", "floor": 1}, {"id": "Room-170a", "name": "Room 170a", "floor": 1}, {"id": "Room-169", "name": "Room 169", "floor": 1}, {"id": "Room-165a", "name": "Room 165a", "floor": 1}, {"id": "Room-170a", "name": "Room 170a", "floor": 1}, {"id": "Room-126", "name": "Room 126", "floor": 1}, {"id": "Room-122", "name": "Room 122", "floor": 1}, {"id": "Room-123", "name": "Room 123", "floor": 1}, {"id": "Room-124", "name": "Room 124", "floor": 1}, {"id": "Entrance", "name": "Entrance", "floor": 1}, {"id": "Cafeteria", "name": "Cafeteria", "floor": 1}, {"id": "Room-130", "name": "Room 130", "floor": 1}, {"id": "Room-132", "name": "Room 132", "floor": 1}, {"id": "Room-130", "name": "Room 130", "floor": 1}, {"id": "Room-131", "name": "Room 131", "floor": 1}, {"id": "Room-128", "name": "Room 128", "floor": 1}, {"id": "Room-133b", "name": "Room 133b", "floor": 1}, {"id": "Room-135", "name": "Room 135", "floor": 1}, {"id": "Room-137", "name": "Room 137", "floor": 1}, {"id": "Room-138", "name": "Room 138", "floor": 1}, {"id": "Room-139", "name": "Room 139", "floor": 1}, {"id": "Room-140", "name": "Room 140", "floor": 1}, {"id": "Room-141", "name": "Room 141", "floor": 1}, {"id": "Room-142", "name": "Room 142", "floor": 1}, {"id": "Room-143", "name": "Room 143", "floor": 1}, {"id": "Room-144a", "name": "Room 144a", "floor": 1}, {"id": "Room-147a", "name": "Room 147a", "floor": 1}, {"id": "Room-147b", "name": "Room 147b", "floor": 1}, {"id": "Room-148", "name": "Room 148", "floor": 1}, {"id": "Room-149", "name": "Room 149", "floor": 1}, {"id": "Room-150", "name": "Room 150", "floor": 1}, {"id": "Room-151", "name": "Room 151", "floor": 1}, {"id": "Room-152", "name": "Room 152", "floor": 1}, {"id": "Room-153", "name": "Room 153", "floor": 1}, {"id": "Room-154a", "name": "Room 154a", "floor": 1}, {"id": "Room-154b", "name": "Room 154b", "floor": 1}, {"id": "Room-155a", "name": "Room 155a", "floor": 1}, {"id": "Room-155b", "name": "Room 155b", "floor": 1}, {"id": "Room-156", "name": "Room 156", "floor": 1}, {"id": "Room-157a", "name": "Room 157a", "floor": 1}, {"id": "Room-157b", "name": "Room 157b", "floor": 1}, {"id": "Room-158", "name": "Room 158", "floor": 1},
+      {"id": "Room-201", "name": "Room 201", "floor": 2}, {"id": "Room-202", "name": "Room 202", "floor": 2}, {"id": "Room-203c", "name": "Room 203c", "floor": 2}, {"id": "Room-203b", "name": "Room 203b", "floor": 2}, {"id": "Room-204a", "name": "Room 204a", "floor": 2}, {"id": "Room-204b", "name": "Room 204b", "floor": 2}, {"id": "Room-204c", "name": "Room 204c", "floor": 2}, {"id": "Room-204d", "name": "Room 204d", "floor": 2}, {"id": "Room-211b", "name": "Room 211b", "floor": 2}, {"id": "Room-211a", "name": "Room 211a", "floor": 2}, {"id": "Room-210", "name": "Room 210", "floor": 2}, {"id": "Room-209", "name": "Room 209", "floor": 2}, {"id": "Corridor Cafeteria Side", "name": "Corridor Cafeteria Side", "floor": 2}, {"id": "Corridor Entrance Side", "name": "Corridor Entrance Side", "floor": 2}, {"id": "2nd Floor Corridor Start", "name": "2nd Floor Corridor Start", "floor": 2}, {"id": "2nd Floor Corridor Middle", "name": "2nd Floor Corridor Middle", "floor": 2}, {"id": "2nd Floor Corridor End", "name": "2nd Floor Corridor End", "floor": 2}, {"id": "Room-215", "name": "Room 215", "floor": 2}, {"id": "Room-216", "name": "Room 216", "floor": 2}, {"id": "Room-213a", "name": "Room 213a", "floor": 2}, {"id": "Room-217", "name": "Room 217", "floor": 2}, {"id": "Room-233a", "name": "Room 233a", "floor": 2}, {"id": "Room-233b", "name": "Room 233b", "floor": 2}, {"id": "Room-233c", "name": "Room 233c", "floor": 2}, {"id": "Room-234b", "name": "Room 234b", "floor": 2}, {"id": "Room-234a", "name": "Room 234a", "floor": 2}, {"id": "Room-235", "name": "Room 235", "floor": 2}, {"id": "Room-236b", "name": "Room 236b", "floor": 2}, {"id": "Room-236a", "name": "Room 236a", "floor": 2}, {"id": "Room-237d", "name": "Room 237d", "floor": 2}, {"id": "Room-237c", "name": "Room 237c", "floor": 2}, {"id": "Room-238b", "name": "Room 238b", "floor": 2}, {"id": "Room-238d", "name": "Room 238d", "floor": 2}, {"id": "Room-239", "name": "Room 239", "floor": 2}, {"id": "Room-223", "name": "Room 223", "floor": 2}, {"id": "Room-224", "name": "Room 224", "floor": 2}, {"id": "Room-225", "name": "Room 225", "floor": 2}, {"id": "Room-226", "name": "Room 226", "floor": 2}, {"id": "Room-227", "name": "Room 227", "floor": 2}, {"id": "Room-228", "name": "Room 228", "floor": 2}, {"id": "Room-229", "name": "Room 229", "floor": 2}, {"id": "Room-232c", "name": "Room 232c", "floor": 2}, {"id": "Room-232d", "name": "Room 232d", "floor": 2}, {"id": "Room-232a", "name": "Room 232a", "floor": 2},
+      {"id": "Room-301d", "name": "Room 301d", "floor": 3}, {"id": "Room-301c", "name": "Room 301c", "floor": 3}, {"id": "Room-302b", "name": "Room 302b", "floor": 3}, {"id": "Room-302c", "name": "Room 302c", "floor": 3}, {"id": "Room-303a", "name": "Room 303a", "floor": 3}, {"id": "Room-303b", "name": "Room 303b", "floor": 3}, {"id": "Room-304b", "name": "Room 304b", "floor": 3}, {"id": "Room-304a", "name": "Room 304a", "floor": 3}, {"id": "Room-304c", "name": "Room 304c", "floor": 3}, {"id": "Room-304d", "name": "Room 304d", "floor": 3}, {"id": "Room-311", "name": "Room 311", "floor": 3}, {"id": "Room-309", "name": "Room 309", "floor": 3}, {"id": "Room-310", "name": "Room 310", "floor": 3}, {"id": "Room-312", "name": "Room 312", "floor": 3}, {"id": "Room-313", "name": "Room 313", "floor": 3}, {"id": "Room-314", "name": "Room 314", "floor": 3}, {"id": "Room-315", "name": "Room 315", "floor": 3}, {"id": "Room-316", "name": "Room 316", "floor": 3}, {"id": "Room-317", "name": "Room 317", "floor": 3}, {"id": "Room-318", "name": "Room 318", "floor": 3}, {"id": "Room-323", "name": "Room 323", "floor": 3}, {"id": "Room-324b", "name": "Room 324b", "floor": 3}, {"id": "Room-325a", "name": "Room 325a", "floor": 3}, {"id": "Room-325b", "name": "Room 325b", "floor": 3}, {"id": "Room-326", "name": "Room 326", "floor": 3}, {"id": "Room-331", "name": "Room 331", "floor": 3}, {"id": "Room-332", "name": "Room 332", "floor": 3}, {"id": "Room-333", "name": "Room 333", "floor": 3}, {"id": "Room-334", "name": "Room 334", "floor": 3}, {"id": "Room-335", "name": "Room 335", "floor": 3}, {"id": "Room-336", "name": "Room 336", "floor": 3}, {"id": "Room-337", "name": "Room 337", "floor": 3}, {"id": "Room-338", "name": "Room 338", "floor": 3}, {"id": "Room-341a", "name": "Room 341a", "floor": 3}, {"id": "Room-341b", "name": "Room 341b", "floor": 3}, {"id": "Room-341c", "name": "Room 341c", "floor": 3}, {"id": "Room-342", "name": "Room 342", "floor": 3}, {"id": "Room-343a", "name": "Room 343a", "floor": 3}, {"id": "Room-343b", "name": "Room 343b", "floor": 3}, {"id": "Room-344", "name": "Room 344", "floor": 3}, {"id": "Room-345a", "name": "Room 345a", "floor": 3}, {"id": "Room-348", "name": "Room 348", "floor": 3},
+      {"id": "Room-401", "name": "Room 401", "floor": 4}, {"id": "Room-402", "name": "Room 402", "floor": 4}, {"id": "Room-403", "name": "Room 403", "floor": 4}, {"id": "Room-404", "name": "Room 404", "floor": 4}, {"id": "Room-405", "name": "Room 405", "floor": 4}, {"id": "Room-406", "name": "Room 406", "floor": 4}, {"id": "Room-413", "name": "Room 413", "floor": 4}, {"id": "Room-414a", "name": "Room 414a", "floor": 4}, {"id": "Room-414b", "name": "Room 414b", "floor": 4}, {"id": "Room-414c", "name": "Room 414c", "floor": 4}, {"id": "Room-424", "name": "Room 424", "floor": 4}, {"id": "Room-412a", "name": "Room 412a", "floor": 4}, {"id": "Room-408a", "name": "Room 408a", "floor": 4}, {"id": "Room-415", "name": "Room 415", "floor": 4}, {"id": "Room-423", "name": "Room 423", "floor": 4},
+      {"id": "Room-501a", "name": "Room 501a", "floor": 5}, {"id": "Room-501b", "name": "Room 501b", "floor": 5}
+    ]
+  },
+  {
+    "id": "K1", "name": "K1",
+    "name": "Mechanical Engineering",
+    "coords": [
+      {"lat": 60.18761720005726, "lng": 24.827497601509094},
+      {"lat": 60.18756252687934, "lng": 24.827677309513092},
+      {"lat": 60.187523855552186, "lng": 24.82763171195984},
+      {"lat": 60.18749451865291, "lng": 24.82772022485733},
+      {"lat": 60.18701445657686, "lng": 24.827119410037994},
+      {"lat": 60.187101134970995, "lng": 24.826819002628326},
+      {"lat": 60.18701845712317, "lng": 24.826719760894775},
+      {"lat": 60.18702645821431, "lng": 24.826684892177582},
+      {"lat": 60.18701045603007, "lng": 24.826663434505463},
+      {"lat": 60.18710246848297, "lng": 24.826357662677765},
+      {"lat": 60.187137139775146, "lng": 24.826389849185944},
+      {"lat": 60.18723448589975, "lng": 24.826089441776276},
+      {"lat": 60.187521188562435, "lng": 24.826446175575256},
+      {"lat": 60.18748251718655, "lng": 24.82656419277191},
+      {"lat": 60.18751718807737, "lng": 24.826604425907135},
+      {"lat": 60.18747184921278, "lng": 24.82674390077591},
+      {"lat": 60.187385171797395, "lng": 24.82663929462433},
+      {"lat": 60.18726248952598, "lng": 24.827049672603604},
+      {"lat": 60.18761720005726, "lng": 24.827497601509094}
+    ],
+    "floorplans": [
+      {
+        "url": "floorplans/floor1.svg",
+        "name": "Floor 1",
+        "floor": 1
+      },
+      {
+        "url": "floorplans/floor2.svg",
+        "name": "Floor 2",
+        "floor": 2
+      },
+      {
+        "url": "floorplans/floor3.svg",
+        "name": "Floor 3",
+        "floor": 3
+      },
+      {
+        "url": "floorplans/floor4.svg",
+        "name": "Floor 4",
+        "floor": 4
+      },
+      {
+        "url": "floorplans/floor5.svg",
+        "name": "Floor 5",
+        "floor": 5
+      }
+    ],
+    "rooms": [
+      {"id": "Room-101", "name": "Room 101", "floor": 1}, {"id": "Room-102b", "name": "Room 102b", "floor": 1}, {"id": "Room-102a", "name": "Room 102a", "floor": 1}, {"id": "Room-103", "name": "Room 103", "floor": 1}, {"id": "Room-104a", "name": "Room 104a", "floor": 1}, {"id": "Room-104b", "name": "Room 104b", "floor": 1}, {"id": "Room-105", "name": "Room 105", "floor": 1}, {"id": "Room-106b", "name": "Room 106b", "floor": 1}, {"id": "Room-109a", "name": "Room 109a", "floor": 1}, {"id": "Room-109b", "name": "Room 109b", "floor": 1}, {"id": "Room-110a", "name": "Room 110a", "floor": 1}, {"id": "Room-110b", "name": "Room 110b", "floor": 1}, {"id": "Room-111", "name": "Room 111", "floor": 1}, {"id": "Room-114", "name": "Room 114", "floor": 1}, {"id": "Room-115", "name": "Room 115", "floor": 1}, {"id": "Room-116", "name": "Room 116", "floor": 1}, {"id": "Room-117", "name": "Room 117", "floor": 1}, {"id": "Room-119", "name": "Room 119", "floor": 1}, {"id": "Room-161", "name": "Room 161", "floor": 1}, {"id": "Room-160a", "name": "Room 160a", "floor": 1}, {"id": "Room-164a", "name": "Room 164a", "floor": 1}, {"id": "Room-162", "name": "Room 162", "floor": 1}, {"id": "Room-163", "name": "Room 163", "floor": 1}, {"id": "Room-168", "name": "Room 168", "floor": 1}, {"id": "Room-170a", "name": "Room 170a", "floor": 1}, {"id": "Room-169", "name": "Room 169", "floor": 1}, {"id": "Room-165a", "name": "Room 165a", "floor": 1}, {"id": "Room-170a", "name": "Room 170a", "floor": 1}, {"id": "Room-126", "name": "Room 126", "floor": 1}, {"id": "Room-122", "name": "Room 122", "floor": 1}, {"id": "Room-123", "name": "Room 123", "floor": 1}, {"id": "Room-124", "name": "Room 124", "floor": 1}, {"id": "Entrance", "name": "Entrance", "floor": 1}, {"id": "Cafeteria", "name": "Cafeteria", "floor": 1}, {"id": "Room-130", "name": "Room 130", "floor": 1}, {"id": "Room-132", "name": "Room 132", "floor": 1}, {"id": "Room-130", "name": "Room 130", "floor": 1}, {"id": "Room-131", "name": "Room 131", "floor": 1}, {"id": "Room-128", "name": "Room 128", "floor": 1}, {"id": "Room-133b", "name": "Room 133b", "floor": 1}, {"id": "Room-135", "name": "Room 135", "floor": 1}, {"id": "Room-137", "name": "Room 137", "floor": 1}, {"id": "Room-138", "name": "Room 138", "floor": 1}, {"id": "Room-139", "name": "Room 139", "floor": 1}, {"id": "Room-140", "name": "Room 140", "floor": 1}, {"id": "Room-141", "name": "Room 141", "floor": 1}, {"id": "Room-142", "name": "Room 142", "floor": 1}, {"id": "Room-143", "name": "Room 143", "floor": 1}, {"id": "Room-144a", "name": "Room 144a", "floor": 1}, {"id": "Room-147a", "name": "Room 147a", "floor": 1}, {"id": "Room-147b", "name": "Room 147b", "floor": 1}, {"id": "Room-148", "name": "Room 148", "floor": 1}, {"id": "Room-149", "name": "Room 149", "floor": 1}, {"id": "Room-150", "name": "Room 150", "floor": 1}, {"id": "Room-151", "name": "Room 151", "floor": 1}, {"id": "Room-152", "name": "Room 152", "floor": 1}, {"id": "Room-153", "name": "Room 153", "floor": 1}, {"id": "Room-154a", "name": "Room 154a", "floor": 1}, {"id": "Room-154b", "name": "Room 154b", "floor": 1}, {"id": "Room-155a", "name": "Room 155a", "floor": 1}, {"id": "Room-155b", "name": "Room 155b", "floor": 1}, {"id": "Room-156", "name": "Room 156", "floor": 1}, {"id": "Room-157a", "name": "Room 157a", "floor": 1}, {"id": "Room-157b", "name": "Room 157b", "floor": 1}, {"id": "Room-158", "name": "Room 158", "floor": 1},
+      {"id": "Room-201", "name": "Room 201", "floor": 2}, {"id": "Room-202", "name": "Room 202", "floor": 2}, {"id": "Room-203c", "name": "Room 203c", "floor": 2}, {"id": "Room-203b", "name": "Room 203b", "floor": 2}, {"id": "Room-204a", "name": "Room 204a", "floor": 2}, {"id": "Room-204b", "name": "Room 204b", "floor": 2}, {"id": "Room-204c", "name": "Room 204c", "floor": 2}, {"id": "Room-204d", "name": "Room 204d", "floor": 2}, {"id": "Room-211b", "name": "Room 211b", "floor": 2}, {"id": "Room-211a", "name": "Room 211a", "floor": 2}, {"id": "Room-210", "name": "Room 210", "floor": 2}, {"id": "Room-209", "name": "Room 209", "floor": 2}, {"id": "Corridor Cafeteria Side", "name": "Corridor Cafeteria Side", "floor": 2}, {"id": "Corridor Entrance Side", "name": "Corridor Entrance Side", "floor": 2}, {"id": "2nd Floor Corridor Start", "name": "2nd Floor Corridor Start", "floor": 2}, {"id": "2nd Floor Corridor Middle", "name": "2nd Floor Corridor Middle", "floor": 2}, {"id": "2nd Floor Corridor End", "name": "2nd Floor Corridor End", "floor": 2}, {"id": "Room-215", "name": "Room 215", "floor": 2}, {"id": "Room-216", "name": "Room 216", "floor": 2}, {"id": "Room-213a", "name": "Room 213a", "floor": 2}, {"id": "Room-217", "name": "Room 217", "floor": 2}, {"id": "Room-233a", "name": "Room 233a", "floor": 2}, {"id": "Room-233b", "name": "Room 233b", "floor": 2}, {"id": "Room-233c", "name": "Room 233c", "floor": 2}, {"id": "Room-234b", "name": "Room 234b", "floor": 2}, {"id": "Room-234a", "name": "Room 234a", "floor": 2}, {"id": "Room-235", "name": "Room 235", "floor": 2}, {"id": "Room-236b", "name": "Room 236b", "floor": 2}, {"id": "Room-236a", "name": "Room 236a", "floor": 2}, {"id": "Room-237d", "name": "Room 237d", "floor": 2}, {"id": "Room-237c", "name": "Room 237c", "floor": 2}, {"id": "Room-238b", "name": "Room 238b", "floor": 2}, {"id": "Room-238d", "name": "Room 238d", "floor": 2}, {"id": "Room-239", "name": "Room 239", "floor": 2}, {"id": "Room-223", "name": "Room 223", "floor": 2}, {"id": "Room-224", "name": "Room 224", "floor": 2}, {"id": "Room-225", "name": "Room 225", "floor": 2}, {"id": "Room-226", "name": "Room 226", "floor": 2}, {"id": "Room-227", "name": "Room 227", "floor": 2}, {"id": "Room-228", "name": "Room 228", "floor": 2}, {"id": "Room-229", "name": "Room 229", "floor": 2}, {"id": "Room-232c", "name": "Room 232c", "floor": 2}, {"id": "Room-232d", "name": "Room 232d", "floor": 2}, {"id": "Room-232a", "name": "Room 232a", "floor": 2},
+      {"id": "Room-301d", "name": "Room 301d", "floor": 3}, {"id": "Room-301c", "name": "Room 301c", "floor": 3}, {"id": "Room-302b", "name": "Room 302b", "floor": 3}, {"id": "Room-302c", "name": "Room 302c", "floor": 3}, {"id": "Room-303a", "name": "Room 303a", "floor": 3}, {"id": "Room-303b", "name": "Room 303b", "floor": 3}, {"id": "Room-304b", "name": "Room 304b", "floor": 3}, {"id": "Room-304a", "name": "Room 304a", "floor": 3}, {"id": "Room-304c", "name": "Room 304c", "floor": 3}, {"id": "Room-304d", "name": "Room 304d", "floor": 3}, {"id": "Room-311", "name": "Room 311", "floor": 3}, {"id": "Room-309", "name": "Room 309", "floor": 3}, {"id": "Room-310", "name": "Room 310", "floor": 3}, {"id": "Room-312", "name": "Room 312", "floor": 3}, {"id": "Room-313", "name": "Room 313", "floor": 3}, {"id": "Room-314", "name": "Room 314", "floor": 3}, {"id": "Room-315", "name": "Room 315", "floor": 3}, {"id": "Room-316", "name": "Room 316", "floor": 3}, {"id": "Room-317", "name": "Room 317", "floor": 3}, {"id": "Room-318", "name": "Room 318", "floor": 3}, {"id": "Room-323", "name": "Room 323", "floor": 3}, {"id": "Room-324b", "name": "Room 324b", "floor": 3}, {"id": "Room-325a", "name": "Room 325a", "floor": 3}, {"id": "Room-325b", "name": "Room 325b", "floor": 3}, {"id": "Room-326", "name": "Room 326", "floor": 3}, {"id": "Room-331", "name": "Room 331", "floor": 3}, {"id": "Room-332", "name": "Room 332", "floor": 3}, {"id": "Room-333", "name": "Room 333", "floor": 3}, {"id": "Room-334", "name": "Room 334", "floor": 3}, {"id": "Room-335", "name": "Room 335", "floor": 3}, {"id": "Room-336", "name": "Room 336", "floor": 3}, {"id": "Room-337", "name": "Room 337", "floor": 3}, {"id": "Room-338", "name": "Room 338", "floor": 3}, {"id": "Room-341a", "name": "Room 341a", "floor": 3}, {"id": "Room-341b", "name": "Room 341b", "floor": 3}, {"id": "Room-341c", "name": "Room 341c", "floor": 3}, {"id": "Room-342", "name": "Room 342", "floor": 3}, {"id": "Room-343a", "name": "Room 343a", "floor": 3}, {"id": "Room-343b", "name": "Room 343b", "floor": 3}, {"id": "Room-344", "name": "Room 344", "floor": 3}, {"id": "Room-345a", "name": "Room 345a", "floor": 3}, {"id": "Room-348", "name": "Room 348", "floor": 3},
+      {"id": "Room-401", "name": "Room 401", "floor": 4}, {"id": "Room-402", "name": "Room 402", "floor": 4}, {"id": "Room-403", "name": "Room 403", "floor": 4}, {"id": "Room-404", "name": "Room 404", "floor": 4}, {"id": "Room-405", "name": "Room 405", "floor": 4}, {"id": "Room-406", "name": "Room 406", "floor": 4}, {"id": "Room-413", "name": "Room 413", "floor": 4}, {"id": "Room-414a", "name": "Room 414a", "floor": 4}, {"id": "Room-414b", "name": "Room 414b", "floor": 4}, {"id": "Room-414c", "name": "Room 414c", "floor": 4}, {"id": "Room-424", "name": "Room 424", "floor": 4}, {"id": "Room-412a", "name": "Room 412a", "floor": 4}, {"id": "Room-408a", "name": "Room 408a", "floor": 4}, {"id": "Room-415", "name": "Room 415", "floor": 4}, {"id": "Room-423", "name": "Room 423", "floor": 4},
+      {"id": "Room-501a", "name": "Room 501a", "floor": 5}, {"id": "Room-501b", "name": "Room 501b", "floor": 5}
+    ]
+  }
+]

@@ -12,7 +12,7 @@ Setup development environment
 1. Install [node.js](http://nodejs.org/)
 2. Install Yeoman toolset:
 
-        npm install --global yo bower grunt-cli
+        npm install --global bower gulp
 
 3. Clone repository and navigate into the repository folder.
 4. Install required project dependencies:
@@ -22,7 +22,7 @@ Setup development environment
 
 5. To launch app on http://localhost:9000:
 
-        grunt serve
+        gulp serve
 
 
 Test
@@ -30,11 +30,11 @@ Test
 
 To execute tests run:
 
-    grunt test
+    gulp test
 
 
 Build
 -----------------------------
 To build the app in the `dist/` folder run:
 
-    grunt build
+    gulp build

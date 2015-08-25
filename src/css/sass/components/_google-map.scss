@@ -1,0 +1,17 @@
+#google-map {
+  height: 100%;
+}
+
+.info-window {
+  ul {
+    margin: 0;
+    padding: 0;
+
+    li {
+      list-style: none;
+      display: inline;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+  }
+}

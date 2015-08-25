@@ -2,14 +2,14 @@
   "name": "otaniemi3d",
   "version": "0.2.0",
   "dependencies": {
+    "jquery": "~2.1.0",
+    "modernizr": "~2.8.3",
     "angular": "~1.4.x",
     "angular-touch": "~1.4.x",
-    "jquery": "~2.1.0",
     "angular-ui-grid": "~3.0.0",
     "d3": "~3.5.5",
     "angular-bootstrap": "~0.13.x",
     "angular-loading-bar": "~0.6.0",
-    "modernizr": "~2.8.3",
     "jstree": "~3.1.1",
     "highcharts": "~4.1.6",
     "highcharts-ng": "~0.0.8",
@@ -21,11 +21,18 @@
   "devDependencies": {
     "angular-mocks": "~1.4.0",
     "jasmine-jquery": "~2.0.5",
-    "jasmine": "~2.1.0"
+    "jasmine": "~2.1.0",
+    "json3": "~3.3.2",
+    "aight": "~2.1.1"
   },
-  "appPath": "app",
+  "appPath": "src",
   "resolutions": {
     "angular": "~1.4.x",
     "jquery": "~2.1.0"
+  },
+  "overrides": {
+      "modernizr": {
+          "main": "modernizr.js"
+      }
   }
 }

@@ -2,9 +2,11 @@ node_modules
 dist
 .tmp
 bower_components
-.idea/*
+.idea
 *.log
 Thumbs.db
 *~
 test/coverage
-docs/
+docs
+src/libs/bower
+src/css/main.css.map
