@@ -299,7 +299,7 @@ angular.module('otaniemi3dApp')
           });
       }
 
-      scope.$on('reset-zoom', function () {
+      scope.$on('reset-position', function () {
         zoomAndPan(1, [0,0]);
       });
 
