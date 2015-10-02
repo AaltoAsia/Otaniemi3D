@@ -14,6 +14,7 @@ angular.module('otaniemi3dApp')
     $scope.selected = undefined;
     //Use this boolean to check for webgl support
     $scope.webglSupport = Modernizr.webgl;
+    $scope.building = $state.params.building;
 
     function waitForX3Dom() {
       var deferred = $q.defer();
