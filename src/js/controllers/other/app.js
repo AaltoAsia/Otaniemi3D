@@ -35,8 +35,10 @@ angular.module('otaniemi3dApp')
       }
     ];
 
-    //this function should be redefined in each controller that needs it
-    self.resetPosition = function noop () {};
+    self.resetPosition = function () {
+      $scope.$broadcast('reset-position');
+      self.room = null;
+    };
 
     $scope.$on('$stateChangeSuccess', function () {
       if ($state.current.name !== 'heat-map') {
@@ -72,12 +74,17 @@ angular.module('otaniemi3dApp')
           roomId = room.id;
         }
         if (floor) {
-          $state.go('heat-map',
-            {
-              building: self.building.id,
-              floor: floor,
-              room: roomId
-            });
+          if ($state.is('x3dom')) {
+            $scope.$broadcast('3d-room-change', roomId);
+          } else {
+            $state.go('heat-map',
+              {
+                building: self.building.id,
+                floor: floor,
+                room: roomId
+              }
+            );
+          }
         }
       }
     });

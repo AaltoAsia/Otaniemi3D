@@ -174,10 +174,6 @@ angular.module('otaniemi3dApp')
       $state.go('heat-map', {floor: $scope.floor - 1});
     };
 
-    $scope.App.resetPosition = function () {
-      $scope.$broadcast('reset-zoom');
-    };
-
     $scope.App.showOptions = function () {
       $scope.App.sensorTypes = $scope.sensorTypes;
       $scope.App.sensorType = $scope.sensorType;

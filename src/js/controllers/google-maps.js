@@ -166,11 +166,6 @@ angular.module('otaniemi3dApp')
       map.setCenter(center);
     });
 
-    $scope.App.resetPosition = function () {
-      map.setCenter(startPos);
-      map.setZoom(startZoom);
-    };
-
     //When current building changes update URL
     $scope.$watch('App.building', function (building, oldBuilding) {
       //if it's already transitioning then there's no reason to transition again
@@ -187,6 +182,11 @@ angular.module('otaniemi3dApp')
         }
       }
     });
+
+    $scope.$on('reset-position', function () {
+      map.setCenter(startPos);
+      map.setZoom(startZoom);
+    })
 
     $scope.$on('destroy', function () {
       $scope.$apply(function () {

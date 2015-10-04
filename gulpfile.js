@@ -88,8 +88,12 @@ gulp.task('copy:custom', ['clean'], function () {
     app.src + '/libs/krpano/skin/*')
     .pipe(gulp.dest(app.dist + '/libs/krpano/skin'));
 
+  var x3dom = gulp.src(
+    app.src + '/libs/x3dom/x3dom.{js,css}')
+    .pipe(gulp.dest(app.dist + '/libs/x3dom/'));
+
   return eventStream.concat(
-    jstree, bootstrap, uiGrid, krpanoPlugins, krpanoSkins
+    jstree, bootstrap, uiGrid, krpanoPlugins, krpanoSkins, x3dom
   );
 });
 

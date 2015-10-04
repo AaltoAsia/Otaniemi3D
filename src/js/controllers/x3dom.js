@@ -14,6 +14,7 @@ angular.module('otaniemi3dApp')
     $scope.selected = undefined;
     //Use this boolean to check for webgl support
     $scope.webglSupport = Modernizr.webgl;
+    $scope.building = $state.params.building;
 
     function waitForX3Dom() {
       var deferred = $q.defer();
@@ -35,46 +36,28 @@ angular.module('otaniemi3dApp')
 
     //x3d change viewpoint (camera location)
     $scope.changeView = function(viewpoint){
-      var elem = $(viewpoint);
-
+      var elem = $('#3dModel__' + viewpoint);
       if (elem.length) {
         elem.attr('set_bind', 'true');
-
-        var x3dElem = $('x3dElement');
-        x3dElem[0].runtime.resetView();
-
-        $state.go('x3dom', {roomId: viewpoint},
-          {location: 'replace', notify: false});
+        return true;
+      } else {
+        return false;
       }
     };
 
     waitForX3Dom().then(function () {
       if ($state.params.roomId) {
-        $scope.changeView($state.params.roomId);
+        for (var i = 0; i < $scope.App.rooms.length; i++) {
+          if ($state.params.roomId === $scope.App.rooms[i].id) {
+            var viewChanged = $scope.changeView($state.params.roomId);
+            if (viewChanged) {
+              $scope.App.room = $scope.App.rooms[i];
+            }
+            break;
+          }
+        }
       }
     });
-
-    $scope.text = undefined;
-    //items in search scope
-    $scope.rooms = ['Entrance','Cafeteria','Corridor Entrance Side',
-      'Corridor Cafeteria Side','2nd Floor Sundeck','2nd Floor Corridor Start',
-      '2nd Floor Corridor Middle','2nd Floor Corridor End','Room-223',
-      'Room-224','Room-225','Room-226','Room-227','Room-228','Room-229',
-      'Room-232a','Room-232c','Room-232d','Room-235','Room-236b','Room-236b2',
-      'Room-236a','Room-237d','Room-237c','Room-238b','Room-238d','Room-239',
-      'Room-333','Room-334','Room-335','Room-336','Room-337','Room-338',
-      'Room-341a','Room-341b','Room-341c','Room-348'];
-
-    //search item selected, change view
-    $scope.onSelect = function($item) {
-      $scope.changeView($item);
-    };
-
-    $scope.showName = function (roomId) {
-      if (roomId) {
-        return roomId.split('-').join(' ');
-      }
-    };
 
     $scope.panoramaViewer = function(roomId) {
       $state.go('panorama', {roomId: roomId});
@@ -90,15 +73,8 @@ angular.module('otaniemi3dApp')
             return getSensorData(roomId);
           }
         }
-
       });
     };
-
-    $scope.$watch('App.room', function (room) {
-      if (room) {
-        $scope.changeView(room);
-      }
-    });
 
     function getSensorData(roomId) {
       var request = {
@@ -118,6 +94,19 @@ angular.module('otaniemi3dApp')
         return data;
       });
     }
+
+    $scope.$on('reset-position', function () {
+      $scope.$broadcast('3d-room-change', null);
+      $scope.changeView('vp0');
+    });
+
+    $scope.$on('3d-room-change', function (_, roomId) {
+      $state.go('x3dom',
+        {building: $scope.building, roomId: roomId},
+        {location: 'replace', notify: false}
+      );
+      $scope.changeView(roomId);
+    });
 
     $scope.$on('$destroy', function () {
       if ($scope.modalInstance) {
