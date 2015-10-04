@@ -16,6 +16,14 @@
   padding-left: 10px;
   padding-right: 10px;
   border: 0px;
+
+  & .navbar-toggle {
+    border-color: #dddddd;
+
+    span {
+      background-color: #888888;
+    }
+  }
 }
 
 .footer {

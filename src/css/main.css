@@ -156,6 +156,10 @@ ul.nav {
   padding-left: 10px;
   padding-right: 10px;
   border: 0px; }
+  .navbar .navbar-toggle {
+    border-color: #dddddd; }
+    .navbar .navbar-toggle span {
+      background-color: #888888; }
 
 .footer {
   background-color: #f5f5f5;
