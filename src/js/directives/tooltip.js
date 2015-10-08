@@ -44,7 +44,7 @@ angular.module('otaniemi3dApp')
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
         this.roomsWithPanorama = [
-          'Room-238d','Room-237c','Room-235','Room-232a',
+          'Room-147a', 'Room-238d','Room-237c','Room-235','Room-232a',
           '2nd Floor Corridor Start',
           '2nd Floor Corridor Middle',
           '2nd Floor Corridor End',
