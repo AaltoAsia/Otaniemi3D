@@ -190,22 +190,44 @@ angular.module('otaniemi3dApp')
         return 0;
       });
 
+
       for (var i = 0; i < sensors.length; i++) {
         var sensorValue = sensors[i].values.length ?
           sensors[i].values[0].value : '';
         var sensorSuffix = sensors[i].suffix;
         sensorSuffix = sensorSuffix ? ' ' + sensorSuffix : '';
 
-        sensorRows += [
-          '[tr]',
-            '[th]',
-              sensors[i].name,
-            '[/th]',
-            '[td]',
-              sensorValue, sensorSuffix,
-            '[/td]',
-          '[/tr]'
-        ].join('');
+        if(sensors[i].isPlug) {
+          sensorRows += [
+            '[tr]',
+              '[th]',
+                sensors[i].name,
+              '[/th]',
+              '[td]',
+                sensorValue,
+                  ' <button ng-click="sensors[i].togglePlug(sensors[i].roomId, sensors[i].name, sensors[i].values[0].value)"',
+                  'ng-show="sensors[i].isPlug"',
+                  'class="btn black-btn panorama-btn">',
+                  'Toggle',
+                '</button>',
+
+              '[/td]',
+            '[/tr]'
+          ].join('');
+
+        } else {
+          sensorRows += [
+            '[tr]',
+              '[th]',
+                sensors[i].name,
+              '[/th]',
+              '[td]',
+                sensorValue, sensorSuffix,
+              '[/td]',
+            '[/tr]'
+          ].join('');
+        }
+
       }
 
       var sensorTable = [

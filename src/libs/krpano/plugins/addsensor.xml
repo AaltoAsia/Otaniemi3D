@@ -2,7 +2,13 @@
 
   <!-- open dialog when clicking on panorama -->
 	<events name="addSensorDialog"
-          onclick="js(krpano.addSensorDialog());" />
+          onclick="
+            if(
+              get(plugin[persistent_tooltip].visible),
+              set(plugin[persistent_tooltip].visible, false),
+              js(krpano.addSensorDialog());
+            );" />
+
 
   <!-- add sensor to clicked location -->
   <action name="addsensor">
@@ -20,13 +26,48 @@
     trace('scale: ', hotspot[%1].scale);
     set(hotspot[%1].alpha, 0.4);
     set(hotspot[%1].zoom, true);
-    set(hotspot[%1].onhover, set(alpha,1.0);showtext(get(hotspot[%1].sensorTable)););
-    set(hotspot[%1].onclick, set(alpha,1.0);showtext(get(hotspot[%1].sensorTable), mobile););
-    set(hotspot[%1].onout, set(alpha,0.4));
+
+
+    set(hotspot[%1].onhover,
+      set(alpha,1.0);
+        if(get(plugin[persistent_tooltip].visible),
+          null,
+          showtext(get(hotspot[%1].sensorTable));
+        );
+    );
+
+
+    set(hotspot[%1].onclick,
+      set(alpha,1.0);
+      set(plugin[persistent_tooltip].x, get(mouse.x));
+      set(plugin[persistent_tooltip].y, get(mouse.y));
+      set(plugin[persistent_tooltip].html, get(hotspot[%1].sensorTable));
+      tween(plugin[persistent_tooltip].alpha, 1.0);
+      tween(plugin[persistent_tooltip].textblur, 0.0);
+      tween(plugin[persistent_tooltip].blur, 0.0);
+      set(plugin[persistent_tooltip].visible, true);
+    );
+
+    set(hotspot[%1].onout,
+      set(alpha,0.4);
+    );
+
   </action>
+
+
+
+  <plugin name="persistent_tooltip" url="%HTMLPATH%/libs/krpano/plugins/textfield.swf"
+    css="border: 1px solid black;border-radius: 5px;background: white;"
+    visible="false"
+    enabled="true"
+    autosize="center"/>
+
+
+
 
 	<!-- update hotspot sensor table -->
   <action name="updatesensors">
+    set(plugin[persistent_tooltip].visible, true);
     trace('old_id: ', %1);
 		trace('new_id: ', %2);
     trace('new_sensors: ', %4);
