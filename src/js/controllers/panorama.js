@@ -205,8 +205,7 @@ angular.module('otaniemi3dApp')
               '[/th]',
               '[td]',
                 sensorValue,
-                  ' <button ng-click="sensors[i].togglePlug(sensors[i].roomId, sensors[i].name, sensors[i].values[0].value)"',
-                  'ng-show="sensors[i].isPlug"',
+                  ' <button onclick="krpano.togglePlug(\''+sensors[i].roomId+'\', \''+sensors[i].name+'\', \''+sensors[i].values[0].value+'\')"',
                   'class="btn black-btn panorama-btn">',
                   'Toggle',
                 '</button>',
@@ -308,6 +307,38 @@ angular.module('otaniemi3dApp')
           self.newSensors = [];
         }
       });
+    };
+
+    $window.krpano.togglePlug = function (roomId, mac, currentValue, $http) {
+
+      var url = 'https://otaniemi3d.cs.hut.fi/omi/node/';
+      var newValue = (parseInt(currentValue)>0 ? "0" : "1");
+
+      var requestXml =
+        '<?xml version="1.0"?>'+
+        '<omi:omiEnvelope xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" version="1.0" ttl="0">'+
+          '<write xmlns="omi.xsd" msgformat="odf">'+
+            '<omi:msg>'+
+              '<Objects xmlns="odf.xsd">'+
+                '<Object>'+
+                  '<id>K1</id>'+
+                  '<Object>'+
+                    '<id>'+roomId+'</id>'+
+                    '<InfoItem name="'+mac+'">'+
+                      '<value>'+newValue+'</value>'+
+                    '</InfoItem>'+
+                  '</Object>'+
+                '</Object>'+
+              '</Objects>'+
+            '</omi:msg>'+
+          '</write>'+
+        '</omi:omiEnvelope>';
+
+        var xhttp=new XMLHttpRequest();
+        xhttp.open("POST", url, true);
+        xhttp.setRequestHeader('Content-Type', 'application/xml');
+        xhttp.send(requestXml);
+
     };
 
     $scope.$on('$destroy', function () {
