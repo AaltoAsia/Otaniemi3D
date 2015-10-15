@@ -42,7 +42,7 @@
           </button>
           <a class="navbar-brand" id="home-view"
              ng-click="App.navbarCollapse = true"
-             ui-sref="google-maps({building: App.building.name})">
+             ui-sref="google-maps({building: App.building.id})">
             <img src="assets/shared/images/LOGO.png">
           </a>
         </div>
@@ -96,6 +96,27 @@
                   template-url="html/partials/options.html">
               </ul>
             </div>
+            <a class="btn btn-default"
+               title="2D view"
+               ng-show="App.showViewSelection"
+               ui-sref-active="active"
+               ui-sref="heat-map({building: App.building.id, floor: App.floor, room: App.room.id})">
+              2D
+            </a>
+            <a class="btn btn-default"
+               title="3D view"
+               ng-show="App.showViewSelection"
+               ui-sref-active="active"
+               ui-sref="x3dom({building: App.building.id, roomId: App.room.id})">
+              3D
+            </a>
+            <a class="btn btn-default"
+               title="Analytics view"
+               ng-show="App.showViewSelection"
+               ui-sref-active="active"
+               ui-sref="analytics({building: App.building.id, roomId: App.room.id})">
+              Data
+            </a>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->

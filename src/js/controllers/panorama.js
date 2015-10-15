@@ -9,11 +9,11 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function($scope, $stateParams, $window, $modal, omiMessage, $q, $interval, buildingData) {
+  function($scope, $state, $window, $modal, omiMessage, $q, $interval, buildingData) {
 
     var self = this;
 
-    self.roomId = $stateParams.roomId;
+    self.roomId = $state.params.roomId;
     self.sensors = [];
     self.newSensors = [];
     self.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
@@ -22,7 +22,6 @@ angular.module('otaniemi3dApp')
       'https://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + self.roomId;
     var xmlPath = 'assets/buildings/' + buildingData.currentBuilding.id +
       '/panorama/' + self.roomId + '.xml';
-    console.log(buildingData.currentBuilding);
 
     self.room = {
       xmlPath: xmlPath,
@@ -287,6 +286,17 @@ angular.module('otaniemi3dApp')
         }
       });
     };
+
+    $scope.$on('room-selection-change', function (event, room) {
+      if (room) {
+        $state.go('panorama',
+          {
+            building: $scope.App.building.id,
+            roomId: room.id
+          }
+        );
+      }
+    });
 
     $scope.$on('$destroy', function () {
       if (self.modalInstance) {

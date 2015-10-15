@@ -17,6 +17,7 @@ angular.module('otaniemi3dApp')
     self.allBuildings = buildingData.buildings;
     self.room = null;
     self.rooms = [];
+    self.floor = 1;
     self.fullscreen = false;
 
     //states are defined in app/app.js
@@ -35,6 +36,8 @@ angular.module('otaniemi3dApp')
       }
     ];
 
+    self.showViewSelection = false;
+
     self.resetPosition = function () {
       $scope.$broadcast('reset-position');
       self.room = null;
@@ -43,6 +46,11 @@ angular.module('otaniemi3dApp')
     $scope.$on('$stateChangeSuccess', function () {
       if ($state.current.name !== 'heat-map') {
         self.fullscreen = false;
+      }
+      if ($state.current.name !== 'google-maps') {
+        self.showViewSelection = true;
+      } else {
+        self.showViewSelection = false;
       }
     });
 
@@ -63,29 +71,12 @@ angular.module('otaniemi3dApp')
       return self.room;
     }, function (room, oldRoom) {
       if (room !== oldRoom) {
-        var floor,
-            roomId = '';
-
-        if ($state.is('heat-map')) {
-          floor = $state.params.floor;
-        }
         if (room) {
-          floor = room.floor;
-          roomId = room.id;
+          self.floor = room.floor;
+        } else {
+          self.floor = 1;
         }
-        if (floor) {
-          if ($state.is('x3dom')) {
-            $scope.$broadcast('3d-room-change', roomId);
-          } else {
-            $state.go('heat-map',
-              {
-                building: self.building.id,
-                floor: floor,
-                room: roomId
-              }
-            );
-          }
-        }
+        $scope.$broadcast('room-selection-change', room);
       }
     });
 

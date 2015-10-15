@@ -186,7 +186,19 @@ angular.module('otaniemi3dApp')
     $scope.$on('reset-position', function () {
       map.setCenter(startPos);
       map.setZoom(startZoom);
-    })
+    });
+
+    $scope.$on('room-selection-change', function (event, room) {
+      if (room) {
+        $state.go('heat-map',
+          {
+            building: $scope.App.building.id,
+            floor: room.floor,
+            room: room.id
+          }
+        );
+      }
+    });
 
     $scope.$on('destroy', function () {
       $scope.$apply(function () {

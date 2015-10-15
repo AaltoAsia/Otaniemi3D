@@ -355,7 +355,7 @@ viewbox on Chrome.
 
 .panobtn {
   position: fixed;
-  z-index: 2;
+  z-index: 99999999;
   width: 10em;
   height: 3em;
   border: none;

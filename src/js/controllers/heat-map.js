@@ -236,6 +236,26 @@ angular.module('otaniemi3dApp')
       });
     };
 
+    $scope.$on('room-selection-change', function (event, room) {
+      if (room) {
+        $state.go('heat-map',
+          {
+            building: $scope.App.building.id,
+            floor: room.floor,
+            room: room.id
+          }
+        );
+      } else {
+        $state.go('heat-map',
+          {
+            building: $scope.App.building.id,
+            floor: $scope.floor,
+            room: null
+          }, {location: 'replace', notify: false}
+        );
+      }
+    });
+
     $scope.$on('floorplan-loaded', function () {
       self.isFloorplanLoaded = true;
     });

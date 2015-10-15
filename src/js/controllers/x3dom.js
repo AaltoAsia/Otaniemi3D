@@ -96,16 +96,21 @@ angular.module('otaniemi3dApp')
     }
 
     $scope.$on('reset-position', function () {
-      $scope.$broadcast('3d-room-change', null);
+      $state.go('x3dom',
+        {building: $scope.building, roomId: null},
+        {location: 'replace', notify: false}
+      );
       $scope.changeView('vp0');
     });
 
-    $scope.$on('3d-room-change', function (_, roomId) {
-      $state.go('x3dom',
-        {building: $scope.building, roomId: roomId},
-        {location: 'replace', notify: false}
-      );
-      $scope.changeView(roomId);
+    $scope.$on('room-selection-change', function (event, room) {
+      if (room) {
+        $state.go('x3dom',
+          {building: $scope.building, roomId: room.id},
+          {location: 'replace', notify: false}
+        );
+        $scope.changeView(room.id);
+      }
     });
 
     $scope.$on('$destroy', function () {
