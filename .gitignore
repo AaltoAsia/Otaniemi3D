@@ -9,4 +9,5 @@ Thumbs.db
 test/coverage
 docs
 src/libs/bower
+src/css/main.css
 src/css/main.css.map
