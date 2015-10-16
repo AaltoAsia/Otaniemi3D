@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function($scope, $state, $window, $modal, omiMessage, $q, $interval, $compile, buildingData) {
+  function($scope, $state, $window, $modal, omiMessage, $q, $interval, buildingData) {
 
     var self = this;
 
@@ -199,13 +199,13 @@ angular.module('otaniemi3dApp')
 
         if(sensors[i].isPlug) {
           toggleButton =
-            '<button ng-click="krpano.togglePlug(' +
-                sensors[i].roomId + ', ' +
-                sensors[i].name + ', ' +
-                sensors[i].values[0].value + ')" ' +
-                'class="btn black-btn panorama-btn">' +
+            '[button onclick="krpano.togglePlug(\'' +
+                sensors[i].roomId + '\', \'' +
+                sensors[i].name + '\', \'' +
+                sensors[i].values[0].value + '\')" ' +
+                'class="btn black-btn panorama-btn"]' +
               'Toggle' +
-            '</button>';
+            '[/button]';
         }
 
         sensorRows += [
@@ -303,17 +303,6 @@ angular.module('otaniemi3dApp')
       });
     };
 
-    $scope.$on('room-selection-change', function (event, room) {
-      if (room) {
-        $state.go('panorama',
-          {
-            building: $scope.App.building.id,
-            roomId: room.id
-          }
-        );
-      }
-    });
-
     $window.krpano.togglePlug = function (roomId, mac, currentValue) {
       var newValue = currentValue !== '0' ? '0' : '1';
 
@@ -337,8 +326,19 @@ angular.module('otaniemi3dApp')
           '</write>'+
         '</omi:omiEnvelope>';
 
-      omiMessage.send(writeRequest);
+      omiMessage.send('write', writeRequest);
     };
+
+    $scope.$on('room-selection-change', function (event, room) {
+      if (room) {
+        $state.go('panorama',
+          {
+            building: $scope.App.building.id,
+            roomId: room.id
+          }
+        );
+      }
+    });
 
     $scope.$on('$destroy', function () {
       if (self.modalInstance) {
