@@ -14,12 +14,6 @@ angular.module('otaniemi3dApp')
     var pendingRequests = {},
         self = this;
 
-    /*
-     * @param {string} id - Id of the object whose data should be fetched.
-     * @param {Object} params - Parameters that are used as OMI request attributes
-     * @param {string} broadcast - Name of the event broadcasted by angular when
-     *                             response has arrived.
-     */
     this.send = function (method, request, params, broadcast, loadingBar) {
       var deferred = $q.defer(),
           url = 'https://otaniemi3d.cs.hut.fi/omi/node/';
@@ -27,7 +21,13 @@ angular.module('otaniemi3dApp')
       params = params || {};
       broadcast = broadcast || '';
       loadingBar = loadingBar || true;
-      var requestXml = generateXml(request, method, params);
+
+      var requestXml;
+      if (typeof request === 'string') {
+        requestXml = request;
+      } else if (typeof request === 'object') {
+        requestXml = generateXml(request, method, params);
+      }
 
       //If a pending request with the same url exists don't send a new request
       if (!pendingRequests[requestXml]) {
@@ -242,6 +242,11 @@ angular.module('otaniemi3dApp')
                 suffix = '';
             }
 
+      	    var isPlug = false;
+      	    if((name.toLowerCase().match(/:/g) || []).length==5) {
+      		    isPlug=true;
+      	    }
+
             sensorList.push({
               id: name + '-' + id,
               type: name,
@@ -250,7 +255,55 @@ angular.module('otaniemi3dApp')
               name: sensorName,
               values: valueList,
               suffix: suffix,
-              metaData: metaData
+              metaData: metaData,
+      	      isPlug: isPlug,
+      	      togglePlug(roomId, mac, currentValue) {
+
+                var url = 'https://otaniemi3d.cs.hut.fi/omi/node/';
+                var newValue = (parseInt(currentValue)>0 ? "0" : "1");
+
+                var requestXml =
+                  '<?xml version="1.0"?>'+
+                  '<omi:omiEnvelope xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" version="1.0" ttl="0">'+
+                    '<write xmlns="omi.xsd" msgformat="odf">'+
+                      '<omi:msg>'+
+                        '<Objects xmlns="odf.xsd">'+
+                          '<Object>'+
+                            '<id>K1</id>'+
+                            '<Object>'+
+                              '<id>'+roomId+'</id>'+
+                              '<InfoItem name="'+mac+'">'+
+                                '<value>'+newValue+'</value>'+
+                              '</InfoItem>'+
+                            '</Object>'+
+                          '</Object>'+
+                        '</Objects>'+
+                      '</omi:msg>'+
+                    '</write>'+
+                  '</omi:omiEnvelope>';
+
+
+                $http.post(url, requestXml, {
+                  headers: {'Content-Type': 'application/xml'}
+                })
+                .then(function (response) {
+                  //alert(response);
+                }, function (reason) {
+                  var msg;
+                  if (reason.status === 404) {
+                    msg = 'Couldn\'t find such sensors or values.';
+                    console.log(msg);
+                    deferred.reject(msg);
+                  } else {
+                    msg = 'Failed to fetch sensor data. Please try again';
+                    console.log(msg);
+                    deferred.reject(msg);
+                  }
+                })
+                .finally(function () {
+                  pendingRequests[requestXml] = false;
+                });
+      	      }
             });
           }
         }

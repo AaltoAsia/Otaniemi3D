@@ -18,7 +18,13 @@ angular.module('otaniemi3dApp')
           '<tr ng-repeat="sensor in tooltip.sensors | orderBy: \'name\'"',
               'ng-style="{\'background-color\': sensor.color}">',
             '<th>{{sensor.name}}</th>',
-            '<td>{{sensor.values[0].value}} {{sensor.suffix}}</td>',
+            '<td>{{sensor.values[0].value}} {{sensor.suffix}}',
+		    '<button ng-click="sensor.togglePlug(tooltip.roomId, sensor.name, sensor.values[0].value)"',
+	              'ng-show="sensor.isPlug"',
+	              'class="btn black-btn panorama-btn">',
+		      'Toggle',
+		    '</button>',
+	    '</td>',
           '</tr>',
           '<tr>',
             '<td colspan="2">',
@@ -44,7 +50,7 @@ angular.module('otaniemi3dApp')
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
         this.roomsWithPanorama = [
-          'Room-238d','Room-237c','Room-235','Room-232a',
+          'Room-147a', 'Room-238d','Room-237c','Room-235','Room-232a',
           '2nd Floor Corridor Start',
           '2nd Floor Corridor Middle',
           '2nd Floor Corridor End',

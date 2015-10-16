@@ -81,6 +81,8 @@ ul.nav {
   .tooltip-table th, .tooltip-table td {
     border: 1px solid #E6E6E6;
     padding: 2px; }
+    .tooltip-table th span, .tooltip-table td span {
+      margin: 10px; }
 
 .tooltip-caption {
   padding: 3px;

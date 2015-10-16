@@ -9,7 +9,7 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function($scope, $state, $window, $modal, omiMessage, $q, $interval, buildingData) {
+  function($scope, $state, $window, $modal, omiMessage, $q, $interval, $compile, buildingData) {
 
     var self = this;
 
@@ -162,7 +162,7 @@ angular.module('otaniemi3dApp')
           '@name': sensors[i].name
         });
         angular.forEach(sensors[i].metaData, function(value, key) {
-          writeRequest.Objects.Object.Object
+          writeRequest.Object.Object
             .InfoItem[i].MetaData.InfoItem.push({
               '@name': key,
               'value': {
@@ -189,11 +189,24 @@ angular.module('otaniemi3dApp')
         return 0;
       });
 
+
       for (var i = 0; i < sensors.length; i++) {
         var sensorValue = sensors[i].values.length ?
           sensors[i].values[0].value : '';
         var sensorSuffix = sensors[i].suffix;
         sensorSuffix = sensorSuffix ? ' ' + sensorSuffix : '';
+        var toggleButton = '';
+
+        if(sensors[i].isPlug) {
+          toggleButton =
+            '<button ng-click="krpano.togglePlug(' +
+                sensors[i].roomId + ', ' +
+                sensors[i].name + ', ' +
+                sensors[i].values[0].value + ')" ' +
+                'class="btn black-btn panorama-btn">' +
+              'Toggle' +
+            '</button>';
+        }
 
         sensorRows += [
           '[tr]',
@@ -201,7 +214,10 @@ angular.module('otaniemi3dApp')
               sensors[i].name,
             '[/th]',
             '[td]',
-              sensorValue, sensorSuffix,
+              '[span]',
+                sensorValue, sensorSuffix,
+              '[/span]',
+              toggleButton,
             '[/td]',
           '[/tr]'
         ].join('');
@@ -297,6 +313,32 @@ angular.module('otaniemi3dApp')
         );
       }
     });
+
+    $window.krpano.togglePlug = function (roomId, mac, currentValue) {
+      var newValue = currentValue !== '0' ? '0' : '1';
+
+      var writeRequest =
+        '<?xml version="1.0"?>'+
+        '<omi:omiEnvelope xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" version="1.0" ttl="0">'+
+          '<write xmlns="omi.xsd" msgformat="odf">'+
+            '<omi:msg>'+
+              '<Objects xmlns="odf.xsd">'+
+                '<Object>'+
+                  '<id>K1</id>'+
+                  '<Object>'+
+                    '<id>'+roomId+'</id>'+
+                    '<InfoItem name="'+mac+'">'+
+                      '<value>'+newValue+'</value>'+
+                    '</InfoItem>'+
+                  '</Object>'+
+                '</Object>'+
+              '</Objects>'+
+            '</omi:msg>'+
+          '</write>'+
+        '</omi:omiEnvelope>';
+
+      omiMessage.send(writeRequest);
+    };
 
     $scope.$on('$destroy', function () {
       if (self.modalInstance) {

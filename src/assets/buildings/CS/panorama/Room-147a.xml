@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<krpano version="1.17.4">
+
+    <include url="%HTMLPATH%/libs/krpano/skin/defaultskin.xml" />
+    <include url="%HTMLPATH%/libs/krpano/plugins/showtext.xml" />
+    <include url="%HTMLPATH%/libs/krpano/plugins/addsensor.xml" />
+
+    <view hlookat="0" vlookat="0" maxpixelzoom="1.0" fovmax="150" limitview="auto"/>
+
+
+    <preview url="1th_Floor_-_Room_147a.tiles/preview.jpg"/>
+
+    <image>
+        <cube url="1th_Floor_-_Room_147a.tiles/pano_%s.jpg"/>
+        <mobile>
+            <sphere url="1th_Floor_-_Room_147a.tiles/mobile_%s.jpg"/>
+        </mobile>
+    </image>
+
+</krpano>
