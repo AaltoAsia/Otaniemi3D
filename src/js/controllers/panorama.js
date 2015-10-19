@@ -131,7 +131,7 @@ angular.module('otaniemi3dApp')
         var pos = key.split(',');
 
         krpano.call('addsensor(' + [
-          sensorGroup[0].id, pos[0], pos[1],
+          'id-' + sensorGroup[0].id, pos[0], pos[1],
           sensorTooltip(sensorGroup),
         ].join(',') + ',"' + JSON.stringify(sensorGroup) +'"' + ')');
       });
@@ -154,6 +154,17 @@ angular.module('otaniemi3dApp')
         }
       };
 
+      function addMetaData(value, key) {
+        writeRequest.Object.Object
+          .InfoItem[i].MetaData.InfoItem.push({
+            '@name': key,
+            'value': {
+              'keyValue': value,
+              '@type': 'xs:double'
+            }
+          });
+      }
+
       for (var i = 0; i < sensors.length; i++) {
         writeRequest.Object.Object.InfoItem.push({
           'MetaData': {
@@ -161,16 +172,7 @@ angular.module('otaniemi3dApp')
           },
           '@name': sensors[i].name
         });
-        angular.forEach(sensors[i].metaData, function(value, key) {
-          writeRequest.Object.Object
-            .InfoItem[i].MetaData.InfoItem.push({
-              '@name': key,
-              'value': {
-                'keyValue': value,
-                '@type': 'xs:double'
-              }
-            });
-        });
+        angular.forEach(sensors[i].metaData, addMetaData);
       }
 
       return omiMessage.send('write', writeRequest);
@@ -279,10 +281,10 @@ angular.module('otaniemi3dApp')
             for (var k = 0; k < self.sensors.length; k++) {
               var oldSensor = self.sensors[k];
 
-              krpano.call('removehotspot(' + oldSensor.id + ')');
+              krpano.call('removehotspot(id-' + oldSensor.id + ')');
 
               if (newSensor.id === oldSensor.id) {
-                oldSensor.metaData = newSensor.metaData;
+                angular.merge(oldSensor.metaData, newSensor.metaData);
                 exists = true;
                 break;
               }

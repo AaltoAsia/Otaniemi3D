@@ -167,7 +167,7 @@ angular.module('otaniemi3dApp')
           var name = objectSensors[j].getAttribute('name');
           var values = objectSensors[j].children;
           var valueList = [];
-          var metaData = null;
+          var metaData = {};
           var metaDataNode;
 
           for (var k = 0; k < values.length; k++) {
@@ -244,7 +244,7 @@ angular.module('otaniemi3dApp')
                 suffix = '';
             }
 
-            if (metaData && metaData.isWritable) {
+            if (metaData.isWritable) {
               sensorName = name;
             }
 
