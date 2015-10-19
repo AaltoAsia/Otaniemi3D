@@ -197,7 +197,7 @@ angular.module('otaniemi3dApp')
         sensorSuffix = sensorSuffix ? ' ' + sensorSuffix : '';
         var toggleButton = '';
 
-        if(sensors[i].isPlug) {
+        if(sensors[i].metaData.isWritable) {
           toggleButton =
             '[button onclick="krpano.togglePlug(\'' +
                 sensors[i].roomId + '\', \'' +
@@ -304,7 +304,7 @@ angular.module('otaniemi3dApp')
     };
 
     $window.krpano.togglePlug = function (roomId, mac, currentValue) {
-      var newValue = currentValue !== '0' ? '0' : '1';
+      var newValue = 1 - currentValue;
 
       var writeRequest =
         '<?xml version="1.0"?>'+
@@ -315,9 +315,9 @@ angular.module('otaniemi3dApp')
                 '<Object>'+
                   '<id>K1</id>'+
                   '<Object>'+
-                    '<id>'+roomId+'</id>'+
-                    '<InfoItem name="'+mac+'">'+
-                      '<value>'+newValue+'</value>'+
+                    '<id>'+ roomId +'</id>'+
+                    '<InfoItem name="'+ mac +'">'+
+                      '<value>'+ newValue +'</value>'+
                     '</InfoItem>'+
                   '</Object>'+
                 '</Object>'+

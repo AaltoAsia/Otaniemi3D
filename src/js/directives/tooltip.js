@@ -7,7 +7,7 @@
  * # tooltip
  */
 angular.module('otaniemi3dApp')
-  .directive('tooltip', function ($state, valueConverter) {
+  .directive('tooltip', function ($state, valueConverter, omiMessage) {
     return {
       restrict: 'E',
       template: [
@@ -18,13 +18,16 @@ angular.module('otaniemi3dApp')
           '<tr ng-repeat="sensor in tooltip.sensors | orderBy: \'name\'"',
               'ng-style="{\'background-color\': sensor.color}">',
             '<th>{{sensor.name}}</th>',
-            '<td>{{sensor.values[0].value}} {{sensor.suffix}}',
-		    '<button ng-click="sensor.togglePlug(tooltip.roomId, sensor.name, sensor.values[0].value)"',
-	              'ng-show="sensor.isPlug"',
-	              'class="btn black-btn panorama-btn">',
-		      'Toggle',
-		    '</button>',
-	    '</td>',
+            '<td>',
+              '<span>',
+                '{{sensor.values[0].value}} {{sensor.suffix}}',
+              '</span>',
+		          '<button ng-click="tooltip.togglePlug(sensor)"',
+      	              'ng-if="sensor.metaData.isWritable"',
+      	              'class="btn black-btn panorama-btn">',
+    		        'Toggle',
+    		      '</button>',
+    	      '</td>',
           '</tr>',
           '<tr>',
             '<td colspan="2">',
@@ -43,7 +46,8 @@ angular.module('otaniemi3dApp')
       scope: {
         sensorType: '='
       },
-      controller: function () {
+      controller: function ($scope) {
+        var self = this;
         this.sensors = [];
         this.room = '';
         this.roomId = '';
@@ -64,32 +68,110 @@ angular.module('otaniemi3dApp')
         this.openPanorama = function (roomId) {
           $state.go('panorama', {roomId: roomId});
         };
+
+        this.togglePlug = function (sensor) {
+          //toggle sensor state between 1 and 0
+          var newValue = 1 - sensor.values[0].value;
+
+          var writeRequest =
+            '<?xml version="1.0"?>'+
+            '<omi:omiEnvelope xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" version="1.0" ttl="0">'+
+              '<write xmlns="omi.xsd" msgformat="odf">'+
+                '<omi:msg>'+
+                  '<Objects xmlns="odf.xsd">'+
+                    '<Object>'+
+                      '<id>K1</id>'+
+                      '<Object>'+
+                        '<id>'+ sensor.roomId +'</id>'+
+                        '<InfoItem name="'+ sensor.mac +'">'+
+                          '<value>'+ newValue +'</value>'+
+                        '</InfoItem>'+
+                      '</Object>'+
+                    '</Object>'+
+                  '</Objects>'+
+                '</omi:msg>'+
+              '</write>'+
+            '</omi:omiEnvelope>';
+
+          omiMessage.send('write', writeRequest);
+        };
       },
       controllerAs: 'tooltip',
       bindToController: true,
       link: function postLink(scope, element, attrs, tooltipCtrl) {
 
-        function showTooltip() {
-          d3.select(element[0]).style('display', null);
+        function getMetaData(datum) {
+          // Request must follow JXON notation and comply with ODF.
+          // https://developer.mozilla.org/en-US/docs/JXON
+          var metaDataRequest = {
+            'Object': {
+              'id': {
+                'keyValue': 'K1'
+              },
+              'Object': {
+                'id': {
+                  'keyValue': datum.roomId
+                },
+                'InfoItem': []
+              }
+            }
+          };
+
+          for (var i = 0; i < datum.sensors.length; i++) {
+            metaDataRequest.Object.Object.InfoItem.push({
+              '@name': datum.sensors[i].type,
+              'MetaData': {
+                'keyValue': null
+              }
+            });
+          }
+
+          //Mark room's datum.metaData true to indicate that meta data was requested
+          datum.metaData = true;
+
+          omiMessage.send('read', metaDataRequest, {}, '', false)
+            .then(function (data) {
+              //Update sensors' meta data
+              for (var i = 0; i < data.length; i++) {
+                for (var j = 0; j < datum.sensors.length; j++) {
+                  if (data[i].id === datum.sensors[j].id) {
+                    if (data[i].metaData) {
+                      datum.sensors[j].metaData = data[i].metaData;
+                    }
+                    break;
+                  }
+                }
+              }
+            }, function (error) {
+              console.log('Error while fetching sensor metadata:', error);
+            });
         }
 
-        function moveTooltip(d) {
+        function showTooltip(datum) {
+          d3.select(element[0]).style('display', null);
+
+          if (datum && !datum.metaData) {
+            getMetaData(datum);
+          }
+        }
+
+        function moveTooltip(datum) {
           if (tooltipCtrl.isLocked) {
             return;
           }
 
-          showTooltip();
+          showTooltip(datum);
 
-          if (d) {
+          if (datum) {
             tooltipCtrl.caption = 'Click to lock the tooltip';
 
             scope.$apply(function () {
               tooltipCtrl.sensors = [];
               tooltipCtrl.room = '';
 
-              if (d.sensors.length) {
-                for (var i = 0; i < d.sensors.length; i++) {
-                  var sensor = d.sensors[i];
+              if (datum.sensors.length) {
+                for (var i = 0; i < datum.sensors.length; i++) {
+                  var sensor = datum.sensors[i];
                   var value = sensor.values[0].value;
                   var color = {};
 
@@ -104,12 +186,12 @@ angular.module('otaniemi3dApp')
                 }
               }
 
-              if (d.room) {
-                tooltipCtrl.room = d.room;
+              if (datum.room) {
+                tooltipCtrl.room = datum.room;
               }
-              if (d.roomId) {
-                tooltipCtrl.roomId = d.roomId;
-                if (tooltipCtrl.roomsWithPanorama.indexOf(d.roomId) > -1) {
+              if (datum.roomId) {
+                tooltipCtrl.roomId = datum.roomId;
+                if (tooltipCtrl.roomsWithPanorama.indexOf(datum.roomId) > -1) {
                   tooltipCtrl.hasPanorama = true;
                 } else {
                   tooltipCtrl.hasPanorama = false;

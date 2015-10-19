@@ -20,7 +20,9 @@ angular.module('otaniemi3dApp')
 
       params = params || {};
       broadcast = broadcast || '';
-      loadingBar = loadingBar || true;
+      if (typeof loadingBar === 'undefined') {
+        loadingBar = true;
+      }
 
       var requestXml;
       if (typeof request === 'string') {
@@ -165,7 +167,7 @@ angular.module('otaniemi3dApp')
           var name = objectSensors[j].getAttribute('name');
           var values = objectSensors[j].children;
           var valueList = [];
-          var metaData = {};
+          var metaData = null;
           var metaDataNode;
 
           for (var k = 0; k < values.length; k++) {
@@ -242,10 +244,9 @@ angular.module('otaniemi3dApp')
                 suffix = '';
             }
 
-      	    var isPlug = false;
-      	    if((name.toLowerCase().match(/:/g) || []).length==5) {
-      		    isPlug=true;
-      	    }
+            if (metaData && metaData.isWritable) {
+              sensorName = name;
+            }
 
             sensorList.push({
               id: name + '-' + id,
@@ -255,55 +256,7 @@ angular.module('otaniemi3dApp')
               name: sensorName,
               values: valueList,
               suffix: suffix,
-              metaData: metaData,
-      	      isPlug: isPlug,
-      	      togglePlug(roomId, mac, currentValue) {
-
-                var url = 'https://otaniemi3d.cs.hut.fi/omi/node/';
-                var newValue = (parseInt(currentValue)>0 ? "0" : "1");
-
-                var requestXml =
-                  '<?xml version="1.0"?>'+
-                  '<omi:omiEnvelope xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" version="1.0" ttl="0">'+
-                    '<write xmlns="omi.xsd" msgformat="odf">'+
-                      '<omi:msg>'+
-                        '<Objects xmlns="odf.xsd">'+
-                          '<Object>'+
-                            '<id>K1</id>'+
-                            '<Object>'+
-                              '<id>'+roomId+'</id>'+
-                              '<InfoItem name="'+mac+'">'+
-                                '<value>'+newValue+'</value>'+
-                              '</InfoItem>'+
-                            '</Object>'+
-                          '</Object>'+
-                        '</Objects>'+
-                      '</omi:msg>'+
-                    '</write>'+
-                  '</omi:omiEnvelope>';
-
-
-                $http.post(url, requestXml, {
-                  headers: {'Content-Type': 'application/xml'}
-                })
-                .then(function (response) {
-                  //alert(response);
-                }, function (reason) {
-                  var msg;
-                  if (reason.status === 404) {
-                    msg = 'Couldn\'t find such sensors or values.';
-                    console.log(msg);
-                    deferred.reject(msg);
-                  } else {
-                    msg = 'Failed to fetch sensor data. Please try again';
-                    console.log(msg);
-                    deferred.reject(msg);
-                  }
-                })
-                .finally(function () {
-                  pendingRequests[requestXml] = false;
-                });
-      	      }
+              metaData: metaData
             });
           }
         }

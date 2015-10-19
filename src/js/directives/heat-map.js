@@ -173,7 +173,10 @@ angular.module('otaniemi3dApp')
               return datum;
             }
 
-            var roomData = { sensors: [] };
+            var roomData = {
+              sensors: [],
+              metaData: null
+            };
 
             var id = d3.select(this).attr('data-room-id');
             var roomName;
