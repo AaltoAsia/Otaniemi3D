@@ -23,6 +23,11 @@ ul.nav {
 .navbar-header {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
+.refresh-btn {
+  padding: 0px 2px; }
+  .refresh-btn span {
+    margin: 5px; }
+
 .btn-black {
   color: #FFFFFF;
   background-color: #000000;
@@ -71,7 +76,54 @@ ul.nav {
   right: 0px;
   z-index: 2; }
 
+/*
+Sets the CSS of right and left arrow, also known as next and previous-button.
+There are distinct CSS definitions for margin-bottom and bottom,
+since zooming out seemed to scale the button out of the floorplan
+viewbox on Chrome.
+*/
+.previous-button, .next-button {
+  font-size: 48px;
+  position: absolute;
+  bottom: 0px;
+  top: auto; }
+
+.btn-fullscreen {
+  margin-bottom: 0; }
+
+.previous-button {
+  left: 5%;
+  left: 5vh; }
+
+.next-button {
+  right: 5%;
+  right: 5vh; }
+
+.options-btn {
+  display: none; }
+
+.panorama-btn, .refresh-btn {
+  pointer-events: all; }
+
+.sensor-type-btn {
+  text-align: right;
+  width: 118px; }
+
+.time-frame-btn {
+  text-align: right;
+  width: 116px; }
+
 @media only screen and (max-width: 768px) {
+  .previous-button, .next-button {
+    font-size: 36px;
+    position: fixed; }
+  .next-button {
+    right: 0px; }
+  .previous-button {
+    left: 0px; }
+  .options-btn {
+    display: inline;
+    width: 100px; }
   .fullscreen-button {
     margin-top: 50px; } }
 
@@ -81,7 +133,7 @@ ul.nav {
   .tooltip-table th, .tooltip-table td {
     border: 1px solid #E6E6E6;
     padding: 2px; }
-    .tooltip-table th span, .tooltip-table td span {
+    .tooltip-table th > span, .tooltip-table td > span {
       margin: 10px; }
 
 .tooltip-caption {
@@ -144,6 +196,27 @@ ul.nav {
   width: auto;
   display: inline-block; }
 
+/* Make clicks pass-through */
+.loading-spinner {
+  display: inline-block;
+  pointer-events: none;
+  margin: 0px 7px !important; }
+  .loading-spinner .spinner-icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border: solid 2px transparent;
+    border-top-color: #29d;
+    border-left-color: #29d;
+    border-radius: 50%;
+    animation: loading-spinner 600ms linear infinite; }
+
+@keyframes loading-spinner {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
+
 .main-view {
   height: calc(100vh - 50px - 0px);
   position: relative; }
@@ -204,35 +277,6 @@ ul.nav {
 .floorplan-fullscreen {
   height: 100%; }
 
-/*
-Sets the CSS of right and left arrow, also known as next and previous-button.
-There are distinct CSS definitions for margin-bottom and bottom,
-since zooming out seemed to scale the button out of the floorplan
-viewbox on Chrome.
-*/
-.previous-button, .next-button {
-  font-size: 48px;
-  position: absolute;
-  bottom: 0px;
-  top: auto; }
-
-.btn-fullscreen {
-  margin-bottom: 0; }
-
-.previous-button {
-  left: 5%;
-  left: 5vh; }
-
-.next-button {
-  right: 5%;
-  right: 5vh; }
-
-.options-btn {
-  display: none; }
-
-.panorama-btn {
-  pointer-events: all; }
-
 .floorplan-caption {
   left: 30%;
   right: 30%;
@@ -242,14 +286,6 @@ viewbox on Chrome.
   text-align: center;
   color: #333;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); }
-
-.sensor-type-btn {
-  text-align: right;
-  width: 118px; }
-
-.time-frame-btn {
-  text-align: right;
-  width: 116px; }
 
 .caret {
   text-align: right;
@@ -342,16 +378,6 @@ viewbox on Chrome.
   margin: 5px; }
 
 @media only screen and (max-width: 768px) {
-  .previous-button, .next-button {
-    font-size: 36px;
-    position: fixed; }
-  .next-button {
-    right: 0px; }
-  .previous-button {
-    left: 0px; }
-  .options-btn {
-    display: inline;
-    width: 100px; }
   .desktop-dropdown {
     display: none; } }
 

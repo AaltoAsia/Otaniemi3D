@@ -103,7 +103,7 @@ gulp.task('clean', function(cb) {
 });
 
 // compile sass files into main.css file
-gulp.task('sass', ['clean'], function () {
+gulp.task('sass', function () {
   return gulp.src(src.sass)
     .pipe(sourcemaps.init())
     .pipe(autoprefixer())

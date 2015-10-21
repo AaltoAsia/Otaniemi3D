@@ -1,0 +1,24 @@
+/* Make clicks pass-through */
+.loading-spinner {
+  display: inline-block;
+  pointer-events: none;
+  margin: 0px 7px !important;
+
+  & .spinner-icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+
+    border: solid 2px transparent;
+    border-top-color: #29d;
+    border-left-color: #29d;
+    border-radius: 50%;
+
+    animation: loading-spinner 600ms linear infinite;
+  }
+}
+
+@keyframes loading-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

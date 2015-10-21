@@ -7,16 +7,29 @@
  * # tooltip
  */
 angular.module('otaniemi3dApp')
-  .directive('tooltip', function ($state, valueConverter, omiMessage) {
+  .directive('tooltip', function ($state, valueConverter, omiMessage, $timeout) {
     return {
       restrict: 'E',
       template: [
         '<table class="tooltip-table">',
           '<tr>',
-            '<th colspan="2" style="text-align:center">{{tooltip.room}}</th>',
+            '<th colspan="2" style="text-align:center">',
+              '<span>{{tooltip.room}}</span>',
+              '<span style="float: right">',
+                '<span class="loading-spinner"',
+                      'ng-style="{\'opacity\': tooltip.isLoading ? 1 : 0}">',
+                  '<span class="spinner-icon"></span>',
+                '</span>',
+                '<button class="btn refresh-btn"',
+                        'ng-click="tooltip.refresh()"',
+                        'title="Refresh">',
+                  '<span class="glyphicon glyphicon-refresh"></span>',
+                '</button>',
+              '</span>',
+            '</th>',
           '</tr>',
           '<tr ng-repeat="sensor in tooltip.sensors | orderBy: \'name\'"',
-              'ng-style="{\'background-color\': sensor.color}">',
+              'ng-style="tooltip.getSensorStyle(sensor)">',
             '<th>{{sensor.name}}</th>',
             '<td>',
               '<span>',
@@ -24,7 +37,8 @@ angular.module('otaniemi3dApp')
               '</span>',
 		          '<button ng-click="tooltip.togglePlug(sensor)"',
       	              'ng-if="sensor.metaData.isWritable"',
-      	              'class="btn black-btn panorama-btn">',
+      	              'class="btn black-btn panorama-btn"',
+                      'title="Toggle plug">',
     		        'Toggle',
     		      '</button>',
     	      '</td>',
@@ -33,9 +47,10 @@ angular.module('otaniemi3dApp')
             '<td colspan="2">',
               '<button ng-click="tooltip.openPanorama(tooltip.roomId)"',
                       'ng-show="tooltip.hasPanorama"',
-                      'class="btn black-btn panorama-btn">',
+                      'class="btn black-btn panorama-btn"',
+                      'title="Open panorama picture">',
                 '360°',
-                '<span class="glyphicon glyphicon glyphicon-camera"></span>',
+                '<span class="glyphicon glyphicon-camera"></span>',
               '</button>',
               '<i class="tooltip-caption">{{tooltip.caption}}',
               '</i>',
@@ -46,7 +61,7 @@ angular.module('otaniemi3dApp')
       scope: {
         sensorType: '='
       },
-      controller: function ($scope) {
+      controller: function () {
         var self = this;
         this.sensors = [];
         this.room = '';
@@ -65,8 +80,98 @@ angular.module('otaniemi3dApp')
         ];
         this.hasPanorama = false;
 
+        //Here we define custom setter and getter for self.isLoading
+        //Setting self.isLoading to true will keep it true at least until
+        //the spinner has spun once (600ms). The custom setter will delay
+        //setting self.isLoading to false if it is called before the time is up.
+        (function() {
+          //This is inside anonymous function so that we can have private
+          //state for storing variables.
+          var rotating = false;
+          var inQueue = false;
+          var _isLoading = true;
+
+          Object.defineProperty(self, 'isLoading', {
+            get: function () {
+              return _isLoading;
+            },
+            set: function (value) {
+              if (!rotating && value === true) {
+                _isLoading = true;
+                rotating = true;
+                inQueue = false;
+
+                //Timeout length should be as long as it takes for the spinner
+                //to spin fully once.
+                $timeout(function () {
+                  rotating = false;
+                  if (inQueue) {
+                    _isLoading = false;
+                  }
+                }, 600);  //This should match the rotation time.
+              } else if (value === true) {
+                _isLoading = value;
+                inQueue = false;
+              } else {
+                if (rotating) {
+                  inQueue = true;
+                } else {
+                  _isLoading = false;
+                }
+              }
+            }
+          });
+        })();
+
+        this.refresh = function () {
+          var dataRequest = {
+            'Object': {
+              'id': {
+                'keyValue': 'K1'
+              },
+              'Object': {
+                'id': {
+                  'keyValue': self.roomId
+                },
+                'InfoItem': []
+              }
+            }
+          };
+
+          for (var i = 0; i < self.sensors.length; i++) {
+            dataRequest.Object.Object.InfoItem.push({
+              'MetaData': {},
+              '@name': self.sensors[i].type
+            });
+          }
+
+          self.isLoading = true;
+
+          return omiMessage.send('read', dataRequest, {}, '', false)
+            .then(function(data) {
+              self.sensors = data;
+              self.isLoading = false;
+              return self.sensors;
+            }, function(error) {
+              self.isLoading = false;
+              console.log('Error:', error);
+            });
+        };
+
         this.openPanorama = function (roomId) {
           $state.go('panorama', {roomId: roomId});
+        };
+
+        this.getSensorStyle = function (sensor) {
+          var value = sensor.values[0].value;
+          var color;
+
+          if (sensor.type === self.sensorType.name) {
+            color = valueConverter.getColor(sensor.type, value).rgbaString;
+          } else {
+            color = '';
+          }
+          return {'background-color': color};
         };
 
         this.togglePlug = function (sensor) {
@@ -128,6 +233,7 @@ angular.module('otaniemi3dApp')
 
           //Mark room's datum.metaData true to indicate that meta data was requested
           datum.metaData = true;
+          tooltipCtrl.isLoading = true;
 
           omiMessage.send('read', metaDataRequest, {}, '', false)
             .then(function (data) {
@@ -142,7 +248,9 @@ angular.module('otaniemi3dApp')
                   }
                 }
               }
+              tooltipCtrl.isLoading = false;
             }, function (error) {
+              tooltipCtrl.isLoading = false;
               console.log('Error while fetching sensor metadata:', error);
             });
         }
@@ -150,7 +258,7 @@ angular.module('otaniemi3dApp')
         function showTooltip(datum) {
           d3.select(element[0]).style('display', null);
 
-          if (datum && !datum.metaData) {
+          if (datum && !datum.metaData && !tooltipCtrl.isLocked) {
             getMetaData(datum);
           }
         }
@@ -163,28 +271,12 @@ angular.module('otaniemi3dApp')
           showTooltip(datum);
 
           if (datum) {
+            tooltipCtrl.isLoading = false;
             tooltipCtrl.caption = 'Click to lock the tooltip';
 
             scope.$apply(function () {
-              tooltipCtrl.sensors = [];
+              tooltipCtrl.sensors = datum.sensors;
               tooltipCtrl.room = '';
-
-              if (datum.sensors.length) {
-                for (var i = 0; i < datum.sensors.length; i++) {
-                  var sensor = datum.sensors[i];
-                  var value = sensor.values[0].value;
-                  var color = {};
-
-                  if (sensor.type === tooltipCtrl.sensorType.name) {
-                    color = valueConverter.getColor(sensor.type, value);
-                  } else {
-                    color.rgbaString = '';
-                  }
-
-                  sensor.color = color.rgbaString;
-                  tooltipCtrl.sensors.push(sensor);
-                }
-              }
 
               if (datum.room) {
                 tooltipCtrl.room = datum.room;

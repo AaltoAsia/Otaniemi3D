@@ -8,40 +8,6 @@ $search-bar-height: 47px; //includes margin
   height: 100%;
 }
 
-/*
-Sets the CSS of right and left arrow, also known as next and previous-button.
-There are distinct CSS definitions for margin-bottom and bottom,
-since zooming out seemed to scale the button out of the floorplan
-viewbox on Chrome.
-*/
-.previous-button, .next-button {
-  font-size: 48px; //Increase the size of arrow a little
-  position: absolute;
-  bottom: 0px;
-  top: auto;
-}
-
-.btn-fullscreen {
-  margin-bottom: 0;
-}
-
-.previous-button {
-  left: 5%;
-  left: 5vh;
-}
-.next-button {
-  right: 5%;
-  right: 5vh;
-}
-
-.options-btn {
-	display: none;
-}
-
-.panorama-btn {
-  pointer-events: all;
-}
-
 .floorplan-caption {
   left: 30%;
   right: 30%;
@@ -52,16 +18,6 @@ viewbox on Chrome.
   text-align: center;
   color: #333;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-.sensor-type-btn {
-  text-align: right;
-  width: 118px;
-}
-
-.time-frame-btn {
-  text-align: right;
-  width: 116px;
 }
 
 .caret {
@@ -179,24 +135,6 @@ viewbox on Chrome.
 }
 
 @media only screen and (max-width : 768px) {
-  .previous-button, .next-button {
-    font-size: 36px; //Increase the size of arrow a little
-    position: fixed;
-  }
-
-  .next-button {
-    right: 0px;
-  }
-
-  .previous-button {
-    left: 0px;
-  }
-
-  .options-btn {
-  	display: inline;
-  	width: 100px;
-  }
-
   .desktop-dropdown {
   	display: none;
   }
