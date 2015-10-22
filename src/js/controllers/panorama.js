@@ -17,6 +17,8 @@ angular.module('otaniemi3dApp')
     self.sensors = [];
     self.newSensors = [];
     self.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
+    //Create global namespace for scripts used by krpano.
+    $window.krpano = {};
 
     var roomUrl =
       'https://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + self.roomId;
@@ -107,6 +109,7 @@ angular.module('otaniemi3dApp')
       $interval(function () {
         if ($('#panorama_obj').length) {
           deferred.resolve(data);
+          $window.krpano.elem = $('#panorama_obj')[0];
         }
       }, 150);
 
@@ -229,7 +232,17 @@ angular.module('otaniemi3dApp')
         '[table class="tooltip-table"]',
           '[tr]',
             '[th colspan="2" style="text-align:center"]',
-              self.roomId,
+              '[span]', self.roomId, '[/span]',
+              '[span style="float: right"]',
+                '[span class="loading-spinner" style="opacity:0"]',
+                  '[span class="spinner-icon"][/span]',
+                '[/span]',
+                '[button class="btn refresh-btn"',
+                        'onclick="krpano.refresh()"',
+                        'title="Refresh"]',
+                  '[span class="glyphicon glyphicon-refresh"][/span]',
+                '[/button]',
+              '[/span]',
             '[/th]',
           '[/tr]',
           sensorRows,
@@ -239,15 +252,26 @@ angular.module('otaniemi3dApp')
       return sensorTable;
     }
 
-    //Create global namespace for scripts used by krpano.
-    $window.krpano = {};
+    $window.krpano.refresh = function () {
+      $('.loading-spinner').css('opacity', '1');
+
+      getMetaData(self.sensors).then(function () {
+        $window.krpano.elem.call(
+          'set(plugin[persistent_tooltip].html, ' +
+          sensorTooltip(self.sensors) + ')'
+        );
+        $('.loading-spinner').css('opacity', '0');
+      }, function (error) {
+        $('.loading-spinner').css('opacity', '1');
+        console.log('Error:', error);
+      });
+    };
 
     $window.krpano.addSensorDialog = function () {
 
-      var krpano = $('#panorama_obj')[0];
-      var x = krpano.get('mouse.x');
-      var y = krpano.get('mouse.y');
-      var pos = krpano.screentosphere(x, y);
+      var x = $window.krpano.elem.get('mouse.x');
+      var y = $window.krpano.elem.get('mouse.y');
+      var pos = $window.krpano.elem.screentosphere(x, y);
 
       self.modalInstance = $modal.open({
         templateUrl: 'html/templates/hotspot-selection.html',
@@ -281,7 +305,7 @@ angular.module('otaniemi3dApp')
             for (var k = 0; k < self.sensors.length; k++) {
               var oldSensor = self.sensors[k];
 
-              krpano.call('removehotspot(id-' + oldSensor.id + ')');
+              $window.krpano.elem.call('removehotspot(id-' + oldSensor.id + ')');
 
               if (newSensor.id === oldSensor.id) {
                 angular.merge(oldSensor.metaData, newSensor.metaData);
