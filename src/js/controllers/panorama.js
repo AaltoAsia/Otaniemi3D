@@ -17,6 +17,7 @@ angular.module('otaniemi3dApp')
     self.sensors = [];
     self.newSensors = [];
     self.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
+    self.sensorBoxes = [];
     //Create global namespace for scripts used by krpano.
     $window.krpano = {};
 
@@ -133,9 +134,24 @@ angular.module('otaniemi3dApp')
       angular.forEach(sensorGroups, function (sensorGroup, key) {
         var pos = key.split(',');
 
+        if(isNaN(Number(pos[0])) || isNaN(Number(pos[1]))) {
+          return;
+        }
+
+        var id = 'id';
+        for (var i = 0; i < sensorGroup.length; i++) {
+          id += '-' + sensorGroup[i].id;
+        }
+
+        var sensorBox = {
+          id: id,
+          sensors: sensorGroup
+        };
+        self.sensorBoxes.push(sensorBox);
+
         krpano.call('addsensor(' + [
-          'id-' + sensorGroup[0].id, pos[0], pos[1],
-          sensorTooltip(sensorGroup),
+          sensorBox.id, pos[0], pos[1],
+          sensorTooltip(sensorBox)
         ].join(',') + ',"' + JSON.stringify(sensorGroup) +'"' + ')');
       });
 
@@ -181,10 +197,10 @@ angular.module('otaniemi3dApp')
       return omiMessage.send('write', writeRequest);
     }
 
-    function sensorTooltip(sensors) {
+    function sensorTooltip(sensorBox) {
       var sensorRows = '';
 
-      sensors.sort(function (a, b) {
+      var sensors = sensorBox.sensors.sort(function (a, b) {
         if (a.name < b.name) {
           return -1;
         }
@@ -238,7 +254,7 @@ angular.module('otaniemi3dApp')
                   '[span class="spinner-icon"][/span]',
                 '[/span]',
                 '[button class="btn refresh-btn"',
-                        'onclick="krpano.refresh()"',
+                        'onclick="krpano.refresh(\'', sensorBox.id, '\')"',
                         'title="Refresh"]',
                   '[span class="glyphicon glyphicon-refresh"][/span]',
                 '[/button]',
@@ -252,13 +268,19 @@ angular.module('otaniemi3dApp')
       return sensorTable;
     }
 
-    $window.krpano.refresh = function () {
+    $window.krpano.refresh = function (sensorBoxId) {
       $('.loading-spinner').css('opacity', '1');
 
-      getMetaData(self.sensors).then(function () {
+      return getMetaData(self.sensors).then(function () {
+        var sensorBox;
+        for (var i = 0; i < self.sensorBoxes.length; i++) {
+          if (self.sensorBoxes[i].id === sensorBoxId) {
+            sensorBox = self.sensorBoxes[i];
+          }
+        }
         $window.krpano.elem.call(
           'set(plugin[persistent_tooltip].html, ' +
-          sensorTooltip(self.sensors) + ')'
+          sensorTooltip(sensorBox) + ')'
         );
         $('.loading-spinner').css('opacity', '0');
       }, function (error) {
