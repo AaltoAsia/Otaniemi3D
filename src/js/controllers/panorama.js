@@ -75,7 +75,10 @@ angular.module('otaniemi3dApp')
         .then(addSensorGroups);
     }
 
-    function getMetaData(sensors) {
+    function getMetaData(sensors, loadingBar) {
+      if (typeof loadingBar === 'undefined') {
+        loadingBar = true;
+      }
       var metaDataRequest = {
         'Object': {
           'id': {
@@ -97,7 +100,7 @@ angular.module('otaniemi3dApp')
         });
       }
 
-      return omiMessage.send('read', metaDataRequest)
+      return omiMessage.send('read', metaDataRequest, {}, '', loadingBar)
         .then(function(data) {
           self.sensors = data;
           return self.sensors;
@@ -271,7 +274,7 @@ angular.module('otaniemi3dApp')
     $window.krpano.refresh = function (sensorBoxId) {
       $('.loading-spinner').css('opacity', '1');
 
-      return getMetaData(self.sensors).then(function () {
+      return getMetaData(self.sensors, false).then(function () {
         var sensorBox;
         for (var i = 0; i < self.sensorBoxes.length; i++) {
           if (self.sensorBoxes[i].id === sensorBoxId) {
