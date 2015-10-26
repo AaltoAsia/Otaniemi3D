@@ -126,24 +126,23 @@ angular.module('otaniemi3dApp')
        * @return {Promise} Promise of a floor plan object with the sensor data.
        */
       function fetchSensorData(floorplan) {
-        var sensorRequest = {
-          'Object': {
-            'id': {
-              'keyValue': 'K1'
-            },
-            'Object': []
-          }
-        };
-
+        var rooms = '';
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
           .each(function () {
-            sensorRequest.Object.Object.push({
-              'id': {
-                'keyValue': d3.select(this).attr('data-room-id')
-              }
-            });
+            rooms += (
+              '<Object>' +
+                '<id>' +
+                  d3.select(this).attr('data-room-id') +
+                '</id>' +
+              '</Object>');
           });
+        var sensorRequest = (
+          '<Object>' +
+            '<id>K1</id>' +
+            rooms +
+          '</Object>'
+        );
 
         return omiMessage.send('read', sensorRequest)
           .then(function success (data) {

@@ -8,65 +8,49 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('omiMessage', function ($http, $q, $interval, dataStorage, JXON) {
+  .service('omiMessage', function ($http, $q, $interval, dataStorage) {
 
     //Store pending http requests to an object
-    var pendingRequests = {},
-        self = this;
+    var pendingRequests = Object.create(null);
+    var self = this;
 
-    this.send = function (method, request, params, broadcast, loadingBar) {
-      var deferred = $q.defer(),
-          url = 'https://otaniemi3d.cs.hut.fi/omi/node/';
-
+    this.send = function (method, request, params, loadingBar) {
       params = params || {};
-      broadcast = broadcast || '';
       if (typeof loadingBar === 'undefined') {
         loadingBar = true;
       }
 
-      var requestXml;
-      if (typeof request === 'string') {
-        requestXml = request;
-      } else if (typeof request === 'object') {
-        requestXml = generateXml(request, method, params);
-      }
+      var options = {
+        url: 'https://otaniemi3d.cs.hut.fi/omi/node/',
+        method: 'POST',
+        data: createOmiRequest(request, method, params),
+        headers: {'Content-Type': 'text/xml'},
+        ignoreLoadingBar: !loadingBar
+      };
 
-      //If a pending request with the same url exists don't send a new request
-      if (!pendingRequests[requestXml]) {
-        pendingRequests[requestXml] = true;
-
-        $http.post(url, requestXml,
-          {
-            headers: {'Content-Type': 'application/xml'},
-            ignoreLoadingBar: !loadingBar
+      if (!pendingRequests[request]) {
+        var promise = $http(options)
+          .then(function(response) {
+            dataStorage.sensorData = parse(response.data);
+            return dataStorage.sensorData;
           })
-          .then(function (response) {
-            var data = parseData(response.data);
-            deferred.resolve(data);
-            dataStorage.sensors = data;
-          }, function (reason) {
-            var msg;
-            if (reason.status === 404) {
-              msg = 'Couldn\'t find such sensors or values.';
-              console.log(msg);
-              deferred.reject(msg);
+          .then(function(error) {
+            if (error.status === 404) {
+              return 'Couldn\'t find such sensors or values.';
             } else {
-              msg = 'Failed to fetch sensor data. Please try again';
-              console.log(msg);
-              deferred.reject(msg);
+              return 'Failed to fetch sensor data. Please try again';
             }
           })
-          .finally(function () {
-            pendingRequests[requestXml] = false;
+          .finally(function() {
+            pendingRequests[request] = false;
           });
 
-      } else {
-        deferred.reject();
+        pendingRequests[request] = promise;
       }
 
-      return deferred.promise;
+      return pendingRequests[request];
     };
-
+    /*
     self.parseInfoItem = function (xml) {
       xml = new DOMParser().parseFromString(xml, 'text/xml');
 
@@ -133,199 +117,157 @@ angular.module('otaniemi3dApp')
         infoItems: infoItems,
         objects: childObjects
       };
-    };
+    };*/
 
-    /*
-     * Convert the sensor data xml to a javascript object and return it.
-     */
-    function parseData(xml) {
-      xml = new DOMParser().parseFromString(xml, 'text/xml');
-
-      var objects = evaluateXPath(xml, '//*[local-name()="Object"]');
-
-      if (objects.length === 0) {
-        console.log('Couldn\'t fetch any sensor data from the server.');
-      }
-
-      var sensorList = [];
+    function parse(data) {
+      console.log(data.querySelector('Objects'));
+      var root = data.querySelector('Objects');
+      var objects = root.children;
+      var parsedObjects = [];
 
       for (var i = 0; i < objects.length; i++) {
-        var id = objects[i].getElementsByTagName('id');
-
-        if (id.length > 0) {
-          id = id[0].textContent;
-        } else {
-          continue;
-        }
-
-        var objectSensors = objects[i].children;
-
-        for (var j = 0; j < objectSensors.length; j++) {
-          if (objectSensors[j].tagName !== 'InfoItem') {
-            continue;
-          }
-          var name = objectSensors[j].getAttribute('name');
-          var values = objectSensors[j].children;
-          var valueList = [];
-          var metaData = {};
-          var metaDataNode;
-
-          for (var k = 0; k < values.length; k++) {
-            if (values[k].tagName === 'value') {
-              var value = values[k].textContent;
-              var unixTime = values[k].getAttribute('unixTime');
-              var dateTime = values[k].getAttribute('dateTime');
-              var time;
-
-              //Check if value is empty string because Number()
-              //turns empty strings into zero.
-              if (value) {
-                value = Math.round(Number(value) * 100) / 100;
-              }
-
-              if (dateTime) {
-                time = new Date(dateTime).getTime();
-              } else {
-                time = new Date(Number(unixTime) * 1000);
-              }
-
-              if (!isNaN(value) && time) {
-                valueList.push({
-                  value: value,
-                  time: time
-                });
-              }
-            } else if (values[k].tagName === 'MetaData') {
-              metaDataNode = values[k];
-            }
-          }
-
-          if (metaDataNode) {
-            var container = document.createElement('div');
-            container.appendChild(metaDataNode);
-
-            metaData = self.parseMetaData(container.innerHTML);
-          }
-
-          if (name) {
-            sortDates(valueList);
-
-            var sensorName;
-            switch (name.toLowerCase()) {
-              case 'co2':
-                sensorName = 'CO2';
-                break;
-              case 'pir':
-                sensorName = 'Occupancy';
-                break;
-              default:
-                sensorName = name.charAt(0).toUpperCase() +
-                  name.slice(1);
-            }
-
-            var suffix;
-            switch (name.toLowerCase()) {
-              case 'temperature':
-                suffix = '°C';
-                break;
-              case 'co2':
-                suffix = 'ppm';
-                break;
-              case 'light':
-                suffix = 'lux';
-                break;
-              case 'humidity':
-                suffix = '%';
-                break;
-              case 'pir':
-                suffix = '';
-                break;
-              default:
-                suffix = '';
-            }
-
-            if (metaData.isWritable) {
-              sensorName = name;
-            }
-
-            sensorList.push({
-              id: name + '-' + id,
-              type: name,
-              room: id.split('-').join(' '),
-              roomId: id,
-              name: sensorName,
-              values: valueList,
-              suffix: suffix,
-              metaData: metaData
-            });
-          }
-        }
-      }
-      return sensorList;
-    }
-
-    /*
-     * Generate request xml to get data from one object with id.
-     */
-    function generateXml (request, method, params) {
-      var preamble = {
-        'omi:omiEnvelope': {
-          '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-          '@xmlns:omi': 'omi.xsd',
-          '@version': '1.0',
-          '@ttl': '0'
-        }
-      };
-      var methodElement = preamble['omi:omiEnvelope']['omi:'+method] = {
-        '@msgformat': 'odf',
-        'omi:msg': true
-      };
-
-      angular.forEach(params, function (value, key) {
-        methodElement['@'+key] = value;
-      });
-
-      var xmlDoc = JXON.createXML(preamble);
-
-      var objects = document.createElementNS('odf.xsd', 'Objects');
-      objects = objects.appendJXON(request);
-
-      $(xmlDoc.documentElement).find('omi\\:msg').append(objects);
-
-      var processingInstructions = xmlDoc.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-8"');
-      xmlDoc.insertBefore(processingInstructions, xmlDoc.firstChild);
-
-      return new XMLSerializer().serializeToString(xmlDoc);
-    }
-
-    /*
-     * Sort value list by date
-     */
-    function sortDates (array) {
-      array.sort(function(a, b){
-        return a.time - b.time;
-      });
-    }
-
-    /*
-     * Evaluate an XPath expression aExpr against a given DOM node
-     * or Document object (aNode), returning the results as an array.
-     * https://developer.mozilla.org/en-US/docs/Using_XPath
-     */
-    function evaluateXPath(aNode, aExpr) {
-      var xpe = new XPathEvaluator();
-      var nsResolver = xpe.createNSResolver(aNode.ownerDocument === null ?
-        aNode.documentElement : aNode.ownerDocument.documentElement);
-      var result = xpe.evaluate(aExpr, aNode, nsResolver, 0, null);
-      var found = [];
-      var res = result.iterateNext();
-
-      while (res) {
-        found.push(res);
-        res = result.iterateNext();
+        parsedObjects.push(self.parseObject(objects[i]));
       }
 
-      return found;
+      console.log(parsedObjects);
+
+      return parsedObjects;
+    }
+
+    self.parseObject = function (object) {
+      var children = object.children;
+      var type = object.getAttribute('type');
+      var id;
+      var description;
+      var infoItems = [];
+      var omiObjects = [];
+
+      for (var i = 0; i < children.length; i++) {
+        if (children[i].nodeName === 'id') {
+          id = children[i];
+        } else if (children[i].nodeName === 'description') {
+          description = children[i];
+        } else if (children[i].nodeName === 'InfoItem') {
+          infoItems.push(children[i]);
+        } else if (children[i].nodeName === 'Object') {
+          omiObjects.push(children[i]);
+        }
+      }
+
+      return {
+        id: id ? id.textContent : null,
+        type: type,
+        description: description ? description.textContent : null,
+        infoItems: infoItems.map(
+          function(item) { return self.parseInfoItem(item); }
+        ),
+        childObjects: omiObjects.map(
+          function(object) { return self.parseObject(object); }
+        )
+      };
+    };
+
+    self.parseInfoItem = function(item) {
+      var children = item.children;
+      var name = item.getAttribute('name');
+      var description;
+      var metaData;
+      var values = [];
+
+      for (var i = 0; i < children.length; i++) {
+        if (children[i].nodeName === 'description') {
+          description = children[i];
+        } else if (children[i].nodeName === 'MetaData') {
+          metaData = children[i];
+        } else if (children[i].nodeName === 'value') {
+          values.push(children[i]);
+        }
+      }
+
+      return {
+        name: name,
+        description: description ? description.textContent : null,
+        metaData: metaData ? self.parseMetaData(metaData) : null,
+        values: values.map(
+          function(value) { return self.parseValue(value); }
+        )
+      };
+    };
+
+    self.parseMetaData = function (metaElem) {
+      var children = metaElem.children;
+      var infoItems = [];
+
+      for (var i = 0; i < children.length; i++) {
+        if (children[i].nodeName === 'InfoItem') {
+          infoItems.push(children[i]);
+        }
+      }
+
+      var metaData = infoItems.map(
+        function(data) { return self.parseInfoItem(data); }
+      );
+
+      return metaData.reduce(
+        function(previous, current) {
+          if (current.values.length === 1) {
+            previous[current.name] = current.values[0].value;
+          } else if (current.values.length > 1) {
+            previous[current.name] = current.values;
+          }
+          return previous;
+        }, {}
+      );
+    };
+
+    self.parseValue = function (value) {
+      var dateTime = value.getAttribute('dateTime');
+      var unixTime = value.getAttribute('unixTime');
+      var time;
+
+      if (dateTime) {
+        time = new Date (dateTime);
+      } else if (unixTime) {
+        time = new Date (Number(unixTime) * 1000);
+      }
+
+      return {
+        value: value.textContent,
+        time: time
+      };
+    };
+
+    function createOmiRequest(request, method, params) {
+      params = params || {};
+      //Because 'ttl' is located in a different place in request XML we
+      //store it in a different variable.
+      var ttl = '0';
+      if ('ttl' in Object.keys(params)) {
+        ttl = params.ttl;
+        delete params.ttl;
+      }
+      //This function turns object into a string with format:
+      //`key1="value1" key2="value2"`
+      var parseParams = function(params) {
+        return Object.keys(params).reduce(
+          function(previous, key) {
+            return previous + ' ' + key + '="' + params[key] + '"';
+          }, ''
+        );
+      };
+
+      return (
+        '<?xml version="1.0"?>' +
+        '<omi:omiEnvelope xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" ' +
+          'xmlns:omi="omi.xsd" version="1.0" ttl="' + ttl + '">' +
+          '<omi:' + method.toLowerCase() +' msgformat="odf"' + parseParams(params) + '>' +
+            '<omi:msg>' +
+              '<Objects xmlns="odf.xsd">' +
+                request +
+              '</Objects>' +
+            '</omi:msg>' +
+          '</omi:read>' +
+        '</omi:omiEnvelope>');
     }
 
   });

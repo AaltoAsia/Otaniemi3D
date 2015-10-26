@@ -124,26 +124,24 @@ angular.module('otaniemi3dApp')
         })();
 
         this.refresh = function () {
-          var dataRequest = {
-            'Object': {
-              'id': {
-                'keyValue': 'K1'
-              },
-              'Object': {
-                'id': {
-                  'keyValue': self.roomId
-                },
-                'InfoItem': []
-              }
-            }
-          };
-
+          var infoItems = '';
           for (var i = 0; i < self.sensors.length; i++) {
-            dataRequest.Object.Object.InfoItem.push({
-              'MetaData': {},
-              '@name': self.sensors[i].type
-            });
+            infoItems += (
+              '<InfoItem name="' + self.sensors[i].type + '">' +
+                '<MetaData/>' +
+              '</InfoItem>'
+            );
           }
+
+          var dataRequest = (
+            '<Object>' +
+              '<id>K1</id>' +
+              '<Object>' +
+                '<id>' + self.roomId + '</id>' +
+                infoItems +
+              '</Object>' +
+            '</Object>'
+          );
 
           self.isLoading = true;
 
@@ -178,25 +176,16 @@ angular.module('otaniemi3dApp')
           //toggle sensor state between 1 and 0
           var newValue = 1 - sensor.values[0].value;
 
-          var writeRequest =
-            '<?xml version="1.0"?>'+
-            '<omi:omiEnvelope xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" version="1.0" ttl="0">'+
-              '<write xmlns="omi.xsd" msgformat="odf">'+
-                '<omi:msg>'+
-                  '<Objects xmlns="odf.xsd">'+
-                    '<Object>'+
-                      '<id>K1</id>'+
-                      '<Object>'+
-                        '<id>'+ sensor.roomId +'</id>'+
-                        '<InfoItem name="'+ sensor.mac +'">'+
-                          '<value>'+ newValue +'</value>'+
-                        '</InfoItem>'+
-                      '</Object>'+
-                    '</Object>'+
-                  '</Objects>'+
-                '</omi:msg>'+
-              '</write>'+
-            '</omi:omiEnvelope>';
+          var writeRequest = (
+            '<Object>'+
+              '<id>K1</id>'+
+              '<Object>'+
+                '<id>'+ sensor.roomId +'</id>'+
+                '<InfoItem name="'+ sensor.mac +'">'+
+                  '<value>'+ newValue +'</value>'+
+                '</InfoItem>'+
+              '</Object>'+
+            '</Object>');
 
           omiMessage.send('write', writeRequest);
         };
@@ -206,30 +195,24 @@ angular.module('otaniemi3dApp')
       link: function postLink(scope, element, attrs, tooltipCtrl) {
 
         function getMetaData(datum) {
-          // Request must follow JXON notation and comply with ODF.
-          // https://developer.mozilla.org/en-US/docs/JXON
-          var metaDataRequest = {
-            'Object': {
-              'id': {
-                'keyValue': 'K1'
-              },
-              'Object': {
-                'id': {
-                  'keyValue': datum.roomId
-                },
-                'InfoItem': []
-              }
-            }
-          };
-
+          var infoItems = '';
           for (var i = 0; i < datum.sensors.length; i++) {
-            metaDataRequest.Object.Object.InfoItem.push({
-              '@name': datum.sensors[i].type,
-              'MetaData': {
-                'keyValue': null
-              }
-            });
+            infoItems += (
+              '<InfoItem name="' + datum.sensors[i].type + '">' +
+                '<MetaData/>' +
+              '</InfoItem>'
+            );
           }
+
+          var metaDataRequest = (
+            '<Object>' +
+              '<id>K1</id>' +
+              '<Object>' +
+                '<id>' + datum.roomId + '</id>' +
+                infoItems +
+              '</Object>' +
+            '</Object>'
+          );
 
           //Mark room's datum.metaData true to indicate that meta data was requested
           datum.metaData = true;
