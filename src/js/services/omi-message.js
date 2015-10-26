@@ -50,76 +50,9 @@ angular.module('otaniemi3dApp')
 
       return pendingRequests[request];
     };
-    /*
-    self.parseInfoItem = function (xml) {
-      xml = new DOMParser().parseFromString(xml, 'text/xml');
 
-      var values = [];
-
-      $(xml).find('value').each(function () {
-        var time = $(this).attr('unixTime');
-        if (!time) {
-          time = $(this).attr('dateTime');
-          time = new Date(time);
-        } else {
-          time = new Date(Number(time) * 1000);
-        }
-
-        var value = $(this).text();
-        if (value) {
-          value = Math.round(Number(value) * 100) / 100;
-        }
-
-        values.push({
-          value: value,
-          time: time
-        });
-      });
-
-      return values;
-    };
-
-    this.parseMetaData = function (xml) {
-      xml = new DOMParser().parseFromString(xml, 'text/xml');
-
-      var metaData = {};
-
-      $(xml).find('InfoItem').each(function () {
-        metaData[$(this).attr('name')] = $(this).find('value').text();
-      });
-
-      return metaData;
-    };
-
-    this.parseObject = function(xml) {
-      xml = new DOMParser().parseFromString(xml, 'text/xml');
-
-      var root = $(xml).find(':root'),
-          id = root.children('id').first().text(),
-          childObjects = [],
-          infoItems = [];
-
-      root.children('Object').each(function () {
-        childObjects.push(
-          $(this).children('id').text()
-        );
-      });
-
-      root.children('InfoItem').each(function () {
-        infoItems.push(
-          $(this).attr('name')
-        );
-      });
-
-      return {
-        id: id,
-        text: id.split('-').join(' '),
-        infoItems: infoItems,
-        objects: childObjects
-      };
-    };*/
-
-    function parse(data) {
+    function parse(xml) {
+      var data = new DOMParser().parseFromString(xml, 'text/xml');
       console.log(data.querySelector('Objects'));
       var root = data.querySelector('Objects');
       var objects = root.children;
