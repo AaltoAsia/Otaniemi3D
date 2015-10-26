@@ -145,10 +145,11 @@ angular.module('otaniemi3dApp')
         );
 
         return omiMessage.send('read', sensorRequest)
-          .then(function success (data) {
+          .then(function (data) {
             floorplan.data = data;
             return floorplan;
-          }, function error () {
+          }, function (error) {
+            console.log('Error:', error);
             floorplan.data = floorplan.data || [];
             return floorplan;
           });
@@ -164,40 +165,27 @@ angular.module('otaniemi3dApp')
       function bindSensors(floorplan) {
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
-          .datum(function () {
+          .datum(function() {
+            let datum = d3.select(this).datum();
 
-            var datum = d3.select(this).datum();
-
-            if (datum && datum.sensors.length) {
+            if (datum) {
               return datum;
             }
 
-            var roomData = {
-              sensors: [],
-              metaData: null
-            };
-
             var id = d3.select(this).attr('data-room-id');
-            var roomName;
+            var room = floorplan.data.filter(
+              function(object) { return object.id === id; }
+            );
 
-            for (var i = 0; i < floorplan.data.length; i ++) {
-              var sensor = floorplan.data[i];
-
-              if (sensor.roomId === id) {
-                roomData.sensors.push(sensor);
-                roomName = sensor.room;
-              }
+            if (room.length) {
+              return room[0];
+            } else {
+              return {
+                id: id,
+                infoItems: [],
+                childObjects: []
+              };
             }
-
-            roomData.room = roomName ? roomName : id;
-            roomData.roomId = id;
-
-            floorplan.rooms.push({
-              name: roomData.room,
-              id: roomData.roomId
-            });
-
-            return roomData;
           });
 
         return floorplan;
@@ -212,6 +200,9 @@ angular.module('otaniemi3dApp')
       function updateRoomColors(floorplan) {
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
+          .style('fill', function(datum) {
+            // body...
+          })
           .each(function () {
             var data = d3.select(this).datum();
 

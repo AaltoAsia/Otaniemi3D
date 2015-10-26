@@ -31,8 +31,7 @@ angular.module('otaniemi3dApp')
       if (!pendingRequests[request]) {
         var promise = $http(options)
           .then(function(response) {
-            dataStorage.sensorData = parse(response.data);
-            return dataStorage.sensorData;
+            return parse(response.data);
           })
           .then(function(error) {
             if (error.status === 404) {
