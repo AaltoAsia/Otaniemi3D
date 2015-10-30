@@ -73,6 +73,7 @@ angular.module('otaniemi3dApp')
       */
       function appendFloorplan(floorplan) {
         floorplan.rooms = [];
+        floorplan.data = [];
         floorplan.translate = [0,0];
         floorplan.scale = 1;
 
@@ -145,11 +146,11 @@ angular.module('otaniemi3dApp')
 
         return omiMessage.send('read', sensorRequest)
           .then(function (data) {
-            floorplan.data = data[0].childObjects;
+            floorplan.data = data;
             return floorplan;
           }, function (error) {
-            console.log(error);
-            floorplan.data = [];
+            console.log('Error:', error);
+            floorplan.data = floorplan.data || [];
             return floorplan;
           });
       }
@@ -199,15 +200,21 @@ angular.module('otaniemi3dApp')
       function updateRoomColors(floorplan) {
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
-          .each(function (datum) {
-            if (datum.infoItems.length) {
-              var sensor = datum.infoItems[0];
-              var value = sensor.values[0].value;
-              console.log(sensor.name);
-              var color = valueConverter.getColor(sensor.name, value);
-              d3.select(this)
-                .style('fill', color.rgb)
-                .style('fill-opacity', color.opacity);
+          .style('fill', function(datum) {
+            // body...
+          })
+          .each(function () {
+            var data = d3.select(this).datum();
+
+            for (var i = 0; i < data.sensors.length; i++) {
+              if (data.sensors[i].type === scope.sensorType.name) {
+                var sensor = data.sensors[i];
+                var value = sensor.values[0].value;
+                var color = valueConverter.getColor(sensor.type, value);
+                d3.select(this)
+                  .style('fill', color.rgb)
+                  .style('fill-opacity', color.opacity);
+              }
             }
           });
       }
