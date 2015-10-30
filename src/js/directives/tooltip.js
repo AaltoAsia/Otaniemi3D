@@ -36,6 +36,7 @@ angular.module('otaniemi3dApp')
                 '{{sensor.values[0].value}} {{sensor.suffix}}',
               '</span>',
 		          '<button ng-click="tooltip.togglePlug(sensor)"',
+                      'ng-disabled="tooltip.togglingPlug"',
       	              'ng-if="sensor.metaData.isWritable"',
       	              'class="btn black-btn panorama-btn"',
                       'title="Toggle plug">',
@@ -68,6 +69,7 @@ angular.module('otaniemi3dApp')
         this.roomId = '';
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
+        this.togglingPlug = false;
         this.roomsWithPanorama = [
           'Room-147a', 'Room-238d','Room-237c','Room-235','Room-232a',
           '2nd Floor Corridor Start',
@@ -187,7 +189,15 @@ angular.module('otaniemi3dApp')
               '</Object>'+
             '</Object>');
 
-          omiMessage.send('write', writeRequest);
+          self.togglingPlug = true;
+
+          omiMessage.send('write', writeRequest)
+            .then(function () {
+              self.togglingPlug = false;
+              sensor.values[0].value = newValue;
+            }, function () {
+              self.togglingPlug = false;
+            });
         };
       },
       controllerAs: 'tooltip',
