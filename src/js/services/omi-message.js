@@ -8,7 +8,7 @@
  * Service in the otaniemi3dApp.
  */
 angular.module('otaniemi3dApp')
-  .service('omiMessage', function ($http, $q, $interval, dataStorage) {
+  .service('omiMessage', function ($http) {
 
     //Store pending http requests to an object
     var pendingRequests = Object.create(null);
@@ -32,8 +32,7 @@ angular.module('otaniemi3dApp')
         var promise = $http(options)
           .then(function(response) {
             return parse(response.data);
-          })
-          .then(function(error) {
+          }, function(error) {
             if (error.status === 404) {
               return 'Couldn\'t find such sensors or values.';
             } else {
@@ -66,6 +65,27 @@ angular.module('otaniemi3dApp')
       return parsedObjects;
     }
 
+    //sorting function
+    function byName(a, b) {
+      if (a.name > b.name) {
+        return 1;
+      }
+      if (a.name < b.name) {
+        return -1;
+      }
+      return 0;
+    }
+    //sorting function
+    function byId(a, b) {
+      if (a.id > b.id) {
+        return 1;
+      }
+      if (a.id < b.id) {
+        return -1;
+      }
+      return 0;
+    }
+
     self.parseObject = function (object) {
       var children = object.children;
       var type = object.getAttribute('type');
@@ -92,10 +112,10 @@ angular.module('otaniemi3dApp')
         description: description ? description.textContent : null,
         infoItems: infoItems.map(
           function(item) { return self.parseInfoItem(item); }
-        ),
+        ).sort(byName),
         childObjects: omiObjects.map(
           function(object) { return self.parseObject(object); }
-        )
+        ).sort(byId)
       };
     };
 

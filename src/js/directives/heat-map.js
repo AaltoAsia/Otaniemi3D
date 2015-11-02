@@ -73,7 +73,6 @@ angular.module('otaniemi3dApp')
       */
       function appendFloorplan(floorplan) {
         floorplan.rooms = [];
-        floorplan.data = [];
         floorplan.translate = [0,0];
         floorplan.scale = 1;
 
@@ -146,11 +145,11 @@ angular.module('otaniemi3dApp')
 
         return omiMessage.send('read', sensorRequest)
           .then(function (data) {
-            floorplan.data = data;
+            floorplan.data = data[0].childObjects;
             return floorplan;
           }, function (error) {
-            console.log('Error:', error);
-            floorplan.data = floorplan.data || [];
+            console.log(error);
+            floorplan.data = [];
             return floorplan;
           });
       }
