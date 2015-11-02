@@ -166,7 +166,7 @@ angular.module('otaniemi3dApp')
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
           .datum(function() {
-            let datum = d3.select(this).datum();
+            var datum = d3.select(this).datum();
 
             if (datum) {
               return datum;
