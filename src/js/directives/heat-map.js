@@ -174,18 +174,16 @@ angular.module('otaniemi3dApp')
 
             var id = d3.select(this).attr('data-room-id');
             var room = floorplan.data.filter(
-              function(object) { return object.id === id; }
+              function(infoItem) {
+                return infoItem.id === id;
+              }
             );
 
-            if (room.length) {
-              return room[0];
-            } else {
-              return {
-                id: id,
-                infoItems: [],
-                childObjects: []
-              };
-            }
+            return room.length ? room[0] : {
+              id: id,
+              infoItems: [],
+              childObjects: []
+            };
           });
 
         return floorplan;
@@ -200,21 +198,18 @@ angular.module('otaniemi3dApp')
       function updateRoomColors(floorplan) {
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
-          .style('fill', function(datum) {
-            // body...
-          })
-          .each(function () {
-            var data = d3.select(this).datum();
-
-            for (var i = 0; i < data.sensors.length; i++) {
-              if (data.sensors[i].type === scope.sensorType.name) {
-                var sensor = data.sensors[i];
-                var value = sensor.values[0].value;
-                var color = valueConverter.getColor(sensor.type, value);
-                d3.select(this)
-                  .style('fill', color.rgb)
-                  .style('fill-opacity', color.opacity);
+          .each(function (datum) {
+            var sensor = datum.infoItems.filter(
+              function(infoItem) {
+                return infoItem.name === scope.sensorType.name;
               }
+            );
+            if (sensor.length) {
+              var value = sensor[0].values[0].value;
+              var color = valueConverter.getColor(sensor[0].name, value);
+              d3.select(this)
+                .style('fill', color.rgb)
+                .style('fill-opacity', color.opacity);
             }
           });
       }

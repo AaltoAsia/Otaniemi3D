@@ -251,6 +251,8 @@ angular.module('otaniemi3dApp')
         function showTooltip(datum) {
           d3.select(element[0]).style('display', null);
 
+          
+
           if (datum && !datum.metaData && !tooltipCtrl.isLocked) {
             getMetaData(datum);
           }
