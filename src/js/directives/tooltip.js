@@ -14,7 +14,7 @@ angular.module('otaniemi3dApp')
         '<table class="tooltip-table">',
           '<tr>',
             '<th colspan="2" style="text-align:center">',
-              '<span>{{tooltip.room}}</span>',
+              '<span>{{tooltip.room.id | roomName}}</span>',
               '<span style="float: right">',
                 '<span class="loading-spinner"',
                       'ng-style="{\'opacity\': tooltip.isLoading ? 1 : 0}">',
@@ -28,12 +28,12 @@ angular.module('otaniemi3dApp')
               '</span>',
             '</th>',
           '</tr>',
-          '<tr ng-repeat="sensor in tooltip.sensors | orderBy: \'name\'"',
+          '<tr ng-repeat="sensor in tooltip.room.infoItems | orderBy: \'name\'"',
               'ng-style="tooltip.getSensorStyle(sensor)">',
             '<th>{{sensor.name}}</th>',
             '<td>',
               '<span>',
-                '{{sensor.values[0].value}} {{sensor.suffix}}',
+                '{{sensor.values[0].value}} {{sensor.name | sensorSuffix}}',
               '</span>',
 		          '<button ng-click="tooltip.togglePlug(sensor)"',
                       'ng-disabled="tooltip.togglingPlug"',
@@ -42,6 +42,26 @@ angular.module('otaniemi3dApp')
                       'title="Toggle plug">',
     		        'Toggle',
     		      '</button>',
+    	      '</td>',
+          '</tr>',
+          '<tr ng-repeat="object in tooltip.room.childObjects | orderBy: \'id\'">',
+            '<th>{{object.id}}</th>',
+            '<td>',
+              '<tr ng-repeat="sensor in object.infoItems | orderBy: \'name\'"',
+                '<th>{{sensor.name}}</th>',
+                '<td>',
+                  '<span>',
+                    '{{sensor.values[0].value}} {{sensor.name | sensorSuffix}}',
+                  '</span>',
+                  '<button ng-click="tooltip.togglePlug(sensor)"',
+                          'ng-disabled="tooltip.togglingPlug"',
+                          'ng-if="sensor.metaData.isWritable"',
+                          'class="btn black-btn panorama-btn"',
+                          'title="Toggle plug">',
+                    'Toggle',
+                  '</button>',
+                '</td>',
+              '</tr>',
     	      '</td>',
           '</tr>',
           '<tr>',
@@ -65,7 +85,7 @@ angular.module('otaniemi3dApp')
       controller: function () {
         var self = this;
         this.sensors = [];
-        this.room = '';
+        this.room = {};
         this.roomId = '';
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
@@ -125,38 +145,41 @@ angular.module('otaniemi3dApp')
           });
         })();
 
-        this.refresh = function () {
-          var infoItems = '';
-          for (var i = 0; i < self.sensors.length; i++) {
-            infoItems += (
-              '<InfoItem name="' + self.sensors[i].type + '">' +
+        this.refresh = function (datum) {
+          datum = datum || self.room;
+          var infoItems = datum.infoItems.reduce(
+            function(previous, current) {
+              return previous +
+              '<InfoItem name="' + current.name + '">' +
                 '<MetaData/>' +
               '</InfoItem>'
-            );
-          }
+            }, ''
+          );
 
-          var dataRequest = (
+          var metaDataRequest = (
             '<Object>' +
               '<id>K1</id>' +
               '<Object>' +
-                '<id>' + self.roomId + '</id>' +
+                '<id>' + datum.id + '</id>' +
                 infoItems +
               '</Object>' +
             '</Object>'
           );
 
+          //Mark room's datum.metaData true to indicate that meta data was requested
+          datum.metaData = true;
           self.isLoading = true;
 
-          return omiMessage.send('read', dataRequest, {}, '', false)
-            .then(function(data) {
-              self.sensors = data;
+          omiMessage.send('read', metaDataRequest, {}, '', false)
+            .then(function (objects) {
+              //Update sensors' meta data
+              datum = objects[0];
               self.isLoading = false;
-              return self.sensors;
-            }, function(error) {
+            }, function (error) {
               self.isLoading = false;
-              console.log('Error:', error);
+              console.log(error);
             });
-        };
+        }
 
         this.openPanorama = function (roomId) {
           $state.go('panorama', {roomId: roomId});
@@ -204,57 +227,11 @@ angular.module('otaniemi3dApp')
       bindToController: true,
       link: function postLink(scope, element, attrs, tooltipCtrl) {
 
-        function getMetaData(datum) {
-          var infoItems = '';
-          for (var i = 0; i < datum.sensors.length; i++) {
-            infoItems += (
-              '<InfoItem name="' + datum.sensors[i].type + '">' +
-                '<MetaData/>' +
-              '</InfoItem>'
-            );
-          }
-
-          var metaDataRequest = (
-            '<Object>' +
-              '<id>K1</id>' +
-              '<Object>' +
-                '<id>' + datum.roomId + '</id>' +
-                infoItems +
-              '</Object>' +
-            '</Object>'
-          );
-
-          //Mark room's datum.metaData true to indicate that meta data was requested
-          datum.metaData = true;
-          tooltipCtrl.isLoading = true;
-
-          omiMessage.send('read', metaDataRequest, {}, '', false)
-            .then(function (data) {
-              //Update sensors' meta data
-              for (var i = 0; i < data.length; i++) {
-                for (var j = 0; j < datum.sensors.length; j++) {
-                  if (data[i].id === datum.sensors[j].id) {
-                    if (data[i].metaData) {
-                      datum.sensors[j].metaData = data[i].metaData;
-                    }
-                    break;
-                  }
-                }
-              }
-              tooltipCtrl.isLoading = false;
-            }, function (error) {
-              tooltipCtrl.isLoading = false;
-              console.log('Error while fetching sensor metadata:', error);
-            });
-        }
-
         function showTooltip(datum) {
           d3.select(element[0]).style('display', null);
 
-          
-
           if (datum && !datum.metaData && !tooltipCtrl.isLocked) {
-            getMetaData(datum);
+            tooltipCtrl.refresh(datum);
           }
         }
 
@@ -270,19 +247,12 @@ angular.module('otaniemi3dApp')
             tooltipCtrl.caption = 'Click to lock the tooltip';
 
             scope.$apply(function () {
-              tooltipCtrl.sensors = datum.sensors;
-              tooltipCtrl.room = '';
+              tooltipCtrl.room = datum;
 
-              if (datum.room) {
-                tooltipCtrl.room = datum.room;
-              }
-              if (datum.roomId) {
-                tooltipCtrl.roomId = datum.roomId;
-                if (tooltipCtrl.roomsWithPanorama.indexOf(datum.roomId) > -1) {
-                  tooltipCtrl.hasPanorama = true;
-                } else {
-                  tooltipCtrl.hasPanorama = false;
-                }
+              if (tooltipCtrl.roomsWithPanorama.indexOf(datum.id) > -1) {
+                tooltipCtrl.hasPanorama = true;
+              } else {
+                tooltipCtrl.hasPanorama = false;
               }
 
             });

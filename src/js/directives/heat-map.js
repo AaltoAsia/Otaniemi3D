@@ -173,8 +173,8 @@ angular.module('otaniemi3dApp')
 
             var id = d3.select(this).attr('data-room-id');
             var room = floorplan.data.filter(
-              function(infoItem) {
-                return infoItem.id === id;
+              function(omiObject) {
+                return omiObject.id === id;
               }
             );
 
