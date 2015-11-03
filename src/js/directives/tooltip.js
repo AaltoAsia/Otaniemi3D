@@ -82,11 +82,9 @@ angular.module('otaniemi3dApp')
       scope: {
         sensorType: '='
       },
-      controller: function () {
+      controller: function ($scope) {
         var self = this;
-        this.sensors = [];
         this.room = {};
-        this.roomId = '';
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
         this.togglingPlug = false;
@@ -170,12 +168,14 @@ angular.module('otaniemi3dApp')
           datum.metaData = true;
           self.isLoading = true;
 
-          omiMessage.send('read', metaDataRequest, {}, '', false)
+          return omiMessage.send('read', metaDataRequest, {}, false)
             .then(function (objects) {
-              //Update sensors' meta data
-              datum = objects[0];
               self.isLoading = false;
+              datum = objects[0].childObjects[0];
+              return datum;
             }, function (error) {
+              //TODO: Make an OMI error parser.
+              //console.log(omiMessage.parseError(error));
               self.isLoading = false;
               console.log(error);
             });
@@ -229,9 +229,14 @@ angular.module('otaniemi3dApp')
 
         function showTooltip(datum) {
           d3.select(element[0]).style('display', null);
+          var elem = this;
 
           if (datum && !datum.metaData && !tooltipCtrl.isLocked) {
-            tooltipCtrl.refresh(datum);
+            scope.$apply(function () {
+              tooltipCtrl.refresh(datum).then(function(data) {
+                d3.select(elem).datum(data);
+              });
+            });
           }
         }
 

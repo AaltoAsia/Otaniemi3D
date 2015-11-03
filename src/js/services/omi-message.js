@@ -32,12 +32,6 @@ angular.module('otaniemi3dApp')
         var promise = $http(options)
           .then(function(response) {
             return parse(response.data);
-          }, function(error) {
-            if (error.status === 404) {
-              return 'Couldn\'t find such sensors or values.';
-            } else {
-              return 'Failed to fetch sensor data. Please try again';
-            }
           })
           .finally(function() {
             pendingRequests[request] = false;
