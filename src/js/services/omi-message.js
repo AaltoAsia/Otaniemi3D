@@ -28,13 +28,11 @@ angular.module('otaniemi3dApp')
         ignoreLoadingBar: !loadingBar
       };
 
-      if (!pendingRequests[request]) {
+      if (!pendingRequests[request + method + JSON.stringify(params)]) {
         var promise = $http(options)
           .then(function(response) {
+            delete pendingRequests[request];
             return parse(response.data);
-          })
-          .finally(function() {
-            pendingRequests[request] = false;
           });
 
         pendingRequests[request] = promise;
@@ -45,7 +43,6 @@ angular.module('otaniemi3dApp')
 
     function parse(xml) {
       var data = new DOMParser().parseFromString(xml, 'text/xml');
-      console.log(data.querySelector('Objects'));
       var root = data.querySelector('Objects');
       var objects = root.children;
       var parsedObjects = [];

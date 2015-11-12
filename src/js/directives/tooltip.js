@@ -172,6 +172,8 @@ angular.module('otaniemi3dApp')
             .then(function (objects) {
               self.isLoading = false;
               datum = objects[0].childObjects[0];
+              datum.metaData = true;
+              self.room = datum;
               return datum;
             }, function (error) {
               //TODO: Make an OMI error parser.
@@ -229,15 +231,6 @@ angular.module('otaniemi3dApp')
 
         function showTooltip(datum) {
           d3.select(element[0]).style('display', null);
-          var elem = this;
-
-          if (datum && !datum.metaData && !tooltipCtrl.isLocked) {
-            scope.$apply(function () {
-              tooltipCtrl.refresh(datum).then(function(data) {
-                d3.select(elem).datum(data);
-              });
-            });
-          }
         }
 
         function moveTooltip(datum) {
@@ -248,18 +241,24 @@ angular.module('otaniemi3dApp')
           showTooltip(datum);
 
           if (datum) {
-            tooltipCtrl.isLoading = false;
-            tooltipCtrl.caption = 'Click to lock the tooltip';
-
+            var elem = this;
             scope.$apply(function () {
-              tooltipCtrl.room = datum;
+              if (!datum.metaData) {
+                tooltipCtrl.refresh(datum).then(function(data) {
+                  d3.select(elem).datum(data);
+                });
+              } else {
+                tooltipCtrl.room = datum;
+              }
+
+              tooltipCtrl.isLoading = false;
+              tooltipCtrl.caption = 'Click to lock the tooltip';
 
               if (tooltipCtrl.roomsWithPanorama.indexOf(datum.id) > -1) {
                 tooltipCtrl.hasPanorama = true;
               } else {
                 tooltipCtrl.hasPanorama = false;
               }
-
             });
           }
 
