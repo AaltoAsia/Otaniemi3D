@@ -13,6 +13,11 @@ angular.module('otaniemi3dApp')
 
     var self = this;
 
+    self.room = {};
+    self.room.id = $state.params.roomId;
+
+
+
     self.roomId = $state.params.roomId;
     self.sensors = [];
     self.newSensors = [];
@@ -22,18 +27,18 @@ angular.module('otaniemi3dApp')
     $window.krpano = {};
 
     var roomUrl =
-      'https://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + self.roomId;
+      'https://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + self.room.id;
     var xmlPath = 'assets/buildings/' + buildingData.currentBuilding.id +
-      '/panorama/' + self.roomId + '.xml';
+      '/panorama/' + self.room.id + '.xml';
 
-    self.room = {
+    self.panoramaData = {
       xmlPath: xmlPath,
       url: roomUrl,
-      sensors: self.sensors
+      //sensors: self.sensors
     };
 
     self.alert = {
-      show: false,
+      visible: false,
       message: ''
     };
 
@@ -45,83 +50,86 @@ angular.module('otaniemi3dApp')
       $window.history.back();
     };
 
-    getSensorData()
-      .then(displaySensors);
+    getRoomObject(self.room)
+      .then(updateRoom)
+      .then(getMetaData)
+      .then(updateRoom)
+      .then(waitForPanorama)
+      .then(makeSensorGroups)
+      .then(addSensorGroups);
 
-    function getSensorData() {
-      var dataRequest = {
-        'Object': {
-          'id': {
-            'keyValue': 'K1'
-          },
-          'Object': {
-            'id': {
-              'keyValue': self.roomId
-            }
-          }
-        }
-      };
+    function updateRoom(room) {
+      self.room = room
+      return room;
+    }
 
-      return omiMessage.send('read', dataRequest)
-        .then(function (data) {
-          return data;
+    function getRoomObject(room) {
+      var request = (
+        '<Object>' +
+          '<id>K1</id>' +
+          '<Object>' +
+            '<id>' + room.id + '</id>' +
+          '</Object>' +
+        '</Object>'
+      );
+
+      return omiMessage.send('read', request)
+        .then(function (objects) {
+          //First child object is the room object
+          return objects[0].childObjects[0];
         });
     }
 
-    function displaySensors(sensors) {
-      return getMetaData(sensors)
-        .then(waitForPanorama)
-        .then(makeSensorGroups)
-        .then(addSensorGroups);
-    }
+    function getMetaData(room, loadingBar) {
+      //Convert to boolean
+      loadingBar = !!loadingBar;
 
-    function getMetaData(sensors, loadingBar) {
-      if (typeof loadingBar === 'undefined') {
-        loadingBar = true;
-      }
-      var metaDataRequest = {
-        'Object': {
-          'id': {
-            'keyValue': 'K1'
-          },
-          'Object': {
-            'id': {
-              'keyValue': self.roomId
-            },
-            'InfoItem': []
-          }
-        }
-      };
+      var infoItems = room.infoItems.reduce(
+        function(previous, current) {
+          return previous +
+          '<InfoItem name="' + current.name + '">' +
+            '<MetaData/>' +
+          '</InfoItem>'
+        }, ''
+      );
 
-      for (var i = 0; i < sensors.length; i++) {
-        metaDataRequest.Object.Object.InfoItem.push({
-          'MetaData': {},
-          '@name': sensors[i].type
-        });
-      }
+      var request = (
+        '<Object>' +
+          '<id>K1</id>' +
+          '<Object>' +
+            '<id>' + room.id + '</id>' +
+            infoItems +
+          '</Object>' +
+        '</Object>'
+      );
 
-      return omiMessage.send('read', metaDataRequest, {}, '', loadingBar)
-        .then(function(data) {
-          self.sensors = data;
-          return self.sensors;
+      return omiMessage.send('read', request, {}, loadingBar)
+        .then(function (objects) {
+          //First child object is the room object
+          return objects[0].childObjects[0];
         });
     }
 
     function waitForPanorama(data) {
       var deferred = $q.defer();
+      var limit = 50;
 
-      $interval(function () {
+      var checkPanoObj = $interval(function () {
         if ($('#panorama_obj').length) {
           deferred.resolve(data);
+          $interval.cancel(checkPanoObj);
           $window.krpano.elem = $('#panorama_obj')[0];
+        } else if (limit < 0) {
+          deferred.reject('Panorama initialization timed out');
         }
+        limit--;
       }, 150);
 
       return deferred.promise;
     }
 
-    function makeSensorGroups(sensors) {
-      return sensors
+    function makeSensorGroups(room) {
+      var infoItems = room.infoItems
         .reduce(function (prev, curr) {
           if (!prev[curr.metaData.ath + ',' + curr.metaData.atv]) {
             prev[curr.metaData.ath + ',' + curr.metaData.atv] = [];

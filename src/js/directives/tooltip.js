@@ -66,7 +66,7 @@ angular.module('otaniemi3dApp')
           '</tr>',
           '<tr>',
             '<td colspan="2">',
-              '<button ng-click="tooltip.openPanorama(tooltip.roomId)"',
+              '<button ng-click="tooltip.openPanorama(tooltip.room)"',
                       'ng-show="tooltip.hasPanorama"',
                       'class="btn black-btn panorama-btn"',
                       'title="Open panorama picture">',
@@ -182,8 +182,8 @@ angular.module('otaniemi3dApp')
             });
         }
 
-        this.openPanorama = function (roomId) {
-          $state.go('panorama', {roomId: roomId});
+        this.openPanorama = function (room) {
+          $state.go('panorama', {roomId: room.id});
         };
 
         this.getSensorStyle = function (sensor) {

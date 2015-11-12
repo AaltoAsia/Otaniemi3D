@@ -11,11 +11,11 @@ angular.module('otaniemi3dApp')
     return {
       restrict: 'E',
       scope: {
-        room: '='
+        data: '='
       },
       link: function postLink(scope) {
         embedpano({
-          xml: scope.room.xmlPath,
+          xml: scope.data.xmlPath,
           id: 'panorama_obj',
           target: 'room-panorama',
           html5: 'only',
