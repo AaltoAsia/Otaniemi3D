@@ -173,7 +173,6 @@ angular.module('otaniemi3dApp')
               self.isLoading = false;
               datum = objects[0].childObjects[0];
               datum.metaData = true;
-              self.room = datum;
               return datum;
             }, function (error) {
               //TODO: Make an OMI error parser.

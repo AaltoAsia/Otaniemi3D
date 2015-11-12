@@ -31,8 +31,10 @@ angular.module('otaniemi3dApp')
       if (!pendingRequests[request + method + JSON.stringify(params)]) {
         var promise = $http(options)
           .then(function(response) {
-            delete pendingRequests[request];
             return parse(response.data);
+          })
+          .finally(function() {
+            delete pendingRequests[request];
           });
 
         pendingRequests[request] = promise;
