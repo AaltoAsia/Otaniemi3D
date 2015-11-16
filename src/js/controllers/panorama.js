@@ -89,7 +89,7 @@ angular.module('otaniemi3dApp')
           return previous +
           '<InfoItem name="' + current.name + '">' +
             '<MetaData/>' +
-          '</InfoItem>'
+          '</InfoItem>';
         }, ''
       );
 
@@ -129,42 +129,62 @@ angular.module('otaniemi3dApp')
     }
 
     function makeSensorGroups(room) {
-      var infoItems = room.infoItems
-        .reduce(function (prev, curr) {
-          if (!prev[curr.metaData.ath + ',' + curr.metaData.atv]) {
-            prev[curr.metaData.ath + ',' + curr.metaData.atv] = [];
+      var infoItems = [];
+      var childObjects = [];
+      if (room.infoItems) {
+        infoItems = room.infoItems.reduce(function (prev, current) {
+          var existingGroup = prev.find(function (group) {
+            return current.metaData ?
+              (group.ath === current.metaData.ath &&
+               group.atv === current.metaData.atv) : false;
+          });
+          if (existingGroup) {
+            existingGroup.infoItems.push(current);
+          } else {
+            prev.push({
+              ath: current.metaData ? current.metaData.ath : null,
+              atv: current.metaData ? current.metaData.atv : null,
+              infoItems: [current]
+            });
           }
-          prev[curr.metaData.ath + ',' + curr.metaData.atv].push(curr);
           return prev;
-        }, {});
+        }, []);
+      }
+
+      if (room.childObjects) {
+        childObjects = room.childObjects.map(function (object) {
+          return makeSensorGroups(object);
+        });
+      }
+
+      var childObjectInfoItems= [].concat.apply([], childObjects);
+      return infoItems.concat(childObjectInfoItems);
     }
 
     function addSensorGroups(sensorGroups) {
       var krpano = $('#panorama_obj')[0];
 
-      angular.forEach(sensorGroups, function (sensorGroup, key) {
-        var pos = key.split(',');
-
-        if(isNaN(Number(pos[0])) || isNaN(Number(pos[1]))) {
+      for (var i = 0; i < sensorGroups.length; i++) {
+        if (isNaN(Number(sensorGroups[i].ath)) ||
+            isNaN(Number(sensorGroups[i].atv))) {
           return;
         }
 
-        var id = 'id';
-        for (var i = 0; i < sensorGroup.length; i++) {
-          id += '-' + sensorGroup[i].id;
-        }
+        var id = sensorGroups[i].infoItems.reduce(function (prev, current) {
+          return prev + '_' + current.name;
+        }, 'sensor_group');
 
         var sensorBox = {
           id: id,
-          sensors: sensorGroup
+          sensors: sensorGroups[i].infoItems
         };
         self.sensorBoxes.push(sensorBox);
 
         krpano.call('addsensor(' + [
-          sensorBox.id, pos[0], pos[1],
+          sensorBox.id, sensorGroups[i].ath, sensorGroups[i].atv,
           sensorTooltip(sensorBox)
-        ].join(',') + ',"' + JSON.stringify(sensorGroup) +'"' + ')');
-      });
+        ].join(',') + ',"' + JSON.stringify(sensorGroups[i]) +'"' + ')');
+      }
 
       return sensorGroups;
     }

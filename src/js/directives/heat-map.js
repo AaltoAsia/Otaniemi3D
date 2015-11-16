@@ -172,13 +172,13 @@ angular.module('otaniemi3dApp')
             }
 
             var id = d3.select(this).attr('data-room-id');
-            var room = floorplan.data.filter(
+            var room = floorplan.data.find(
               function(omiObject) {
                 return omiObject.id === id;
               }
             );
 
-            return room.length ? room[0] : {
+            return room ? room : {
               id: id,
               infoItems: [],
               childObjects: []
@@ -198,14 +198,14 @@ angular.module('otaniemi3dApp')
         d3.select(floorplan.svg)
           .selectAll('[data-room-id]')
           .each(function (datum) {
-            var sensor = datum.infoItems.filter(
+            var sensor = datum.infoItems.find(
               function(infoItem) {
                 return infoItem.name === scope.sensorType.name;
               }
             );
-            if (sensor.length) {
-              var value = sensor[0].values[0].value;
-              var color = valueConverter.getColor(sensor[0].name, value);
+            if (sensor) {
+              var value = sensor.values[0].value;
+              var color = valueConverter.getColor(sensor.name, value);
               d3.select(this)
                 .style('fill', color.rgb)
                 .style('fill-opacity', color.opacity);
