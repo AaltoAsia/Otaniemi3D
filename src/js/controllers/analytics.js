@@ -8,10 +8,9 @@
  * Controller of the otaniemi3dApp
  */
 angular.module('otaniemi3dApp')
-  .controller('AnalyticsCtrl', function ($scope, $window, omiMessage, $modal) {
+  .controller('AnalyticsCtrl', function ($scope, $window, omiMessage, $modal, valueConverter) {
 
-    $scope.sensor = null;
-    $scope.sensors = [];
+    $scope.infoItems = [];
     $scope.searchStr = '';
     //Bootstrap small size < 992px
     $scope.mobileDevice = $window.innerWidth < 992;
@@ -20,11 +19,13 @@ angular.module('otaniemi3dApp')
       $scope.mobileDevice = $window.innerWidth < 992;
     });
 
-    var temperatureColor = '#f15c80';
-    var pirColor = '#90ed7d';
-    var lightColor = '#f7a35c';
-    var co2Color = '#7e09e8';
-    var humidityColor = '#2150ff';
+    var chartColors = {
+      temperature: '#f15c80',
+      pir: '#90ed7d',
+      light: '#f7a35c',
+      co2: '#7e09e8',
+      humidity: '#2150ff'
+    };
 
     $scope.alert = {
       show: false,
@@ -39,14 +40,14 @@ angular.module('otaniemi3dApp')
           labels: {
             format: '{value}°C',
             style: {
-              color: temperatureColor,
+              color: chartColors.temperature,
               fontWeight: 'bold'
             }
           },
           title: {
             text: 'Temperature',
             style: {
-              color: temperatureColor,
+              color: chartColors.temperature,
               fontWeight: 'bold'
             }
           },
@@ -56,14 +57,14 @@ angular.module('otaniemi3dApp')
           labels: {
             format: '{value} lux',
             style: {
-              color: lightColor,
+              color: chartColors.light,
               fontWeight: 'bold'
             }
           },
           title: {
             text: 'Light',
             style: {
-              color: lightColor,
+              color: chartColors.light,
               fontWeight: 'bold'
             }
           },
@@ -73,14 +74,14 @@ angular.module('otaniemi3dApp')
           labels: {
             format: '{value}',
             style: {
-              color: pirColor,
+              color: chartColors.pir,
               fontWeight: 'bold'
             }
           },
           title: {
             text: 'Pir',
             style: {
-              color: pirColor,
+              color: chartColors.pir,
               fontWeight: 'bold'
             }
           },
@@ -90,14 +91,14 @@ angular.module('otaniemi3dApp')
           labels: {
             format: '{value}%',
             style: {
-              color: humidityColor,
+              color: chartColors.humidity,
               fontWeight: 'bold'
             }
           },
           title: {
             text: 'Humidity',
             style: {
-              color: humidityColor,
+              color: chartColors.humidity,
               fontWeight: 'bold'
             }
           },
@@ -108,14 +109,14 @@ angular.module('otaniemi3dApp')
           labels: {
             format: '{value} ppm',
             style: {
-              color: co2Color,
+              color: chartColors.co2,
               fontWeight: 'bold'
             }
           },
           title: {
             text: 'CO2',
             style: {
-              color: co2Color,
+              color: chartColors.co2,
               fontWeight: 'bold'
             }
           },
@@ -130,7 +131,7 @@ angular.module('otaniemi3dApp')
       title: {
         text: 'Data history'
       },
-      noData: 'Add sensors to drop area to see data chart'
+      noData: 'Add infoItems to drop area to see data chart'
     };
 
     var day, week, month, year;
@@ -190,9 +191,8 @@ angular.module('otaniemi3dApp')
       }
     };
 
-    $scope.clearSensors = function () {
-      $scope.sensors = [];
-      $scope.sensor = null;
+    $scope.clearInfoItems = function () {
+      $scope.infoItems = [];
       $scope.chartConfig.series = [{
         name: ' ',
         data : [],
@@ -203,48 +203,67 @@ angular.module('otaniemi3dApp')
       }];
     };
 
-    $scope.addSensor = function (sensor) {
-      if (angular.isArray(sensor)) {
-        if (!sensor.length) {
+    $scope.addInfoItem = function (infoItem) {
+      if (angular.isArray(infoItem)) {
+        if (!infoItem.length) {
           return;
         }
-        angular.forEach(sensor, function (value) {
-          $scope.addSensor(value);
+        angular.forEach(infoItem, function (value) {
+          $scope.addInfoItem(value);
         });
         return;
       }
 
       for (var k = 0; k < $scope.chartConfig.series.length; k++) {
-        if ($scope.chartConfig.series[k].id === sensor.id) {
+        if ($scope.chartConfig.series[k].id === infoItem.id) {
           return;
         }
       }
 
-      var path = sensor.url.substring(sensor.url.indexOf($scope.App.building) + 1);
-
-
-      var request = objects.splice(0, -1).reduce(function (prev, current) {
+      //Split url to start after $scope.App.building.
+      //e.g. 'otaniemi3d.cs.hut.fi/omi/node/Objects/K1/Room-101/temperature'
+      //becames 'K1/Room-101/temperature'
+      var path = infoItem.url.substring(infoItem.url.indexOf($scope.App.building.id));
+      //This split results in ['K1', 'Room-101', 'temperature']
+      var objects = path.split('/');
+      //Because last value in objects array is InfoItem, we splice the
+      //array and add the InfoItem later.
+      var request = objects.slice(0, -1).reduce(function (prev, current) {
         return [prev[0] +
           '<Object>' +
             '<id>' + current + '</id>',
           '</Object>' +
           prev[1]];
-      }, ['', '']).join('');
+      }, ['', '']);
+
+      request = request[0] +
+        '<InfoItem name="' + objects.pop() + '"/>' +
+        request[1];
 
       var params = $scope.timeFrame.params;
       $scope.chartConfig.loading = true;
 
       omiMessage.send('read', request, params).then(function success (data) {
-        var selectedSensor = data[0],
-            sensorData = [];
+        var odfObject = data[0];
+        var childObjects = odfObject.childObjects;
+        var chartId = odfObject.id;
 
-        $scope.sensor = sensor;
-        $scope.sensors.push(sensor);
+        while (childObjects && childObjects.length) {
+          odfObject = childObjects[0];
+          childObjects = odfObject.childObjects;
+          chartId += '/' + odfObject.id;
+        }
 
-        for (var j = 0; j < selectedSensor.values.length; j++) {
-          sensorData.push([
-            new Date(selectedSensor.values[j].time).getTime(),
-            selectedSensor.values[j].value,
+        var infoItem = odfObject.infoItems[0];
+        infoItem.parent = odfObject.id;
+        chartId += '/' + infoItem.name;
+        $scope.infoItems.push(infoItem);
+        var valueData = [];
+
+        for (var j = 0; j < infoItem.values.length; j++) {
+          valueData.push([
+            new Date(infoItem.values[j].time).getTime(),
+            Number(infoItem.values[j].value),
           ]);
         }
 
@@ -253,35 +272,17 @@ angular.module('otaniemi3dApp')
           $scope.chartConfig.series = [];
         }
 
-        var color;
-        switch (selectedSensor.type) {
-          case 'temperature':
-            color = temperatureColor;
-            break;
-          case 'light':
-            color = lightColor;
-            break;
-          case 'pir':
-            color = pirColor;
-            break;
-          case 'humidity':
-            color = humidityColor;
-            break;
-          case 'co2':
-            color = co2Color;
-            break;
-          default:
-            color = '#707070';
-        }
+        var color = chartColors[infoItem.name] ?
+          chartColors[infoItem.name] : '#707070';
 
         $scope.chartConfig.series.push({
-          name: selectedSensor.room + ': ' + selectedSensor.name,
-          data: sensorData,
+          name: odfObject.id + ': ' + infoItem.name,
+          data: valueData,
           tooltip: {
-            valueSuffix: ' ' + selectedSensor.suffix
+            valueSuffix: valueConverter.getValueUnit(infoItem.name)
           },
-          id: selectedSensor.id,
-          yAxis: selectedSensor.type,
+          id: chartId,
+          yAxis: infoItem.name,
           color: color
         });
 
@@ -297,7 +298,7 @@ angular.module('otaniemi3dApp')
       });
     };
 
-    $scope.dropSensor = function (event) {
+    $scope.dropInfoItem = function (event) {
       // body...
     };
 

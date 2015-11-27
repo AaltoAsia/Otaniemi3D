@@ -32,32 +32,19 @@ ul.nav {
   color: #FFFFFF;
   background-color: #000000;
   border-color: #000000; }
-  .btn-black:hover,
-  .btn-black:focus,
-  .btn-black:active,
-  .btn-black.active,
+  .btn-black:hover, .btn-black:focus, .btn-black:active, .btn-black.active,
   .btn-black.open .btn-black.dropdown-toggle {
     color: #FFFFFF;
     background-color: #A8A8A8;
     border-color: #000000; }
-  .btn-black:active,
-  .btn-black.active,
+  .btn-black:active, .btn-black.active,
   .btn-black.open .btn-black.dropdown-toggle {
     background-image: none; }
-  .btn-black.disabled,
-  .btn-black[disabled],
-  fieldset[disabled] .btn-black,
-  .btn-black.disabled:hover,
-  .btn-black[disabled]:hover,
-  fieldset[disabled] .btn-black:hover,
-  .btn-black.disabled:focus,
-  .btn-black[disabled]:focus,
-  fieldset[disabled] .btn-black:focus,
-  .btn-black.disabled:active,
-  .btn-black[disabled]:active,
-  fieldset[disabled] .btn-black:active,
-  .btn-black.disabled.active,
-  .btn-black[disabled].active,
+  .btn-black.disabled, .btn-black[disabled],
+  fieldset[disabled] .btn-black, .btn-black.disabled:hover, .btn-black[disabled]:hover,
+  fieldset[disabled] .btn-black:hover, .btn-black.disabled:focus, .btn-black[disabled]:focus,
+  fieldset[disabled] .btn-black:focus, .btn-black.disabled:active, .btn-black[disabled]:active,
+  fieldset[disabled] .btn-black:active, .btn-black.disabled.active, .btn-black[disabled].active,
   fieldset[disabled] .btn-black.active {
     background-color: #000000;
     border-color: #000000; }

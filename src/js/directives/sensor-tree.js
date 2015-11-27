@@ -13,8 +13,8 @@ angular.module('otaniemi3dApp')
       template: '<div></div>',
       restrict: 'E',
       scope: {
-        selectSensor: '=',
-        dragSensor: '=',
+        selectCallback: '=',
+        dragCallback: '=',
         search: '=',
         checkbox: '=',
         rootUrl: '=',
@@ -26,7 +26,7 @@ angular.module('otaniemi3dApp')
             'sort',
             scope.checkbox ? 'checkbox' : '',
             typeof attrs.search === 'string' ? 'search' : '',
-            typeof attrs.dragSensor === 'string' ? 'dnd' : ''
+            typeof attrs.dragCallback === 'string' ? 'dnd' : ''
           ],
           search: {
             show_only_matches: true,
@@ -202,7 +202,7 @@ angular.module('otaniemi3dApp')
             var target = $(data.event.target);
             if(target.closest('#drop-area').length) {
               var sensor = getNode(data.data.nodes[0], true);
-              scope.dragSensor(sensor);
+              scope.dragCallback(sensor);
             }
           })
           .on('dnd_move.vakata', function (_, data) {

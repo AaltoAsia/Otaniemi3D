@@ -51,15 +51,15 @@
         <div id="drop-area"
              class="hidden-xs hidden-sm"
              title="You can view multiple sensor values at a time by dragging sensors to the drop area.">
-          <div id="{{sensor.id}}"
+          <div id="{{infoItem.id}}"
                class="sensor-legend"
-               ng-repeat="sensor in sensors"
+               ng-repeat="infoItem in infoItems"
                draggable="true"
-               ui-event="{dragend: 'dropSensor($event)'}">
-            <img ng-src="assets/shared/images/{{sensor.name}}.svg">
-            <div>{{sensor.room}}: {{sensor.text}}</div>
+               ui-event="{dragend: 'dropInfoItem($event)'}">
+            <img ng-src="assets/shared/images/{{infoItem.name}}.svg">
+            <div>{{infoItem.parent}}: {{infoItem.name}}</div>
           </div>
-          <h3 ng-show="!sensors.length">Drop a sensor here</h3>
+          <h3 ng-hide="infoItems.length">Drop a sensor here</h3>
         </div>
 
         <div id="clear-btn">
@@ -77,8 +77,7 @@
       placeholder="Search">
     <sensor-tree id="sensor-tree"
       root-url="'http://otaniemi3d.cs.hut.fi/omi/node/Objects/K1'"
-      select-sensor="addSensor"
-      drag-sensor="addSensor"
+      drag-callback="addInfoItem"
       checkbox="mobileDevice"
       search="searchStr"
       error="alert">
