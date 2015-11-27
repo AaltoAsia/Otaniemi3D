@@ -122,13 +122,13 @@ angular.module('otaniemi3dApp')
     this.getValueUnit = function(sensorType){
       switch(sensorType) {
         case 'temperature':
-          return '°C';
+          return ' °C';
         case 'co2':
-          return 'ppm';
+          return ' ppm';
         case 'light':
-          return 'lux';
+          return ' lux';
         case 'humidity':
-          return '%';
+          return ' %';
         default:
           return '';
       }

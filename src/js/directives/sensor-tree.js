@@ -7,7 +7,7 @@
  * # sensorTree
  */
 angular.module('otaniemi3dApp')
-  .directive('sensorTree', function ($document, $http, omiMessage) {
+  .directive('sensorTree', function ($document, omiMessage, valueConverter) {
     return {
       template: '<div></div>',
       restrict: 'E',
@@ -28,28 +28,28 @@ angular.module('otaniemi3dApp')
             typeof attrs.dragSensor === 'string' ? 'dnd' : ''
           ],
           search: {
-            show_only_matches: true,
-            show_only_matches_children: true
+            show_only_matches: true, //jshint ignore:line
+            show_only_matches_children: true //jshint ignore:line
           },
           dnd: {
-            is_draggable: function (nodes) {
+            is_draggable: function (nodes) { //jshint ignore:line
               var node = nodes[0];
               return node.original.type === 'sensor';
             }
           },
           core: {
-            check_callback: true,
+            check_callback: true, //jshint ignore:line
             worker: false,
-            data: function (node, cb) {
+            data: function (node, callback) {
 
-              function sendSuccess(self, cb, children) {
-                cb.call(self, children);
+              function sendSuccess(self, callback, children) {
+                callback.call(self, children);
                 scope.error.show = false;
                 scope.error.message = '';
               }
 
-              function sendError(self, cb, error) {
-                cb.call(self, error.errorNode);
+              function sendError(self, callback, error) {
+                callback.call(self, error.errorNode);
                 scope.error.show = true;
                 scope.error.message = error.errorMsg;
               }
@@ -60,107 +60,93 @@ angular.module('otaniemi3dApp')
                 errorMsg: 'Error when opening a tree node. Please close and reopen the node to try again.'
               };
               var id = scope.rootUrl.split('/');
-              var icon;
-              var type;
-              var url;
+              var icon, url;
 
               if (node.id === '#') {
-                id = id[id.length-1].length ? id[id.length-1] : id[id.length-2];
+                //Check if url ends with slash or not and select last path element
+                //i.e. .../K1/ and .../K1 both result in K1 as the id.
+                //id = id[id.length-1].length ? id[id.length-1] : id[id.length-2];
+                id = id[id.length - 1];
 
-                //IDEA: data from server could have type as a metadata
-                if (id === 'K1') {
+                if (id === 'K1' || id === 'CS') {
                   icon = 'assets/shared/images/icon-building.svg';
-                  type = 'building';
                 } else {
                   icon = 'assets/shared/images/icon-room.svg';
-                  type = 'room';
                 }
 
+                //Root element
                 children = [{
                   id: id,
-                  text: id.split('-').join(' '),
+                  text: id,
                   children: true,
-                  type: type,
+                  isOdfObject: true,
+                  url: scope.rootUrl,
                   icon: icon,
                   state: {opened: true}
                 }];
 
-                cb.call(this, children);
+                callback.call(this, children);
 
-              } else if (node.original.type === 'sensor') {
-                $http.get(node.original.url).success(function (data) {
-                  var values = omiMessage.parseInfoItem(data);
+              } else if (node.original.isOdfObject) {
+                omiMessage.restApi(node.original.url)
+                  .then(function (odfObject) {
 
-                  if (values.length) {
-                    children = [{
-                      values: values,
-                      text: values[0].value + '  --  ' +
-                        values[0].time.toISOString(),
-                      icon: false,
-                      type: 'value'
-                    }];
-                  }
+                    for (var i = 0; i < odfObject.infoItems.length; i++) {
+                      var infoItem = odfObject.infoItems[i];
+                      url = node.original.url + '/' + infoItem.name;
 
-                  sendSuccess(this, cb, children);
-                })
-                .error(function () {
-                  sendError(this, cb, error);
-                });
+                      children.push({
+                        id: url,
+                        text: infoItem.name,
+                        children: true,
+                        isInfoItem: true,
+                        icon: 'assets/shared/images/icon-' + infoItem.name + '.svg',
+                        url: url
+                      });
+                    }
 
-              } else if (node.original.type === 'room') {
-                url = scope.rootUrl;
-                if (node.parent !== '#') {
-                  url += node.id;
-                }
-                $http.get(url).success(function (data) {
-                  var room = omiMessage.parseObject(data);
+                    for (var j = 0; j < odfObject.childObjects.length; j++) {
+                      var childObject = odfObject.childObjects[j];
+                      url = node.original.url + '/' + childObject.id;
 
-                  for (var i = 0; i < room.infoItems.length; i++) {
-                    var id = room.infoItems[i];
+                      children.push({
+                        id: url,
+                        text: childObject.id,
+                        children: true,
+                        isOdfObject: true,
+                        icon: 'assets/shared/images/icon-room.svg',
+                        url: url
+                      });
+                    }
 
-                    children.push({
-                      id: id + '-' + node.id,
-                      room: room.id,
-                      name: id,
-                      text: id.charAt(0).toUpperCase() + id.slice(1),
-                      children: true,
-                      icon: 'assets/shared/images/icon-' + id + '.svg',
-                      type: 'sensor',
-                      url: url + '/' + id
-                    });
-                  }
-                  sendSuccess(this, cb, children);
-                })
-                .error(function () {
-                  sendError(this, cb, error);
-                });
+                    sendSuccess(this, callback, children);
 
-              } else if (node.original.type === 'building') {
-                url = scope.rootUrl;
-                if (node.parent !== '#') {
-                  url += node.id;
-                }
-                $http.get(url).success(function (data) {
-                  var building = omiMessage.parseObject(data);
+                  }, function () {
+                    sendError(this, callback, error);
+                  });
 
-                  for (var i = 0; i < building.objects.length; i++) {
-                    var id = building.objects[i];
+              } else if (node.original.isInfoItem) {
+                omiMessage.restApi(node.original.url, 'isInfoItem')
+                  .then(function (infoItem) {
 
-                    children.push({
-                      id: id,
-                      text: id.split('-').join(' '),
-                      children: true,
-                      icon: 'assets/shared/images/icon-room.svg',
-                      type: 'room',
-                      url: scope.rootUrl + id
-                    });
-                  }
-                  sendSuccess(this, cb, children);
-                })
-                .error(function () {
-                  sendError(this, cb, error);
-                  node.children = true;
-                });
+                    for (var i = 0; i < infoItem.values.length; i++) {
+                      var value = infoItem.values[i];
+
+                      children.push({
+                        id: node.original.url + i,
+                        text: value.value + valueConverter.getValueUnit(infoItem.name) +
+                          ' -- ' + new Date(value.time).toTimeString().split(' ')[0],
+                        children: false,
+                        isInfoItem: true,
+                        icon: false
+                      });
+                    }
+
+                    sendSuccess(this, callback, children);
+
+                  }, function () {
+                    sendError(this, callback, error);
+                  });
               }
             },
             themes: {
@@ -173,9 +159,9 @@ angular.module('otaniemi3dApp')
 
         function getNode(node, original) {
           if (!original) {
-            return tree.get_node(node);
+            return tree.get_node(node); //jshint ignore:line
           } else {
-            return tree.get_node(node).original;
+            return tree.get_node(node).original; //jshint ignore:line
           }
         }
 
@@ -190,7 +176,7 @@ angular.module('otaniemi3dApp')
             }
             var selectedSensors = [];
 
-            angular.forEach(tree.get_selected(true), function (node) {
+            angular.forEach(tree.get_selected(true), function (node) { //jshint ignore:line
               if (node.original.type === 'sensor') {
                 selectedSensors.push(node.original);
               }
@@ -228,7 +214,7 @@ angular.module('otaniemi3dApp')
             if (str) {
               tree.search(str);
             } else {
-              tree.clear_search();
+              tree.clear_search(); //jshint ignore:line
             }
           });
         }
