@@ -6,8 +6,9 @@
  * @description
  * # sensorTree
  */
+ /* jshint -W106 */ // Ignore jshint about non-camelCase variables
 angular.module('otaniemi3dApp')
-  .directive('sensorTree', function ($document, omiMessage, valueConverter) {
+  .directive('sensorTree', function ($document, omiMessage, valueConverter, $interval) {
     return {
       template: '<div></div>',
       restrict: 'E',
@@ -28,17 +29,17 @@ angular.module('otaniemi3dApp')
             typeof attrs.dragSensor === 'string' ? 'dnd' : ''
           ],
           search: {
-            show_only_matches: true, //jshint ignore:line
-            show_only_matches_children: true //jshint ignore:line
+            show_only_matches: true,
+            show_only_matches_children: true
           },
           dnd: {
-            is_draggable: function (nodes) { //jshint ignore:line
+            is_draggable: function (nodes) {
               var node = nodes[0];
               return node.original.type === 'sensor';
             }
           },
           core: {
-            check_callback: true, //jshint ignore:line
+            check_callback: true,
             worker: false,
             data: function (node, callback) {
 
@@ -129,11 +130,11 @@ angular.module('otaniemi3dApp')
                 omiMessage.restApi(node.original.url, 'isInfoItem')
                   .then(function (infoItem) {
 
-                    for (var i = 0; i < infoItem.values.length; i++) {
-                      var value = infoItem.values[i];
+                    if (infoItem.values.length) {
+                      var value = infoItem.values[0];
 
                       children.push({
-                        id: node.original.url + i,
+                        id: node.original.url + '/' + 'value',
                         text: value.value + valueConverter.getValueUnit(infoItem.name) +
                           ' -- ' + new Date(value.time).toTimeString().split(' ')[0],
                         children: false,
@@ -159,11 +160,19 @@ angular.module('otaniemi3dApp')
 
         function getNode(node, original) {
           if (!original) {
-            return tree.get_node(node); //jshint ignore:line
+            return tree.get_node(node);
           } else {
-            return tree.get_node(node).original; //jshint ignore:line
+            return tree.get_node(node).original;
           }
         }
+
+        $interval(function () {
+          element.find('.jstree-open').each(function () {
+            if ($(this).children('.jstree-children').children('.jstree-leaf').length) {
+              tree.refresh_node(getNode($(this)));
+            }
+          });
+        }, 4000);
 
         element
           .on('after_close.jstree', function (_, data) {
@@ -176,7 +185,7 @@ angular.module('otaniemi3dApp')
             }
             var selectedSensors = [];
 
-            angular.forEach(tree.get_selected(true), function (node) { //jshint ignore:line
+            angular.forEach(tree.get_selected(true), function (node) {
               if (node.original.type === 'sensor') {
                 selectedSensors.push(node.original);
               }
@@ -214,7 +223,7 @@ angular.module('otaniemi3dApp')
             if (str) {
               tree.search(str);
             } else {
-              tree.clear_search(); //jshint ignore:line
+              tree.clear_search();
             }
           });
         }
@@ -226,3 +235,4 @@ angular.module('otaniemi3dApp')
       }
     };
   });
+  /* jshint +W106 */

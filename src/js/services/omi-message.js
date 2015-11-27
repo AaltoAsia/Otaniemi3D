@@ -73,8 +73,6 @@ angular.module('otaniemi3dApp')
         parsedObjects.push(parseObject(objects[i]));
       }
 
-      console.log(parsedObjects);
-
       return parsedObjects;
     }
 
