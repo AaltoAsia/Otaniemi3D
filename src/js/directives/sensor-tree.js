@@ -34,8 +34,12 @@ angular.module('otaniemi3dApp')
           },
           dnd: {
             is_draggable: function (nodes) {
-              var node = nodes[0];
-              return node.original.type === 'sensor';
+              for (var i = 0; i < nodes.length; i++) {
+                if (!nodes[i].original.isInfoItem) {
+                  return false;
+                }
+              }
+              return true;
             }
           },
           core: {
@@ -138,7 +142,6 @@ angular.module('otaniemi3dApp')
                         text: value.value + valueConverter.getValueUnit(infoItem.name) +
                           ' -- ' + new Date(value.time).toTimeString().split(' ')[0],
                         children: false,
-                        isInfoItem: true,
                         icon: false
                       });
                     }
@@ -166,7 +169,7 @@ angular.module('otaniemi3dApp')
           }
         }
 
-        $interval(function () {
+        var updateSensors = $interval(function () {
           element.find('.jstree-open').each(function () {
             if ($(this).children('.jstree-children').children('.jstree-leaf').length) {
               tree.refresh_node(getNode($(this)));
@@ -229,6 +232,7 @@ angular.module('otaniemi3dApp')
         }
 
         scope.$on('$destroy', function () {
+          $interval.cancel(updateSensors);
           $.jstree.destroy();
           $document.off('dnd_stop.vakata dnd_move.vakata');
         });

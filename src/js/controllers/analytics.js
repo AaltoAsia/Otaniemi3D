@@ -220,23 +220,16 @@ angular.module('otaniemi3dApp')
         }
       }
 
-      // Request must follow JXON notation and comply with ODF.
-      // https://developer.mozilla.org/en-US/docs/JXON
-      var request = {
-        'Object': {
-          'id': {
-            'keyValue': 'K1'
-          },
-          'Object': {
-            'id': {
-              'keyValue': sensor.room
-            },
-            'InfoItem': {
-              '@name': sensor.name
-            }
-          }
-        }
-      };
+      var path = sensor.url.substring(sensor.url.indexOf($scope.App.building) + 1);
+
+
+      var request = objects.splice(0, -1).reduce(function (prev, current) {
+        return [prev[0] +
+          '<Object>' +
+            '<id>' + current + '</id>',
+          '</Object>' +
+          prev[1]];
+      }, ['', '']).join('');
 
       var params = $scope.timeFrame.params;
       $scope.chartConfig.loading = true;
