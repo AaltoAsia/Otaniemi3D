@@ -385,26 +385,21 @@ angular.module('otaniemi3dApp')
       var newValue = 1 - currentValue;
 
       var writeRequest =
-        '<?xml version="1.0"?>'+
-        '<omi:omiEnvelope xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:omi="omi.xsd" version="1.0" ttl="0">'+
-          '<write xmlns="omi.xsd" msgformat="odf">'+
-            '<omi:msg>'+
-              '<Objects xmlns="odf.xsd">'+
-                '<Object>'+
-                  '<id>K1</id>'+
-                  '<Object>'+
-                    '<id>'+ roomId +'</id>'+
-                    '<InfoItem name="'+ mac +'">'+
-                      '<value>'+ newValue +'</value>'+
-                    '</InfoItem>'+
-                  '</Object>'+
-                '</Object>'+
-              '</Objects>'+
-            '</omi:msg>'+
-          '</write>'+
-        '</omi:omiEnvelope>';
+        '<Object>'+
+          '<id>K1</id>'+
+          '<Object>'+
+            '<id>'+ roomId +'</id>'+
+            '<InfoItem name="'+ mac +'">'+
+              '<value>'+ newValue +'</value>'+
+            '</InfoItem>'+
+          '</Object>'+
+        '</Object>';
 
       omiMessage.send('write', writeRequest);
+    };
+
+    $window.krpano.updateSensors = function() {
+      // body...
     };
 
     $scope.$on('room-selection-change', function (event, room) {
