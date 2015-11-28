@@ -28,41 +28,11 @@ angular.module('otaniemi3dApp')
               '</span>',
             '</th>',
           '</tr>',
-          '<tr ng-repeat="sensor in tooltip.room.infoItems | orderBy: \'name\'"',
-              'ng-style="tooltip.getSensorStyle(sensor)">',
-            '<th>{{sensor.name}}</th>',
-            '<td>',
-              '<span>',
-                '{{sensor.values[0].value}} {{sensor.name | sensorSuffix}}',
-              '</span>',
-		          '<button ng-click="tooltip.togglePlug(sensor)"',
-                      'ng-disabled="tooltip.togglingPlug"',
-      	              'ng-if="sensor.metaData.isWritable"',
-      	              'class="btn black-btn panorama-btn"',
-                      'title="Toggle plug">',
-    		        'Toggle',
-    		      '</button>',
-    	      '</td>',
-          '</tr>',
-          '<tr ng-repeat="object in tooltip.room.childObjects | orderBy: \'id\'">',
-            '<th>{{object.id}}</th>',
-            '<td>',
-              '<tr ng-repeat="sensor in object.infoItems | orderBy: \'name\'"',
-                '<th>{{sensor.name}}</th>',
-                '<td>',
-                  '<span>',
-                    '{{sensor.values[0].value}} {{sensor.name | sensorSuffix}}',
-                  '</span>',
-                  '<button ng-click="tooltip.togglePlug(sensor)"',
-                          'ng-disabled="tooltip.togglingPlug"',
-                          'ng-if="sensor.metaData.isWritable"',
-                          'class="btn black-btn panorama-btn"',
-                          'title="Toggle plug">',
-                    'Toggle',
-                  '</button>',
-                '</td>',
-              '</tr>',
-    	      '</td>',
+          '<tr>',
+            '<td colspan="2">',
+              '<sensor-tree id="sensor-tree" odf-object="tooltip.room">',
+              '</sensor-tree>',
+            '</td>',
           '</tr>',
           '<tr>',
             '<td colspan="2">',
@@ -82,7 +52,7 @@ angular.module('otaniemi3dApp')
       scope: {
         sensorType: '='
       },
-      controller: function ($scope) {
+      controller: function () {
         var self = this;
         this.room = {};
         this.caption = 'Downloading sensor data...';
@@ -150,7 +120,7 @@ angular.module('otaniemi3dApp')
               return previous +
               '<InfoItem name="' + current.name + '">' +
                 '<MetaData/>' +
-              '</InfoItem>'
+              '</InfoItem>';
             }, ''
           );
 
@@ -180,7 +150,7 @@ angular.module('otaniemi3dApp')
               self.isLoading = false;
               console.log(error);
             });
-        }
+        };
 
         this.openPanorama = function (room) {
           $state.go('panorama', {roomId: room.id});
