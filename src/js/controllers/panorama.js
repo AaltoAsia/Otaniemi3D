@@ -9,32 +9,25 @@
  */
 angular.module('otaniemi3dApp')
   .controller('PanoramaCtrl',
-  function($scope, $state, $window, $modal, omiMessage, $q, $interval, buildingData) {
+  function($scope, $state, $window, $modal, omiMessage, $q, $interval) {
 
     var self = this;
 
-    self.room = {};
-    self.room.id = $state.params.roomId;
-
-
-
-    self.roomId = $state.params.roomId;
-    self.sensors = [];
-    self.newSensors = [];
+    self.room = { id: $state.params.roomId };
     self.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
     self.sensorBoxes = [];
+    self.sensorsToRelocate = [];
     //Create global namespace for scripts used by krpano.
     $window.krpano = {};
 
     var roomUrl =
       'https://otaniemi3d.cs.hut.fi/omi/node/Objects/K1/' + self.room.id;
-    var xmlPath = 'assets/buildings/' + buildingData.currentBuilding.id +
+    var xmlPath = 'assets/buildings/' + $scope.App.building.id +
       '/panorama/' + self.room.id + '.xml';
 
     self.panoramaData = {
       xmlPath: xmlPath,
-      url: roomUrl,
-      //sensors: self.sensors
+      url: roomUrl
     };
 
     self.alert = {
@@ -43,7 +36,7 @@ angular.module('otaniemi3dApp')
     };
 
     self.addSensors = function(sensors) {
-      self.newSensors = sensors;
+      self.sensorsToRelocate = sensors;
     };
 
     self.goBack = function () {
@@ -59,7 +52,7 @@ angular.module('otaniemi3dApp')
       .then(addSensorGroups);
 
     function updateRoom(room) {
-      self.room = room
+      self.room = room;
       return room;
     }
 
@@ -176,7 +169,9 @@ angular.module('otaniemi3dApp')
 
         var sensorBox = {
           id: id,
-          sensors: sensorGroups[i].infoItems
+          sensors: sensorGroups[i].infoItems,
+          ath: sensorGroups[i].ath,
+          atv: sensorGroups[i].atv
         };
         self.sensorBoxes.push(sensorBox);
 
@@ -249,7 +244,7 @@ angular.module('otaniemi3dApp')
         sensorSuffix = sensorSuffix ? ' ' + sensorSuffix : '';
         var toggleButton = '';
 
-        if(sensors[i].metaData.isWritable) {
+        if(sensors[i].metaData && sensors[i].metaData.isWritable) {
           toggleButton =
             '[button onclick="krpano.togglePlug(\'' +
                 sensors[i].roomId + '\', \'' +
@@ -302,7 +297,7 @@ angular.module('otaniemi3dApp')
     $window.krpano.refresh = function (sensorBoxId) {
       $('.loading-spinner').css('opacity', '1');
 
-      return getMetaData(self.sensors, false).then(function () {
+      return getMetaData(self.room, false).then(function () {
         var sensorBox;
         for (var i = 0; i < self.sensorBoxes.length; i++) {
           if (self.sensorBoxes[i].id === sensorBoxId) {
@@ -335,49 +330,53 @@ angular.module('otaniemi3dApp')
           params: function () {
             return {
               room: self.room,
+              url: roomUrl,
               alert: self.alert,
-              addSensors: self.addSensors
+              addSensors: function(sensors) {
+                self.sensorsToRelocate = sensors;
+              }
             };
           }
         }
       });
 
       self.modalInstance.result.then(function () {
-        if (self.newSensors.length) {
-          for (var i = 0; i < self.newSensors.length; i++) {
-            self.newSensors[i].metaData = {
+        if (self.sensorsToRelocate.length) {
+
+          for (var j = 0; j < self.sensorsToRelocate.length; j++) {
+            var newSensor = self.sensorsToRelocate[j];
+            //Because these sensors were retrieved by sensor-tree directive,
+            //they don't have any meta data. Therefore we don't have to worry
+            //about owerwriting it.
+            newSensor.metaData = {
               ath: pos.x,
               atv: pos.y
             };
-          }
 
-          for (var j = 0; j < self.newSensors.length; j++) {
-            var newSensor = self.newSensors[j];
-            var exists = false;
+            for (var k = 0; k < self.sensorBoxes.length; k++) {
+              var sensorBox = self.sensorBoxes[k];
 
-            for (var k = 0; k < self.sensors.length; k++) {
-              var oldSensor = self.sensors[k];
-
-              $window.krpano.elem.call('removehotspot(id-' + oldSensor.id + ')');
-
-              if (newSensor.id === oldSensor.id) {
-                angular.merge(oldSensor.metaData, newSensor.metaData);
-                exists = true;
-                break;
+              for (var i = 0; i < sensorBox.infoItems.length; i++) {
+                var infoItem = sensorBox.infoItems[i];
+                if (newSensor.name === infoItem.name) {
+                  angular.merge(newSensor.metaData, infoItem.metaData);
+                  var index = sensorBox.infoItems.indexOf(infoItem);
+                  //Remove infoItem from its previous sensorBox.
+                  sensorBox.infoItems.splice(index, 1);
+                }
               }
             }
-
-            if (!exists) {
-              self.sensors.push(newSensor);
-            }
+              //$window.krpano.elem.call('removehotspot(id-' + oldSensor.id + ')');
           }
 
-          var sensorGroups = makeSensorGroups(self.sensors);
-          addSensorGroups(sensorGroups);
+          var sensorGroup = makeSensorGroups({
+            infoItems: self.sensorsToRelocate
+          });
+          addSensorGroups(sensorGroup);
 
-          sendMetaData(self.newSensors);
+          sendMetaData(self.sensorsToRelocate);
 
-          self.newSensors = [];
+          self.sensorsToRelocate = [];
         }
       });
     };
