@@ -1,6 +1,7 @@
 .tooltip-table {
   min-width: 221px;
   border-collapse: separate;
+  pointer-events: all;
 
   & th, & td {
     border: 1px solid #E6E6E6;

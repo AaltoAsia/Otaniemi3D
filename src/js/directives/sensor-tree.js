@@ -26,130 +26,15 @@ angular.module('otaniemi3dApp')
         //Object to store error messages.
         error: '=',
         //If provided, the tree uses local data from this object.
-        odfObject: '='
+        odfTree: '='
       },
       link: function postLink (scope, element, attrs) {
-        var odfData;
-        if (typeof scope.odfObject === 'object') {
-          odfData = scope.odfObject;
-        } else {
-          odfData = function (node, callback) {
-
-            function sendSuccess(self, callback, children) {
-              callback.call(self, children);
-              scope.error.show = false;
-              scope.error.message = '';
-            }
-
-            function sendError(self, callback, error) {
-              callback.call(self, error.errorNode);
-              scope.error.show = true;
-              scope.error.message = error.errorMsg;
-            }
-
-            var children = [];
-            var error = {
-              errorNode: [{ text: 'Error' }],
-              errorMsg: 'Error when opening a tree node. Please close and reopen the node to try again.'
-            };
-            var id = scope.rootUrl.split('/');
-            var icon, url;
-
-            if (node.id === '#') {
-              //Check if url ends with slash or not and select last path element
-              //i.e. .../K1/ and .../K1 both result in K1 as the id.
-              //id = id[id.length-1].length ? id[id.length-1] : id[id.length-2];
-              id = id[id.length - 1];
-
-              if (id === 'K1' || id === 'CS') {
-                icon = 'assets/shared/images/icon-building.svg';
-              } else {
-                icon = 'assets/shared/images/icon-room.svg';
-              }
-
-              //Root element
-              children = [{
-                id: id,
-                text: id,
-                children: true,
-                isOdfObject: true,
-                url: scope.rootUrl,
-                icon: icon,
-                state: {opened: true}
-              }];
-
-              callback.call(this, children);
-
-            } else if (node.original.isOdfObject) {
-
-              omiMessage.restApi(node.original.url)
-                .then(function (odfObject) {
-
-                  for (var i = 0; i < odfObject.infoItems.length; i++) {
-                    var infoItem = odfObject.infoItems[i];
-                    url = node.original.url + '/' + infoItem.name;
-
-                    children.push({
-                      id: url,
-                      text: infoItem.name,
-                      children: true,
-                      isInfoItem: true,
-                      icon: 'assets/shared/images/icon-' + infoItem.name + '.svg',
-                      url: url
-                    });
-                  }
-
-                  for (var j = 0; j < odfObject.childObjects.length; j++) {
-                    var childObject = odfObject.childObjects[j];
-                    url = node.original.url + '/' + childObject.id;
-
-                    children.push({
-                      id: url,
-                      text: childObject.id,
-                      children: true,
-                      isOdfObject: true,
-                      icon: 'assets/shared/images/icon-room.svg',
-                      url: url
-                    });
-                  }
-
-                  sendSuccess(this, callback, children);
-
-                }, function () {
-                  sendError(this, callback, error);
-                });
-
-            } else if (node.original.isInfoItem) {
-              omiMessage.restApi(node.original.url, 'isInfoItem')
-                .then(function (infoItem) {
-
-                  if (infoItem.values.length) {
-                    var value = infoItem.values[0];
-
-                    children.push({
-                      id: node.original.url + '/' + 'value',
-                      text: value.value + valueConverter.getValueUnit(infoItem.name) +
-                        ' -- ' + new Date(value.time).toTimeString().split(' ')[0],
-                      children: false,
-                      icon: false
-                    });
-                  }
-
-                  sendSuccess(this, callback, children);
-
-                }, function () {
-                  sendError(this, callback, error);
-                });
-            }
-          };
-        }
-
         element.jstree({
           plugins: [
             'sort',
             scope.checkbox ? 'checkbox' : '',
-            typeof attrs.search === 'string' ? 'search' : '',
-            typeof attrs.dragCallback === 'string' ? 'dnd' : ''
+            attrs.search ? 'search' : '',
+            attrs.dragCallback ? 'dnd' : ''
           ],
           search: {
             show_only_matches: true,
@@ -168,7 +53,122 @@ angular.module('otaniemi3dApp')
           core: {
             check_callback: true,
             worker: false,
-            data: odfData,
+            data: function (node, callback) {
+
+              function sendSuccess(self, callback, children) {
+                callback.call(self, children);
+                scope.error.show = false;
+                scope.error.message = '';
+              }
+
+              function sendError(self, callback, error) {
+                callback.call(self, error.errorNode);
+                scope.error.show = true;
+                scope.error.message = error.errorMsg;
+              }
+
+              var children = [];
+              var error = {
+                errorNode: [{ text: 'Error' }],
+                errorMsg: 'Error when opening a tree node. Please close and reopen the node to try again.'
+              };
+
+              var icon, url, id;
+              if (scope.rootUrl) {
+                id = scope.rootUrl.split('/');
+              }
+
+              if (attrs.odfTree) {
+
+                callback.call(this, [scope.odfTree]);
+
+              } else if (node.id === '#') {
+                //Check if url ends with slash or not and select last path element
+                //i.e. .../K1/ and .../K1 both result in K1 as the id.
+                //id = id[id.length-1].length ? id[id.length-1] : id[id.length-2];
+                id = id[id.length - 1];
+
+                if (id === 'K1' || id === 'CS') {
+                  icon = 'assets/shared/images/icon-building.svg';
+                } else {
+                  icon = 'assets/shared/images/icon-room.svg';
+                }
+
+                //Root element
+                children = [{
+                  id: id,
+                  text: id,
+                  children: true,
+                  isOdfObject: true,
+                  url: scope.rootUrl,
+                  icon: icon,
+                  state: {opened: true}
+                }];
+
+                callback.call(this, children);
+
+              } else if (node.original.isOdfObject) {
+
+                omiMessage.restApi(node.original.url)
+                  .then(function (odfObject) {
+
+                    for (var i = 0; i < odfObject.infoItems.length; i++) {
+                      var infoItem = odfObject.infoItems[i];
+                      url = node.original.url + '/' + infoItem.name;
+
+                      children.push({
+                        id: url,
+                        text: infoItem.name,
+                        children: true,
+                        isInfoItem: true,
+                        icon: 'assets/shared/images/icon-' + infoItem.name + '.svg',
+                        url: url
+                      });
+                    }
+
+                    for (var j = 0; j < odfObject.childObjects.length; j++) {
+                      var childObject = odfObject.childObjects[j];
+                      url = node.original.url + '/' + childObject.id;
+
+                      children.push({
+                        id: url,
+                        text: childObject.id,
+                        children: true,
+                        isOdfObject: true,
+                        icon: 'assets/shared/images/icon-room.svg',
+                        url: url
+                      });
+                    }
+
+                    sendSuccess(this, callback, children);
+
+                  }, function () {
+                    sendError(this, callback, error);
+                  });
+
+              } else if (node.original.isInfoItem) {
+                omiMessage.restApi(node.original.url, 'isInfoItem')
+                  .then(function (infoItem) {
+
+                    if (infoItem.values.length) {
+                      var value = infoItem.values[0];
+
+                      children.push({
+                        id: node.original.url + '/' + 'value',
+                        text: value.value + valueConverter.getValueUnit(infoItem.name) +
+                          ' -- ' + new Date(value.time).toTimeString().split(' ')[0],
+                        children: false,
+                        icon: false
+                      });
+                    }
+
+                    sendSuccess(this, callback, children);
+
+                  }, function () {
+                    sendError(this, callback, error);
+                  });
+              }
+            },
             themes: {
               responsive: true
             }
@@ -185,21 +185,25 @@ angular.module('otaniemi3dApp')
           }
         }
 
-        var updateSensors = $interval(function () {
-          element.find('.jstree-open').each(function () {
-            if ($(this).children('.jstree-children').children('.jstree-leaf').length) {
-              tree.refresh_node(getNode($(this)));
-            }
-          });
-        }, 4000);
+        if (!attrs.odfTree) {
+          var updateSensors = $interval(function () {
+            element.find('.jstree-open').each(function () {
+              if ($(this).children('.jstree-children').children('.jstree-leaf').length) {
+                tree.refresh_node(getNode($(this)));
+              }
+            });
+          }, 4000);
+        }
 
         element
           .on('after_close.jstree', function (_, data) {
-            data.node.children = true;
-            getNode(data.node.id).state.loaded = false;
+            if (attrs.odfTree) {
+              data.node.children = true;
+              getNode(data.node.id).state.loaded = false;
+            }
           })
           .on('select_node.jstree', function () {
-            if (typeof attrs.selectSensor !== 'string') {
+            if (!attrs.selectSensor) {
               return;
             }
             var selectedSensors = [];
@@ -237,7 +241,7 @@ angular.module('otaniemi3dApp')
             }
           });
 
-        if (typeof scope.search === 'string') {
+        if (attrs.search) {
           scope.$watch('search', function (str) {
             if (str) {
               tree.search(str);
@@ -246,6 +250,10 @@ angular.module('otaniemi3dApp')
             }
           });
         }
+
+        scope.$watch('odfTree', function () {
+          tree.refresh();
+        });
 
         scope.$on('$destroy', function () {
           $interval.cancel(updateSensors);
