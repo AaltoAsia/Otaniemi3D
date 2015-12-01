@@ -214,12 +214,6 @@ angular.module('otaniemi3dApp')
         return;
       }
 
-      for (var k = 0; k < $scope.chartConfig.series.length; k++) {
-        if ($scope.chartConfig.series[k].id === infoItem.id) {
-          return;
-        }
-      }
-
       //Split url to start after $scope.App.building.
       //e.g. 'otaniemi3d.cs.hut.fi/omi/node/Objects/K1/Room-101/temperature'
       //becames 'K1/Room-101/temperature'
@@ -236,9 +230,14 @@ angular.module('otaniemi3dApp')
           prev[1]];
       }, ['', '']);
 
-      request = request[0] +
-        '<InfoItem name="' + objects.pop() + '"/>' +
-        request[1];
+      request = request[0] + '<InfoItem name="' +
+        objects.pop() + '"/>' + request[1];
+
+      for (var k = 0; k < $scope.chartConfig.series.length; k++) {
+        if ($scope.chartConfig.series[k].id === path) {
+          return;
+        }
+      }
 
       var params = $scope.timeFrame.params;
       $scope.chartConfig.loading = true;
@@ -246,17 +245,15 @@ angular.module('otaniemi3dApp')
       omiMessage.send('read', request, params).then(function success (data) {
         var odfObject = data[0];
         var childObjects = odfObject.childObjects;
-        var chartId = odfObject.id;
+        var chartId = path;
 
         while (childObjects && childObjects.length) {
           odfObject = childObjects[0];
           childObjects = odfObject.childObjects;
-          chartId += '/' + odfObject.id;
         }
 
         var infoItem = odfObject.infoItems[0];
         infoItem.parent = odfObject.id;
-        chartId += '/' + infoItem.name;
         $scope.infoItems.push(infoItem);
         var valueData = [];
 

@@ -188,7 +188,7 @@ angular.module('otaniemi3dApp')
                 tree.refresh_node(getNode($(this)));
               }
             });
-          }, 4000);
+          }, 5000);
         }
 
         element
