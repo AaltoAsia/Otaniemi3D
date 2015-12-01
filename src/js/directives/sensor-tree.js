@@ -197,7 +197,7 @@ angular.module('otaniemi3dApp')
 
         element
           .on('after_close.jstree', function (_, data) {
-            if (attrs.odfTree) {
+            if (!attrs.odfTree) {
               data.node.children = true;
               getNode(data.node.id).state.loaded = false;
             }

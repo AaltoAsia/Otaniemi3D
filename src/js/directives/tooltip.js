@@ -59,7 +59,10 @@ angular.module('otaniemi3dApp')
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
         this.togglingPlug = false;
-        this.odfTree = {};
+        this.odfTree = {
+          id: 'placeholder',
+          text: 'Loading sensors...'
+        };
         this.roomsWithPanorama = [
           'Room-147a', 'Room-238d','Room-237c','Room-235','Room-232a',
           '2nd Floor Corridor Start',
@@ -115,7 +118,7 @@ angular.module('otaniemi3dApp')
           });
         })();
 
-        function makeJsTree(data, rootUrl) {
+        this.makeJsTree = function(data, rootUrl) {
           if (!data || !rootUrl) return null; //jshint ignore: line
 
           var childObjects = [];
@@ -124,19 +127,17 @@ angular.module('otaniemi3dApp')
           if (data.infoItems) {
             infoItems = data.infoItems.map(function(infoItem) {
               var url = rootUrl + '/' + infoItem.name;
-              var values = infoItem.values.map(function(value, i) {
-                return {
-                  id: url + '/' + 'value' + i,
-                  text: value.value + valueConverter.getValueUnit(infoItem.name) +
-                    ' -- ' + new Date(value.time).toTimeString().split(' ')[0],
-                  children: false,
-                  icon: false
-                };
-              });
+              var valueText;
+
+              if (infoItem.values.length) {
+                var value = infoItem.values[0];
+                valueText = ': ' + value.value +
+                  valueConverter.getValueUnit(infoItem.name);
+              }
+
               return {
                 id: url,
-                text: infoItem.name,
-                children: values,
+                text: infoItem.name + valueText,
                 icon: 'assets/shared/images/icon-' + infoItem.name + '.svg'
               };
             });
@@ -155,7 +156,7 @@ angular.module('otaniemi3dApp')
             children: infoItems.concat(childObjects),
             icon: 'assets/shared/images/icon-room.svg'
           };
-        }
+        };
 
         this.refresh = function (datum) {
           datum = datum || self.room;
@@ -187,7 +188,7 @@ angular.module('otaniemi3dApp')
               self.isLoading = false;
               datum = objects[0].childObjects[0];
               datum.metaData = true;
-              self.odfTree = makeJsTree(datum, datum.id);
+              self.odfTree = self.makeJsTree(datum, datum.id);
               return datum;
             }, function (error) {
               //TODO: Make an OMI error parser.
@@ -252,17 +253,20 @@ angular.module('otaniemi3dApp')
             return;
           }
 
-          showTooltip(datum);
+          showTooltip();
 
           if (datum) {
             var elem = this;
             scope.$apply(function () {
               if (!datum.metaData) {
                 tooltipCtrl.refresh(datum).then(function(data) {
-                  d3.select(elem).datum(data);
+                  if (data) {
+                    d3.select(elem).datum(data);
+                  }
                 });
               } else {
                 tooltipCtrl.room = datum;
+                tooltipCtrl.odfTree = tooltipCtrl.makeJsTree(datum, datum.id);
               }
 
               tooltipCtrl.isLoading = false;
