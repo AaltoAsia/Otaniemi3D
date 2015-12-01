@@ -127,7 +127,7 @@ angular.module('otaniemi3dApp')
           if (data.infoItems) {
             infoItems = data.infoItems.map(function(infoItem) {
               var url = rootUrl + '/' + infoItem.name;
-              var valueText;
+              var valueText = '';
 
               if (infoItem.values.length) {
                 var value = infoItem.values[0];

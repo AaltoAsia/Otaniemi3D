@@ -8,7 +8,7 @@
  */
  /* jshint -W106 */ // Ignore jshint about non-camelCase variables
 angular.module('otaniemi3dApp')
-  .directive('sensorTree', function ($document, omiMessage, valueConverter, $interval) {
+  .directive('sensorTree', function ($document, omiMessage, valueConverter, $interval, $q) {
     return {
       template: '<div></div>',
       restrict: 'E',
@@ -43,7 +43,7 @@ angular.module('otaniemi3dApp')
           dnd: {
             is_draggable: function (nodes) {
               for (var i = 0; i < nodes.length; i++) {
-                if (!nodes[i].original.isInfoItem) {
+                if (nodes[i].original.isOdfObject) {
                   return false;
                 }
               }
@@ -112,18 +112,33 @@ angular.module('otaniemi3dApp')
                 omiMessage.restApi(node.original.url)
                   .then(function (odfObject) {
 
+                    function addInfoItem(url) {
+                      return omiMessage.restApi(url, 'infoItem')
+                        .then(function (infoItem) {
+                          var valueText = '';
+                          if (infoItem.values.length) {
+                            var value = infoItem.values[0];
+                            valueText = ': ' + value.value +
+                              valueConverter.getValueUnit(infoItem.name);
+                          }
+
+                          children.push({
+                            id: url,
+                            text: infoItem.name + valueText,
+                            icon: 'assets/shared/images/icon-' +
+                              infoItem.name + '.svg',
+                            url: url
+                          });
+                        });
+                    }
+
+                    var infoItemPromises = [];
+
                     for (var i = 0; i < odfObject.infoItems.length; i++) {
                       var infoItem = odfObject.infoItems[i];
                       url = node.original.url + '/' + infoItem.name;
 
-                      children.push({
-                        id: url,
-                        text: infoItem.name,
-                        children: true,
-                        isInfoItem: true,
-                        icon: 'assets/shared/images/icon-' + infoItem.name + '.svg',
-                        url: url
-                      });
+                      infoItemPromises.push(addInfoItem(url));
                     }
 
                     for (var j = 0; j < odfObject.childObjects.length; j++) {
@@ -140,33 +155,14 @@ angular.module('otaniemi3dApp')
                       });
                     }
 
-                    sendSuccess(this, callback, children);
+                    $q.all(infoItemPromises).then(function() {
+                      sendSuccess(this, callback, children);
+                    });
 
                   }, function () {
                     sendError(this, callback, error);
                   });
 
-              } else if (node.original.isInfoItem) {
-                omiMessage.restApi(node.original.url, 'isInfoItem')
-                  .then(function (infoItem) {
-
-                    if (infoItem.values.length) {
-                      var value = infoItem.values[0];
-
-                      children.push({
-                        id: node.original.url + '/' + 'value',
-                        text: value.value + valueConverter.getValueUnit(infoItem.name) +
-                          ' -- ' + new Date(value.time).toTimeString().split(' ')[0],
-                        children: false,
-                        icon: false
-                      });
-                    }
-
-                    sendSuccess(this, callback, children);
-
-                  }, function () {
-                    sendError(this, callback, error);
-                  });
               }
             },
             themes: {
@@ -187,7 +183,7 @@ angular.module('otaniemi3dApp')
 
         if (!attrs.odfTree) {
           var updateSensors = $interval(function () {
-            element.find('.jstree-open').each(function () {
+            element.find('.jstree-open:not(.jstree-last)').each(function () {
               if ($(this).children('.jstree-children').children('.jstree-leaf').length) {
                 tree.refresh_node(getNode($(this)));
               }
