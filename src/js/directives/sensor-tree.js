@@ -75,8 +75,8 @@ angular.module('otaniemi3dApp')
               var rootId;
               if (scope.rootUrl) {
                 rootId = scope.rootUrl.split('/');
+                rootId = rootId[rootId.length - 1];
               }
-              rootId = rootId[rootId.length - 1];
 
               if (attrs.odfTree) {
 
