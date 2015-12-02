@@ -8,7 +8,7 @@
  */
  /* jshint -W106 */ // Ignore jshint about non-camelCase variables
 angular.module('otaniemi3dApp')
-  .directive('sensorTree', function ($document, omiMessage, valueConverter, $interval, $q) {
+  .directive('sensorTree', function ($document, omiMessage, valueConverter, $interval) {
     return {
       template: '<div></div>',
       restrict: 'E',
@@ -72,23 +72,19 @@ angular.module('otaniemi3dApp')
                 errorNode: [{ text: 'Error' }],
                 errorMsg: 'Error when opening a tree node. Please close and reopen the node to try again.'
               };
-
-              var icon, url, id;
+              var rootId;
               if (scope.rootUrl) {
-                id = scope.rootUrl.split('/');
+                rootId = scope.rootUrl.split('/');
               }
+              rootId = rootId[rootId.length - 1];
 
               if (attrs.odfTree) {
 
                 callback.call(this, [scope.odfTree]);
 
               } else if (node.id === '#') {
-                //Check if url ends with slash or not and select last path element
-                //i.e. .../K1/ and .../K1 both result in K1 as the id.
-                //id = id[id.length-1].length ? id[id.length-1] : id[id.length-2];
-                id = id[id.length - 1];
-
-                if (id === 'K1' || id === 'CS') {
+                var icon;
+                if (rootId === 'K1' || rootId === 'CS') {
                   icon = 'assets/shared/images/icon-building.svg';
                 } else {
                   icon = 'assets/shared/images/icon-room.svg';
@@ -96,8 +92,8 @@ angular.module('otaniemi3dApp')
 
                 //Root element
                 children = [{
-                  id: id,
-                  text: id,
+                  id: rootId,
+                  text: rootId,
                   children: true,
                   isOdfObject: true,
                   url: scope.rootUrl,
@@ -112,9 +108,52 @@ angular.module('otaniemi3dApp')
                 omiMessage.restApi(node.original.url)
                   .then(function (odfObject) {
 
-                    function addInfoItem(url) {
-                      return omiMessage.restApi(url, 'infoItem')
-                        .then(function (infoItem) {
+                    for (var j = 0; j < odfObject.childObjects.length; j++) {
+                      var childObject = odfObject.childObjects[j];
+                      var url = node.original.url + '/' + childObject.id;
+
+                      children.push({
+                        id: url,
+                        text: childObject.id,
+                        children: true,
+                        isOdfObject: true,
+                        icon: 'assets/shared/images/icon-room.svg',
+                        url: url
+                      });
+                    }
+
+                    var infoItems = odfObject.infoItems.reduce(
+                      function(previous, current) {
+                        return previous +
+                        '<InfoItem name="' + current.name + '">' +
+                          '<MetaData/>' +
+                        '</InfoItem>';
+                      }, ''
+                    );
+
+                    if (infoItems) {
+                      var path = node.original.url.substring(node.original.url.indexOf(rootId));
+                      var objects = path.split('/');
+                      var request = objects.reduce(function (prev, current) {
+                        return [prev[0] +
+                          '<Object>' +
+                            '<id>' + current + '</id>',
+                          '</Object>' +
+                          prev[1]];
+                      }, ['', '']);
+
+                      request = request[0] + infoItems + request[1];
+
+                      omiMessage.send('read', request).then(function(data) {
+                        var object = data[0];
+                        var childObjects = object.childObjects;
+                        while (object.id !== objects[objects.length - 1] &&
+                              childObjects && childObjects.length) {
+                          object = childObjects[0];
+                        }
+                        for (var i = 0; i < object.infoItems.length; i++) {
+                          var infoItem = object.infoItems[i];
+                          var url = node.original.url + '/' + infoItem.name;
                           var valueText = '';
                           if (infoItem.values.length) {
                             var value = infoItem.values[0];
@@ -129,40 +168,21 @@ angular.module('otaniemi3dApp')
                               infoItem.name + '.svg',
                             url: url
                           });
-                        });
-                    }
+                        }
 
-                    var infoItemPromises = [];
+                        sendSuccess(this, callback, children);
 
-                    for (var i = 0; i < odfObject.infoItems.length; i++) {
-                      var infoItem = odfObject.infoItems[i];
-                      url = node.original.url + '/' + infoItem.name;
-
-                      infoItemPromises.push(addInfoItem(url));
-                    }
-
-                    for (var j = 0; j < odfObject.childObjects.length; j++) {
-                      var childObject = odfObject.childObjects[j];
-                      url = node.original.url + '/' + childObject.id;
-
-                      children.push({
-                        id: url,
-                        text: childObject.id,
-                        children: true,
-                        isOdfObject: true,
-                        icon: 'assets/shared/images/icon-room.svg',
-                        url: url
+                      }, function () {
+                        sendError(this, callback, error);
                       });
-                    }
 
-                    $q.all(infoItemPromises).then(function() {
+                    } else {
                       sendSuccess(this, callback, children);
-                    });
+                    }
 
                   }, function () {
                     sendError(this, callback, error);
                   });
-
               }
             },
             themes: {
