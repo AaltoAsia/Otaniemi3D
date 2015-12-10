@@ -3,5 +3,11 @@
     <span class="glyphicon glyphicon glyphicon-backward"></span>
     BACK
   </button>
-  <panorama id="room-panorama" data="panorama.panoramaData"></panorama>
+  <panorama id="room-panorama" data="panorama.panoramaData">
+    <tooltip sensor-type="{}"
+             element-to-attach="'.sensor-hotspot'"
+             parent-element="'#room-panorama'"
+             class="mouse-tooltip">
+    </tooltip>
+  </panorama>
 </div>

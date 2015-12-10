@@ -51,7 +51,9 @@ angular.module('otaniemi3dApp')
         '</table>',
       ].join(''),
       scope: {
-        sensorType: '='
+        sensorType: '=',
+        elementToAttach: '=',
+        parentElement: '='
       },
       controller: function () {
         var self = this;
@@ -320,18 +322,18 @@ angular.module('otaniemi3dApp')
         d3.select(element[0]).style('display', 'none');
 
         d3.select(element.parent()[0])
-          .selectAll('[data-room-id]')
+          .selectAll(tooltipCtrl.elementToAttach)
             .on('mouseover', showTooltip)
             .on('mousemove', moveTooltip)
             .on('mouseout', hideTooltip)
             .on('mouseup', lockTooltip);
 
-        d3.select(element.parent()[0]).select('#floorplan')
+        d3.select(element.parent()[0]).select(tooltipCtrl.parentElement)
           .on('mousedown.tooltip', unlockTooltip);
 
         scope.$on('$destroy', function () {
           d3.select(element.parent()[0])
-            .selectAll('[data-room-id]')
+            .selectAll(tooltipCtrl.elementToAttach)
               .on('mouseover', null)
               .on('mousemove', null)
               .on('mouseout', null)

@@ -15,8 +15,6 @@ angular.module('otaniemi3dApp')
 
     self.room = { id: $state.params.roomId };
     self.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
-    self.sensorBoxes = [];
-    self.sensorsToRelocate = [];
     //Create global namespace for scripts used by krpano.
     $window.krpano = {};
 
@@ -44,24 +42,23 @@ angular.module('otaniemi3dApp')
     };
 
     getRoomObject(self.room)
-      .then(updateRoom)
       .then(getMetaData)
       .then(updateRoom)
       .then(waitForPanorama)
-      .then(makeSensorGroups)
-      .then(addSensorGroups);
+      .then(createHotspots)
+      .then(addHotspots);
 
-    function updateRoom(room) {
-      self.room = room;
-      return room;
+    function updateRoom(odfObject) {
+      self.room = odfObject;
+      return odfObject;
     }
 
-    function getRoomObject(room) {
+    function getRoomObject(odfObject) {
       var request = (
         '<Object>' +
           '<id>K1</id>' +
           '<Object>' +
-            '<id>' + room.id + '</id>' +
+            '<id>' + odfObject.id + '</id>' +
           '</Object>' +
         '</Object>'
       );
@@ -73,11 +70,11 @@ angular.module('otaniemi3dApp')
         });
     }
 
-    function getMetaData(room, loadingBar) {
+    function getMetaData(odfObject, loadingBar) {
       //Convert to boolean
       loadingBar = !!loadingBar;
 
-      var infoItems = room.infoItems.reduce(
+      var infoItems = odfObject.infoItems.reduce(
         function(previous, current) {
           return previous +
           '<InfoItem name="' + current.name + '">' +
@@ -90,7 +87,7 @@ angular.module('otaniemi3dApp')
         '<Object>' +
           '<id>K1</id>' +
           '<Object>' +
-            '<id>' + room.id + '</id>' +
+            '<id>' + odfObject.id + '</id>' +
             infoItems +
           '</Object>' +
         '</Object>'
@@ -121,11 +118,15 @@ angular.module('otaniemi3dApp')
       return deferred.promise;
     }
 
-    function makeSensorGroups(room) {
+    /*
+    * This function groups sensors by their location in panorama (ath, atv)
+    * and creates hotspots to these locations.
+    */
+    function createHotspots(odfObject) {
       var infoItems = [];
       var childObjects = [];
-      if (room.infoItems) {
-        infoItems = room.infoItems.reduce(function (prev, current) {
+      if (odfObject.infoItems) {
+        infoItems = odfObject.infoItems.reduce(function (prev, current) {
           var existingGroup = prev.find(function (group) {
             return current.metaData ?
               (group.ath === current.metaData.ath &&
@@ -144,9 +145,9 @@ angular.module('otaniemi3dApp')
         }, []);
       }
 
-      if (room.childObjects) {
-        childObjects = room.childObjects.map(function (object) {
-          return makeSensorGroups(object);
+      if (odfObject.childObjects) {
+        childObjects = odfObject.childObjects.map(function (object) {
+          return createHotspots(object);
         });
       }
 
@@ -154,34 +155,21 @@ angular.module('otaniemi3dApp')
       return infoItems.concat(childObjectInfoItems);
     }
 
-    function addSensorGroups(sensorGroups) {
-      var krpano = $('#panorama_obj')[0];
-
-      for (var i = 0; i < sensorGroups.length; i++) {
-        if (isNaN(Number(sensorGroups[i].ath)) ||
-            isNaN(Number(sensorGroups[i].atv))) {
+    function addHotspots(hotspots) {
+      for (var i = 0; i < hotspots.length; i++) {
+        if (!$.isNumeric(hotspots[i].ath) ||
+            !$.isNumeric(hotspots[i].atv)) {
           return;
         }
 
-        var id = sensorGroups[i].infoItems.reduce(function (prev, current) {
-          return prev + '_' + current.name;
-        }, 'sensor_group');
+        var id = hotspots[i].ath + ',' + hotspots[i].atv;
 
-        var sensorBox = {
-          id: id,
-          sensors: sensorGroups[i].infoItems,
-          ath: sensorGroups[i].ath,
-          atv: sensorGroups[i].atv
-        };
-        self.sensorBoxes.push(sensorBox);
-
-        krpano.call('addsensor(' + [
-          sensorBox.id, sensorGroups[i].ath, sensorGroups[i].atv,
-          sensorTooltip(sensorBox)
-        ].join(',') + ',"' + JSON.stringify(sensorGroups[i]) +'"' + ')');
+        $window.krpano.elem.call('addsensor(' + [
+          id, hotspots[i].ath, hotspots[i].atv
+        ].join(',') + ')');
       }
 
-      return sensorGroups;
+      return hotspots;
     }
 
     function sendMetaData(sensors) {
@@ -223,96 +211,8 @@ angular.module('otaniemi3dApp')
       return omiMessage.send('write', writeRequest);
     }
 
-    function sensorTooltip(sensorBox) {
-      var sensorRows = '';
+    $window.krpano.showTooltip = function (ath, atv) {
 
-      var sensors = sensorBox.sensors.sort(function (a, b) {
-        if (a.name < b.name) {
-          return -1;
-        }
-        if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      });
-
-
-      for (var i = 0; i < sensors.length; i++) {
-        var sensorValue = sensors[i].values.length ?
-          sensors[i].values[0].value : '';
-        var sensorSuffix = sensors[i].suffix;
-        sensorSuffix = sensorSuffix ? ' ' + sensorSuffix : '';
-        var toggleButton = '';
-
-        if(sensors[i].metaData && sensors[i].metaData.isWritable) {
-          toggleButton =
-            '[button onclick="krpano.togglePlug(\'' +
-                sensors[i].roomId + '\', \'' +
-                sensors[i].name + '\', \'' +
-                sensors[i].values[0].value + '\')" ' +
-                'class="btn black-btn panorama-btn"]' +
-              'Toggle' +
-            '[/button]';
-        }
-
-        sensorRows += [
-          '[tr]',
-            '[th]',
-              sensors[i].name,
-            '[/th]',
-            '[td]',
-              '[span]',
-                sensorValue, sensorSuffix,
-              '[/span]',
-              toggleButton,
-            '[/td]',
-          '[/tr]'
-        ].join('');
-      }
-
-      var sensorTable = [
-        '[table class="tooltip-table"]',
-          '[tr]',
-            '[th colspan="2" style="text-align:center"]',
-              '[span]', self.roomId, '[/span]',
-              '[span style="float: right"]',
-                '[span class="loading-spinner" style="opacity:0"]',
-                  '[span class="spinner-icon"][/span]',
-                '[/span]',
-                '[button class="btn refresh-btn"',
-                        'onclick="krpano.refresh(\'', sensorBox.id, '\')"',
-                        'title="Refresh"]',
-                  '[span class="glyphicon glyphicon-refresh"][/span]',
-                '[/button]',
-              '[/span]',
-            '[/th]',
-          '[/tr]',
-          sensorRows,
-        '[/table]'
-      ].join('');
-
-      return sensorTable;
-    }
-
-    $window.krpano.refresh = function (sensorBoxId) {
-      $('.loading-spinner').css('opacity', '1');
-
-      return getMetaData(self.room, false).then(function () {
-        var sensorBox;
-        for (var i = 0; i < self.sensorBoxes.length; i++) {
-          if (self.sensorBoxes[i].id === sensorBoxId) {
-            sensorBox = self.sensorBoxes[i];
-          }
-        }
-        $window.krpano.elem.call(
-          'set(plugin[persistent_tooltip].html, ' +
-          sensorTooltip(sensorBox) + ')'
-        );
-        $('.loading-spinner').css('opacity', '0');
-      }, function (error) {
-        $('.loading-spinner').css('opacity', '1');
-        console.log('Error:', error);
-      });
     };
 
     $window.krpano.addSensorDialog = function () {
