@@ -31,7 +31,7 @@ angular.module('otaniemi3dApp')
           '<tr>',
             '<td colspan="2">',
               '<sensor-tree id="sensor-tree"',
-                'odf-tree="tooltip.odfTree">',
+                'odf-object="tooltip.room">',
               '</sensor-tree>',
             '</td>',
           '</tr>',
@@ -57,11 +57,10 @@ angular.module('otaniemi3dApp')
       },
       controller: function () {
         var self = this;
-        this.room = {};
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
         this.togglingPlug = false;
-        this.odfTree = {
+        this.room = {
           id: 'placeholder',
           text: 'Loading sensors...'
         };
@@ -120,46 +119,6 @@ angular.module('otaniemi3dApp')
           });
         })();
 
-        this.makeJsTree = function(data, rootUrl) {
-          if (!data || !rootUrl) return null; //jshint ignore: line
-
-          var childObjects = [];
-          var infoItems = [];
-
-          if (data.infoItems) {
-            infoItems = data.infoItems.map(function(infoItem) {
-              var url = rootUrl + '/' + infoItem.name;
-              var valueText = '';
-
-              if (infoItem.values.length) {
-                var value = infoItem.values[0];
-                valueText = ': ' + value.value +
-                  valueConverter.getValueUnit(infoItem.name);
-              }
-
-              return {
-                id: url,
-                text: infoItem.name + valueText,
-                icon: 'assets/shared/images/icon-' + infoItem.name + '.svg'
-              };
-            });
-          }
-
-          if (data.childObjects) {
-            childObjects = data.childObjects.map(function(object) {
-              self.makeJsTree(object, rootUrl + '/', object.id);
-            });
-          }
-
-          return {
-            id: rootUrl,
-            text: data.id,
-            state: { opened: true },
-            children: infoItems.concat(childObjects),
-            icon: 'assets/shared/images/icon-room.svg'
-          };
-        };
-
         this.refresh = function (datum) {
           datum = datum || self.room;
           var infoItems = datum.infoItems.reduce(
@@ -190,7 +149,6 @@ angular.module('otaniemi3dApp')
               self.isLoading = false;
               datum = objects[0].childObjects[0];
               datum.metaData = true;
-              self.odfTree = self.makeJsTree(datum, datum.id);
               return datum;
             }, function (error) {
               //TODO: Make an OMI error parser.
@@ -268,7 +226,6 @@ angular.module('otaniemi3dApp')
                 });
               } else {
                 tooltipCtrl.room = datum;
-                tooltipCtrl.odfTree = tooltipCtrl.makeJsTree(datum, datum.id);
               }
 
               tooltipCtrl.isLoading = false;

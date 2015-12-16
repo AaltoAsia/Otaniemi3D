@@ -26,7 +26,7 @@ angular.module('otaniemi3dApp')
         //Object to store error messages.
         error: '=',
         //If provided, the tree uses local data from this object.
-        odfTree: '='
+        odfObject: '='
       },
       link: function postLink (scope, element, attrs) {
         element.jstree({
@@ -78,9 +78,9 @@ angular.module('otaniemi3dApp')
                 rootId = rootId[rootId.length - 1];
               }
 
-              if (attrs.odfTree) {
+              if (attrs.odfObject) {
 
-                callback.call(this, [scope.odfTree]);
+                callback.call(this, [makeJsTree(scope.odfObject, scope.odfObject.id)]);
 
               } else if (node.id === '#') {
                 var icon;
@@ -191,6 +191,46 @@ angular.module('otaniemi3dApp')
           }
         });
 
+        function makeJsTree(data, rootUrl) {
+          if (!data || !rootUrl) return null; //jshint ignore: line
+
+          var childObjects = [];
+          var infoItems = [];
+
+          if (data.infoItems) {
+            infoItems = data.infoItems.map(function(infoItem) {
+              var url = rootUrl + '/' + infoItem.name;
+              var valueText = '';
+
+              if (infoItem.values.length) {
+                var value = infoItem.values[0];
+                valueText = ': ' + value.value +
+                  valueConverter.getValueUnit(infoItem.name);
+              }
+
+              return {
+                id: url,
+                text: infoItem.name + valueText,
+                icon: 'assets/shared/images/icon-' + infoItem.name + '.svg'
+              };
+            });
+          }
+
+          if (data.childObjects) {
+            childObjects = data.childObjects.map(function(object) {
+              makeJsTree(object, rootUrl + '/', object.id);
+            });
+          }
+
+          return {
+            id: rootUrl,
+            text: data.id,
+            state: { opened: true },
+            children: infoItems.concat(childObjects),
+            icon: 'assets/shared/images/icon-room.svg'
+          };
+        }
+
         var tree = element.jstree(true);
 
         function getNode(node, original) {
@@ -201,7 +241,7 @@ angular.module('otaniemi3dApp')
           }
         }
 
-        if (!attrs.odfTree) {
+        if (!attrs.odfObject) {
           var updateSensors = $interval(function () {
             element.find('.jstree-open:not(.jstree-last)').each(function () {
               if ($(this).children('.jstree-children').children('.jstree-leaf').length) {
@@ -213,7 +253,7 @@ angular.module('otaniemi3dApp')
 
         element
           .on('after_close.jstree', function (_, data) {
-            if (!attrs.odfTree) {
+            if (!attrs.odfObject) {
               data.node.children = true;
               getNode(data.node.id).state.loaded = false;
             }
@@ -267,7 +307,7 @@ angular.module('otaniemi3dApp')
           });
         }
 
-        scope.$watch('odfTree', function () {
+        scope.$watch('odfObject', function () {
           tree.refresh();
         });
 

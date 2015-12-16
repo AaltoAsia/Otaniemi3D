@@ -15,6 +15,8 @@ angular.module('otaniemi3dApp')
 
     self.room = { id: $state.params.roomId };
     self.class = $scope.App.fullscreen ? 'panorama-fullscreen' : '';
+    self.sensorsToRelocate = [];
+    self.hotspots = [];
     //Create global namespace for scripts used by krpano.
     $window.krpano = {};
 
@@ -169,6 +171,7 @@ angular.module('otaniemi3dApp')
         ].join(',') + ')');
       }
 
+      self.hotspots = hotspots;
       return hotspots;
     }
 
@@ -229,8 +232,7 @@ angular.module('otaniemi3dApp')
         resolve: {
           params: function () {
             return {
-              room: self.room,
-              url: roomUrl,
+              odfObject: self.room,
               alert: self.alert,
               addSensors: function(sensors) {
                 self.sensorsToRelocate = sensors;
@@ -243,30 +245,12 @@ angular.module('otaniemi3dApp')
       self.modalInstance.result.then(function () {
         if (self.sensorsToRelocate.length) {
 
+          for (var i = 0; i < self.hotspots.length; i++) {
+            $window.krpano.elem.call('removehotspot(' + self.hotspots[i].id + ')');
+          }
+
           for (var j = 0; j < self.sensorsToRelocate.length; j++) {
-            var newSensor = self.sensorsToRelocate[j];
-            //Because these sensors were retrieved by sensor-tree directive,
-            //they don't have any meta data. Therefore we don't have to worry
-            //about owerwriting it.
-            newSensor.metaData = {
-              ath: pos.x,
-              atv: pos.y
-            };
-
-            for (var k = 0; k < self.sensorBoxes.length; k++) {
-              var sensorBox = self.sensorBoxes[k];
-
-              for (var i = 0; i < sensorBox.infoItems.length; i++) {
-                var infoItem = sensorBox.infoItems[i];
-                if (newSensor.name === infoItem.name) {
-                  angular.merge(newSensor.metaData, infoItem.metaData);
-                  var index = sensorBox.infoItems.indexOf(infoItem);
-                  //Remove infoItem from its previous sensorBox.
-                  sensorBox.infoItems.splice(index, 1);
-                }
-              }
-            }
-              //$window.krpano.elem.call('removehotspot(id-' + oldSensor.id + ')');
+            
           }
 
           var sensorGroup = makeSensorGroups({
