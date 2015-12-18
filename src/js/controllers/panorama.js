@@ -139,8 +139,7 @@ angular.module('otaniemi3dApp')
           } else {
             prev.push({
               ath: current.metaData ? current.metaData.ath : null,
-              atv: current.metaData ? current.metaData.atv : null,
-              infoItems: [current]
+              atv: current.metaData ? current.metaData.atv : null
             });
           }
           return prev;
@@ -164,7 +163,7 @@ angular.module('otaniemi3dApp')
           return;
         }
 
-        var id = hotspots[i].ath + ',' + hotspots[i].atv;
+        var id = 'id-' + hotspots[i].ath + ',' + hotspots[i].atv;
 
         $window.krpano.elem.call('addsensor(' + [
           id, hotspots[i].ath, hotspots[i].atv
@@ -214,6 +213,46 @@ angular.module('otaniemi3dApp')
       return omiMessage.send('write', writeRequest);
     }
 
+    function relocateSensors(sensors, ath, atv) {
+      function byId(id) {
+        return function(elem) {
+          return elem.id === id;
+        };
+      }
+
+      function byName(name) {
+        return function(elem) {
+          return elem.name === name;
+        };
+      }
+
+      if (!sensors.length) {
+        return null;
+      }
+
+      for (var i = 0; i < sensors.length; i++) {
+        var path = sensors[i].id.split('/');
+        var childObject;
+        var infoItem;
+        var children = self.room.childObjects;
+        for (var j = 0; j < path.length; j++) {
+          var id = path[j];
+          childObject = children.find(byId(id));
+          if (childObject) {
+            childObject.metaData.ath = ath;
+            childObject.metaData.atv = atv;
+            children = childObject.childObjects;
+          } else {
+            infoItem = children.find(byName(id));
+            if (infoItem) {
+              infoItem.metaData.ath = ath;
+              infoItem.metaData.atv = atv;
+            }
+          }
+        }
+      }
+    }
+
     $window.krpano.showTooltip = function (ath, atv) {
 
     };
@@ -234,7 +273,7 @@ angular.module('otaniemi3dApp')
             return {
               odfObject: self.room,
               alert: self.alert,
-              addSensors: function(sensors) {
+              relocateSensors: function(sensors) {
                 self.sensorsToRelocate = sensors;
               }
             };
@@ -250,7 +289,7 @@ angular.module('otaniemi3dApp')
           }
 
           for (var j = 0; j < self.sensorsToRelocate.length; j++) {
-            
+
           }
 
           var sensorGroup = makeSensorGroups({

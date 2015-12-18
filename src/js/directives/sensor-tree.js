@@ -225,6 +225,7 @@ angular.module('otaniemi3dApp')
           return {
             id: rootUrl,
             text: data.id,
+            isOdfObject: true,
             state: { opened: true },
             children: infoItems.concat(childObjects),
             icon: 'assets/shared/images/icon-room.svg'
@@ -259,18 +260,9 @@ angular.module('otaniemi3dApp')
             }
           })
           .on('select_node.jstree', function () {
-            if (!attrs.selectSensor) {
-              return;
+            if (attrs.selectSensor) {
+              scope.selectSensor(tree.get_selected(true));
             }
-            var selectedSensors = [];
-
-            angular.forEach(tree.get_selected(true), function (node) {
-              if (node.original.type === 'sensor') {
-                selectedSensors.push(node.original);
-              }
-            });
-
-            scope.selectSensor(selectedSensors);
           });
 
         $document
