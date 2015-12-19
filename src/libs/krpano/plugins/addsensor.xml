@@ -2,12 +2,7 @@
 
   <!-- open dialog when clicking on panorama -->
 	<events name="addSensorDialog"
-          onclick="
-            if(
-              get(plugin[persistent_tooltip].visible),
-              set(plugin[persistent_tooltip].visible, false),
-              js(krpano.addSensorDialog());
-            );" />
+          onclick="js(krpano.addSensorDialog());"/>
 
 
   <!-- add sensor to clicked location -->
@@ -19,9 +14,6 @@
     trace('ath: ', hotspot[%1].ath);
     set(hotspot[%1].atv, %3);
     trace('atv: ', hotspot[%1].atv);
-    set(hotspot[%1].sensorTable, %4);
-		set(hotspot[%1].sensors, %5);
-		trace('sensors: ', hotspot[%1].sensors);
     set(hotspot[%1].scale, 0.7);
     trace('scale: ', hotspot[%1].scale);
     set(hotspot[%1].alpha, 0.4);

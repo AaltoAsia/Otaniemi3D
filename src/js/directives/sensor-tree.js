@@ -260,8 +260,8 @@ angular.module('otaniemi3dApp')
             }
           })
           .on('select_node.jstree', function () {
-            if (attrs.selectSensor) {
-              scope.selectSensor(tree.get_selected(true));
+            if (scope.selectCallback) {
+              scope.selectCallback(tree.get_selected(true));
             }
           });
 

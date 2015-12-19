@@ -134,9 +134,7 @@ angular.module('otaniemi3dApp')
               (group.ath === current.metaData.ath &&
                group.atv === current.metaData.atv) : false;
           });
-          if (existingGroup) {
-            existingGroup.infoItems.push(current);
-          } else {
+          if (!existingGroup) {
             prev.push({
               ath: current.metaData ? current.metaData.ath : null,
               atv: current.metaData ? current.metaData.atv : null
@@ -174,43 +172,14 @@ angular.module('otaniemi3dApp')
       return hotspots;
     }
 
-    function sendMetaData(sensors) {
-      var writeRequest = {
-        'Object': {
-          'id': {
-            'keyValue': 'K1'
-          },
-          'Object': {
-            'id': {
-              'keyValue': self.roomId
-            },
-            'InfoItem': []
-          }
-        }
-      };
+    function sendMetaData(odfObject) {
+      var metaData = omiMessage.metaDataToXml(odfObject);
+      console.log(odfObject);
+      console.log(metaData);
 
-      function addMetaData(value, key) {
-        writeRequest.Object.Object
-          .InfoItem[i].MetaData.InfoItem.push({
-            '@name': key,
-            'value': {
-              'keyValue': value,
-              '@type': 'xs:double'
-            }
-          });
+      if (metaData) {
+        return omiMessage.send('write', metaData);
       }
-
-      for (var i = 0; i < sensors.length; i++) {
-        writeRequest.Object.Object.InfoItem.push({
-          'MetaData': {
-            'InfoItem': []
-          },
-          '@name': sensors[i].name
-        });
-        angular.forEach(sensors[i].metaData, addMetaData);
-      }
-
-      return omiMessage.send('write', writeRequest);
     }
 
     function relocateSensors(sensors, ath, atv) {
@@ -226,25 +195,20 @@ angular.module('otaniemi3dApp')
         };
       }
 
-      if (!sensors.length) {
-        return null;
-      }
-
       for (var i = 0; i < sensors.length; i++) {
         var path = sensors[i].id.split('/');
         var childObject;
         var infoItem;
         var children = self.room.childObjects;
-        for (var j = 0; j < path.length; j++) {
+        for (var j = 1; j < path.length; j++) {
           var id = path[j];
           childObject = children.find(byId(id));
           if (childObject) {
-            childObject.metaData.ath = ath;
-            childObject.metaData.atv = atv;
             children = childObject.childObjects;
           } else {
-            infoItem = children.find(byName(id));
+            infoItem = self.room.infoItems.find(byName(id));
             if (infoItem) {
+              infoItem.metaData = infoItem.metaData || {};
               infoItem.metaData.ath = ath;
               infoItem.metaData.atv = atv;
             }
@@ -288,16 +252,12 @@ angular.module('otaniemi3dApp')
             $window.krpano.elem.call('removehotspot(' + self.hotspots[i].id + ')');
           }
 
-          for (var j = 0; j < self.sensorsToRelocate.length; j++) {
+          relocateSensors(self.sensorsToRelocate, pos.x, pos.y);
 
-          }
+          var hotspots = createHotspots(self.room);
+          addHotspots(hotspots);
 
-          var sensorGroup = makeSensorGroups({
-            infoItems: self.sensorsToRelocate
-          });
-          addSensorGroups(sensorGroup);
-
-          sendMetaData(self.sensorsToRelocate);
+          sendMetaData(self.room);
 
           self.sensorsToRelocate = [];
         }

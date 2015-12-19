@@ -63,6 +63,41 @@ angular.module('otaniemi3dApp')
       return pendingRequests[url];
     };
 
+    this.metaDataToXml = function(object) {
+      var openingTag = '<Object><id>' + object.id + '</id>';
+      var closingTag = '</Object>';
+      var metaData = false;
+
+      for (var i = 0; i < object.infoItems.length; i++) {
+        var item = object.infoItems[i];
+        if (item.metaData) {
+          metaData = true;
+          openingTag += [
+            '<InfoItem name="', item.name, '">',
+              '<MetaData>',
+                '<InfoItem name="ath">',
+                  '<value>', item.metaData.ath, '</value>',
+                '</InfoItem>',
+                '<InfoItem name="atv">',
+                  '<value>', item.metaData.atv, '</value>',
+                '</InfoItem>',
+              '</MetaData>',
+            '</InfoItem>'
+          ].join('');
+        }
+      }
+
+      for (var j = 0; i < object.childObjects.length; j++) {
+        openingTag += self.metaDataToXml(object.childObjects[j]);
+      }
+
+      if (metaData) {
+        return openingTag + closingTag;
+      } else {
+        return '';
+      }
+    };
+
     function parse(xml) {
       var data = new DOMParser().parseFromString(xml, 'text/xml');
       var root = data.querySelector('Objects');
