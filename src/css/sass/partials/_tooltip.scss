@@ -25,7 +25,7 @@
   background: white;
   z-index: 10;
   position: fixed;
-  pointer-events: none;
+  pointer-events: all;
   display: flex;
   flex-flow: column;
 }

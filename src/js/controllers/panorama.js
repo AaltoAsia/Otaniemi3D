@@ -132,7 +132,8 @@ angular.module('otaniemi3dApp')
           var existingGroup = prev.find(function (group) {
             return current.metaData ?
               (group.ath === current.metaData.ath &&
-               group.atv === current.metaData.atv) : false;
+               group.atv === current.metaData.atv) :
+               (group.ath === null || group.atv ===  null);
           });
           if (!existingGroup) {
             prev.push({
@@ -158,10 +159,10 @@ angular.module('otaniemi3dApp')
       for (var i = 0; i < hotspots.length; i++) {
         if (!$.isNumeric(hotspots[i].ath) ||
             !$.isNumeric(hotspots[i].atv)) {
-          return;
+          continue;
         }
 
-        var id = 'id-' + hotspots[i].ath + ',' + hotspots[i].atv;
+        var id = 'id-' + i;
 
         $window.krpano.elem.call('addsensor(' + [
           id, hotspots[i].ath, hotspots[i].atv
@@ -174,8 +175,6 @@ angular.module('otaniemi3dApp')
 
     function sendMetaData(odfObject) {
       var metaData = omiMessage.metaDataToXml(odfObject);
-      console.log(odfObject);
-      console.log(metaData);
 
       if (metaData) {
         return omiMessage.send('write', metaData);
@@ -217,8 +216,23 @@ angular.module('otaniemi3dApp')
       }
     }
 
-    $window.krpano.showTooltip = function (ath, atv) {
+    function getHotspotElements() {
+      var sensorString = 'libs/krpano/plugins/sensor-128.png';
+      var elements = [];
 
+      $('#panorama_obj').find('div').each(function() {
+        // This is a pretty hacky way to get the elemnt. It works by checking
+        // if the background-image is sensor-128.png.
+        if ($(this).css('background-image').indexOf(sensorString) > -1) {
+          elements.push(this);
+        }
+      });
+
+      return elements;
+    }
+
+    $window.krpano.addTooltip = function() {
+      $scope.$broadcast('attachTooltip', getHotspotElements());
     };
 
     $window.krpano.addSensorDialog = function () {
@@ -249,7 +263,7 @@ angular.module('otaniemi3dApp')
         if (self.sensorsToRelocate.length) {
 
           for (var i = 0; i < self.hotspots.length; i++) {
-            $window.krpano.elem.call('removehotspot(' + self.hotspots[i].id + ')');
+            $window.krpano.elem.call('removehotspot(id-' + i + ')');
           }
 
           relocateSensors(self.sensorsToRelocate, pos.x, pos.y);

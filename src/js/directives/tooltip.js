@@ -53,17 +53,24 @@ angular.module('otaniemi3dApp')
       scope: {
         sensorType: '=',
         elementToAttach: '=',
-        parentElement: '='
+        parentElement: '=',
+        odfObject: '='
       },
       controller: function () {
         var self = this;
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
         this.togglingPlug = false;
-        this.room = {
-          id: 'placeholder',
-          text: 'Loading sensors...'
-        };
+
+        if (this.odfObject) {
+          this.room = this.odfObject;
+        } else {
+          this.room = {
+            id: 'placeholder',
+            text: 'Loading sensors...'
+          };
+        }
+
         this.roomsWithPanorama = [
           'Room-147a', 'Room-238d','Room-237c','Room-235','Room-232a',
           '2nd Floor Corridor Start',
@@ -166,7 +173,7 @@ angular.module('otaniemi3dApp')
           var value = sensor.values[0].value;
           var color;
 
-          if (sensor.type === self.sensorType.name) {
+          if (self.sensorType && sensor.type === self.sensorType.name) {
             color = valueConverter.getColor(sensor.type, value).rgbaString;
           } else {
             color = '';
@@ -276,25 +283,54 @@ angular.module('otaniemi3dApp')
           }
         }
 
+        var attachedElements = [
+          tooltipCtrl.elementToAttach
+        ];
+
         d3.select(element[0]).style('display', 'none');
 
-        d3.select(element.parent()[0])
-          .selectAll(tooltipCtrl.elementToAttach)
+        d3.selectAll(tooltipCtrl.elementToAttach)
             .on('mouseover', showTooltip)
             .on('mousemove', moveTooltip)
             .on('mouseout', hideTooltip)
             .on('mouseup', lockTooltip);
 
-        d3.select(element.parent()[0]).select(tooltipCtrl.parentElement)
+        d3.select(tooltipCtrl.parentElement)
           .on('mousedown.tooltip', unlockTooltip);
 
         scope.$on('$destroy', function () {
-          d3.select(element.parent()[0])
-            .selectAll(tooltipCtrl.elementToAttach)
-              .on('mouseover', null)
-              .on('mousemove', null)
-              .on('mouseout', null)
-              .on('click', null);
+          for (var i = 0; i < attachedElements.length; i++) {
+            d3.selectAll(attachedElements[i])
+                .on('mouseover', null)
+                .on('mousemove', null)
+                .on('mouseout', null)
+                .on('click', null);
+          }
+          d3.select(tooltipCtrl.parentElement)
+            .on('mousedown.tooltip', null);
+        });
+
+        scope.$on('attachTooltip', function(event, elements) {
+          for (var i = 0; i < elements.length; i++) {
+            if (attachedElements.indexOf(elements[i]) > -1) {
+              continue;
+            }
+
+            attachedElements.push(elements[i]);
+
+            var element;
+            if (typeof elements[i] === 'string') {
+              element = d3.selectAll(elements[i]);
+            } else {
+              element = d3.select(elements[i]);
+            }
+
+            element
+              .on('mouseover', showTooltip)
+              .on('mousemove', moveTooltip)
+              .on('mouseout', hideTooltip)
+              .on('mouseup', lockTooltip);
+          }
         });
 
       }

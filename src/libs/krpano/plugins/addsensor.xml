@@ -20,24 +20,9 @@
     set(hotspot[%1].zoom, true);
 
 
-    set(hotspot[%1].onhover,
+    set(hotspot[%1].onover,
       set(alpha,1.0);
-      if(get(plugin[persistent_tooltip].visible),
-        null,
-        showtext(get(hotspot[%1].sensorTable));
-      );
-    );
-
-
-    set(hotspot[%1].onclick,
-      set(alpha,1.0);
-      set(plugin[persistent_tooltip].x, get(mouse.x));
-      set(plugin[persistent_tooltip].y, get(mouse.y));
-      set(plugin[persistent_tooltip].html, get(hotspot[%1].sensorTable));
-      tween(plugin[persistent_tooltip].alpha, 1.0);
-      tween(plugin[persistent_tooltip].textblur, 0.0);
-      tween(plugin[persistent_tooltip].blur, 0.0);
-      set(plugin[persistent_tooltip].visible, true);
+      js(krpano.addTooltip();)
     );
 
     set(hotspot[%1].onout,
