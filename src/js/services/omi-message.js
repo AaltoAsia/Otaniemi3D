@@ -266,13 +266,13 @@ angular.module('otaniemi3dApp')
         '<?xml version="1.0"?>' +
         '<omi:omiEnvelope xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" ' +
           'xmlns:omi="omi.xsd" version="1.0" ttl="' + ttl + '">' +
-          '<omi:' + method.toLowerCase() +' msgformat="odf"' + parseParams(params) + '>' +
+          '<' + method.toLowerCase() +' xmlns="omi.xsd" msgformat="odf"' + parseParams(params) + '>' +
             '<omi:msg>' +
               '<Objects xmlns="odf.xsd">' +
                 request +
               '</Objects>' +
             '</omi:msg>' +
-          '</omi:read>' +
+          '</' + method.toLowerCase() + '>' +
         '</omi:omiEnvelope>');
     }
 
