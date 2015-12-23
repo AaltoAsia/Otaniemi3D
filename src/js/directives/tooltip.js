@@ -30,7 +30,7 @@ angular.module('otaniemi3dApp')
           '</tr>',
           '<tr>',
             '<td colspan="2">',
-              '<sensor-tree id="sensor-tree"',
+              '<sensor-tree id="tooltip-tree"',
                 'odf-object="tooltip.room">',
               '</sensor-tree>',
             '</td>',
@@ -54,23 +54,19 @@ angular.module('otaniemi3dApp')
         sensorType: '=',
         elementToAttach: '=',
         parentElement: '=',
-        odfObject: '='
+        room: '='
       },
       controller: function () {
         var self = this;
         this.caption = 'Downloading sensor data...';
         this.isLocked = false;
         this.togglingPlug = false;
-
-        if (this.odfObject) {
-          this.room = this.odfObject;
-        } else {
+        if (!this.room) {
           this.room = {
             id: 'placeholder',
             text: 'Loading sensors...'
           };
         }
-
         this.roomsWithPanorama = [
           'Room-147a', 'Room-238d','Room-237c','Room-235','Room-232a',
           '2nd Floor Corridor Start',

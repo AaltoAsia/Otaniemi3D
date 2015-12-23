@@ -299,8 +299,10 @@ angular.module('otaniemi3dApp')
           });
         }
 
-        scope.$watch('odfObject', function () {
-          tree.refresh();
+        scope.$watch('odfObject', function (newObject, oldObject) {
+          if (newObject !== oldObject) {
+            tree.refresh();
+          }
         });
 
         scope.$on('$destroy', function () {
