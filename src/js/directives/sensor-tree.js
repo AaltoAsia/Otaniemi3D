@@ -307,8 +307,9 @@ angular.module('otaniemi3dApp')
 
         scope.$on('$destroy', function () {
           $interval.cancel(updateSensors);
-          $.jstree.destroy();
-          $document.off('dnd_stop.vakata dnd_move.vakata');
+          element.jstree('destroy');
+          //TODO: create different event listeners for each jstree instance
+          //$document.off('dnd_stop.vakata dnd_move.vakata')
         });
       }
     };

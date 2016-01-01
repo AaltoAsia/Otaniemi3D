@@ -2,7 +2,11 @@
 
   <!-- open dialog when clicking on panorama -->
 	<events name="addSensorDialog"
-          onclick="js(krpano.addSensorDialog());"/>
+          onclick="
+            if(get(tooltip_visible),
+              set(tooltip_visible, false),
+              js(krpano.addSensorDialog());
+            );"/>
 
 
   <!-- add sensor to clicked location -->
@@ -24,32 +28,15 @@
       set(alpha,1.0);
       js(krpano.addTooltip();)
     );
+    
+    set(hotspot[%1].onclick,
+      set(alpha,1.0);
+      set(tooltip_visible, true);
+    );
 
     set(hotspot[%1].onout,
       set(alpha,0.4);
     );
-
-  </action>
-
-
-
-  <plugin name="persistent_tooltip" url="%HTMLPATH%/libs/krpano/plugins/textfield.swf"
-    css="border: 1px solid black;border-radius: 5px;background: white;"
-    visible="false"
-    enabled="true"
-    autosize="center"/>
-
-
-
-
-	<!-- update hotspot sensor table -->
-  <action name="updatesensors">
-    set(plugin[persistent_tooltip].visible, true);
-    trace('old_id: ', %1);
-		trace('new_id: ', %2);
-    trace('new_sensors: ', %4);
-		addsensor(%2, hotspot[%1].ath, hotspot[%1].atv, %3, %4);
-		removehotspot(%1);
   </action>
 
 </krpano>
