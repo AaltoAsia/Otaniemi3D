@@ -8,7 +8,7 @@
     <dc:title/>
    </cc:Work>
   </rdf:RDF>
- </metadata>
+ </metadata><g id="main-group">
  <defs>
   <filter id="ag" style="color-interpolation-filters:sRGB" height="1.1228" width="1.1174" y="-.061377" x="-.058683">
    <feGaussianBlur stdDeviation="1.775618"/>
@@ -7478,5 +7478,5 @@
  <path style="stroke-linejoin:round;stroke:#000000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:.12;fill:none" d="m611.56 685.2v10.199"/>
  <path style="stroke-linejoin:round;stroke:#000000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:.12;fill:none" d="m611.56 695.4h-0.71876l-0.60156-0.11719-0.71875-0.12109-0.59766-0.1211-0.60156-0.11719-0.71875-0.24218-0.60156-0.35938-0.60156-0.24218-0.47657-0.35938-0.60156-0.48047-0.48047-0.35937-0.48046-0.48047-0.48047-0.47657-0.48047-0.48047-0.71875-1.2031-0.35938-0.59766-0.24218-0.60156-0.23829-0.59766-0.12109-0.60156-0.23828-0.71875-0.12109-0.60156v-1.3203"/>
  <path style="stroke-linejoin:round;stroke:#000000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:.12;fill:none" d="m618.16 690.84v11.039"/>
- <path style="stroke-linejoin:round;stroke:#000000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:.12;fill:none" d="m618.1 701.76c5.5977 0 10.137-4.543 10.137-10.141"/>
+ <path style="stroke-linejoin:round;stroke:#000000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:.12;fill:none" d="m618.1 701.76c5.5977 0 10.137-4.543 10.137-10.141"/></g>
 </svg>
